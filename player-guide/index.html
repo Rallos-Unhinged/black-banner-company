@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Black Banner Company — Player Guide</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
 
 :root {
-  --bg:#050505;
   --panel:rgba(13,11,9,.92);
   --panel2:rgba(22,17,12,.95);
   --gold:#d8a63b;
@@ -21,13 +21,11 @@
 }
 
 * { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; }
 
 body {
   min-height:100vh;
   background:
     radial-gradient(circle at top center, rgba(212,91,31,.18), transparent 32rem),
-    radial-gradient(circle at bottom center, rgba(216,166,59,.08), transparent 36rem),
     linear-gradient(180deg,#090604 0%,#050505 48%,#080705 100%);
   color:var(--text);
   font-family:'Crimson Pro', Georgia, serif;
@@ -35,20 +33,7 @@ body {
   line-height:1.65;
 }
 
-body::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.86) 100%),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.018), rgba(255,255,255,.018) 1px, transparent 1px, transparent 5px);
-  pointer-events:none;
-  z-index:0;
-}
-
 .page {
-  position:relative;
-  z-index:1;
   width:min(1180px, calc(100% - 2rem));
   margin:0 auto;
 }
@@ -65,7 +50,7 @@ body::before {
   width:100%;
   background:linear-gradient(rgba(0,0,0,.42), rgba(0,0,0,.76)), var(--panel);
   border:1px solid rgba(216,166,59,.55);
-  box-shadow:0 2rem 5rem rgba(0,0,0,.75), inset 0 0 4rem rgba(216,166,59,.05);
+  box-shadow:0 2rem 5rem rgba(0,0,0,.75);
   padding:clamp(1.5rem, 4vw, 4rem);
   position:relative;
   overflow:hidden;
@@ -75,19 +60,16 @@ body::before {
   content:"";
   position:absolute;
   inset:0;
-  background:url('data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAQAElEQVR4Aey9B3ycxZ3//9ldFRuwtbIJuGmLXAAfYBtSaLYlGQiplOSXSrMh4XJJjpS7y10SCIGUy10u/Z87ktAh5S69Uyy50JIQjAmh2JZ2[...]
+  background:url("../images/black_banner_epic.gif") center center no-repeat;
   background-size:min(760px, 86vw);
   opacity:.10;
   filter:grayscale(30%) contrast(120%);
   pointer-events:none;
 }
 
-.hero-card::after {
-  content:"";
-  position:absolute;
-  inset:1rem;
-  border:1px solid rgba(216,166,59,.16);
-  pointer-events:none;
+.hero-card > * {
+  position:relative;
+  z-index:2;
 }
 
 .logo {
@@ -95,8 +77,6 @@ body::before {
   display:block;
   margin:0 auto 1.2rem;
   filter:drop-shadow(0 0 32px rgba(212,91,31,.42));
-  position:relative;
-  z-index:2;
   border-radius:14px;
 }
 
@@ -107,20 +87,14 @@ body::before {
   letter-spacing:.18em;
   font-size:.72rem;
   margin-bottom:.8rem;
-  position:relative;
-  z-index:2;
 }
 
 h1 {
   font-family:'Cinzel', serif;
   font-size:clamp(2.4rem, 8vw, 5.4rem);
   line-height:.95;
-  letter-spacing:.03em;
   color:var(--gold);
-  text-shadow:0 .2rem 1rem rgba(0,0,0,.9);
   margin-bottom:.8rem;
-  position:relative;
-  z-index:2;
 }
 
 .tagline {
@@ -128,17 +102,12 @@ h1 {
   color:var(--gold-soft);
   font-style:italic;
   margin-bottom:1.4rem;
-  position:relative;
-  z-index:2;
 }
 
 .intro {
   max-width:860px;
   margin:0 auto 1.4rem;
   color:var(--muted);
-  font-size:1.08rem;
-  position:relative;
-  z-index:2;
 }
 
 .buttons {
@@ -147,8 +116,6 @@ h1 {
   flex-wrap:wrap;
   gap:.85rem;
   margin-top:1.5rem;
-  position:relative;
-  z-index:2;
 }
 
 .btn {
@@ -165,18 +132,10 @@ h1 {
   letter-spacing:.09em;
   text-transform:uppercase;
   background:rgba(216,166,59,.08);
-  transition:transform .18s ease, background .18s ease, box-shadow .18s ease;
-}
-
-.btn:hover {
-  transform:translateY(-2px);
-  background:rgba(216,166,59,.18);
-  box-shadow:0 0 22px rgba(216,166,59,.18);
 }
 
 .btn.primary {
   background:linear-gradient(135deg, rgba(141,38,38,.72), rgba(216,166,59,.18));
-  border-color:rgba(241,217,148,.8);
 }
 
 section {
@@ -184,15 +143,12 @@ section {
   padding:clamp(1.25rem, 3vw, 2.25rem);
   background:var(--panel);
   border:1px solid var(--faint);
-  box-shadow:0 1.25rem 3rem rgba(0,0,0,.35);
 }
 
 h2 {
   font-family:'Cinzel', serif;
   color:var(--gold);
   font-size:clamp(1.35rem, 3vw, 2rem);
-  margin-bottom:.6rem;
-  letter-spacing:.04em;
 }
 
 h3 {
@@ -200,7 +156,6 @@ h3 {
   color:var(--gold-soft);
   font-size:1.05rem;
   margin:1rem 0 .35rem;
-  letter-spacing:.04em;
   text-transform:uppercase;
 }
 
@@ -208,7 +163,6 @@ p { margin-bottom:.8rem; color:var(--text); }
 strong { color:var(--gold-soft); }
 
 .rule {
-  width:100%;
   height:1px;
   margin:1rem 0 1.2rem;
   background:linear-gradient(90deg, transparent, rgba(216,166,59,.75), transparent);
@@ -229,31 +183,19 @@ strong { color:var(--gold-soft); }
 
 .card p, .card li { color:var(--muted); }
 
-ul {
-  padding-left:1.2rem;
-  margin:.4rem 0 0;
-}
-
-li { margin:.22rem 0; }
+ul { padding-left:1.2rem; }
 
 .rank-table, .reward-table {
   width:100%;
   border-collapse:collapse;
   margin-top:1rem;
-  overflow:hidden;
-  border:1px solid rgba(216,166,59,.38);
 }
 
 th {
   background:#1f170b;
   color:#f0c75e;
-  font-family:'Cinzel', serif;
-  font-size:.75rem;
-  letter-spacing:.08em;
-  text-transform:uppercase;
   padding:.55rem .8rem;
   text-align:left;
-  border:1px solid rgba(216,166,59,.35);
 }
 
 td {
@@ -262,8 +204,6 @@ td {
   padding:.5rem .8rem;
   border:1px solid rgba(216,166,59,.20);
 }
-
-tr:nth-child(even) td { background:#242016; }
 
 .callout {
   margin-top:1.2rem;
@@ -290,7 +230,6 @@ footer {
 
 @media (max-width:860px) {
   .grid { grid-template-columns:1fr; }
-  .hero { min-height:auto; padding-top:1rem; }
   .btn { width:100%; }
 }
 </style>
@@ -298,188 +237,176 @@ footer {
 
 <body>
 <div class="page">
-  <header class="hero">
-    <div class="hero-card">
-      <img class="logo" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAQAElEQVR4Aey9B3ycxZ3//9ldFRuwtbIJuGmLXAAfYBtSaLYlGQiplOSXSrMh4XJJjpS7y10SCIGUy10u/Z87ktAh5S69Uyy5[...]
-      <div class="eyebrow">Player Guide</div>
-      <h1>Welcome to the<br>Black Banner Company</h1>
-      <p class="tagline">Mercenaries for Coin. Contracts for Glory.</p>
-      <p class="intro">
-        We are a D&amp;D 2024 persistent server designed to play like an MMO.
-        Your character grows through contracts, ranks, and reputation in a living world that remembers success and failure.
-      </p>
-      <div class="buttons">
-        <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank">Join Our Discord</a>
-        <a class="btn" href="https://rallos-unhinged.github.io/black-banner-crafting-guide/" target="_blank">Crafting Guide</a>
-        <a class="btn" href="../">Home</a>
-      </div>
+
+<header class="hero">
+  <div class="hero-card">
+    <img class="logo" src="../images/BBC3.jpg" alt="Black Banner Company Logo">
+
+    <div class="eyebrow">Player Guide</div>
+    <h1>Welcome to the<br>Black Banner Company</h1>
+    <p class="tagline">Mercenaries for Coin. Contracts for Glory.</p>
+    <p class="intro">
+      We are a D&amp;D 2024 persistent server designed to play like an MMO.
+      Your character grows through contracts, ranks, and reputation in a living world that remembers success and failure.
+    </p>
+
+    <div class="buttons">
+      <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank">Join Our Discord</a>
+      <a class="btn" href="../">Home</a>
+      <a class="btn" href="../crafting-guide/">Crafting Guide</a>
+      <a class="btn" href="../bastions/">Bastions Guide</a>
     </div>
-  </header>
+  </div>
+</header>
 
-  <section id="core">
-    <h2>Core Concept</h2>
-    <div class="rule"></div>
-    <div class="grid">
-      <div class="card"><h3>Persistent Characters</h3><p>Your character continues to grow across contracts, downtime, and server events.</p></div>
-      <div class="card"><h3>Contract-Based Gameplay</h3><p>Adventures are posted as contracts, allowing players to sign up and play at different times.</p></div>
-      <div class="card"><h3>Rank-Based Progression</h3><p>Your level determines your rank, which helps balance contracts, rewards, and item access.</p></div>
-      <div class="card"><h3>Meaningful Consequences</h3><p>Success and failure both matter. The world responds to what players do.</p></div>
-    </div>
-    <div class="callout">Earn your place. Prove your worth. Rise through the ranks.</div>
-  </section>
+<section>
+<h2>Core Concept</h2>
+<div class="rule"></div>
+<div class="grid">
+<div class="card"><h3>Persistent Characters</h3><p>Your character continues to grow across contracts, downtime, and server events.</p></div>
+<div class="card"><h3>Contract-Based Gameplay</h3><p>Adventures are posted as contracts, allowing players to sign up and play at different times.</p></div>
+<div class="card"><h3>Rank-Based Progression</h3><p>Your level determines your rank, which helps balance contracts, rewards, and item access.</p></div>
+<div class="card"><h3>Meaningful Consequences</h3><p>Success and failure both matter. The world responds to what players do.</p></div>
+</div>
+<div class="callout">Earn your place. Prove your worth. Rise through the ranks.</div>
+</section>
 
-  <section id="pp">
-    <h2>Progress Points</h2>
-    <div class="rule"></div>
-    <p><strong>Progress Points</strong> represent time and effort spent on contracts. PP tracks activity and progression within the Company.</p>
-    <table class="rank-table">
-      <thead><tr><th>Progress Points</th><th>Time Played</th></tr></thead>
-      <tbody>
-        <tr><td>1 PP</td><td>2 hours played</td></tr>
-        <tr><td>2 PP</td><td>4 hours played</td></tr>
-        <tr><td>3 PP</td><td>6+ hours played</td></tr>
-      </tbody>
-    </table>
-  </section>
+<section>
+<h2>Progress Points</h2>
+<div class="rule"></div>
+<p><strong>Progress Points</strong> represent time and effort spent on contracts.</p>
+<table class="rank-table">
+<tr><th>Progress Points</th><th>Time Played</th></tr>
+<tr><td>1 PP</td><td>2 hours played</td></tr>
+<tr><td>2 PP</td><td>4 hours played</td></tr>
+<tr><td>3 PP</td><td>6+ hours played</td></tr>
+</table>
+</section>
 
-  <section id="ranks">
-    <h2>Rank System</h2>
-    <div class="rule"></div>
-    <p>Your rank is determined by character level.</p>
-    <table class="rank-table">
-      <thead><tr><th>Rank</th><th>Character Levels</th></tr></thead>
-      <tbody>
-        <tr><td>F Rank</td><td>Levels 1–2</td></tr>
-        <tr><td>E Rank</td><td>Levels 3–5</td></tr>
-        <tr><td>D Rank</td><td>Levels 6–8</td></tr>
-        <tr><td>C Rank</td><td>Levels 9–11</td></tr>
-        <tr><td>B Rank</td><td>Levels 12–14</td></tr>
-        <tr><td>A Rank</td><td>Levels 15–17</td></tr>
-        <tr><td>S Rank</td><td>Levels 18–20</td></tr>
-      </tbody>
-    </table>
-  </section>
+<section>
+<h2>Rank System</h2>
+<div class="rule"></div>
+<table class="rank-table">
+<tr><th>Rank</th><th>Character Levels</th></tr>
+<tr><td>F Rank</td><td>Levels 1–2</td></tr>
+<tr><td>E Rank</td><td>Levels 3–5</td></tr>
+<tr><td>D Rank</td><td>Levels 6–8</td></tr>
+<tr><td>C Rank</td><td>Levels 9–11</td></tr>
+<tr><td>B Rank</td><td>Levels 12–14</td></tr>
+<tr><td>A Rank</td><td>Levels 15–17</td></tr>
+<tr><td>S Rank</td><td>Levels 18–20</td></tr>
+</table>
+</section>
 
-  <section id="contracts">
-    <h2>Contract Rules</h2>
-    <div class="rule"></div>
-    <p>Players may take contracts <strong>one rank above or below</strong> their own. For example, D Rank players may take E, D, or C Rank contracts.</p>
-    <p>For contracts lower than the player's rank, they earn <strong>Gold and Work Hours</strong>, but do not earn PP.</p>
-    <div class="callout warning">
-      This rule exists to prevent high-rank characters from trivializing low-rank content and to prevent low-rank characters from entering deadly contracts. Attempting contracts above your rank is dangerous and not recommended.
-    </div>
-  </section>
+<section>
+<h2>Contract Rules</h2>
+<div class="rule"></div>
+<p>Players may take contracts <strong>one rank above or below</strong> their own.</p>
+<p>For contracts lower than the player's rank, they earn <strong>Gold and Work Hours</strong>, but do not earn PP.</p>
+<div class="callout warning">Attempting contracts above your rank is dangerous and not recommended.</div>
+</section>
 
-  <section id="items">
-    <h2>Magic Item Restrictions</h2>
-    <div class="rule"></div>
-    <p>To keep the server balanced, magic item usage is rank-locked. Loot and usage must always match your current rank.</p>
-    <table class="rank-table">
-      <thead><tr><th>Rank</th><th>Magic Item Access</th></tr></thead>
-      <tbody>
-        <tr><td>E Rank</td><td>Common</td></tr>
-        <tr><td>D Rank</td><td>Uncommon</td></tr>
-        <tr><td>C Rank</td><td>Rare</td></tr>
-        <tr><td>B Rank</td><td>Rare</td></tr>
-        <tr><td>B+ Rank &amp; A Rank</td><td>Very Rare</td></tr>
-        <tr><td>S Rank</td><td>Legendary</td></tr>
-      </tbody>
-    </table>
-  </section>
+<section>
+<h2>Magic Item Restrictions</h2>
+<div class="rule"></div>
+<table class="rank-table">
+<tr><th>Rank</th><th>Magic Item Access</th></tr>
+<tr><td>E Rank</td><td>Common</td></tr>
+<tr><td>D Rank</td><td>Uncommon</td></tr>
+<tr><td>C Rank</td><td>Rare</td></tr>
+<tr><td>B Rank</td><td>Rare</td></tr>
+<tr><td>B+ Rank &amp; A Rank</td><td>Very Rare</td></tr>
+<tr><td>S Rank</td><td>Legendary</td></tr>
+</table>
+</section>
 
-  <section id="rewards">
-    <h2>Contract Gold Rewards</h2>
-    <div class="rule"></div>
-    <div class="grid">
-      <div class="card">
-        <h3>Quests</h3>
-        <table class="reward-table">
-          <thead><tr><th>Rank</th><th>Gold</th></tr></thead>
-          <tbody>
-            <tr><td>F</td><td>3–10 gp</td></tr>
-            <tr><td>E</td><td>15–50 gp</td></tr>
-            <tr><td>D</td><td>75–125 gp</td></tr>
-            <tr><td>C</td><td>200–300 gp</td></tr>
-            <tr><td>B</td><td>500–1,000 gp</td></tr>
-            <tr><td>A</td><td>1,500–2,500 gp</td></tr>
-            <tr><td>S</td><td>4,000–5,000 gp</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="card">
-        <h3>Dungeons</h3>
-        <table class="reward-table">
-          <thead><tr><th>Rank</th><th>Gold</th></tr></thead>
-          <tbody>
-            <tr><td>F</td><td>5–15 gp</td></tr>
-            <tr><td>E</td><td>30–75 gp</td></tr>
-            <tr><td>D</td><td>115–200 gp</td></tr>
-            <tr><td>C</td><td>300–500 gp</td></tr>
-            <tr><td>B</td><td>750–1,500 gp</td></tr>
-            <tr><td>A</td><td>2,500–4,000 gp</td></tr>
-            <tr><td>S</td><td>5,000–10,000 gp</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="callout">Final payouts are determined by the DM, based on contract difficulty, time invested, and party performance.</div>
-  </section>
+<section>
+<h2>Contract Gold Rewards</h2>
+<div class="rule"></div>
+<div class="grid">
+<div class="card">
+<h3>Quests</h3>
+<table class="reward-table">
+<tr><th>Rank</th><th>Gold</th></tr>
+<tr><td>F</td><td>3–10 gp</td></tr>
+<tr><td>E</td><td>15–50 gp</td></tr>
+<tr><td>D</td><td>75–125 gp</td></tr>
+<tr><td>C</td><td>200–300 gp</td></tr>
+<tr><td>B</td><td>500–1,000 gp</td></tr>
+<tr><td>A</td><td>1,500–2,500 gp</td></tr>
+<tr><td>S</td><td>4,000–5,000 gp</td></tr>
+</table>
+</div>
 
-  <section id="work-hours">
-    <h2>Work Hours</h2>
-    <div class="rule"></div>
-    <p>After each completed contract, players earn <strong>32 Work Hours</strong>.</p>
-    <div class="grid">
-      <div class="card"><h3>Used For</h3><p>Training and crafting.</p></div>
-      <div class="card"><h3>Spend Before Next Contract</h3><p>Work Hours must be spent before your next contract.</p></div>
-      <div class="card"><h3>Unused Hours</h3><p>Unused hours are lost. Plan wisely.</p></div>
-      <div class="card"><h3>Crafting</h3><p>Use Work Hours with the crafting guide to create items, train, or prepare for future contracts.</p></div>
-    </div>
-  </section>
+<div class="card">
+<h3>Dungeons</h3>
+<table class="reward-table">
+<tr><th>Rank</th><th>Gold</th></tr>
+<tr><td>F</td><td>5–15 gp</td></tr>
+<tr><td>E</td><td>30–75 gp</td></tr>
+<tr><td>D</td><td>115–200 gp</td></tr>
+<tr><td>C</td><td>300–500 gp</td></tr>
+<tr><td>B</td><td>750–1,500 gp</td></tr>
+<tr><td>A</td><td>2,500–4,000 gp</td></tr>
+<tr><td>S</td><td>5,000–10,000 gp</td></tr>
+</table>
+</div>
+</div>
+<div class="callout">Final payouts are determined by the DM.</div>
+</section>
 
-  <section id="failure">
-    <h2>Contract Failure &amp; World Consequences</h2>
-    <div class="rule"></div>
-    <p><strong>Failure matters.</strong></p>
-    <div class="grid">
-      <div class="card"><h3>Possible Contract Losses</h3><ul><li>No gold</li><li>No Progress Points</li><li>No loot or components, at DM discretion</li></ul></div>
-      <div class="card"><h3>World Response</h3><ul><li>Enemy factions gain ground</li><li>Regions become more dangerous</li><li>Future contracts increase in difficulty</li><li>Company reputation may suffer</li></ul></div>
-    </div>
-    <div class="callout warning">The world remembers.</div>
-  </section>
+<section>
+<h2>Work Hours</h2>
+<div class="rule"></div>
+<p>After each completed contract, players earn <strong>32 Work Hours</strong>.</p>
+<div class="grid">
+<div class="card"><h3>Used For</h3><p>Training and crafting.</p></div>
+<div class="card"><h3>Spend Before Next Contract</h3><p>Work Hours must be spent before your next contract.</p></div>
+<div class="card"><h3>Unused Hours</h3><p>Unused hours are lost.</p></div>
+<div class="card"><h3>Crafting</h3><p>Use Work Hours with the crafting guide.</p></div>
+</div>
+</section>
 
-  <section id="crafting">
-    <h2>Item Masters, Crafting &amp; The Company Vault</h2>
-    <div class="rule"></div>
-    <p>Gold earned through contracts can be used to:</p>
-    <div class="grid">
-      <div class="card"><h3>Commission Items</h3><p>Commission magic items from Item Masters.</p></div>
-      <div class="card"><h3>Craft Gear</h3><p>Craft items using earned components.</p></div>
-      <div class="card"><h3>Company Vault</h3><p>Purchase materials from the Company Vault.</p></div>
-      <div class="card"><h3>Player Trade</h3><p>Trade gold, items, or components with other players.</p></div>
-    </div>
-    <div class="callout">Item Masters are DMs entrusted with crafting and balance oversight.</div>
-  </section>
+<section>
+<h2>Contract Failure &amp; World Consequences</h2>
+<div class="rule"></div>
+<p><strong>Failure matters.</strong></p>
+<div class="grid">
+<div class="card"><h3>Possible Losses</h3><ul><li>No gold</li><li>No PP</li><li>No loot or components</li></ul></div>
+<div class="card"><h3>World Response</h3><ul><li>Enemy factions gain ground</li><li>Regions become more dangerous</li><li>Company reputation may suffer</li></ul></div>
+</div>
+<div class="callout warning">The world remembers.</div>
+</section>
 
-  <section id="signup">
-    <h2>Contract Posting &amp; Sign-Ups</h2>
-    <div class="rule"></div>
-    <p>DMs will post contracts including the contract rank, player limit, and a brief description.</p>
-    <p>Players may freely sign up. Priority goes to players of the intended rank. Extra sign-ups are waitlisted and may be called in if needed.</p>
-  </section>
+<section>
+<h2>Item Masters, Crafting &amp; The Company Vault</h2>
+<div class="rule"></div>
+<div class="grid">
+<div class="card"><h3>Commission Items</h3><p>Commission magic items from Item Masters.</p></div>
+<div class="card"><h3>Craft Gear</h3><p>Craft items using earned components.</p></div>
+<div class="card"><h3>Company Vault</h3><p>Purchase materials from the Company Vault.</p></div>
+<div class="card"><h3>Player Trade</h3><p>Trade gold, items, or components with other players.</p></div>
+</div>
+</section>
 
-  <section id="final">
-    <h2>Final Words</h2>
-    <div class="rule"></div>
-    <p>The Black Banner Company is built on fair progression, meaningful risk, persistent character growth, and respect for DM balance and effort.</p>
-    <div class="callout">
-      Choose your contracts wisely. Earn your banner. Rise through the ranks.
-    </div>
-  </section>
+<section>
+<h2>Contract Posting &amp; Sign-Ups</h2>
+<div class="rule"></div>
+<p>DMs will post contracts including the contract rank, player limit, and a brief description.</p>
+<p>Players may freely sign up. Priority goes to players of the intended rank.</p>
+</section>
 
-  <footer>
-    Black Banner Company · Mercenaries for Coin · Contracts for Glory
-  </footer>
+<section>
+<h2>Final Words</h2>
+<div class="rule"></div>
+<p>The Black Banner Company is built on fair progression, meaningful risk, persistent character growth, and respect for DM balance and effort.</p>
+<div class="callout">Choose your contracts wisely. Earn your banner. Rise through the ranks.</div>
+</section>
+
+<footer>
+Black Banner Company · Mercenaries for Coin · Contracts for Glory
+</footer>
+
 </div>
 </body>
 </html>
