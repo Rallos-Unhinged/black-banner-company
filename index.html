@@ -84,9 +84,8 @@ body::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url('data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAQAElEQVR4Aey9B3ycxZ3//9ldFRuwtbIJuGmLXAAfYBtSaLYlGQiplOSXSrMh4XJJjpS7y10SCIGUy10u/Z87ktAh5S69Uyy50JIQjAmh2JZ2tXKD[...]
-  background-size: min(800px, 86vw);
-  opacity: .10;
+  background: linear-gradient(135deg, rgba(212,91,31,.15), rgba(141,38,38,.1));
+  opacity: .5;
   filter: grayscale(30%) contrast(120%);
   pointer-events: none;
 }
@@ -101,12 +100,19 @@ body::before {
 
 .logo {
   width: min(300px, 72vw);
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
   margin: 0 auto 1.4rem;
   filter: drop-shadow(0 0 32px rgba(212,91,31,.42));
   position: relative;
   z-index: 2;
   border-radius: 14px;
+  background: rgba(216,166,59,.08);
+  border: 1px solid rgba(216,166,59,.3);
+  font-size: 4rem;
+  color: var(--gold);
 }
 
 .eyebrow {
@@ -318,7 +324,7 @@ footer {
   <div class="page">
     <header class="hero">
       <div class="hero-card">
-        <img class="logo" src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAQAElEQVR4Aey9B3ycxZ3//9ldFRuwtbIJuGmLXAAfYBtSaLYlGQiplOSXSrMh4XJJjpS7y10SCIGUy10u/Z87ktAh5S69Uyy50JIQjAmh2JZ2tXKD[...]
+        <div class="logo">⚔️</div>
         <div class="eyebrow">Persistent Dungeons & Dragons 5e Community</div>
         <h1>Black Banner<br>Company</h1>
         <p class="tagline">Mercenaries. Adventurers. Legends.</p>
