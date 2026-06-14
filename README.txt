@@ -1,0 +1,1 @@
+Replace each index.html with your finished guide files and upload the entire folder to a GitHub repository.
