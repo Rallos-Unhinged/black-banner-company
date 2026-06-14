@@ -84,8 +84,9 @@ body::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(212,91,31,.15), rgba(141,38,38,.1));
-  opacity: .5;
+  background: url("./images/black_banner_epic.gif") center center no-repeat;
+  background-size: min(800px, 86vw);
+  opacity: .10;
   filter: grayscale(30%) contrast(120%);
   pointer-events: none;
 }
@@ -100,19 +101,12 @@ body::before {
 
 .logo {
   width: min(300px, 72vw);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 150px;
+  display: block;
   margin: 0 auto 1.4rem;
   filter: drop-shadow(0 0 32px rgba(212,91,31,.42));
   position: relative;
   z-index: 2;
   border-radius: 14px;
-  background: rgba(216,166,59,.08);
-  border: 1px solid rgba(216,166,59,.3);
-  font-size: 4rem;
-  color: var(--gold);
 }
 
 .eyebrow {
@@ -324,7 +318,8 @@ footer {
   <div class="page">
     <header class="hero">
       <div class="hero-card">
-        <div class="logo">⚔️</div>
+        <img class="logo" src="./images/black_banner_epic.gif" alt="Black Banner Company Logo">
+
         <div class="eyebrow">Persistent Dungeons & Dragons 5e Community</div>
         <h1>Black Banner<br>Company</h1>
         <p class="tagline">Mercenaries. Adventurers. Legends.</p>
@@ -336,7 +331,7 @@ footer {
         <div class="buttons">
           <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank">Join Our Discord</a>
           <a class="btn" href="player-guide/">Player Guide</a>
-          <a class="btn" href="https://rallos-unhinged.github.io/black-banner-crafting-guide/" target="_blank">Crafting Guide</a>
+          <a class="btn" href="crafting-guide/">Crafting Guide</a>
           <a class="btn" href="bastions/">Bastions of the Black</a>
         </div>
       </div>
@@ -430,7 +425,8 @@ footer {
       <div class="buttons">
         <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank">Join Our Discord</a>
         <a class="btn" href="player-guide/">Read Player Guide</a>
-        <a class="btn" href="https://rallos-unhinged.github.io/black-banner-crafting-guide/" target="_blank">Open Crafting Guide</a>
+        <a class="btn" href="crafting-guide/">Open Crafting Guide</a>
+        <a class="btn" href="bastions/">Bastions of the Black</a>
       </div>
     </section>
 
