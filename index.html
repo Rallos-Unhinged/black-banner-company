@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Black Banner Company</title>
+
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
 
@@ -17,7 +18,7 @@
   --blood: #8d2626;
   --text: #efe4cc;
   --muted: #c6b99c;
-  --faint: rgba(216,166,59,.28);
+  --faint: rgba(216, 166, 59, 0.28);
 }
 
 * {
@@ -33,8 +34,8 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top center, rgba(212,91,31,.18), transparent 32rem),
-    radial-gradient(circle at bottom center, rgba(216,166,59,.08), transparent 36rem),
+    radial-gradient(circle at top center, rgba(212, 91, 31, 0.18), transparent 32rem),
+    radial-gradient(circle at bottom center, rgba(216, 166, 59, 0.08), transparent 36rem),
     linear-gradient(180deg, #090604 0%, #050505 48%, #080705 100%);
   color: var(--text);
   font-family: 'Crimson Pro', Georgia, serif;
@@ -47,8 +48,14 @@ body::before {
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.86) 100%),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.018), rgba(255,255,255,.018) 1px, transparent 1px, transparent 5px);
+    radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.18) 55%, rgba(0, 0, 0, 0.86) 100%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.018),
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px,
+      transparent 5px
+    );
   pointer-events: none;
   z-index: 0;
 }
@@ -71,10 +78,12 @@ body::before {
 .hero-card {
   width: 100%;
   background:
-    linear-gradient(rgba(0,0,0,.42), rgba(0,0,0,.76)),
+    linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.76)),
     var(--panel);
-  border: 1px solid rgba(216,166,59,.55);
-  box-shadow: 0 2rem 5rem rgba(0,0,0,.75), inset 0 0 4rem rgba(216,166,59,.05);
+  border: 1px solid rgba(216, 166, 59, 0.55);
+  box-shadow:
+    0 2rem 5rem rgba(0, 0, 0, 0.75),
+    inset 0 0 4rem rgba(216, 166, 59, 0.05);
   padding: clamp(1.5rem, 4vw, 4rem);
   position: relative;
   overflow: hidden;
@@ -86,7 +95,7 @@ body::before {
   inset: 0;
   background: url("./images/black_banner_epic.gif") center center no-repeat;
   background-size: min(800px, 86vw);
-  opacity: .10;
+  opacity: 0.10;
   filter: grayscale(30%) contrast(120%);
   pointer-events: none;
 }
@@ -95,7 +104,7 @@ body::before {
   content: "";
   position: absolute;
   inset: 1rem;
-  border: 1px solid rgba(216,166,59,.16);
+  border: 1px solid rgba(216, 166, 59, 0.16);
   pointer-events: none;
 }
 
@@ -103,7 +112,7 @@ body::before {
   width: min(300px, 72vw);
   display: block;
   margin: 0 auto 1.4rem;
-  filter: drop-shadow(0 0 32px rgba(212,91,31,.42));
+  filter: drop-shadow(0 0 32px rgba(212, 91, 31, 0.42));
   position: relative;
   z-index: 2;
   border-radius: 14px;
@@ -113,9 +122,9 @@ body::before {
   font-family: 'Fira Mono', monospace;
   color: var(--gold);
   text-transform: uppercase;
-  letter-spacing: .18em;
-  font-size: .72rem;
-  margin-bottom: .8rem;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  margin-bottom: 0.8rem;
   position: relative;
   z-index: 2;
 }
@@ -123,11 +132,11 @@ body::before {
 h1 {
   font-family: 'Cinzel', serif;
   font-size: clamp(2.4rem, 8vw, 5.6rem);
-  line-height: .95;
-  letter-spacing: .03em;
+  line-height: 0.95;
+  letter-spacing: 0.03em;
   color: var(--gold);
-  text-shadow: 0 .2rem 1rem rgba(0,0,0,.9);
-  margin-bottom: .8rem;
+  text-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.9);
+  margin-bottom: 0.8rem;
   position: relative;
   z-index: 2;
 }
@@ -154,7 +163,7 @@ h1 {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: .85rem;
+  gap: 0.85rem;
   margin-top: 2rem;
   position: relative;
   z-index: 2;
@@ -165,27 +174,34 @@ h1 {
   align-items: center;
   justify-content: center;
   min-width: 190px;
-  padding: .85rem 1.1rem;
-  border: 1px solid rgba(216,166,59,.65);
+  padding: 0.85rem 1.1rem;
+  border: 1px solid rgba(216, 166, 59, 0.65);
   color: var(--gold-soft);
   text-decoration: none;
   font-family: 'Cinzel', serif;
-  font-size: .78rem;
-  letter-spacing: .09em;
+  font-size: 0.78rem;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  background: rgba(216,166,59,.08);
-  transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+  background: rgba(216, 166, 59, 0.08);
+  transition:
+    transform 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  background: rgba(216,166,59,.18);
-  box-shadow: 0 0 22px rgba(216,166,59,.18);
+  background: rgba(216, 166, 59, 0.18);
+  box-shadow: 0 0 22px rgba(216, 166, 59, 0.18);
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, rgba(141,38,38,.72), rgba(216,166,59,.18));
-  border-color: rgba(241,217,148,.8);
+  background: linear-gradient(
+    135deg,
+    rgba(141, 38, 38, 0.72),
+    rgba(216, 166, 59, 0.18)
+  );
+  border-color: rgba(241, 217, 148, 0.8);
 }
 
 section {
@@ -193,35 +209,40 @@ section {
   padding: clamp(1.25rem, 3vw, 2.25rem);
   background: var(--panel);
   border: 1px solid var(--faint);
-  box-shadow: 0 1.25rem 3rem rgba(0,0,0,.35);
+  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.35);
 }
 
 h2 {
   font-family: 'Cinzel', serif;
   color: var(--gold);
   font-size: clamp(1.35rem, 3vw, 2rem);
-  margin-bottom: .6rem;
-  letter-spacing: .04em;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.04em;
 }
 
 h3 {
   font-family: 'Cinzel', serif;
   color: var(--gold-soft);
   font-size: 1rem;
-  margin-bottom: .35rem;
-  letter-spacing: .04em;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 p {
-  margin-bottom: .8rem;
+  margin-bottom: 0.8rem;
 }
 
 .rule {
   width: 100%;
   height: 1px;
   margin: 1rem 0 1.2rem;
-  background: linear-gradient(90deg, transparent, rgba(216,166,59,.75), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(216, 166, 59, 0.75),
+    transparent
+  );
 }
 
 .grid {
@@ -233,14 +254,14 @@ p {
 
 .feature {
   background: var(--panel2);
-  border: 1px solid rgba(216,166,59,.22);
+  border: 1px solid rgba(216, 166, 59, 0.22);
   padding: 1rem;
   min-height: 150px;
 }
 
 .feature p {
   color: var(--muted);
-  font-size: .98rem;
+  font-size: 0.98rem;
   margin: 0;
 }
 
@@ -252,8 +273,8 @@ p {
 }
 
 .tool-card {
-  background: rgba(0,0,0,.24);
-  border: 1px solid rgba(216,166,59,.22);
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(216, 166, 59, 0.22);
   padding: 1.1rem;
   text-align: center;
 }
@@ -263,14 +284,14 @@ p {
   font-family: 'Cinzel', serif;
   color: var(--gold-soft);
   text-transform: uppercase;
-  letter-spacing: .08em;
-  font-size: .82rem;
-  margin-bottom: .35rem;
+  letter-spacing: 0.08em;
+  font-size: 0.82rem;
+  margin-bottom: 0.35rem;
 }
 
 .tool-card span {
   color: var(--muted);
-  font-size: .96rem;
+  font-size: 0.96rem;
 }
 
 .tool-card .btn {
@@ -282,7 +303,7 @@ p {
 .callout {
   margin-top: 1.2rem;
   border-left: 4px solid var(--ember);
-  background: rgba(212,91,31,.08);
+  background: rgba(212, 91, 31, 0.08);
   padding: 1rem 1.2rem;
   color: var(--gold-soft);
 }
@@ -291,14 +312,15 @@ footer {
   text-align: center;
   color: #9d854a;
   font-family: 'Cinzel', serif;
-  font-size: .72rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   padding: 2rem 0 3rem;
 }
 
 @media (max-width: 860px) {
-  .grid, .tools {
+  .grid,
+  .tools {
     grid-template-columns: 1fr;
   }
 
@@ -316,125 +338,254 @@ footer {
 
 <body>
   <div class="page">
+
     <header class="hero">
       <div class="hero-card">
-        <img class="logo" src="./images/black_banner_epic.gif" alt="Black Banner Company Logo">
 
-        <div class="eyebrow">Persistent Dungeons & Dragons 5e Community</div>
-        <h1>Black Banner<br>Company</h1>
-        <p class="tagline">Mercenaries. Adventurers. Legends.</p>
-        <p class="intro">
-          Welcome to the Black Banner Company, a living Westmarch-style Dungeons & Dragons community set in the world of Thracia.
-          Take contracts, forge your legend, craft powerful gear, build your Bastion, and leave your mark beneath the Banner.
+        <img
+          class="logo"
+          src="./images/black_banner_epic.gif"
+          alt="Black Banner Company Logo"
+        >
+
+        <div class="eyebrow">
+          Persistent Dungeons &amp; Dragons 5e Community
+        </div>
+
+        <h1>
+          Black Banner<br>
+          Company
+        </h1>
+
+        <p class="tagline">
+          Mercenaries. Adventurers. Legends.
         </p>
 
-       <div class="buttons">
-  <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank">Join Our Discord</a>
-  <a class="btn" href="player-guide/">Player Guide</a>
-  <a class="btn" href="crafting-guide/">Crafting Guide</a>
-  <a class="btn" href="bastions/">Bastions of the Black</a>
-  <a class="btn merch" href="https://black-banner-company.myshopify.com/" target="_blank">⚔️ Merch Store</a>
-</div>
+        <p class="intro">
+          Welcome to the Black Banner Company, a living Westmarch-style
+          Dungeons &amp; Dragons community set in the world of Thracia.
+          Take contracts, forge your legend, craft powerful gear, build your
+          Bastion, and leave your mark beneath the Banner.
+        </p>
+
+        <div class="buttons">
+          <a
+            class="btn primary"
+            href="https://discord.gg/blackbannercompany"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Join Our Discord
+          </a>
+
+          <a class="btn" href="player-guide/">
+            Player Guide
+          </a>
+
+          <a class="btn" href="crafting-guide/">
+            Crafting Guide
+          </a>
+
+          <a class="btn" href="bastions/">
+            Bastions of the Black
+          </a>
         </div>
+
       </div>
     </header>
 
-    <section>
-      <h2>What Is The Black Banner Company?</h2>
-      <div class="rule"></div>
-      <p>
-        The Black Banner Company is a mercenary guild operating from the city of <strong>Drathmere</strong> in the land of
-        <strong>Thracia</strong>. Players take on contracts ranging from monster hunts and investigations to political intrigue,
-        dangerous expeditions, and server-wide events that shape the future of the world.
-      </p>
-      <p>
-        Instead of following a single campaign, the server runs as a persistent shared world where player choices matter.
-        Every contract can leave a mark. Every character can build a reputation. Every victory, failure, bargain, and discovery
-        becomes part of the Company's history.
-      </p>
-    </section>
+    <main>
 
-    <section>
-      <h2>What We Offer</h2>
-      <div class="rule"></div>
-      <div class="grid">
-        <div class="feature">
-          <h3>⚔️ Living World</h3>
-          <p>Join a persistent setting that evolves through contracts, player actions, discoveries, and server-wide events.</p>
-        </div>
-        <div class="feature">
-          <h3>🎲 Active Games</h3>
-          <p>Participate in adventures hosted by Dungeon Masters across multiple character ranks and storylines.</p>
-        </div>
-        <div class="feature">
-          <h3>📖 Character Growth</h3>
-          <p>Earn rewards, improve your reputation, level your character, and unlock new opportunities within the Company.</p>
-        </div>
-        <div class="feature">
-          <h3>⚒️ Crafting</h3>
-          <p>Harvest rare materials, brew potions, forge weapons, craft armor, and create specialized equipment.</p>
-        </div>
-        <div class="feature">
-          <h3>🏰 Bastions</h3>
-          <p>Build and expand your own stronghold, develop rooms, recruit hirelings, and create a lasting legacy.</p>
-        </div>
-        <div class="feature">
-          <h3>🧙 Roleplay</h3>
-          <p>Tell your character's story through guild hall roleplay, contracts, downtime, politics, and personal ambition.</p>
-        </div>
-      </div>
-    </section>
+      <section>
+        <h2>What Is The Black Banner Company?</h2>
+        <div class="rule"></div>
 
-    <section>
-      <h2>Required Tools</h2>
-      <div class="rule"></div>
-      <div class="tools">
-        <div class="tool-card">
-          <strong>Discord</strong>
-          <span>Community hub, roleplay, announcements, and scheduling.</span>
-          <br>
-          <a class="btn" href="https://discord.com/" target="_blank">Get Discord</a>
-        </div>
-        <div class="tool-card">
-          <strong>D&amp;D Beyond</strong>
-          <span>Used for character sheets and character management.</span>
-          <br>
-          <a class="btn" href="https://www.dndbeyond.com/" target="_blank">Visit D&amp;D Beyond</a>
-        </div>
-        <div class="tool-card">
-          <strong>TaleSpire</strong>
-          <span>Our primary virtual tabletop for contracts and events.</span>
-          <br>
-          <a class="btn" href="https://store.steampowered.com/app/720620/TaleSpire/" target="_blank">Get TaleSpire</a>
-        </div>
-      </div>
+        <p>
+          The Black Banner Company is a mercenary guild operating from the
+          city of <strong>Drathmere</strong> in the land of
+          <strong>Thracia</strong>. Players take on contracts ranging from
+          monster hunts and investigations to political intrigue, dangerous
+          expeditions, and server-wide events that shape the future of the
+          world.
+        </p>
 
-      <div class="callout">
-        New to the Company? Join the Discord, read the Player Guide, and introduce yourself beneath the Banner.
-      </div>
-    </section>
+        <p>
+          Instead of following a single campaign, the server runs as a
+          persistent shared world where player choices matter. Every contract
+          can leave a mark. Every character can build a reputation. Every
+          victory, failure, bargain, and discovery becomes part of the
+          Company's history.
+        </p>
+      </section>
 
-    <section>
-      <h2>Join The Company</h2>
-      <div class="rule"></div>
-      <p>
-        The road ahead is dangerous. Ancient powers stir in forgotten places. Fortunes wait to be claimed.
-        Legends wait to be written.
-      </p>
-      <p>
-        The question is simple: <strong>will your name be remembered beneath the Black Banner?</strong>
-      </p>
-      <div class="buttons">
-        <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank">Join Our Discord</a>
-        <a class="btn" href="player-guide/">Read Player Guide</a>
-        <a class="btn" href="crafting-guide/">Open Crafting Guide</a>
-        <a class="btn" href="bastions/">Bastions of the Black</a>
-      </div>
-    </section>
+      <section>
+        <h2>What We Offer</h2>
+        <div class="rule"></div>
+
+        <div class="grid">
+
+          <div class="feature">
+            <h3>⚔️ Living World</h3>
+            <p>
+              Join a persistent setting that evolves through contracts,
+              player actions, discoveries, and server-wide events.
+            </p>
+          </div>
+
+          <div class="feature">
+            <h3>🎲 Active Games</h3>
+            <p>
+              Participate in adventures hosted by Dungeon Masters across
+              multiple character ranks and storylines.
+            </p>
+          </div>
+
+          <div class="feature">
+            <h3>📖 Character Growth</h3>
+            <p>
+              Earn rewards, improve your reputation, level your character,
+              and unlock new opportunities within the Company.
+            </p>
+          </div>
+
+          <div class="feature">
+            <h3>⚒️ Crafting</h3>
+            <p>
+              Harvest rare materials, brew potions, forge weapons, craft
+              armor, and create specialized equipment.
+            </p>
+          </div>
+
+          <div class="feature">
+            <h3>🏰 Bastions</h3>
+            <p>
+              Build and expand your own stronghold, develop rooms, recruit
+              hirelings, and create a lasting legacy.
+            </p>
+          </div>
+
+          <div class="feature">
+            <h3>🧙 Roleplay</h3>
+            <p>
+              Tell your character's story through guild hall roleplay,
+              contracts, downtime, politics, and personal ambition.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <h2>Required Tools</h2>
+        <div class="rule"></div>
+
+        <div class="tools">
+
+          <div class="tool-card">
+            <strong>Discord</strong>
+            <span>
+              Community hub, roleplay, announcements, and scheduling.
+            </span>
+            <br>
+
+            <a
+              class="btn"
+              href="https://discord.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get Discord
+            </a>
+          </div>
+
+          <div class="tool-card">
+            <strong>D&amp;D Beyond</strong>
+            <span>
+              Used for character sheets and character management.
+            </span>
+            <br>
+
+            <a
+              class="btn"
+              href="https://www.dndbeyond.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit D&amp;D Beyond
+            </a>
+          </div>
+
+          <div class="tool-card">
+            <strong>TaleSpire</strong>
+            <span>
+              Our primary virtual tabletop for contracts and events.
+            </span>
+            <br>
+
+            <a
+              class="btn"
+              href="https://store.steampowered.com/app/720620/TaleSpire/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get TaleSpire
+            </a>
+          </div>
+
+        </div>
+
+        <div class="callout">
+          New to the Company? Join the Discord, read the Player Guide, and
+          introduce yourself beneath the Banner.
+        </div>
+      </section>
+
+      <section>
+        <h2>Join The Company</h2>
+        <div class="rule"></div>
+
+        <p>
+          The road ahead is dangerous. Ancient powers stir in forgotten
+          places. Fortunes wait to be claimed. Legends wait to be written.
+        </p>
+
+        <p>
+          The question is simple:
+          <strong>
+            will your name be remembered beneath the Black Banner?
+          </strong>
+        </p>
+
+        <div class="buttons">
+          <a
+            class="btn primary"
+            href="https://discord.gg/blackbannercompany"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Join Our Discord
+          </a>
+
+          <a class="btn" href="player-guide/">
+            Read Player Guide
+          </a>
+
+          <a class="btn" href="crafting-guide/">
+            Open Crafting Guide
+          </a>
+
+          <a class="btn" href="bastions/">
+            Bastions of the Black
+          </a>
+        </div>
+      </section>
+
+    </main>
 
     <footer>
       Black Banner Company · Thracia · Drathmere · Forge, Craft, Harvest, Prosper
     </footer>
+
   </div>
 </body>
 </html>
