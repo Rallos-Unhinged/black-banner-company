@@ -156,16 +156,48 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 
 <section class="guide-section" id="building">
 <h2 class="sec-title">Building & Costs <span class="tag">Construction</span></h2>
-<div class="callout"><strong>Starting Your Bastion</strong>To start your Bastion, build any Basic Facility. Once that first facility is completed, your Bastion officially exists. All Basic Facilities begin as Cramped and must be upgraded step by step. You cannot skip directly from Cramped to Vast.</div>
-<div class="callout info"><strong>Construction Turns</strong>Every time you get a workweek reset, you also get a Construction Turn. A Construction Turn does not take any workweek hours. You can only build one facility at a time unless a rule specifically says otherwise. Facilities become operational at the start of the turn after completion.</div>
-<h3 class="sub-title">Basic Facility Build Costs</h3>
-<div class="table-wrap"><table><thead><tr><th>Size</th><th>Build Cost</th><th>Construction Turns</th><th>Map Area</th></tr></thead><tbody>
-<tr><td>Cramped</td><td>250g</td><td>3 turns</td><td>4 squares</td></tr>
-<tr><td>Roomy</td><td>500g</td><td>4 turns</td><td>16 squares</td></tr>
-<tr><td>Vast</td><td>2,000g</td><td>11 turns</td><td>36 squares</td></tr>
+<div class="callout"><strong>Starting Your Bastion</strong>To start your Bastion, build any Basic Facility. Once that first facility is completed, your Bastion officially exists. All Basic Facilities begin at <b>D-Rank and Cramped size</b>.</div>
+<p>Basic Facilities are rooms every Bastion can have, while Special Facilities are more specialized rooms that expand your character’s skills, story, or influence. You may build one of every Basic Facility unless a rule says otherwise. Some facilities, such as additional Barracks beyond the first, use Special Facility slots even though they continue to upgrade like Basic Facilities.</p>
+<p>You may only build one facility at a time. Finish the current facility before beginning another so construction progress remains clear.</p>
+
+<h3 class="sub-title">Basic Facilities</h3>
+<div class="table-wrap"><table><thead><tr><th>Basic Facility</th></tr></thead><tbody>
+<tr><td>Barracks</td></tr>
+<tr><td>Battlements (Walls)</td></tr>
+<tr><td>Bedroom</td></tr>
+<tr><td>Dining Room</td></tr>
+<tr><td>Harvestarium</td></tr>
+<tr><td>Humble Exterior</td></tr>
+<tr><td>Kitchen</td></tr>
+<tr><td>Parlor</td></tr>
+<tr><td>Shop</td></tr>
+<tr><td>Storage</td></tr>
+<tr><td>Well Room</td></tr>
 </tbody></table></div>
-<h3 class="sub-title">Upgrading Facility Rank</h3>
-<div class="table-wrap"><table><thead><tr><th>Target Rank</th><th>Cost</th></tr></thead><tbody><tr><td>C</td><td>500g</td></tr><tr><td>B</td><td>1,000g</td></tr><tr><td>A</td><td>2,000g</td></tr><tr><td>S</td><td>4,000g</td></tr></tbody></table></div>
+
+<div class="callout info"><strong>Construction Turns</strong>Every time you get a workweek reset, you also get a Construction Turn. A Construction Turn does not use workweek hours. Facilities become operational at the start of the turn after completion.</div>
+
+<h3 class="sub-title">Building a New Basic Facility</h3>
+<div class="table-wrap"><table><thead><tr><th>Starting Size</th><th>Build Cost</th><th>Construction Turns</th><th>Map Area</th></tr></thead><tbody>
+<tr><td>Cramped</td><td>250 GP</td><td>3 turns</td><td>4 squares</td></tr>
+</tbody></table></div>
+
+<h3 class="sub-title">Increasing Basic Facility Size</h3>
+<p>The cost and time required to increase a Basic Facility depends on its current size. These costs stay the same regardless of facility rank.</p>
+<div class="table-wrap"><table><thead><tr><th>Space Increase</th><th>GP Cost</th><th>Time Required</th><th>Resulting Map Area</th></tr></thead><tbody>
+<tr><td>Cramped to Roomy</td><td>500 GP</td><td>4 Construction Turns</td><td>16 squares</td></tr>
+<tr><td>Roomy to Vast</td><td>2,000 GP</td><td>11 Construction Turns</td><td>36 squares</td></tr>
+</tbody></table></div>
+
+<h3 class="sub-title">Upgrading Basic Facility Rank</h3>
+<p>To increase a Basic Facility’s rank, pay the listed gold cost. There is no additional construction time. The cost represents new hardware, reinforced structures, and specialized equipment.</p>
+<div class="table-wrap"><table><thead><tr><th>Target Rank</th><th>Cost</th></tr></thead><tbody>
+<tr><td>C</td><td>500 GP</td></tr>
+<tr><td>B</td><td>1,000 GP</td></tr>
+<tr><td>A</td><td>2,000 GP</td></tr>
+<tr><td>S</td><td>4,000 GP</td></tr>
+</tbody></table></div>
+
 <div class="callout moss"><strong>Construction Cost Reductions</strong>Carpenter's Tools or Mason's Tools reduce Individual Bastion building costs by 10% each. If you have both, the discounts add together. If using Trance to gain the tool proficiency, the proficiency must be locked in for the entire build time.</div>
 </section>
 
@@ -199,21 +231,48 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 
 <section class="guide-section" id="defense">
 <h2 class="sec-title">Defending Your Bastion <span class="tag">Combat</span></h2>
-<p>You cannot be attacked until you have at least four facilities in your Bastion. If an attack event happens before then, the enemy ignores you.</p>
-<p>Barracks, Graveyards, and Menageries let you hire or house Defenders. Some events can grant extra Defenders, such as Mercenary Guest, Ronin, or Duel to the Death. Hiring Defenders from a Barracks does not cost gold, but other events and facilities might.</p>
-<p>Bastion combat works by rolling a Defender's combat die. If the roll is 3 or lower, the Defender dies but successfully kills their adversary. This can be improved by Battlements or an Armory. Barracks and Graveyard Defenders normally use a d6, beasts may range from d6 to d12, and Knights use d12.</p>
-<div class="callout iron"><strong>Event Combat Note</strong>Unless otherwise stated, any event that requires a Defender to roll a combat die uses the normal Bastion combat rules. A Defender that rolls within their death threshold is killed. Improvements from Battlements, Armory, or other Bastion features apply if they would normally apply.</div>
-<p>You may sacrifice Battlements to repel an attack, or release a Friendly Monster if you have one. Repelling an attack by destroying Battlements or a similar defense grants no reward.</p>
-<p>Siege weapons block a set number of attackers or deal damage during an Invasion. Ballistas kill 6 attackers or deal 3d10. Catapults kill 8 attackers or deal 10d6. Cannons kill 16 attackers or deal 8d10.</p>
+<p>Some events send attackers against your Bastion, threatening to destroy facilities and kill everyone inside. Battlements, Defenders, Armories, and siege weapons are the primary tools used to withstand these attacks.</p>
+<p>You cannot be attacked until you have at least four facilities of any type. If an attack event occurs before then, the enemy ignores your Bastion.</p>
+<p>Barracks, Graveyards, and Menageries allow you to hire or house Defenders. Some events can grant extra Defenders who provide their own housing, such as Mercenary Guest, Ronin, or Duel to the Death.</p>
+<p>Hiring Defenders from a Barracks does not cost gold, though Defenders gained from other events or facilities might.</p>
+
+<h3 class="sub-title">Defender Combat</h3>
+<p>Bastion combat works by rolling a Defender’s combat die. If the result is within that Defender’s death threshold, the Defender dies but still kills the attacker they blocked.</p>
+<ul>
+<li>Normal Barracks and Graveyard Defenders use a d6 and normally die on a 3 or lower.</li>
+<li>Beasts from a Menagerie may use anything from a d6 to a d12.</li>
+<li>Knights use a d12.</li>
+<li>Battlements, an Armory, and other Bastion features can reduce the death threshold.</li>
+</ul>
+<div class="callout iron"><strong>Event Combat Note</strong>Unless otherwise stated, any event that requires a Defender to roll a combat die uses the normal Bastion combat rules. A Defender that rolls within their death threshold is killed. Improvements from Battlements, Armory, or other Bastion features apply when relevant.</div>
+
+<p>A Defender blocks one attacker at a time. If the Defender survives, they may immediately block another attacker. For ease of play, roll a number of combat dice equal to the number of attackers and count through the results until either all attackers are blocked or all available Defenders are dead.</p>
+
+<div class="callout info"><strong>Combat Example</strong>A force of 6 attackers assaults a Bastion with 4 d6 Defenders and fully upgraded Battlements. Roll 6d6, one die per attacker. Suppose the results are 5, 5, 4, 5, 1, and 6. Fully upgraded Battlements reduce the Defenders’ death threshold to 1. The first four attacks are blocked, one Defender dies on the fifth result, and the surviving Defenders block the sixth attacker. The Bastion is victorious.</div>
+
+<p>If fully upgraded Battlements and the appropriate Armory upgrades cause your home Defenders to fight with d8s, roll d8s instead of d6s when defending your own Bastion. Different Defender types, such as Knights using d12s, are best rolled before or after the normal Defenders so their results remain easy to track.</p>
+<p>It is statistically possible for a single surviving Bastion Defender to hold off a very large force because they may continue blocking attackers until they roll within their death threshold.</p>
+
+<h3 class="sub-title">Repelling Attacks</h3>
+<p>You may sacrifice Battlements to repel an attack after your Defenders are killed, or release a Friendly Monster to drive the attackers away. Repelling an attack by destroying Battlements or using a similar automatic defense grants no Reward.</p>
+
+<h3 class="sub-title">Siege Weapons</h3>
+<p>Siege weapons block a set number of attackers during normal attacks or deal damage during an Invasion.</p>
+<ul>
+<li><b>Ballista:</b> Kills 6 attackers or deals 3d10 damage during an Invasion.</li>
+<li><b>Catapult:</b> Kills 8 attackers or deals 10d6 damage during an Invasion.</li>
+<li><b>Cannon:</b> Kills 16 attackers or deals 8d10 damage during an Invasion.</li>
+</ul>
 </section>
 
 <section class="guide-section" id="fall">
 <h2 class="sec-title">Fall of a Bastion <span class="tag">Core Rules</span></h2>
+<p>You can lose your Bastion in the following ways:</p>
 <div class="table-wrap"><table><thead><tr><th>Cause</th><th>Result</th></tr></thead><tbody>
-<tr><td>Abandonment</td><td>You give up the Bastion, release your hirelings, and abandon the site.</td></tr>
-<tr><td>Neglect</td><td>If no orders are issued for Monthly Turns equal to your Rank, hirelings abandon it and the site is looted. In general, a hiatus of 6 months or more may cause ruin.</td></tr>
-<tr><td>Razed</td><td>If every facility is destroyed and you do not repair at least one within two Monthly Turns, all hirelings leave.</td></tr>
-<tr><td>Transference</td><td>Your Acolyte can inherit the Bastion if you retire your main and play the Acolyte as your next main. Rooms above the Acolyte's rank are locked until they reach that rank.</td></tr>
+<tr><td><b>Abandonment</b></td><td>You may give up your Bastion at any time, release your hirelings, and abandon the location. The Bastion is quickly vacated, eventually looted, and may be burned or otherwise destroyed.</td></tr>
+<tr><td><b>Neglect</b></td><td>If you issue no orders for a number of consecutive Monthly Bastion Turns equal to your Rank, the hirelings abandon the Bastion and the site is eventually looted. In general, a hiatus of six months or more may cause the Bastion to fall into ruin.</td></tr>
+<tr><td><b>Razed</b></td><td>If every facility in your Bastion is destroyed and you do not repair at least one within two Monthly Bastion Turns, all hirelings leave.</td></tr>
+<tr><td><b>Transference</b></td><td>Your Acolyte may inherit the Bastion if you retire your main character and choose the Acolyte as your next main. Facilities above the Acolyte’s rank remain locked until they reach the required rank. To replace an inherited facility with one better suited to the Acolyte, destroy the old facility and pay the normal gold cost and construction time for the replacement. If you choose not to continue with the Acolyte, the Bastion is considered abandoned.</td></tr>
 </tbody></table></div>
 </section>
 
@@ -276,17 +335,128 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 <div class="table-wrap"><table><thead><tr><th>Facility</th><th>Purpose</th></tr></thead><tbody><tr><td>Barracks</td><td>Recruit and house Bastion Defenders.</td></tr><tr><td>Bedroom</td><td>Resting and maximum HP benefit.</td></tr><tr><td>Dining Room</td><td>Temporary HP from meals.</td></tr><tr><td>Kitchen</td><td>Cooking, treats, and Chef support.</td></tr><tr><td>Parlor</td><td>Heroic Inspiration from short rests and conversation.</td></tr><tr><td>Shop</td><td>Server market sales and trade goods.</td></tr><tr><td>Storage</td><td>Store equipment and materials safely.</td></tr><tr><td>Well Room</td><td>Water supply and siege operation support.</td></tr><tr><td>Battlements</td><td>Defense, repel attackers, and reduce Defender death thresholds.</td></tr><tr><td>Harvestarium</td><td>Harvest materials from specialized terrain.</td></tr><tr><td>Humble Exterior</td><td>Reduce attention from attacks and sieges.</td></tr></tbody></table></div>
 </section>
 
-<section class="guide-section" id="barracks"><h3 class="sub-title">Barracks</h3><p>Sleeping quarters for your Bastion Defenders.</p><p><span class="order-tag">Order</span><b>Recruit:</b> Recruit up to 4 Bastion Defenders.</p></section>
-<section class="guide-section" id="bedroom"><h3 class="sub-title">Bedroom</h3><p>Long resting in your Bastion grants <b>1d4 + Constitution Modifier maximum HP</b>, plus an additional 1d4 per rank above D.</p></section>
-<section class="guide-section" id="dining"><h3 class="sub-title">Dining Room</h3><p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p><p>Dining here grants Temporary Hit Points equal to <b>1d4 + Constitution Modifier</b>. For each rank above D, gain an additional 1d4 Temporary Hit Points.</p></section>
+<section class="guide-section" id="barracks">
+<h3 class="sub-title">Barracks</h3>
+<p>A Barracks serves as sleeping quarters for your Bastion Defenders, providing them with a place to rest between duties.</p>
+<p>The first Barracks you construct is a Basic Facility. Any additional Barracks beyond the first consume a Special Facility slot, but still increase in size and rank using the Basic Facility rules.</p>
+<p>A Barracks houses up to <b>4 Bastion Defenders per rank, counting D-Rank as the first rank</b>. For example, a D-Rank Cramped Barracks houses 4 Defenders, while an A-Rank Cramped Barracks houses 16.</p>
+<p>A Roomy Barracks houses <b>2 additional Defenders per rank</b>, and a Vast Barracks houses <b>4 additional Defenders per rank</b>.</p>
+<div class="table-wrap"><table><thead><tr><th>Rank</th><th>Cramped</th><th>Roomy</th><th>Vast</th></tr></thead><tbody>
+<tr><td>D</td><td>4</td><td>6</td><td>8</td></tr>
+<tr><td>C</td><td>8</td><td>12</td><td>16</td></tr>
+<tr><td>B</td><td>12</td><td>18</td><td>24</td></tr>
+<tr><td>A</td><td>16</td><td>24</td><td>32</td></tr>
+<tr><td>S</td><td>20</td><td>30</td><td>40</td></tr>
+</tbody></table></div>
+<p><span class="order-tag">Order</span><b>Recruit.</b> Each time you issue this order, recruit up to four Bastion Defenders and assign them quarters in the Barracks, up to its capacity.</p>
+</section>
+<section class="guide-section" id="bedroom">
+<h3 class="sub-title">Bedroom</h3>
+<p>This is where you and your guests sleep while staying in the Bastion.</p>
+<p>If you complete a Long Rest in your Bastion, gain <b>1d4 + your Constitution Modifier as maximum HP</b>. For each rank the Bedroom is above D, increase the maximum HP gained by an additional 1d4.</p>
+<p>A Roomy Bedroom allows you to grant this benefit to up to four other players in your Combined Bastion during the same Bastion Turn. A Vast Bedroom allows you to grant it to up to nine other players, including players who are not part of your Combined Bastion.</p>
+<p>A guest can only receive the maximum-HP benefit appropriate to their own rank. For example, if an S-Rank Bedroom hosts a D-Rank player, that player gains only 1d4 maximum HP rather than 5d4.</p>
+</section>
+<section class="guide-section" id="dining">
+<h3 class="sub-title">Dining Room</h3>
+<p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p>
+<p>Dining here grants Temporary Hit Points equal to <b>1d4 + your Constitution Modifier</b>. For each rank above D, gain an additional 1d4 Temporary Hit Points.</p>
+<p>You may share this facility with members of your Combined Bastion. A guest only receives the Temporary Hit Points appropriate to their own rank. For example, a D-Rank player eating in an S-Rank Dining Room receives only 1d4 Temporary Hit Points rather than 5d4.</p>
+<div class="table-wrap"><table><thead><tr><th>Dining Room Size</th><th>People Served</th></tr></thead><tbody>
+<tr><td>Cramped</td><td>1</td></tr>
+<tr><td>Roomy</td><td>4</td></tr>
+<tr><td>Vast</td><td>9</td></tr>
+</tbody></table></div>
+</section>
 <section class="guide-section" id="kitchen"><h3 class="sub-title">Kitchen</h3><p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p><p>If you possess the Chef Feat, you may gain Expertise in Cooking checks made within this facility.</p><div class="table-wrap"><table><thead><tr><th>Kitchen Rank</th><th>Recipes that get Advantage</th></tr></thead><tbody><tr><td>D</td><td>Common / Uncommon Treats</td></tr><tr><td>C</td><td>Rare Treats</td></tr><tr><td>B</td><td>Rare+ Treats</td></tr><tr><td>A</td><td>Very Rare Treats</td></tr><tr><td>S</td><td>Legendary Treats</td></tr></tbody></table></div><p><span class="order-tag">Order</span><b>Let's Cook!</b> If at least one cook assists you, gain Advantage on crafting treats of the kitchen's rank or lower. In a Vast Kitchen with three hirelings, a successful treat craft creates 1d6 extra treats.</p></section>
-<section class="guide-section" id="parlor"><h3 class="sub-title">Parlor</h3><p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p><p><span class="order-tag">Order</span><b>Parle:</b> As long as you are the same rank as the facility and have one hireling to talk to, a short rest in the Parlor grants Heroic Inspiration.</p></section>
-<section class="guide-section" id="shop"><h3 class="sub-title">Shop</h3><p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p><p>A Shop is a dedicated business space for selling trade goods and items in the Discord Server's Market channel. Without this, you cannot start one.</p></section>
-<section class="guide-section" id="storage"><h3 class="sub-title">Storage</h3><p><b>Hireling Capacity:</b> 1 Cramped, 3 Roomy.</p><p>Storage allows you to store equipment while adventuring. Cramped stores 2 categories, Roomy stores 5, and Vast stores all categories.</p><p><span class="order-tag">Order</span><b>Store:</b> Store and withdraw goods or equipment any number of times.</p></section>
+<section class="guide-section" id="parlor">
+<h3 class="sub-title">Parlor</h3>
+<p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p>
+<p><span class="order-tag">Order</span><b>Parle.</b> As long as you are the same rank as the facility and have at least one hireling available to talk to, a Short Rest in the Parlor grants Heroic Inspiration.</p>
+<p>You may talk with anyone in the Bastion, including hirelings assigned to other facilities.</p>
+</section>
+<section class="guide-section" id="shop">
+<h3 class="sub-title">Shop</h3>
+<p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p>
+<p>A Shop is a dedicated business space for selling trade goods and items in the Discord Server’s Market channel. Without this facility, you cannot start a shop.</p>
+<p>You may share the Shop with a number of other players equal to the number of hirelings assigned to this facility.</p>
+</section>
+<section class="guide-section" id="storage">
+<h3 class="sub-title">Storage</h3>
+<p><b>Hireling Capacity:</b> 1 Cramped, 3 Roomy.</p>
+<p>Storage allows you to store equipment and materials while adventuring. It can only contain items equal to or lower than the Storage facility’s rank.</p>
+<p>A Cramped Storage room can contain two categories, Roomy can contain five categories, and Vast can contain all categories. If this facility is destroyed, you lose access to the stored equipment until it is repaired.</p>
+<p><span class="order-tag">Order</span><b>Store.</b> Store and withdraw goods or equipment any number of times.</p>
+<h4 class="item-title">Storage Categories</h4>
+<ul>
+<li>Herbs</li>
+<li>Weapons and Ammunition</li>
+<li>Armour and Clothing</li>
+<li>Potions</li>
+<li>Leathers, Scrolls, and Weaves</li>
+<li>Metals</li>
+<li>Jewellery and Gemstones</li>
+<li>Stones and Wood</li>
+<li>Perishables, including Rations, Treats, Bloods, and Alcohols</li>
+<li>Adventuring Equipment, including Wondrous Items, Tool Kits, Components, and Miscellaneous Equipment</li>
+<li>Hazardous Materials, including Bombs, Poisons, Oils, Holy Water, Acid Flasks, and Alchemist’s Fire</li>
+</ul>
+</section>
 <section class="guide-section" id="well"><h3 class="sub-title">Well Room</h3><p>A reliable water source for defenders, hirelings, and crafters.</p><p><span class="order-tag">Order</span><b>Fresh Water:</b> Each size increases the number of Special Facilities that remain operational during a siege, up to 3. A Vast Well Room extends these benefits to your Combined Bastion.</p></section>
-<section class="guide-section" id="battlements"><h3 class="sub-title">Battlements</h3><p>Battlements must be equal to your rank to function.</p><p><span class="order-tag">Order</span><b>Mount Defenses:</b> Repel attackers and reduce Defender deaths.</p><p><b>Repel Attackers:</b> If all Defenders are killed, sacrifice Battlements to push attackers back. Destroyed walls must be rebuilt.</p><p><b>Reduce Defender Death:</b> Defenders normally die on 3 or lower. This reduces the threshold by 1; Vast Battlements can make defenders die only on a 1.</p></section>
-<section class="guide-section" id="harvestarium"><h3 class="sub-title">Harvestarium</h3><p><b>Hireling Capacity:</b> 1 Cramped, 3 Roomy.</p><p>Choose a specialization when building: Fertile Soil, Quarries, Mines, Hunter's Lodge, Pasturelands, or Black Forest.</p><p><span class="order-tag">Order</span><b>Harvest:</b> When you gain a Reward, roll once on a specialization table for 1d4–1, minimum 1, materials at a rank three lower than the facility.</p></section>
-<section class="guide-section" id="humble"><h3 class="sub-title">Humble Exterior</h3><p><b>Requirements:</b> No Armory, Battlements, Siege Workshop, or War Room, and no more than one Barracks.</p><p>You treat the Individual Event <b>Surprise Attack!</b> and Monthly Event <b>Siege</b> as Nothing Happens.</p></section>
+<section class="guide-section" id="battlements">
+<h3 class="sub-title">Battlements</h3>
+<p>No fort is complete without walls. Lined with archers that keep Marauders and Besiegers at bay, only the foolhardy do not build them. The Battlements must be equal to your rank, or they will not function.</p>
+
+<div class="table-wrap"><table><thead><tr><th>Battlement’s Size</th><th>Benefit</th></tr></thead><tbody>
+<tr><td>Cramped</td><td>Repel Attackers</td></tr>
+<tr><td>Roomy</td><td>Reduce Defender Death by 1</td></tr>
+<tr><td>Vast</td><td>Reduce Defender Death by 1</td></tr>
+</tbody></table></div>
+
+<p><span class="order-tag">Order</span><b>Mount Defenses.</b> Repel Attackers and Reduce Defender Death.</p>
+
+<h4 class="item-title">Repel Attackers</h4>
+<p>In the event all your Defenders are killed by attackers, you can sacrifice your Battlements to push them back. If destroyed, you will need to rebuild your walls.</p>
+
+<h4 class="item-title">Reduce Defender Death</h4>
+<p>Defenders by default die when you roll a 3 or lower on a d6. This reduces that threshold by 1 for each applicable size benefit, such that Vast Battlements let your Defenders die only on a 1. This benefit applies to all Defenders, including Knights, undead, and beasts.</p>
+
+<p><span class="order-tag">Order</span><b>Rebuild.</b> Pay 500g per rank above C; rebuilding is free at D-Rank. Bastion Builders may reduce this cost. Issue this order three times to fully rebuild your walls.</p>
+<p>Alternatively, you can expedite the rebuild by paying five times the normal gold cost. The Battlements are then fully rebuilt at the beginning of your next Individual Bastion Turn. This remains free for D-Rank Battlements.</p>
+</section>
+<section class="guide-section" id="harvestarium">
+<h3 class="sub-title">Harvestarium</h3>
+<p><b>Hireling Capacity:</b> 1 Cramped, 3 Roomy.</p>
+<p>Very few forts are built strictly for defense. Most seek to control the resources of the surrounding area. When building this facility, choose one resource specialization: <b>Fertile Soil, Quarries, Mines, Hunter’s Lodge, Pasturelands,</b> or <b>Black Forest</b>.</p>
+<p>The Harvestarium boosts your Bastion’s economy. Whenever you gain a <b>Reward</b> from an event, you may issue the Harvest order to acquire extra materials. If the event allows you to roll on the general Reward table, such as after defeating a siege, you may instead roll on one of your Harvestarium specialization tables. Replacing the general Reward roll does not require an order.</p>
+<div class="callout moss"><strong>Reward Replacement</strong>If an event grants a roll on the general Reward table, you may replace that roll with one roll on a Harvestarium specialization table. This does not use your Harvest order.</div>
+<p><span class="order-tag">Order</span><b>Harvest.</b> When you gain a <b>Reward</b>, roll once on one of your specialization tables. You gain <b>1d4 – 1 materials, minimum 1</b>, at a rank three lower than the Harvestarium’s rank. You can issue this order only once per Individual Bastion Turn.</p>
+<div class="callout info"><strong>Example</strong>An A-Rank Harvestarium specialized in Pasturelands belongs to an S-Rank owner who wins a siege event. The owner replaces the general Reward table roll with the Pasturelands table and gains ×5 Legendary meats or S-Rank bloods. The owner also issues the Harvest order, rolls 1d4 – 1, and gets 2, gaining an additional ×10 D-Rank meats or bloods.</div>
+<p><span class="order-tag">Order</span><b>Respecialize.</b> Pay <b>500g</b> and issue this order three times to change one specialization, ignoring the Harvestarium’s rank or size. Once started, you must either finish the process or cancel it.</p>
+<h4 class="item-title">Specializations</h4>
+<div class="facility-grid">
+<div class="fcard"><div class="fcard-name">Fertile Soil</div><p>Prime arable land with multiple streams and rivers, perfect for growing herbs or crops.</p></div>
+<div class="fcard"><div class="fcard-name">Quarries</div><p>Geological surveys indicate that these areas are rich in stones and fossils and are not far from the coast. They are also prone to earthquakes.</p></div>
+<div class="fcard"><div class="fcard-name">Mines</div><p>The dwarves swear by it. If you choose any other place to look for metals, you are an idiot, they say. But don’t dig too deep…</p></div>
+<div class="fcard"><div class="fcard-name">Hunter’s Lodge</div><p>At the base of alpine mountains, deep ravines, and expansive wilderness, this is the best location to hunt the fiercest creatures on Parthius for their leathers.</p></div>
+<div class="fcard"><div class="fcard-name">Pasturelands</div><p>If your game is meat and blood, raising livestock is what you want. However, the land is curious, and sometimes the meat tastes much better than it should…</p></div>
+<div class="fcard"><div class="fcard-name">Black Forest</div><p>Where the trees grow so dense they black out the sun. Full of exotic woods and textiles. Don’t get lost!</p></div>
+</div>
+<h4 class="item-title">Harvestarium Size Benefits</h4>
+<div class="table-wrap"><table><thead><tr><th>Harvestarium Size</th><th>Benefit</th></tr></thead><tbody>
+<tr><td>Cramped</td><td>1 Hireling Slot</td></tr>
+<tr><td>Roomy</td><td>3 Hireling Slots</td></tr>
+<tr><td>Vast</td><td>Choose one extra Specialization</td></tr>
+</tbody></table></div>
+</section>
+<section class="guide-section" id="humble">
+<h3 class="sub-title">Humble Exterior</h3>
+<p><b>Requirements:</b> You must not have an Armory, Battlements, Siege Workshop, or War Room constructed, and you may have no more than one Barracks.</p>
+<p>Instead of an imposing or awe-inspiring structure, you make your Bastion easy to overlook by attackers.</p>
+<p>You treat the Individual Bastion Event <b>Surprise Attack!</b> and the Monthly Bastion Event <b>Siege</b> as <b>Nothing Happens</b>.</p>
+<p>If you have a Vast Bedroom, you may house five hirelings in reserve. These hirelings are not assigned to any facility, including the Humble Exterior or Bedroom, until you place them. This allows you to immediately fill a facility vacancy caused by an event.</p>
+<p>This facility must be at least equal to your rank to function.</p>
+</section>
 
 <section class="guide-section" id="special-rules">
 <h2 class="sec-title">Special Facilities <span class="tag">Rules</span></h2>
