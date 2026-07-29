@@ -2871,26 +2871,303 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 </div>
 <!-- FORGERY -->
 <div class="guide-section" id="forgery">
-<h2 class="sec-title">Forgery Kit <span class="tag">Profession</span></h2><p><em>With proficiency in this kit and access to a library, you too can weave deception and creativity into tangible forms! Whether it’s altering orders to salvage a failed mission, exaggerating dangers for greater rewards, or creating fool’s gold to deceive and trade, each forgery comes with its own thrilling challenge. Imagine crafting documents that absolve offenses, swap resources, or even add progress points on guild adventures! And let’s not forget the realm of custom forgeries—from fake IDs to misleading maps, the only limit is your imagination. Caution, though; the stakes are high, and the penalties for failure can be severe. Dive into this profession where your skills can shape reality, dictated by your wits and the roll of the dice. Ready your quills and inks, for the art of forgery awaits!</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Forgery Kit. C-Rank and above recipes require a Workshop or Library as appropriate.</p><p><strong>Note:</strong> You can choose to use Altered Orders, Capital Gains, or False Progress in the same adventure, not all three of them! Class features such as Reliable Talent or Silvery Tongue cannot be used with products of the Forgery Kit.</p>
 
+<h2 class="sec-title">
+  Forgery Kit <span class="tag">Profession</span>
+</h2>
+
+<p>
+  <em>
+    With proficiency in this kit and access to a library, you too can weave
+    deception and creativity into tangible forms! Whether it’s altering orders
+    to salvage a failed mission, exaggerating dangers for greater rewards, or
+    creating fool’s gold to deceive and trade, each forgery comes with its own
+    thrilling challenge. Imagine crafting documents that absolve offenses,
+    swap resources, or even add progress points on guild adventures! And let’s
+    not forget the realm of custom forgeries—from fake IDs to misleading maps,
+    the only limit is your imagination. Caution, though; the stakes are high,
+    and the penalties for failure can be severe. Dive into this profession
+    where your skills can shape reality, dictated by your wits and the roll of
+    the dice. Ready your quills and inks, for the art of forgery awaits!
+  </em>
+</p>
+
+<hr class="flavor-divider"/>
+
+<p>
+  <strong>Requirements:</strong>
+  Proficiency with Forgery Kit, a Forgery Kit, and access to a Library.
+  C-Rank and higher recipes require a Workshop.
+</p>
+
+<div class="callout danger">
+  <strong>Important Restriction</strong>
+  You can choose to use <b>Altered Orders</b>, <b>Capital Gains</b>, or
+  <b>False Progress</b> during the same adventure, but you cannot use all
+  three during that adventure.
+  <br/><br/>
+  Class features such as <b>Reliable Talent</b> or <b>Silvery Tongue</b>
+  cannot be used with products created using the Forgery Kit.
+</div>
+
+<div class="roll-box">
+  <h4>Roll Outcomes</h4>
+
+  <div class="roll-item">
+    <span class="roll-die great">Nat 20</span>
+    <span>
+      Refund 1 unit of exotic material. If no exotic material was used,
+      refund 50% of the mundane materials.
+    </span>
+  </div>
+
+  <div class="roll-item">
+    <span class="roll-die">Success</span>
+    <span>
+      If the crafting roll meets the DC, it beats the DC and the forgery
+      is successfully created.
+    </span>
+  </div>
+
+  <div class="roll-item">
+    <span class="roll-die bad">Failure</span>
+    <span>
+      Waste one-third of the exotic materials used, rounded down,
+      with a minimum of 1 unit wasted.
+    </span>
+  </div>
+
+  <div class="roll-item">
+    <span class="roll-die bad">Nat 1</span>
+    <span>All materials used in the craft are wasted.</span>
+  </div>
+</div>
+
+<h3 class="sub-title">Forgery Recipes</h3>
 
 <div class="table-wrap">
 <table>
-<thead><tr><th>Document</th><th>Effect</th><th>Check Required</th><th>Penalty on Failure</th></tr></thead>
-<tbody>
-<tr><td><strong>Altered Orders</strong></td><td>Convert a failed mission into a mild success (+1 progress for you + X allies)</td><td>Deception vs. quest giver Passive Insight 14 + (3 per rank above D)</td><td>Fine equal to quest gold reward for you and named allies</td></tr>
-<tr><td><strong>Capital Gains ×10</strong></td><td>Increase quest reward by 25%</td><td>Deception vs. quest giver Passive Insight 12 + (2 per rank above E)</td><td>Fine equal to quest reward for you and named allies</td></tr>
-<tr><td><strong>Official Resource Exchange ×2</strong></td><td>Swap an unwanted exotic material for one of equal rank at merchant</td><td>Deception vs. merchant Passive Insight 12 + (2 per rank above E)</td><td>Fine equal to material value</td></tr>
-<tr><td><strong>False Progress</strong></td><td>Add 1 extra progress point when you only received 1</td><td>Sleight of Hand vs. quest giver Passive Perception 16 + (2 per rank above D)</td><td>Lose the earned point AND one extra</td></tr>
-<tr><td><strong>Fool's Gold (100 coins)</strong></td><td>Functions as real gold outside The City</td><td>Persuasion/Deception vs. NPC Insight</td><td>250g fine in the City; don't carry more than 100 pieces</td></tr>
-</tbody>
+  <thead>
+    <tr>
+      <th>Craft</th>
+      <th>Materials</th>
+      <th>Crafting Time</th>
+      <th>DC</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <td colspan="4"><strong>Guild Forgeries</strong></td>
+    </tr>
+
+    <tr>
+      <td><strong>Writ: Altered Orders</strong></td>
+      <td>
+        10 sheets of parchment and 1 unit of D-Rank or higher herb or plant
+      </td>
+      <td>16 hours</td>
+      <td>13 + X</td>
+    </tr>
+
+    <tr>
+      <td><strong>Writ: Capital Gains ×10</strong></td>
+      <td>
+        50 sheets of parchment and 1 unit of any-rank herb or plant
+      </td>
+      <td>16 hours</td>
+      <td>13 + X</td>
+    </tr>
+
+    <tr>
+      <td><strong>Writ: Official Resource Exchange ×2</strong></td>
+      <td>
+        5 sheets of parchment and 1 unit of any-rank herb or plant
+      </td>
+      <td>16 hours</td>
+      <td>13 + X</td>
+    </tr>
+
+    <tr>
+      <td><strong>Writ: False Progress</strong></td>
+      <td>
+        5 sheets of parchment and 2 units of D-Rank or higher herb or plant
+      </td>
+      <td>16 hours</td>
+      <td>13 + X</td>
+    </tr>
+
+    <tr>
+      <td colspan="4"><strong>Frequent Forgeries</strong></td>
+    </tr>
+
+    <tr>
+      <td><strong>Fool’s Gold — 100 Gold Coins</strong></td>
+      <td>10 gold worth of materials</td>
+      <td>8 hours</td>
+      <td>13</td>
+    </tr>
+
+    <tr>
+      <td><strong>Custom Forgery</strong></td>
+      <td>DM discretion</td>
+      <td>DM discretion</td>
+      <td>DM discretion</td>
+    </tr>
+  </tbody>
 </table>
 </div>
+
 <div class="callout info">
-<strong>Official Resource Exchange &amp; Custom Forgeries</strong>
-        The document's rank equals the rank of herbs/plants used to craft it. Bloods and meats can be traded for other exotic materials at a 5:1 ratio (mix/match same rarity by equal market value). <em>Custom Forgeries</em> (fake IDs, maps, contracts, scrolls, seals, etc.) need no library — the DM sets their time and DC.
-      </div>
-<p><strong>Master Forger:</strong> advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning deception (DM's discretion).</p>
+  <strong>Forgery Rank</strong>
+  The rank of a Guild Forgery is equal to the rank of the herb or plant used
+  to create it. Whenever a recipe uses <b>X</b>, use the X value from the
+  Rank Chart for that material’s rank.
+</div>
+
+<h3 class="sub-title">Altered Orders</h3>
+
+<p>
+  With this forged document, you can convert a failed mission into a mild
+  success, gaining at least 1 Progress Point for yourself and X allies,
+  unless the failure was caused by evil acts.
+</p>
+
+<p>
+  Only one player per adventure can use Altered Orders. To use the document,
+  make a Deception check against the quest giver’s Passive Insight:
+  <strong>14 + 3 for each rank above D</strong>.
+</p>
+
+<p>
+  On a success, the failed mission is treated as a mild success for you and
+  the named allies. On a failure, you and every ally whose name appears on
+  the document must each pay a fine equal to the quest’s gold reward.
+</p>
+
+<p>
+  Altered Orders is consumed when used. It must be the same rank as the quest
+  on which it is being used.
+</p>
+
+<h3 class="sub-title">Capital Gains</h3>
+
+<p>
+  This falsified writ increases the gold received from a quest or dungeon by
+  exaggerating the dangers faced while completing it. The writ can include
+  the crafter and X allies.
+</p>
+
+<p>
+  Make a Deception check against the quest giver’s Passive Insight:
+  <strong>12 + 2 for each rank above E</strong>. If the check meets the DC,
+  it succeeds.
+</p>
+
+<p>
+  On a success, increase the quest’s gold reward by 25%. On a failure, you
+  and every ally whose name appears on the document must each pay a fine
+  equal to the quest’s full gold reward.
+</p>
+
+<p>
+  Only one Capital Gains writ can be used per quest. The writ is consumed
+  when used and must be the same rank as the quest.
+</p>
+
+<h3 class="sub-title">False Progress</h3>
+
+<p>
+  When a character would receive only 1 Progress Point at the end of an
+  adventure, this forgery can potentially grant that character an additional
+  Progress Point.
+</p>
+
+<p>
+  Sign one party member’s name onto the document. When that character is
+  awarded only 1 Progress Point, make a Sleight of Hand check against the
+  quest giver’s Passive Perception:
+  <strong>16 + 2 for each rank above D</strong>.
+</p>
+
+<p>
+  On a success, the named character receives 1 additional Progress Point.
+  On a failure, the named character loses the Progress Point they would have
+  earned from the quest and loses 1 additional Progress Point.
+</p>
+
+<p>
+  The False Progress writ must be the same rank as the quest on which it is
+  used and is consumed after the attempt.
+</p>
+
+<h3 class="sub-title">Official Resource Exchange</h3>
+
+<p>
+  With this forged registry, you can exchange an unwanted exotic material
+  for another exotic material of the same rank at the Merchant’s Quarters.
+  The writ can exchange one exotic material of a rank equal to or lower than
+  the writ’s rank.
+</p>
+
+<p>
+  For example, a B-Rank Official Resource Exchange can trade a B-Rank or lower
+  exotic material for another exotic material of the same rank.
+</p>
+
+<p>
+  To complete the exchange, declare the exotic material being traded and make
+  a Deception check against the merchant’s Passive Insight:
+  <strong>12 + 2 for each rank above E</strong>.
+</p>
+
+<p>
+  On a failure, the character must pay a fine equal to the market value of the
+  traded material. The fine may be paid by surrendering the material or by
+  paying its value in gold.
+</p>
+
+<p>
+  This forged document does not require an adventure to use. The person
+  turning it in must spend X Work Hours locating the correct supplier.
+  The writ is consumed when the exchange is attempted.
+</p>
+
+<div class="callout">
+  <strong>Blood and Meat Exchanges</strong>
+  Blood and meat can be exchanged for other exotic materials at a ratio of
+  <b>5 to 1</b>.
+  <br/><br/>
+  Blood and meat of the same rarity may be mixed together as long as the
+  combined market value is equal to the exotic material being received.
+  <br/><br/>
+  Example: 3 Rare bloods and 2 Rare meats may be exchanged for 1 C-Rank
+  Plaguesteel. Use the Rank Chart to determine rank, rarity, and market value.
+</div>
+
+<h3 class="sub-title">Fool’s Gold</h3>
+
+<p>
+  This craft creates 100 counterfeit gold coins using 10 gold worth of
+  materials. How the coins are inspected, accepted, detected, or penalized
+  is determined by the DM.
+</p>
+
+<h3 class="sub-title">Custom Forgeries</h3>
+
+<p>
+  Custom forgeries can include false identification, travel papers, merchant
+  records, contracts, maps, permits, letters, seals, deeds, or other documents.
+  The required materials, crafting time, crafting DC, effect, and consequences
+  of discovery are determined by the DM.
+</p>
+
+<p>
+  <strong>Master Forger:</strong>
+  You have advantage on Persuasion, History, Arcana, Religion, Deception,
+  Insight, and Performance checks concerning deception, at the DM’s discretion.
+</p>
+
 </div>
 <!-- DISGUISE -->
 <div class="guide-section" id="disguise">
