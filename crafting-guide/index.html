@@ -1404,7 +1404,7 @@ td {
 <div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>You destroy 1/3 of the materials (rounded down, min 1).</span></div>
 <div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials wasted.</span></div>
-</div>
+</div><h3 class="sub-title">Potion Miscibility</h3><p>Whenever a creature drinks two or more potions before the effects of the first potion expire, roll 1d100 and consult the Potion Miscibility table.</p><div class="callout danger"><strong>Mixing Potions</strong> Apply the result immediately after the second potion is consumed. When a result requires a choice, the DM makes the final determination.</div><div class="table-wrap"><table><thead><tr><th>1d100</th><th>Result</th></tr></thead><tbody><tr><td><strong>01</strong></td><td>Both potions lose their effects, and the mixture creates a magical explosion in a 5-foot-radius Sphere centered on itself. Each creature in that area takes 4d10 Force damage.</td></tr><tr><td><strong>02–08</strong></td><td>Both potions lose their effects, and the mixture becomes an ingested poison of your choice (see “Poison” in chapter 3).</td></tr><tr><td><strong>09–15</strong></td><td>Both potions lose their effects.</td></tr><tr><td><strong>16–25</strong></td><td>One potion loses its effect.</td></tr><tr><td><strong>26–35</strong></td><td>Both potions work, but with their numerical effects and durations halved (DM Discretion). If a potion has no numerical effect and no duration, it instead loses its effect. †</td></tr><tr><td><strong>36–90</strong></td><td>Both potions work normally.</td></tr><tr><td><strong>91–99</strong></td><td>Both potions work, but the numerical effects and duration of one potion are doubled (DM Discretion). If neither potion has anything to double in this way, they work normally. †</td></tr><tr><td><strong>00</strong></td><td>Both potions work and the effects of one of them becomes semi-permanent. You and the DM decide one power from either potion to remain as an effect until the end of the quest. For example, a Potion of Healing might increase your Hit Point maximum by 2d4 + 2, or a Potion of Maximum Power allows you to use maximum damage once per minute. At the DM’s discretion, a Dispel Magic spell or similar magic might end this lasting effect.</td></tr></tbody></table></div><p><em>† Numerical effects and durations are modified at the DM’s discretion.</em></p>
 <h3 class="sub-title">Common Potions (Workshop Optional)</h3>
 <div class="card-grid">
 <div class="card common">
@@ -1519,7 +1519,15 @@ Alternatively, the oil can be poured on the ground as an action, where it covers
 <div class="card-name">Potion of Gaseous Form</div>
 <div class="card-meta"><span class="badge rare">Rare</span><span class="badge">DC 12</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Ghost Blossom ×2</div>
-<div class="card-effect"><strong>Effect:</strong> When you drink this potion, you gain the effect of the Gaseous Form spell for 1 hour, requiring no Concentration. You can end the effect early as a Bonus Action. The potion's container appears to hold fog that moves and pours like water.</div>
+<div class="card-effect"><strong>Effect:</strong> When you drink this potion, you transform into a pool of water. You return to your true form after 10 minutes or if you are incapacitated or die.
+
+You’re under the following effects while in this form:
+
+Liquid Movement. You have a swimming speed of 30 feet. You can move over or through other liquids. You can enter and occupy the space of another creature. You can rise up to your normal height, and you can pass through even Tiny openings. You extinguish nonmagical flames in any space you enter.
+
+Watery Resilience. You have resistance to nonmagical damage. You also have advantage on Strength, Dexterity, and Constitution saving throws.
+
+Limitations. You can’t talk, attack, cast spells, or activate magic items. Any objects you were carrying or wearing meld into your new form and are inaccessible, though you continue to be affected by anything you’re wearing, such as armor.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">8 hrs</span></div></div>
 </div>
 <div class="card rare">
@@ -1680,67 +1688,67 @@ Alternatively, the oil can be poured on the ground as an action, where it covers
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">8 hrs</span></div></div>
 </div>
 </div>
-<h3 class="sub-title">Very Rare Potions (Workshop + Lab)</h3><div class="card-grid"><div class="card veryrare">
+<h3 class="sub-title">Very Rare Potions (Workshop + Lab)</h3>
+<div class="card-grid">
+<div class="card veryrare">
 <div class="card-name">Potion of Flying</div>
 <div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 15</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Thunder Leaf ×1</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, you gain a flying speed equal to your walking speed for 1 hour and can hover. If you’re in the air when the potion wears off, you fall unless you have some other means of staying aloft. This potion’s clear liquid floats at the top of its container and has cloudy white impurities drifting in it.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">8 hrs</span></div></div>
-</div><div class="card veryrare">
+</div>
+<div class="card veryrare">
 <div class="card-name">Potion of Invisibility</div>
 <div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 16</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Doomsphere Whiskers ×2</div>
 <div class="card-effect"><strong>Effect:</strong> This potion’s container looks empty but feels as though it holds liquid. When you drink it, you become invisible for 1 hour. Anything you wear or carry is invisible with you. The effect ends early if you attack or cast a spell.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">16 hrs</span></div></div>
-</div><div class="card veryrare">
+</div>
+<div class="card veryrare">
 <div class="card-name">Potion of Speed</div>
 <div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 16</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Galebloom ×2</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, you gain the effect of the Haste spell for 1 minute (no concentration required). The potion’s yellow fluid is streaked with black and swirls on its own.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">8 hrs</span></div></div>
-</div><div class="card veryrare">
+</div>
+<div class="card veryrare">
 <div class="card-name">Potion of Cloud Giant Strength</div>
 <div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 20</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Devanian Fungus ×1, Thunder Leaf ×1, Cloud Giant Bone ×1 (A+)</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, your Strength score changes to 29 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
-</div><div class="card veryrare">
+</div>
+<div class="card veryrare">
 <div class="card-name">Potion of Longevity</div>
 <div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 21</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Blue Herb ×4, Silverstem ×3, scorpion's tail, adder's fang, dead spider, tiny heart</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, your physical age is reduced by 1d6 + 6 years, to a minimum of 13 years. Each time you subsequently drink a potion of longevity, there is a 10 percent cumulative chance that you instead age by 1d6 + 6 years. Suspended in this amber liquid are a scorpion’s tail, an adder’s fang, a dead spider, and a tiny heart that, against all reason, is still beating. The ingredients vanish when the potion is opened.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">24 hrs</span></div></div>
-</div><div class="card veryrare">
-<div class="card-name">Potion of Greater Invisibility</div>
-<div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 18</span></div>
-<div class="card-ing"><strong>Ingredients:</strong> Doomsphere Whiskers ×2, Shadowsilk ×1 (A+)</div>
-<div class="card-effect"><strong>Effect:</strong> When you drink this potion, you become Invisible for 1 hour. Anything you are wearing or carrying is Invisible with you. Unlike a normal Potion of Invisibility, the effect does not end when you attack or cast a spell.</div>
-<div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">24 hrs</span></div></div>
-</div><div class="card veryrare">
-<div class="card-name">Potion of Mind Control (Humanoid)</div>
-<div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 20</span></div>
-<div class="card-ing"><strong>Ingredients:</strong> Devanian Fungus ×2, Abominable Skin ×1 (A+)</div>
-<div class="card-effect"><strong>Effect:</strong> When you drink this potion, you can cast Dominate Person (save DC 15) on a humanoid if you do so before the end of your next turn. If you do not, the potion is wasted. If the target fails its initial saving throw, the effect lasts for 1 hour without requiring Concentration. The Charmed creature has Disadvantage on subsequent saving throws to end the effect.</div>
-<div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">24 hrs</span></div></div>
-</div></div><h3 class="sub-title">Legendary Potions (Workshop + Lab)</h3><div class="card-grid"><div class="card legendary">
+</div>
+<h3 class="sub-title">Legendary Potions (Workshop + Lab)</h3>
+<div class="card-grid">
+<div class="card legendary">
 <div class="card-name">Oil of Sharpness</div>
 <div class="card-meta"><span class="badge legendary">Legendary</span><span class="badge">DC 17</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Voidblossom ×1</div>
 <div class="card-effect"><strong>Effect:</strong> This clear, gelatinous oil sparkles with tiny, ultrathin silver shards. The oil can coat one slashing or piercing weapon or up to 5 pieces of slashing or piercing ammunition. Applying the oil takes 1 minute. For 1 hour, the coated item is magical and has a +3 bonus to attack and damage rolls.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
-</div><div class="card legendary">
+</div>
+<div class="card legendary">
 <div class="card-name">Potion of Invulnerability</div>
 <div class="card-meta"><span class="badge legendary">Legendary</span><span class="badge">DC 23</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Dragontongue ×2</div>
 <div class="card-effect"><strong>Effect:</strong> For 1 minute after you drink this potion, you have resistance to all damage. The potion’s syrupy liquid looks like liquified iron.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
-</div><div class="card legendary">
+</div>
+<div class="card legendary">
 <div class="card-name">Potion of Storm Giant Strength</div>
 <div class="card-meta"><span class="badge legendary">Legendary</span><span class="badge">DC 23</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Black Lotus ×2, Storm Giant Bone ×1 (S+)</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, your Strength score changes to 29 for 1 hour. The potion has no effect on you if your Strength is equal to or greater than that score.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
-</div><div class="card legendary">
+</div>
+<div class="card legendary">
 <div class="card-name">Potion of Possibility</div>
 <div class="card-meta"><span class="badge legendary">Legendary</span><span class="badge">DC 22</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Arborian Ivy ×3</div>
@@ -1752,20 +1760,35 @@ If the original d20 roll has advantage or disadvantage, you roll your d20 after 
 
 While you have one or more Fragments of Possibility from this potion, you can’t gain another Fragment of Possibility from any source.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
-</div><div class="card legendary">
+</div>
+<div class="card legendary">
 <div class="card-name">Potion of Giant Size</div>
 <div class="card-meta"><span class="badge legendary">Legendary</span><span class="badge">DC 23</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Arborian Ivy ×2, Giant Bones ×2 (S+)</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, you become Huge for 24 hours if you are Medium or smaller. Your Strength becomes 25 if it is lower, your maximum and current Hit Points double, and your reach increases by 5 feet. Everything you are wearing and carrying grows with you. Your melee weapons deal three times their normal number of damage dice. The potion has no effect if you are already Huge or larger.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
-</div><div class="card legendary">
+</div>
+<div class="card legendary">
 <div class="card-name">Potion of Mind Control (Monster)</div>
 <div class="card-meta"><span class="badge legendary">Legendary</span><span class="badge">DC 23</span></div>
 <div class="card-ing"><strong>Ingredients:</strong> Voidblossom ×2, Abominable Skin ×1 (S+)</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, you can cast Dominate Monster (save DC 15) on a creature if you do so before the end of your next turn. If you do not, the potion is wasted. If the target fails its initial saving throw, the effect lasts for 1 hour without requiring Concentration. The Charmed creature has Disadvantage on subsequent saving throws to end the effect.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
+</div>
+</div>
+<div class="card veryrare">
+<div class="card-name">Potion of Greater Invisibility</div>
+<div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 18</span></div>
+<div class="card-ing"><strong>Ingredients:</strong> Doomsphere Whiskers ×2, Shadowsilk ×1 (A+)</div>
+<div class="card-effect"><strong>Effect:</strong> When you drink this potion, you become Invisible for 1 hour. Anything you are wearing or carrying is Invisible with you. Unlike a normal Potion of Invisibility, the effect does not end when you attack or cast a spell.</div>
+<div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">24 hrs</span></div></div>
+</div><div class="card veryrare">
+<div class="card-name">Potion of Mind Control (Humanoid)</div>
+<div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 20</span></div>
+<div class="card-ing"><strong>Ingredients:</strong> Devanian Fungus ×2, Abominable Skin ×1 (A+)</div>
+<div class="card-effect"><strong>Effect:</strong> When you drink this potion, you can cast Dominate Person (save DC 15) on a humanoid if you do so before the end of your next turn. If you do not, the potion is wasted. If the target fails its initial saving throw, the effect lasts for 1 hour without requiring Concentration. The Charmed creature has Disadvantage on subsequent saving throws to end the effect.</div>
+<div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">24 hrs</span></div></div>
 </div></div>
-
 <!-- BREWER -->
 <div class="guide-section" id="brewer">
 <h2 class="sec-title">Brewer's Supplies <span class="tag">Profession</span></h2>
