@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Bastions of the Black — Guide v2.5</title>
+<title>Bastions of the Black — Guide v2.6</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
 :root{
@@ -83,7 +83,7 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 </head>
 <body>
 <aside id="sidebar">
-<div class="logo"><h2>Bastions of<br/>the Black</h2><p>v2.5 · Facility Sharing Labels</p></div>
+<div class="logo"><h2>Bastions of<br/>the Black</h2><p>v2.6 · Resident Passive Sharing</p></div>
 <nav>
 <div class="section-head">Site</div>
 <a href="../">Home</a><a href="../player-guide/">Player Guide</a><a href="../crafting-guide/">Crafting Guide</a><a href="../bastions/">Bastions Guide</a>
@@ -132,7 +132,7 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 </aside>
 <main id="main">
 <header id="hero">
-<div class="version">Bastions of the Black · v2.5 · Editor: Ooxy</div>
+<div class="version">Bastions of the Black · v2.6 · Editor: Ooxy</div>
 <div class="guide-buttons"><a href="../">Home</a><a href="../player-guide/">Player Guide</a><a href="../crafting-guide/">Crafting Guide</a><a href="../bastions/">Bastions Guide</a></div>
 <h1>Bastions of<br/><span>the Black</span></h1>
 <p class="subtitle">Your stronghold, your legacy — build it, defend it, grow it.</p>
@@ -149,7 +149,7 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 <li>Reach <b>C-Rank / Level 9</b> to unlock Special Facilities.</li>
 <li>Issue Bastion Orders during Bastion Turns, defend your Bastion from events, and grow your stronghold into a lasting legacy.</li>
 </ol>
-<div class="callout info"><strong>v2.5 Sharing Clarification</strong> Every Basic and Special Facility now identifies exactly how it can be shared. Bastion buffs are restricted to officially listed Combined Bastion residents unless a facility explicitly states otherwise.</div></section>
+<div class="callout info"><strong>v2.6 Sharing Clarification</strong> Every Basic and Special Facility identifies exactly how it can be shared. Most passive benefits from Basic Facilities may be shared with officially listed Combined Bastion residents when the facility's Sharing line allows it. Active Orders, ownership, hirelings, production, resource generation, and character-specific progression remain with the facility owner unless a facility explicitly states otherwise.</div></section>
 <section class="guide-section" id="what-is">
 <h2 class="sec-title">What is a Bastion? <span class="tag">Overview</span></h2>
 <p>A Bastion is a location that belongs to your character: a base, stronghold, ship, hideout, temple, tower, keep, casino, lodge, or other seat of power. It offers refuge from adventuring and gives access to crafting bonuses, harvesting, defenders, hirelings, buffs, and story events.</p>
@@ -356,6 +356,7 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 <section class="guide-section" id="basic">
 <h2 class="sec-title">Basic Facilities <span class="tag">D-Rank</span></h2>
 <p>Basic facilities are available to all Bastions starting at D-Rank. You may have one of every Basic Facility type unless a rule states otherwise.</p>
+<div class="callout info"><strong>Basic Facility Passive Benefits</strong>As a general rule, passive personal benefits from Basic Facilities are shareable with characters who are officially listed as residents of the same Combined Bastion, subject to the facility's capacity, rank limits, and Sharing line. This does not share ownership, Orders, hirelings, crafting Expertise, production, harvested resources, or other character-specific progression. If a Basic Facility says Owner Only, that specific rule overrides this general rule.</div>
 <div class="table-wrap"><table><thead><tr><th>Facility</th><th>Purpose</th></tr></thead><tbody><tr><td>Barracks</td><td>Recruit and house Bastion Defenders.</td></tr><tr><td>Bedroom</td><td>Resting and maximum HP benefit.</td></tr><tr><td>Dining Room</td><td>Temporary HP from meals.</td></tr><tr><td>Kitchen</td><td>Cooking, treats, and Chef support.</td></tr><tr><td>Parlor</td><td>Heroic Inspiration from short rests and conversation.</td></tr><tr><td>Shop</td><td>Server market sales and trade goods.</td></tr><tr><td>Storage</td><td>Store equipment and materials safely.</td></tr><tr><td>Well Room</td><td>Water supply and siege operation support.</td></tr><tr><td>Battlements</td><td>Defense, repel attackers, and reduce Defender death thresholds.</td></tr><tr><td>Harvestarium</td><td>Harvest materials from specialized terrain.</td></tr><tr><td>Humble Exterior</td><td>Reduce attention from attacks and sieges.</td></tr></tbody></table></div>
 </section>
 <section class="guide-section" id="barracks">
@@ -388,14 +389,14 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 <div class="table-wrap"><table><thead><tr><th>Dining Room Size</th><th>People Served</th></tr></thead><tbody>
 <tr><td>Cramped</td><td>1</td></tr>
 <tr><td>Roomy</td><td>4</td></tr>
-<tr><td>Vast</td><td>9</td></tr>
+<tr><td>Vast</td><td>6</td></tr>
 </tbody></table></div>
 </section>
 <section class="guide-section" id="kitchen"><h3 class="sub-title">Kitchen</h3><p class="sharing-line"><b>Sharing:</b> Physical Facility Shared; Mechanical Benefits Owner Only. Residents may use the kitchen normally, but Chef Expertise, Let’s Cook!, crafting Advantage, and extra-treat production belong to the owner unless a rule specifically says otherwise.</p><p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p><p>If you possess the Chef Feat, you may gain Expertise in Cooking checks made within this facility.</p><div class="table-wrap"><table><thead><tr><th>Kitchen Rank</th><th>Recipes that get Advantage</th></tr></thead><tbody><tr><td>D</td><td>Common / Uncommon Treats</td></tr><tr><td>C</td><td>Rare Treats</td></tr><tr><td>B</td><td>Rare+ Treats</td></tr><tr><td>A</td><td>Very Rare Treats</td></tr><tr><td>S</td><td>Legendary Treats</td></tr></tbody></table></div><p><span class="order-tag">Order</span><b>Let's Cook!</b> If at least one cook assists you, gain Advantage on crafting treats of the kitchen's rank or lower. In a Vast Kitchen with three hirelings, a successful treat craft creates 1d6 extra treats.</p></section>
 <section class="guide-section" id="parlor">
-<h3 class="sub-title">Parlor</h3><p class="sharing-line"><b>Sharing:</b> Owner Only. Residents may use the room socially, but the Parle Order and Heroic Inspiration benefit belong to the owner.</p>
+<h3 class="sub-title">Parlor</h3><p class="sharing-line"><b>Sharing:</b> Combined Bastion Residents. The owner controls the Parle Order, but its Heroic Inspiration benefit may be received by officially listed residents who meet the room's requirements.</p>
 <p><b>Hireling Capacity:</b> 1 Roomy, 3 Vast.</p>
-<p><span class="order-tag">Order</span><b>Parle.</b> As long as you are the same rank as the facility and have at least one hireling available to talk to, a Short Rest in the Parlor grants Heroic Inspiration.</p>
+<p><span class="order-tag">Order</span><b>Parle.</b> The owner issues this Order. While it is active and at least one hireling is available to talk to, the owner and officially listed residents of the same Combined Bastion may gain Heroic Inspiration by completing a Short Rest in the Parlor. A resident can receive only the benefit appropriate to their own rank, and the Parlor must be at least equal to that resident's rank to grant the benefit.</p>
 <p>You may talk with anyone in the Bastion, including hirelings assigned to other facilities.</p>
 </section>
 <section class="guide-section" id="shop">
