@@ -78,6 +78,208 @@ footer{background:var(--stone);color:#5a4e30;text-align:center;padding:1.5rem;fo
 
 .sharing-line{background:#e7ddc3;border-left:4px solid var(--sky);padding:.48rem .7rem;margin:.5rem 0 .75rem;font-size:.86rem;color:var(--ink)}
 .sharing-line b{font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--sky);margin-right:.35rem}
+
+/* =========================================================
+   BLACK BANNER CRAFTING-GUIDE THEME OVERRIDE
+   Visual/theme changes only — no Bastion content changed.
+   ========================================================= */
+:root{
+  --stone:#080706;
+  --mortar:#11100d;
+  --rampart:#1a1710;
+  --parchment:#0b0a08;
+  --aged:#17140d;
+  --faint:#4d3b12;
+  --ink:#e7dcc2;
+  --muted:#b5a47c;
+  --gold:#c8960a;
+  --iron:#8c7a4d;
+  --blood:#c8960a;
+  --banner:#d7ad38;
+  --moss:#9e8a4a;
+  --sky:#b68b21;
+  --white:#f3e7c6;
+}
+
+html{scroll-behavior:smooth;background:#080706}
+body{
+  background:#080706;
+  color:var(--ink);
+}
+
+#sidebar{
+  background:#050504;
+  border-right:1px solid #6d5215;
+}
+#sidebar .logo{
+  border-bottom:1px solid #4d3b12;
+  background:#050504;
+}
+#sidebar .logo h2{color:#e0b33a}
+#sidebar .logo p{color:#8f7430}
+
+#sidebar nav a{
+  color:#c9a82c;
+  border-left:2px solid transparent;
+}
+#sidebar nav a:hover{
+  color:#ffe08a;
+  background:rgba(200,150,10,.10);
+  border-left-color:#c8960a;
+}
+#sidebar nav a.sub-link{color:#a98b2e}
+#sidebar nav a.sub-link::before{color:#6f591d}
+#sidebar nav a.sub-link:hover{color:#f0c955}
+#sidebar nav .section-head{
+  color:#6f5418;
+  border-top:1px solid rgba(200,150,10,.08);
+}
+
+#main{
+  background:#0b0a08;
+  color:var(--ink);
+}
+
+#hero{
+  background:
+    linear-gradient(rgba(5,5,4,.95),rgba(8,7,6,.97)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.015) 0,rgba(255,255,255,.015) 1px,transparent 1px,transparent 4px);
+  border-bottom:1px solid #6d5215;
+  box-shadow:inset 0 -1px 0 rgba(200,150,10,.15);
+}
+#hero::before,#hero::after{opacity:.55}
+#hero .version{color:#9b7925}
+#hero h1{color:#d8a92f;text-shadow:0 2px 18px rgba(0,0,0,.9)}
+#hero h1 span{color:#e6c462}
+#hero .subtitle{color:#c6baa0}
+.pill{
+  background:#181309;
+  border:1px solid #6f5418;
+  color:#d4af3a;
+}
+
+.guide-buttons a{
+  border:1px solid #8c6818;
+  background:linear-gradient(180deg,#171108 0%,#0d0a06 100%);
+  color:#e0c35f;
+  box-shadow:inset 0 0 18px rgba(200,150,10,.04);
+}
+.guide-buttons a:hover{
+  background:#211708;
+  color:#ffe49a;
+  box-shadow:inset 0 0 24px rgba(200,150,10,.12);
+}
+
+.content{background:#0b0a08}
+.guide-section{
+  border-top:1px solid #3b2d0d;
+}
+h2.sec-title{
+  color:#d4a62e;
+  text-shadow:0 1px 0 #000;
+}
+h2.sec-title .tag{
+  background:#3a160d;
+  color:#f1d46e;
+  border:1px solid #7b3b22;
+}
+h3.sub-title{
+  color:#d2a332;
+}
+h4.item-title{
+  color:#d9bf79;
+  border-bottom:1px solid #5a4414;
+}
+p,ul,ol,li,td{
+  color:#e0d6bd;
+}
+strong,b{color:#e4bb4c}
+
+.callout{
+  background:#17140d;
+  border-left-color:#c8960a;
+  color:#e3d8bf;
+  box-shadow:inset 0 0 0 1px rgba(200,150,10,.08);
+}
+.callout strong{color:#d5a931}
+.callout.danger{border-left-color:#9d4c2a}
+.callout.danger strong{color:#d78252}
+.callout.info{border-left-color:#8c6818}
+.callout.info strong{color:#e0b948}
+.callout.moss{border-left-color:#7d6b28}
+.callout.moss strong{color:#c9b654}
+.callout.iron{border-left-color:#75664a}
+.callout.iron strong{color:#c0ad82}
+
+.table-wrap{
+  border:1px solid #4a3810;
+  background:#100e09;
+}
+table{background:#100e09}
+thead tr{background:#17140d}
+thead th{
+  color:#d8aa2f;
+  border-bottom:1px solid #6f5418;
+}
+tbody tr{
+  border-bottom:1px solid #3d2f10;
+}
+tbody tr:nth-child(even){background:#17140d}
+tbody tr:hover{background:#211b0e}
+td{color:#e2d7bb}
+
+.fcard,.event-card,.guild-card,.reward-card{
+  background:#11100c;
+  border:1px solid #4a3810;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.01);
+}
+.fcard{border-top:2px solid #8d6a1a}
+.fcard.rank-c{border-top-color:#6f7e37}
+.fcard.rank-b{border-top-color:#5c6f9a}
+.fcard.rank-a{border-top-color:#9c6c8b}
+.fcard.rank-s{border-top-color:#d0a52b}
+.fcard-name,.event-name,.guild-name{
+  color:#e0b347;
+}
+.fcard-meta{color:#b19b69}
+.badge{
+  background:#1b170e;
+  color:#c7ad65;
+  border:1px solid #554214;
+}
+.order-tag{
+  background:#1d180d;
+  color:#e2b83f;
+  border:1px solid #614a13;
+}
+.upgrade-box{
+  background:#18150d;
+  border:1px dashed #6f591d;
+  color:#dfd1ad;
+}
+.small{color:#b6a47c}
+
+.sharing-line{
+  background:#17140d;
+  border-left:3px solid #8c6818;
+  color:#e0d4b8;
+}
+.sharing-line b{color:#deb747}
+
+footer{
+  background:#050504;
+  color:#78612b;
+  border-top:1px solid #4a3810;
+}
+
+/* make anchors feel intentional when jumping from the sidebar */
+.guide-section,
+[id^="special-"],
+#rank-c,#rank-b,#rank-a,#rank-s,
+#monthly-events,#monthly-details,#individual-events,#individual-details{
+  scroll-margin-top:18px;
+}
+
 </style>
 </head>
 <body>
