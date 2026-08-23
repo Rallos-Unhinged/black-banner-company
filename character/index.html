@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,122 +6,109 @@
 <title>Black Banner Company — Character</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
-:root{--bg:#030609;--panel:#081017;--panel2:#0b151d;--edge:#35505c;--edge2:#84631b;--gold:#d3a62b;--gold2:#f0c858;--txt:#e8e6dd;--muted:#8fa1a8;--cyan:#49c8e8;--green:#59c77b;--red:#d76e6e}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#10202b 0,#05090d 38%,#020405 100%);color:var(--txt);font:17px/1.4 'Crimson Pro',serif}
-.shell{width:min(1500px,calc(100% - 24px));margin:auto;padding:12px 0 40px}.bar,.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.bar{justify-content:space-between;border-bottom:1px solid #263842;padding:7px 0 12px}.nav{display:flex;gap:7px;flex-wrap:wrap}
-button,.btn{font:700 12px 'Cinzel',serif;letter-spacing:.05em;text-transform:uppercase;color:#e6c45a;background:linear-gradient(#14202a,#080d12);border:1px solid #566a70;padding:8px 12px;cursor:pointer;text-decoration:none}
-button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:18px 8px 12px;border-bottom:1px solid #30434c}.hero h1{font:900 clamp(28px,4vw,54px) 'Cinzel';margin:0;color:#e0b239}.subtitle{color:var(--muted)}
-.status{font:700 13px 'Cinzel';color:#68db87}.status:before{content:"●";margin-right:7px}.tabs{padding:10px 0}
-.viewer{display:grid;grid-template-columns:minmax(180px,1fr) minmax(280px,2fr) auto;gap:7px;align-items:end;border:1px solid #334b55;background:#071017;padding:9px;margin:10px 0}
-.viewer input,.viewer select{width:100%;background:#050a0e;border:1px solid #405963;color:#eee;padding:8px}
-.readonly-note{font:700 12px Cinzel;color:#d6b44a;text-transform:uppercase;letter-spacing:.05em}
+:root{--bg:#040504;--panel:#080b0b;--panel2:#0b0e0e;--edge:#564019;--gold:#d5aa3b;--gold2:#f0cd73;--text:#eee7d7;--muted:#9b927f;--green:#58c769;--blue:#42a9e5;--purple:#c86cff;--red:#d76e6e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 48% 0,#14110a 0,#050606 38%,#020202 100%);color:var(--text);font:17px/1.35 'Crimson Pro',serif}
+button,.btn{font:700 12px Cinzel;color:#e7c461;background:linear-gradient(#171108,#090603);border:1px solid #76571b;padding:9px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+button:hover,.btn:hover{border-color:#d5aa3b;color:#ffe7a2}.hidden{display:none!important}.owner-only{}
 body.readonly .owner-only{display:none!important}
-body.readonly .equip input,body.readonly .equip select,body.readonly #characterName,body.readonly #level,body.readonly #classSummary,body.readonly #ddbUrl,body.readonly .stat input{pointer-events:none;opacity:.82}
-.tab{border-color:#324853;color:#9bb0b8}.tab.active{color:#f0c85d;border-color:#b38c28;background:#16150f}
-.notice{padding:10px 14px;margin:8px 0;border:1px solid #4c3b16;background:#151109;color:#d8c48c}.notice.good{border-color:#2f6b42;color:#8ee1a8}.notice.bad{border-color:#754040;color:#e79a9a}.hidden{display:none!important}
-.sheet{display:grid;grid-template-columns:1fr 1.65fr 1fr;gap:10px}.panel{background:linear-gradient(180deg,#0c141a,#070b0f);border:1px solid #384f59;box-shadow:inset 0 0 0 1px #101d25;padding:10px;min-width:0}
-.panel h2,.panel h3{font:700 14px 'Cinzel';letter-spacing:.12em;color:#cda12d;text-transform:uppercase;margin:0 0 8px}.character-card{text-align:center;padding:8px;border:1px solid #8c6b22;background:#090b0d}
-.portrait{position:relative;min-height:560px;background:linear-gradient(#0d151b,#05080b);border:1px solid #5a6870;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.portrait img{width:100%;height:100%;min-height:560px;object-fit:cover;display:block}.portrait-placeholder{color:#667982;font:700 16px 'Cinzel';text-align:center;padding:30px}.portrait-actions{display:flex;gap:6px;margin-top:7px}.portrait-actions>*{flex:1}.portrait input{display:none}
-.equip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.equip{border:1px solid #334852;background:#071017;min-height:74px;padding:7px;position:relative}
-.equip.has-image{padding-left:72px;min-height:90px}.equip-img{position:absolute;left:7px;top:24px;width:56px;height:56px;object-fit:contain;border:1px solid #36515e;background:#03080b;padding:2px}
-.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.skill-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #243941;padding:4px 2px}.skill-row b{color:#d7af42}.skill-bonus{font:600 13px Fira Mono;color:#aee0ed}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.equip-drop{margin-top:5px;border:1px dashed #385664;padding:4px;text-align:center;font-size:10px;color:#78929d;cursor:pointer}.equip-drop.drag{border-color:#c9a12f;color:#e0c168}.equip.has-image{padding-left:74px;min-height:94px}.equip-img{position:absolute;left:7px;top:24px;width:58px;height:58px;object-fit:contain;background:#03080b;border:1px solid #36515e;padding:2px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
-.ddb-picker{margin-top:6px}.ddb-picker select{max-width:none;width:100%;background:#061016;border:1px solid #42616d;color:#dce8ec;padding:5px;font-size:12px}
-.inventory-browser{margin-top:10px;border:1px solid #38505b;background:#071017;padding:9px}.inventory-browser .browser-row{display:grid;grid-template-columns:1fr 180px 120px;gap:7px;align-items:end}.inventory-browser select{width:100%;background:#050a0e;border:1px solid #405a65;color:#eee;padding:8px}
-.badge{display:inline-block;padding:2px 6px;border:1px solid #45606b;margin-left:5px;font:500 10px Fira Mono;color:#8fd7e5}.badge.eq{border-color:#7a6422;color:#e8c75a}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.stat{border:1px solid #314752;background:#071017;text-align:center;padding:8px}.stat b{display:block;font:700 11px 'Cinzel';color:#8198a1}.stat .score{font:700 24px 'Fira Mono';color:#fff}.stat input{width:55px;background:#03080b;border:0;color:#fff;text-align:center;font:700 20px 'Fira Mono'}
-.field{margin:7px 0}.field label{display:block;color:#90a1a9;font:700 11px 'Cinzel';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}.field input,.field select{width:100%;background:#050a0e;border:1px solid #334b55;color:#eee;padding:8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.summary{border:1px solid #334b55;padding:9px;background:#071017;margin-bottom:8px}.summary strong{color:#e5ba44}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #314752;background:#071017;padding:7px}.tool .name{min-height:37px;color:#ddd}.tool select{width:100%;background:#050a0e;color:#eee;border:1px solid #405963;padding:6px}
-.feature-list{display:grid;gap:6px}.toggle{display:flex;gap:8px;align-items:center;border:1px solid #334a54;background:#071017;padding:8px}.toggle input{accent-color:#c9a12f}
-.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{flex:1}.warn{color:#e7c66a;font-size:14px}.small{font-size:13px;color:var(--muted)}.classline{color:#c6d2d7}
-@media(max-width:1050px){.sheet{grid-template-columns:1fr 1fr}.right{grid-column:1/-1}.tool-list{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:700px){.sheet,.craft,.row{grid-template-columns:1fr}.tool-list,.equip-grid{grid-template-columns:1fr}.portrait,.portrait img{min-height:420px}.bar .nav{width:100%}.btn,button{flex:1}}
+.shell{width:min(1600px,100%);margin:auto;min-height:100vh}
+.topbar{height:80px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #554017;background:#050707}
+.identity{display:flex;gap:14px;align-items:center}.mini-avatar{width:58px;height:58px;object-fit:cover;border:1px solid #806220;border-radius:5px;background:#0b0b0b}
+.identity h1{font:700 28px Cinzel;margin:0;color:#f3eee2}.identity .sub{color:#b7ac96}.online{color:#50cc68}.top-actions{display:flex;gap:12px}
+.viewer{display:grid;grid-template-columns:220px 1fr auto;gap:8px;padding:8px 14px;border-bottom:1px solid #342810;background:#080a09}.viewer input,.viewer select{width:100%;background:#050606;color:#eee;border:1px solid #5c4519;padding:7px}
+.notice{margin:8px 14px;padding:10px;border:1px solid #76571b;background:#171108}.notice.bad{border-color:#7d3333;color:#ef9c9c}.notice.good{border-color:#2d6d3d;color:#95dfa4}
+.workspace{display:grid;grid-template-columns:215px minmax(0,1fr);min-height:calc(100vh - 130px)}
+.sidebar{border-right:1px solid #493613;background:#070909;position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#35220b,#100d07);color:#f4d46f;border-left:4px solid #c69c31}.side-icon{width:25px;text-align:center;color:#cbb68f}
+.bag-zone{padding:10px;border-top:1px solid #463412}.bag-zone h3{font:700 13px Cinzel;color:#d2ad45;margin:4px 4px 8px}.bag{border:1px solid #493714;background:#0b0c0b;margin-bottom:6px}.bag summary{cursor:pointer;padding:8px 9px;color:#e5c663;font:700 12px Cinzel;list-style:none}.bag summary::-webkit-details-marker{display:none}.bag summary:before{content:"▸";margin-right:7px}.bag[open] summary:before{content:"▾"}.bag-items{padding:0 8px 8px;max-height:220px;overflow:auto}.bag-item{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-top:1px solid #1f1d17;color:#ccc;font-size:13px}.bag-item span:last-child{color:#efcf6f}
+.materials-link{margin-top:8px;width:100%}
+.load-card{position:absolute;bottom:12px;left:10px;right:10px;border:1px solid #5b4518;padding:12px;text-align:center;background:#0a0a08}.load-card h4{font:700 12px Cinzel;color:#ddb848;margin:0 0 6px}.load-card .green{color:#64d078;font-size:18px}.attune-gems{font-size:25px;color:#4ccd67;letter-spacing:4px}
+.main{min-width:0}.equipment-layout{display:grid;grid-template-columns:260px minmax(410px,1fr) 260px 340px;gap:10px;padding:10px}
+.slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:118px;border:1px solid #5b4317;background:linear-gradient(135deg,#0a0d0d,#080706);padding:10px 10px 8px 105px;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
+.equip.empty{padding-left:12px}.equip-img{position:absolute;left:10px;top:13px;width:82px;height:82px;object-fit:contain;border:1px solid #6d521d;background:#020404;padding:3px}.slot-title{font:700 16px Cinzel;color:#e1b64b;margin-bottom:3px}.item-name{font-size:18px}.rarity{font-size:15px}.rarity.Common{color:#ddd}.rarity.Uncommon{color:#48d050}.rarity.Rare{color:#39bafa}.rarity.Very-Rare,.rarity.Legendary{color:#c968ef}.slot-edit{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}.slot-edit select{max-width:100%;background:#050606;color:#ddd;border:1px solid #594317;font-size:11px}.slot-image-btn{font-size:9px;padding:4px 6px}
+.center-stage{border:1px solid #604818;background:#050707;padding:8px;min-width:0}.stage-title{text-align:center;font:700 22px Cinzel;color:#e5bf57;padding:4px;border-bottom:1px solid #5b4317;margin-bottom:7px}.portrait{height:650px;position:relative;border:1px solid #816321;background:#050606;display:flex;align-items:center;justify-content:center;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover}.portrait-placeholder{text-align:center;color:#8b8170;font:700 14px Cinzel}.portrait-upload{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2}
+.bottom-slots{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;padding:0 10px 12px;margin-right:350px}.bottom-slots .equip{padding:10px;min-height:178px;text-align:center}.bottom-slots .equip-img{position:static;width:92px;height:92px;margin:auto;display:block}.bottom-slots .item-name{font-size:16px}.bottom-slots .slot-title{font-size:14px}
+.stats-panel{border:1px solid #5c4519;background:#070909;padding:10px;align-self:start}.stats-section{border:1px solid #493714;background:#090b0b;margin-bottom:9px;padding:10px}.stats-section h3{font:700 14px Cinzel;color:#d8b14c;margin:0 0 10px;border-bottom:1px solid #302712;padding-bottom:5px}.general-head{display:grid;grid-template-columns:1fr 92px;gap:10px}.crest{width:88px;height:104px;object-fit:contain;border:1px dashed #76571b;background:#050606;cursor:pointer}.general-lines{font-size:16px}.statline{display:flex;justify-content:space-between;padding:2px 0}.statline .hp{color:#57ce68}.statline .power{color:#4cbcf0}.abilities .statline{font-size:15px}.attack-row,.save-row{display:flex;justify-content:space-between;padding:3px 0}.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}.skill-row{display:flex;justify-content:space-between;border-bottom:1px solid #1e1b13;padding:2px 0;font-size:13px}.skill-bonus{color:#e7c766}
+.character-edit{margin:0 10px 12px;border:1px solid #554017;background:#080907;padding:10px}.edit-grid{display:grid;grid-template-columns:2fr 80px 80px 2fr;gap:7px}.edit-grid input{width:100%;background:#050606;border:1px solid #5c4519;color:#eee;padding:7px}.edit-actions{display:flex;gap:8px;margin-top:8px}
+.tabs{display:flex;gap:8px;padding:8px 10px;border-top:1px solid #362a12}.craft-wrap{padding:10px}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.panel{border:1px solid #564019;background:#080b0b;padding:10px}.panel h2,.panel h3{font:700 14px Cinzel;color:#d4ad42}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #4c3b16;padding:7px}.tool select,.field input,.field select{width:100%;background:#050606;border:1px solid #5c4519;color:#eee;padding:6px}.field{margin:7px 0}.field label{display:block;font:700 11px Cinzel;color:#c1ab7d}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}.feature-list{display:grid;gap:6px}.toggle{border:1px solid #4c3b16;padding:7px}.actions{display:flex;gap:7px}.small{font-size:13px;color:var(--muted)}.warn{color:#e7c66a}
+@media(max-width:1350px){.equipment-layout{grid-template-columns:230px minmax(360px,1fr) 230px 310px}.bottom-slots{margin-right:320px}}
+@media(max-width:1050px){.workspace{grid-template-columns:180px 1fr}.equipment-layout{grid-template-columns:1fr 1.3fr}.slot-right,.stats-panel{grid-column:auto}.stats-panel{grid-column:1/-1}.bottom-slots{margin-right:0;grid-template-columns:repeat(4,1fr)}}
+@media(max-width:720px){.workspace{grid-template-columns:1fr}.sidebar{display:none}.equipment-layout{grid-template-columns:1fr}.bottom-slots{grid-template-columns:repeat(2,1fr)}.viewer{grid-template-columns:1fr}.edit-grid{grid-template-columns:1fr 1fr}.craft{grid-template-columns:1fr}.tool-list{grid-template-columns:1fr}}
 </style>
 </head>
 <body><div class="shell">
-  <div class="bar">
-    <div class="nav">
-      <a class="btn" href="../">Home</a><a class="btn" href="../player-guide/">Player Guide</a>
-      <a class="btn" href="../crafting-guide/">Crafting Guide</a><a class="btn" href="../material-market/">Market</a>
-      <a class="btn" href="../bastions/my-bastion/">My Bastion</a>
+<div class="topbar">
+  <div class="identity"><img id="miniAvatar" class="mini-avatar hidden"><div><h1 id="topName">My Character</h1><div class="sub"><span id="topClass"></span> · <span id="topRank"></span> <span id="online" class="online hidden">● Online</span></div></div></div>
+  <div class="top-actions owner-only"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="editToggle">✎ Edit Character</button></div>
+</div>
+<div id="message" class="notice hidden"></div>
+<div class="viewer">
+  <input id="characterSearch" placeholder="Search player or character…">
+  <select id="characterSelect"><option value="">My Character</option></select>
+  <button id="visitCharacter">View Sheet</button>
+</div>
+
+<div class="workspace">
+<aside class="sidebar">
+  <div class="side-link" data-jump="overview"><span class="side-icon">⌂</span>Overview</div>
+  <div class="side-link active" data-jump="inventory"><span class="side-icon">🎒</span>Inventory</div>
+  <div class="side-link" data-jump="equipment"><span class="side-icon">⚔</span>Equipment</div>
+  <div class="side-link owner-only" data-tablink="crafting"><span class="side-icon">⚒</span>Crafting</div>
+  <a class="side-link" href="../bastions/my-bastion/"><span class="side-icon">♜</span>Bastions</a>
+  <div class="side-link"><span class="side-icon">▣</span>Contracts</div>
+  <div class="side-link" data-jump="skills"><span class="side-icon">✥</span>Skills</div>
+  <div class="side-link"><span class="side-icon">▤</span>Notes</div>
+  <div class="side-link"><span class="side-icon">◷</span>Activity</div>
+  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button></div>
+  <div class="load-card"><h4>Equipment Load</h4><div class="green">Character Inventory</div><div id="loadCount">— items</div><hr style="border-color:#342812"><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
+</aside>
+
+<main class="main">
+<section id="sheetTab">
+<div id="equipment" class="equipment-layout">
+  <div id="equipLeft" class="slot-column"></div>
+  <div class="center-stage">
+    <div class="stage-title">↠ EQUIPMENT LOADOUT ↞</div>
+    <div id="portraitDrop" class="portrait">
+      <img id="portraitImg" class="hidden" alt="Character portrait">
+      <div id="portraitPlaceholder" class="portrait-placeholder">DROP CHARACTER PORTRAIT HERE<br><span class="small">PNG · JPG · WEBP · max 5 MB</span></div>
+      <button id="uploadBtn" class="portrait-upload owner-only">📷 Change Portrait</button>
+      <input id="portraitFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
-    <div><span id="account" class="small"></span> <button id="loginBtn">Login</button></div>
   </div>
-
-  <div class="hero">
-    <div><div class="subtitle">Black Banner Company · Character Registry</div><h1 id="heroName">MY CHARACTER</h1><div id="heroClass" class="classline"></div></div>
-    <div><div id="heroRank" style="font:700 14px Cinzel;color:#d9b042"></div><div id="online" class="status hidden">Online</div></div>
-  </div>
-  <div id="message" class="notice hidden"></div>
-  <div class="viewer">
-    <div class="field" style="margin:0"><label>Find Character</label><input id="characterSearch" placeholder="Search player or character…"></div>
-    <div class="field" style="margin:0"><label>Visit Character Sheet</label><select id="characterSelect"><option value="">My Character</option></select></div>
-    <button id="visitCharacter">View Sheet</button>
-  </div>
-  <div id="viewingNote" class="readonly-note"></div>
-  <div class="tabs">
-    <button class="tab active" data-tab="sheet">Character Sheet</button>
-    <button class="tab owner-only" data-tab="crafting">Crafting Registry</button>
-  </div>
-
-  <section id="sheetTab">
-    <div class="sheet">
-      <div class="panel left">
-        <h2>Equipped Inventory</h2>
-        <div class="inventory-browser owner-only">
-          <div class="browser-row">
-            <div class="field" style="margin:0"><label>D&D Beyond Inventory</label><select id="ddbInventory"><option value="">Load D&D Beyond inventory…</option></select></div>
-            <div class="field" style="margin:0"><label>Put In Slot</label><select id="ddbTargetSlot"></select></div>
-            <button id="addDdbItem">Add Item</button>
-          </div>
-          <div class="small" id="ddbInventoryNote" style="margin-top:6px">Use Refresh Inventory to load every item on the linked D&D Beyond character.</div>
-          <div class="actions" style="margin-top:6px"><button id="refreshDdbInventory">Refresh Inventory</button></div>
-        </div>
-        <div id="equipLeft" class="equip-grid" style="margin-top:8px"></div>
-        <h3 style="margin-top:12px">Weapons & Extras</h3>
-        <div id="equipBottom" class="equip-grid"></div>
-        <div class="actions owner-only" style="margin-top:9px"><button id="saveGear">Save Loadout</button></div>
-      </div>
-
-      <div class="panel">
-        <div class="character-card">
-          <h2 id="cardName">Character</h2>
-          <div id="portraitDrop" class="portrait">
-            <img id="portraitImg" class="hidden" alt="Character portrait">
-            <div id="portraitPlaceholder" class="portrait-placeholder">DROP CHARACTER PORTRAIT HERE<br><span class="small">PNG · JPG · WEBP · max 5 MB</span></div>
-          </div>
-          <div class="portrait-actions owner-only">
-            <button id="uploadBtn">Upload Portrait</button><input id="portraitFile" type="file" accept="image/png,image/jpeg,image/webp">
-          </div>
-          <div class="summary" style="margin-top:9px">
-            <div class="field"><label>Character Name</label><input id="characterName"></div>
-            <div class="row">
-              <div class="field"><label>Level</label><input id="level" type="number" min="1" max="20"></div>
-              <div class="field"><label>Rank</label><input id="rank" readonly></div>
-            </div>
-            <div class="field"><label>Class / Build</label><input id="classSummary"></div>
-          </div>
-          <div class="field"><label>D&D Beyond Character URL</label><input id="ddbUrl" placeholder="https://www.dndbeyond.com/characters/..."></div>
-          <div class="actions owner-only"><button id="syncBtn">Sync D&D Beyond</button><button id="saveCharacter">Save Character</button></div>
-          <div id="syncNote" class="small" style="margin-top:7px">D&D Beyond sync is experimental.</div>
-        </div>
-      </div>
-
-      <div class="panel right">
-        <h2>Character Statistics</h2>
-        <div class="stats">
-          <div class="stat"><b>STR</b><input id="str" type="number"></div><div class="stat"><b>DEX</b><input id="dex" type="number"></div><div class="stat"><b>CON</b><input id="con" type="number"></div>
-          <div class="stat"><b>INT</b><input id="int" type="number"></div><div class="stat"><b>WIS</b><input id="wis" type="number"></div><div class="stat"><b>CHA</b><input id="cha" type="number"></div>
-        </div>
-        <div class="summary" style="margin-top:10px"><strong>Proficiency Bonus</strong><div id="pb" style="font:700 30px Fira Mono;margin-top:4px">+2</div></div>
-        <div class="summary"><strong>Equipment Source</strong><div class="small">D&D Beyond equipped items are imported automatically when you sync. You can edit any slot afterward.</div></div>
-        <div class="summary"><strong>Attunement</strong><div id="attuneCount" style="font:700 22px Fira Mono">0 / 3</div></div>
-        <div class="summary"><strong>Skills</strong><div class="small" style="margin:3px 0 7px">Pulled automatically when you press Sync D&D Beyond.</div><div id="skillGrid" class="skill-grid"></div></div>
-      </div>
+  <div id="equipRight" class="slot-column"></div>
+  <aside class="stats-panel">
+    <div id="overview" class="stats-section">
+      <h3>General</h3>
+      <div class="general-head"><div class="general-lines"><div id="generalLevel">Level —</div><div id="generalClass">—</div><div id="generalRank">—</div><hr style="border-color:#2d2514">
+        <div class="statline"><span>Health</span><span id="hpLine" class="hp">—</span></div>
+        <div class="statline"><span>Power</span><span id="powerLine" class="power">—</span></div>
+        <div class="statline"><span>Armor Class</span><span id="acLine">—</span></div>
+        <div class="statline"><span>Initiative</span><span id="initLine">—</span></div>
+        <div class="statline"><span>Speed</span><span id="speedLine">—</span></div>
+        <div class="statline"><span>Inspiration</span><span id="inspLine">◇</span></div>
+      </div><img id="crestImg" class="crest owner-clickable" alt="Character crest" title="Click to upload a custom crest"></div>
+      <input id="crestFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
-  </section>
+    <div class="stats-section abilities"><h3>⚄ Ability Scores</h3><div id="abilityList"></div></div>
+    <div class="stats-section"><h3>⚔ Attacks</h3><div id="attackList"></div></div>
+    <div class="stats-section"><h3>⚙ Saving Throws</h3><div id="saveList"></div></div>
+    <div class="stats-section"><div class="statline"><span style="color:#d8b14c">Passive Perception</span><span id="passivePerception">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Save DC</span><span id="spellDC">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Attack</span><span id="spellAttack">—</span></div></div>
+    <div id="skills" class="stats-section"><h3>Skills</h3><div id="skillGrid" class="skill-grid"></div></div>
+  </aside>
+</div>
+<div id="equipBottom" class="bottom-slots"></div>
 
-  <section id="craftingTab" class="hidden">
+<div id="editPanel" class="character-edit owner-only hidden">
+  <div class="edit-grid"><input id="characterName" placeholder="Character Name"><input id="level" type="number" min="1" max="20"><input id="rank" readonly><input id="classSummary" placeholder="Class / Build"></div>
+  <div class="edit-grid" style="grid-template-columns:repeat(6,1fr);margin-top:7px"><input id="str" placeholder="STR"><input id="dex" placeholder="DEX"><input id="con" placeholder="CON"><input id="int" placeholder="INT"><input id="wis" placeholder="WIS"><input id="cha" placeholder="CHA"></div>
+  <input id="ddbUrl" style="width:100%;margin-top:7px;background:#050606;border:1px solid #5c4519;color:#eee;padding:7px" placeholder="D&D Beyond Character URL">
+  <div class="edit-actions"><button id="saveCharacter">Save Character</button><button id="saveGear">Save Loadout</button></div>
+  <div id="syncNote" class="small" style="margin-top:6px"></div>
+</div>
+<div class="tabs owner-only"><button class="tab" data-tab="sheet">Character Sheet</button><button class="tab" data-tab="crafting">Crafting Registry</button></div>
+</section>
+
+<section id="craftingTab" class="hidden craft-wrap">
     <div class="craft">
       <div class="panel">
         <h2>Profession / Tool Registration</h2>
@@ -152,197 +140,165 @@ body.readonly .equip input,body.readonly .equip select,body.readonly #characterN
       </div>
     </div>
   </section>
+</main>
 </div>
-
+</div>
 <script>
 const API_BASE="https://api.blackbannercompany.com";
 const $=id=>document.getElementById(id);
-const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak / Back",chest:"Chest / Armor",arms:"Arms / Bracers",hands:"Hands",waist:"Waist",legs:"Legs",feet:"Feet",main_hand:"Main Hand",off_hand:"Off Hand",ranged:"Ranged",ring_1:"Ring I",ring_2:"Ring II",trinket:"Trinket",other:"Other"};
-const leftSlots=["head","mask","neck","cloak","chest","arms","hands","waist","legs","feet"];
+const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak",chest:"Chest",arms:"Arms",hands:"Hands",waist:"Waist",legs:"Legs",feet:"Feet",main_hand:"Main Hand",off_hand:"Off Hand",ranged:"Ranged",ring_1:"Ring 1",ring_2:"Ring 2",trinket:"Trinket / Other",other:"Other"};
+const leftSlots=["head","mask","neck","cloak","chest","arms"];
+const rightSlots=["hands","waist","legs","feet"];
 const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
-let data=null,toolChoices=[],ddbInventory=[],characterDirectory=[],currentViewingOwn=true;
+let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],characterDirectory=[],currentViewingOwn=true;
 
 async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{...(opts.body instanceof Blob?{}:{"Content-Type":"application/json"}),...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b}
 function show(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
 function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F"}
 function pb(n){n=Number(n||1);return n>=17?6:n>=13?5:n>=9?4:n>=5?3:2}
+function mod(score){return Math.floor((Number(score||10)-10)/2)}
+function signed(n){n=Number(n||0);return `${n>=0?"+":""}${n}`}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+
+function rarityClass(r){return String(r||"").replace(/\s+/g,"-")}
 function equipCard(slot,row={}){
- const name=row.itemName||"",rarity=row.rarity||"",attuned=!!row.attuned,imageUrl=row.customImageUrl||row.imageUrl||"";
- return `<div class="equip ${imageUrl?"has-image":""}" data-slot="${slot}" data-image-url="${imageUrl.replace(/"/g,"&quot;")}">
- ${imageUrl?`<img class="equip-img" src="${imageUrl.replace(/"/g,"&quot;")}" alt="">`:""}
- <div class="slot">${slotLabels[slot]}</div>
- <input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty">
- <div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact","Magic"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div>
- <div class="ddb-picker owner-only"><select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond inventory…</option></select></div>
- <div class="equip-drop owner-only" data-drop-slot="${slot}">Drop/click image</div>
+ const imageUrl=row.customImageUrl||row.imageUrl||"", name=row.itemName||"", rarity=row.rarity||"";
+ return `<div class="equip ${imageUrl?"":"empty"}" data-slot="${slot}" data-image-url="${esc(imageUrl)}">
+   ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="">`:""}
+   <div class="slot-title">${slotLabels[slot]}</div>
+   <div class="item-name">${esc(name||"Empty")}</div>
+   <div class="rarity ${rarityClass(rarity)}">${esc(rarity||"")}</div>
+   <div class="slot-edit owner-only">
+     <select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond…</option></select>
+     <button class="slot-image-btn" data-image-slot="${slot}">Image</button>
+     <label style="font-size:10px;color:#cba9ff"><input class="attuned" type="checkbox" ${row.attuned?"checked":""}> Attuned</label>
+   </div>
  </div>`;
 }
 function renderEquipment(rows=[]){
- const map=new Map(rows.map(x=>[x.slotKey,x]));
- const imgs=(data&&data.equipmentImages)||{};
+ const map=new Map(rows.map(x=>[x.slotKey,x])), imgs=(data&&data.equipmentImages)||{};
  const decorate=s=>({...((map.get(s)||{})),customImageUrl:imgs[s]?.url||null});
  $("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,decorate(s))).join("");
+ $("equipRight").innerHTML=rightSlots.map(s=>equipCard(s,decorate(s))).join("");
  $("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,decorate(s))).join("");
- updateAttune();renderDdbInventory();bindEquipmentImageDrops();
+ bindEquipmentControls();updateAttune();renderDdbPickers();
 }
-function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>({slotKey:el.dataset.slot,itemName:el.querySelector(".itemName").value.trim(),rarity:el.querySelector(".raritySel").value,attuned:el.querySelector(".attuned").checked,source:"manual",imageUrl:el.dataset.imageUrl||null}))}
-function updateAttune(){$("attuneCount").textContent=`${document.querySelectorAll(".attuned:checked").length} / 3`}
-document.addEventListener("change",e=>{
-  if(e.target.classList.contains("attuned"))updateAttune();
-  if(currentViewingOwn && e.target.classList.contains("slotDdbPicker") && e.target.value!==""){
-    const item=ddbInventory[Number(e.target.value)];
-    applyInventoryItemToSlot(item,e.target.dataset.slotPicker);
-    e.target.value="";
-  }
-});
+function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>{const slot=el.dataset.slot;const existing=(data?.equipment||[]).find(x=>x.slotKey===slot)||{};return {slotKey:slot,itemName:el.querySelector(".item-name")?.textContent==="Empty"?"":el.querySelector(".item-name")?.textContent||"",rarity:el.querySelector(".rarity")?.textContent||"",attuned:!!el.querySelector(".attuned")?.checked,source:existing.source||"manual",imageUrl:el.dataset.imageUrl||null}})}
+function updateAttune(){const n=document.querySelectorAll(".attuned:checked").length;$("attuneText").textContent=`${n} / 3`}
 
-function renderTools(crafting){
- const p=crafting?.profile||{}, prof=new Set((crafting?.tools||[]).map(x=>x.tool_key)), expert=new Set([p.expert_tool,p.expert_tool_2].filter(Boolean));
- $("toolList").innerHTML=toolChoices.map(t=>`<div class="tool"><div class="name">${t.name}</div><select data-tool="${t.toolKey}"><option value="none">Not Registered</option><option value="proficient" ${prof.has(t.toolKey)&&!expert.has(t.toolKey)?"selected":""}>Proficient</option><option value="expertise" ${expert.has(t.toolKey)?"selected":""}>Expertise</option></select></div>`).join("");
- const opts='<option value="">None</option>'+toolChoices.map(t=>`<option value="${t.toolKey}">${t.name}</option>`).join("");
- $("temp1").innerHTML=opts;$("temp2").innerHTML=opts;$("magicAdeptTool").innerHTML=opts;
- $("temp1").value=p.temp_tool||"";$("temp2").value=p.temp_tool_2||"";$("magicAdeptTool").value=p.magic_item_adept_tool||"";
- $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;$("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;$("magicAdept").checked=!!p.has_magic_item_adept;
- $("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
+function inventoryLabel(x){return `${x.name}${Number(x.quantity||1)>1?` ×${x.quantity}`:""}${x.equipped?" · Equipped":""}`}
+function renderDdbPickers(){
+ const opts='<option value="">Choose from D&D Beyond…</option>'+ddbInventory.map((x,i)=>`<option value="${i}">${esc(inventoryLabel(x))}</option>`).join("");
+ document.querySelectorAll(".slotDdbPicker").forEach(s=>s.innerHTML=opts);
+}
+function applyInventoryItemToSlot(item,slot){
+ const el=document.querySelector(`.equip[data-slot="${slot}"]`);if(!el||!item)return;
+ el.querySelector(".item-name").textContent=item.name||"Empty";
+ const r=el.querySelector(".rarity");r.textContent=item.rarity||"";r.className=`rarity ${rarityClass(item.rarity)}`;
+ el.dataset.imageUrl=item.imageUrl||"";
+ let img=el.querySelector(".equip-img");
+ if(item.imageUrl){if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.prepend(img)}img.src=item.imageUrl;el.classList.remove("empty")}else if(!img){el.classList.add("empty")}
+ const cb=el.querySelector(".attuned");if(cb)cb.checked=!!item.attuned;
+ updateAttune();
+}
+function bindEquipmentControls(){
+ document.querySelectorAll(".slotDdbPicker").forEach(s=>s.onchange=()=>{if(s.value!==""){applyInventoryItemToSlot(ddbInventory[Number(s.value)],s.dataset.slotPicker);s.value=""}});
+ document.querySelectorAll("[data-image-slot]").forEach(b=>b.onclick=()=>chooseEquipmentImage(b.dataset.imageSlot));
+}
+function chooseEquipmentImage(slot){const i=document.createElement("input");i.type="file";i.accept="image/png,image/jpeg,image/webp";i.onchange=()=>uploadEquipmentImage(slot,i.files?.[0]);i.click()}
+
+function friendlyKey(k){return String(k||"").replace(/_/g," ").replace(/\b([edcbas])\b/gi,m=>m.toUpperCase()+"-Rank").replace(/\b\w/g,m=>m.toUpperCase())}
+function renderBags(){
+ const holder=$("bags");if(!holder)return;
+ const containers=ddbInventory.filter(x=>x.isContainer);
+ const byParent=new Map();
+ for(const item of ddbInventory){const key=item.containerEntityId||"uncontained";if(!byParent.has(key))byParent.set(key,[]);byParent.get(key).push(item)}
+ const parts=[];
+ for(const bag of containers){
+   const items=(byParent.get(String(bag.inventoryId))||[]).filter(x=>String(x.inventoryId)!==String(bag.inventoryId));
+   parts.push(`<details class="bag"><summary>🎒 ${esc(bag.name)} (${items.length})</summary><div class="bag-items">${items.length?items.map(x=>`<div class="bag-item"><span>${esc(x.name)}</span><span>×${Number(x.quantity||1)}</span></div>`).join(""):'<div class="small">Empty</div>'}</div></details>`);
+ }
+ const containedIds=new Set(containers.map(x=>String(x.inventoryId)));
+ const loose=ddbInventory.filter(x=>!x.isContainer && (!x.containerEntityId || !containedIds.has(String(x.containerEntityId))));
+ if(loose.length)parts.push(`<details class="bag"><summary>🧭 Carried / Uncontained (${loose.length})</summary><div class="bag-items">${loose.map(x=>`<div class="bag-item"><span>${esc(x.name)}</span><span>×${Number(x.quantity||1)}</span></div>`).join("")}</div></details>`);
+ holder.innerHTML=parts.join("")||'<div class="small">No D&D Beyond containers found.</div>';
+ $("loadCount").textContent=`${ddbInventory.reduce((s,x)=>s+Number(x.quantity||1),0)} items`;
+}
+function renderMaterialBag(){
+ const rows=materialInventory||[];
+ const html=rows.length?rows.map(x=>`<div class="bag-item"><span>${esc(friendlyKey(x.itemKey))}</span><span>×${Number(x.qty||0)}</span></div>`).join(""):'<div class="small">No crafting materials.</div>';
+ $("bags").innerHTML=`<details class="bag" open><summary>⚒ Crafting Materials (${rows.length})</summary><div class="bag-items">${html}</div></details>`;
+}
+async function loadDdbInventory(){
+ const [d,m]=await Promise.all([api("/api/character/dndbeyond-inventory"),api("/api/inventory")]);
+ ddbInventory=d.inventory||[];materialInventory=m.inventory||[];renderDdbPickers();renderBags();
 }
 
+function renderStats(c,details={},skills=[]){
+ $("generalLevel").textContent=`Level ${c.character_level||"—"}`;$("generalClass").textContent=c.class_summary||"—";$("generalRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
+ const hp=details.hp||{};$("hpLine").textContent=hp.max?`${hp.current} / ${hp.max}${hp.temp?` (+${hp.temp})`:""}`:"—";
+ const pow=details.power||{};$("powerLine").textContent=pow.max?`${pow.current} / ${pow.max}`:"—";
+ $("acLine").textContent=details.armorClass??"—";$("initLine").textContent=details.initiative!=null?signed(details.initiative):"—";$("speedLine").textContent=details.speed?`${details.speed} ft.`:"—";$("inspLine").textContent=details.inspiration?"◆":"◇";
+ const abilities=[["STR",c.strength_score,"Strength"],["DEX",c.dexterity_score,"Dexterity"],["CON",c.constitution_score,"Constitution"],["INT",c.intelligence_score,"Intelligence"],["WIS",c.wisdom_score,"Wisdom"],["CHA",c.charisma_score,"Charisma"]];
+ $("abilityList").innerHTML=abilities.map(([abbr,score])=>`<div class="statline"><span>${abbr}</span><span>${score??"—"}</span><span>${score!=null?signed(mod(score)):"—"}</span></div>`).join("");
+ $("attackList").innerHTML=(details.attacks||[]).map(a=>`<div class="attack-row"><span>${esc(a.name)}</span><span>${signed(a.bonus)}</span></div>`).join("")||'<div class="small">Sync D&D Beyond to load attacks.</div>';
+ $("saveList").innerHTML=(details.savingThrows||[]).map(s=>`<div class="save-row"><span>${esc(s.name)}</span><span>${signed(s.bonus)}</span></div>`).join("")||'<div class="small">Sync D&D Beyond to load saves.</div>';
+ $("passivePerception").textContent=details.passivePerception??"—";$("spellDC").textContent=details.spell?.saveDC??"—";$("spellAttack").textContent=details.spell?.attack!=null?signed(details.spell.attack):"—";
+ renderSkills(skills);
+}
 function renderSkills(skills=[]){
-  const map=new Map((skills||[]).map(s=>[s.name,Number(s.bonus||0)]));
-  const names=["Acrobatics","Animal Handling","Arcana","Athletics","Deception","History","Insight","Intimidation","Investigation","Medicine","Nature","Perception","Performance","Persuasion","Religion","Sleight of Hand","Stealth","Survival"];
-  $("skillGrid").innerHTML=names.map(n=>{const b=map.has(n)?map.get(n):null;return `<div class="skill-row"><span>${n}</span><span class="skill-bonus">${b===null?"—":(b>=0?"+":"")+b}</span></div>`}).join("");
+ const map=new Map((skills||[]).map(s=>[s.name,Number(s.bonus||0)]));const names=["Acrobatics","Animal Handling","Arcana","Athletics","Deception","History","Insight","Intimidation","Investigation","Medicine","Nature","Perception","Performance","Persuasion","Religion","Sleight of Hand","Stealth","Survival"];
+ $("skillGrid").innerHTML=names.map(n=>`<div class="skill-row"><span>${n}</span><span class="skill-bonus">${map.has(n)?signed(map.get(n)):"—"}</span></div>`).join("");
+}
+function renderTools(crafting){
+ const p=crafting?.profile||{},prof=new Set((crafting?.tools||[]).map(x=>x.tool_key)),expert=new Set([p.expert_tool,p.expert_tool_2].filter(Boolean));
+ $("toolList").innerHTML=toolChoices.map(t=>`<div class="tool"><div>${esc(t.name)}</div><select data-tool="${t.toolKey}"><option value="none">Not Registered</option><option value="proficient" ${prof.has(t.toolKey)&&!expert.has(t.toolKey)?"selected":""}>Proficient</option><option value="expertise" ${expert.has(t.toolKey)?"selected":""}>Expertise</option></select></div>`).join("");
+ const opts='<option value="">None</option>'+toolChoices.map(t=>`<option value="${t.toolKey}">${esc(t.name)}</option>`).join("");
+ ["temp1","temp2","magicAdeptTool"].forEach(id=>$(id).innerHTML=opts);$("temp1").value=p.temp_tool||"";$("temp2").value=p.temp_tool_2||"";$("magicAdeptTool").value=p.magic_item_adept_tool||"";
+ $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;$("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;$("magicAdept").checked=!!p.has_magic_item_adept;$("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
 }
 function fill(d){
- data=d;toolChoices=d.toolChoices||[];
- const c=d.character||{};
- $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level||1);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";
+ data=d;toolChoices=d.toolChoices||[];const c=d.character||{};
+ $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";
  [["str","strength_score"],["dex","dexterity_score"],["con","constitution_score"],["int","intelligence_score"],["wis","wisdom_score"],["cha","charisma_score"]].forEach(([id,k])=>$(id).value=c[k]??"");
- $("heroName").textContent=c.character_name||"MY CHARACTER";$("cardName").textContent=c.character_name||"Character";$("heroClass").textContent=c.class_summary||"";$("heroRank").textContent=`${$("rank").value}-Rank · Level ${$("level").value}`;$("pb").textContent=`+${pb($("level").value)}`;
- renderEquipment(d.equipment||[]);renderTools(d.crafting||{});renderSkills(d.skills||[]);
- if(d.portrait?.hasPortrait){$("portraitImg").src=d.portrait.url||API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden")}
+ $("topName").textContent=c.character_name||"My Character";$("topClass").textContent=c.class_summary||"";$("topRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
+ renderEquipment(d.equipment||[]);renderStats(c,d.ddbDetails||{},d.skills||[]);renderTools(d.crafting||{});
+ if(d.ddbInventory?.length){ddbInventory=d.ddbInventory;renderDdbPickers();renderBags()}
+ if(d.portrait?.hasPortrait){$("portraitImg").src=d.portrait.url;$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");$("miniAvatar").src=d.portrait.url;$("miniAvatar").classList.remove("hidden")}
+ else{$("portraitImg").classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}
+ if(d.crest?.hasCrest){$("crestImg").src=d.crest.url}else{$("crestImg").removeAttribute("src")}
  if(c.dndbeyond_last_sync)$("syncNote").textContent="Last D&D Beyond sync: "+new Date(Number(c.dndbeyond_last_sync)).toLocaleString();
 }
 function characterPayload(){
  const prof=[],exp=[];document.querySelectorAll("[data-tool]").forEach(s=>{if(s.value!=="none")prof.push(s.dataset.tool);if(s.value==="expertise")exp.push(s.dataset.tool)});
- return {characterName:$("characterName").value,characterLevel:Number($("level").value),classSummary:$("classSummary").value,dndBeyondUrl:$("ddbUrl").value,
- strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,
- proficientTools:prof,expertTools:exp,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),
- hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,
- hasMagicItemAdept:$("magicAdept").checked,magicItemAdeptTool:$("magicAdeptTool").value,intelligenceModifier:Number($("intMod").value||0)}
+ return {characterName:$("characterName").value,characterLevel:Number($("level").value),classSummary:$("classSummary").value,dndBeyondUrl:$("ddbUrl").value,strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,proficientTools:prof,expertTools:exp,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,hasMagicItemAdept:$("magicAdept").checked,magicItemAdeptTool:$("magicAdeptTool").value,intelligenceModifier:Number($("intMod").value||0)}
 }
-async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register permanent Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});await api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})});show("Character and crafting registration saved.","good");await load()}
+async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});await api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})});show("Character saved.","good");await load()}
 
-async function loadCharacterDirectory(){
-  const d=await api("/api/characters");
-  characterDirectory=d.characters||[];
-  renderCharacterDirectory("");
-}
-function renderCharacterDirectory(filter=""){
-  const q=String(filter||"").trim().toLowerCase();
-  const rows=characterDirectory.filter(c=>!q || `${c.playerName||""} ${c.characterName||""} ${c.classSummary||""}`.toLowerCase().includes(q));
-  $("characterSelect").innerHTML='<option value="">My Character</option>'+rows
-    .filter(c=>!c.isMine)
-    .map(c=>`<option value="${c.userId}">${c.playerName||"Banner Member"} — ${c.characterName||"Character"}${c.rank?` · ${c.rank}-Rank`:""}</option>`).join("");
-}
-function setReadOnlyMode(readonly,ownerName=""){
-  currentViewingOwn=!readonly;
-  document.body.classList.toggle("readonly",readonly);
-  $("viewingNote").textContent=readonly?`Viewing ${ownerName||"another player's"} Character Sheet · Read Only`:"";
-  if(readonly){
-    $("craftingTab").classList.add("hidden");
-    $("sheetTab").classList.remove("hidden");
-    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab==="sheet"));
-  }
-}
-async function visitCharacter(ownerId){
-  if(!ownerId){
-    history.replaceState({},document.title,location.pathname);
-    setReadOnlyMode(false);
-    const d=await api("/api/character/profile");
-    fill(d);
-    return;
-  }
-  const d=await api("/api/character/view?owner="+encodeURIComponent(ownerId));
-  history.replaceState({},document.title,location.pathname+"?owner="+encodeURIComponent(ownerId));
-  setReadOnlyMode(true,d.owner?.globalName||d.character?.character_name||"Banner Member");
-  fill(d);
-}
-async function load(){try{
-  const s=await api("/api/session");
-  $("account").textContent=s.user.globalName||s.user.username;
-  $("loginBtn").textContent="Logout";
-  $("online").classList.remove("hidden");
-  await loadCharacterDirectory();
-  const owner=new URLSearchParams(location.search).get("owner");
-  if(owner){
-    const d=await api("/api/character/view?owner="+encodeURIComponent(owner));
-    setReadOnlyMode(true,d.owner?.globalName||d.character?.character_name||"Banner Member");
-    fill(d);
-    $("characterSelect").value=owner;
-  }else{
-    setReadOnlyMode(false);
-    const d=await api("/api/character/profile");
-    fill(d);
-  }
-  $("message").classList.add("hidden");
-}catch(e){
-  $("loginBtn").textContent="Login";
-  show("Login with Discord to open the Character Registry.","bad");
-}}
-$("loginBtn").onclick=async()=>{if($("loginBtn").textContent==="Logout"){await api("/auth/logout",{method:"POST",body:"{}"});location.reload()}else location.href=API_BASE+"/auth/discord?return="+encodeURIComponent("/character/")};
-$("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value);$("pb").textContent=`+${pb($("level").value)}`};
-$("int").oninput=()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2)};
-$("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Equipment loadout saved.","good")).catch(e=>show(e.message,"bad"));$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
-$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s), ${d.sync.inventoryCount||ddbInventory.length} inventory item(s), ${(d.sync.skills||[]).length} skills updated.`;show("D&D Beyond sync complete. Equipped items were auto-filled, and the full D&D Beyond inventory is now available in the dropdowns.","good");await load();renderDdbInventory()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("sheetTab").classList.toggle("hidden",b.dataset.tab!=="sheet");$("craftingTab").classList.toggle("hidden",b.dataset.tab!=="crafting")});
+async function uploadEquipmentImage(slot,file){if(!file)return;const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");if(!data.equipmentImages)data.equipmentImages={};data.equipmentImages[slot]={url:b.url};renderEquipment(data.equipment||[])}
+async function uploadPortrait(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");show("Portrait updated.","good");await load()}
+async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
 
-async function uploadEquipmentImage(slot,file){
- if(!currentViewingOwn||!file)return;
- if(!["image/png","image/jpeg","image/webp"].includes(file.type))return show("Use a PNG, JPG, or WebP image for equipment slots.","bad");
- if(file.size>5*1024*1024)return show("Equipment image is larger than 5 MB.","bad");
- const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
- const b=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(b.error||"Equipment image upload failed.");
- if(!data.equipmentImages)data.equipmentImages={};
- data.equipmentImages[slot]={url:b.url};
- const el=document.querySelector(`.equip[data-slot="${slot}"]`);
- if(el){
-   el.dataset.imageUrl=b.url||"";
-   let img=el.querySelector(".equip-img");
-   if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.prepend(img)}
-   img.src=b.url;el.classList.add("has-image");
- }
- show("Equipment slot image updated.","good");
-}
-function bindEquipmentImageDrops(){
- document.querySelectorAll(".equip-drop").forEach(drop=>{
-   const slot=drop.dataset.dropSlot;
-   drop.onclick=()=>{
-     if(!currentViewingOwn)return;
-     const input=document.createElement("input");input.type="file";input.accept="image/png,image/jpeg,image/webp";
-     input.onchange=()=>uploadEquipmentImage(slot,input.files?.[0]).catch(e=>show(e.message,"bad"));
-     input.click();
-   };
-   ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{if(!currentViewingOwn)return;e.preventDefault();drop.classList.add("drag")}));
-   ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{if(!currentViewingOwn)return;e.preventDefault();drop.classList.remove("drag")}));
-   drop.addEventListener("drop",e=>uploadEquipmentImage(slot,e.dataTransfer?.files?.[0]).catch(err=>show(err.message,"bad")));
- });
-}
-async function uploadPortrait(file){if(!file)return;if(file.size>5*1024*1024)return show("Portrait is larger than 5 MB.","bad");try{const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json();if(!r.ok)throw new Error(b.error||"Upload failed");$("portraitImg").src=API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");show("Character portrait uploaded.","good")}catch(e){show(e.message,"bad")}}
+async function loadCharacterDirectory(){const d=await api("/api/characters");characterDirectory=d.characters||[];renderDirectory("")}
+function renderDirectory(q=""){q=q.toLowerCase();$("characterSelect").innerHTML='<option value="">My Character</option>'+characterDirectory.filter(c=>!c.isMine&&(!q||`${c.playerName} ${c.characterName}`.toLowerCase().includes(q))).map(c=>`<option value="${c.userId}">${esc(c.playerName)} — ${esc(c.characterName)}</option>`).join("")}
+function setReadOnly(v,name=""){currentViewingOwn=!v;document.body.classList.toggle("readonly",v);if(v)$("editPanel").classList.add("hidden")}
+async function visitCharacter(id){const d=id?await api("/api/character/view?owner="+encodeURIComponent(id)):await api("/api/character/profile");setReadOnly(!!id,d.owner?.globalName||"");fill(d)}
+async function load(){try{const s=await api("/api/session");$("online").classList.remove("hidden");await loadCharacterDirectory();const owner=new URLSearchParams(location.search).get("owner");if(owner){$("characterSelect").value=owner;await visitCharacter(owner)}else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}}catch(e){show("Character page could not load: "+e.message,"bad")}}
 
-$("refreshDdbInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));
-$("addDdbItem").onclick=()=>{
-  const idx=$("ddbInventory").value;
-  if(idx==="")return show("Choose an item from the D&D Beyond inventory first.","bad");
-  applyInventoryItemToSlot(ddbInventory[Number(idx)],$("ddbTargetSlot").value);
-  $("ddbInventory").value="";
-  show("Item added to the selected equipment slot. Click Save Loadout to keep it.","good");
-};
-
-$("characterSearch").addEventListener("input",e=>renderCharacterDirectory(e.target.value));
-$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
-$("characterSelect").addEventListener("change",()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad")));
-$("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]);
-["dragenter","dragover"].forEach(ev=>$("portraitDrop").addEventListener(ev,e=>{e.preventDefault();e.dataTransfer.dropEffect="copy"}));$("portraitDrop").addEventListener("drop",e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0])});
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
+$("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
+$("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
+$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
+$("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
+$("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
+$("crestImg").onclick=()=>{if(currentViewingOwn)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
+$("refreshInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
+$("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
+$("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
+document.querySelectorAll("[data-tablink='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
+document.querySelectorAll("[data-tab='sheet']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.remove("hidden");$("craftingTab").classList.add("hidden")});
+document.querySelectorAll("[data-tab='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
+document.querySelectorAll("[data-jump]").forEach(x=>x.onclick=()=>document.getElementById(x.dataset.jump)?.scrollIntoView({behavior:"smooth"}));
 load();
 </script>
 </body></html>
