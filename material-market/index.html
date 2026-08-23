@@ -541,7 +541,7 @@ function listingRows(filtered) {
         <td>${f.rank ? `<span class="rank rank-${f.rank}">${f.rank}</span> ` : ""}${escapeHtml(f.name.replace(/^[EDCBAS]-Rank /,""))}</td>
         <td class="qty">${Number(x.quantityRemaining)}</td>
         <td class="gold">${Number(x.priceEach).toLocaleString()}g</td>
-        <td>${own ? "You" : `Member ${escapeHtml(String(x.sellerId).slice(-6))}`}</td>
+        <td>${own ? "You" : escapeHtml(x.sellerName || `Member ${String(x.sellerId).slice(-6)}`)}</td>
         <td><button ${own ? "disabled" : ""} onclick="buyListing(${Number(x.id)}, ${Number(x.quantityRemaining)}, ${Number(x.priceEach)}, '${escapeHtml(x.itemKey)}')">${own ? "Your Listing" : "Buy"}</button></td>
       </tr>`;
     }).join("")}</tbody>
