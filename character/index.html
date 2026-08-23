@@ -17,6 +17,9 @@ button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;ju
 .portrait{position:relative;min-height:560px;background:linear-gradient(#0d151b,#05080b);border:1px solid #5a6870;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .portrait img{width:100%;height:100%;min-height:560px;object-fit:cover;display:block}.portrait-placeholder{color:#667982;font:700 16px 'Cinzel';text-align:center;padding:30px}.portrait-actions{display:flex;gap:6px;margin-top:7px}.portrait-actions>*{flex:1}.portrait input{display:none}
 .equip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.equip{border:1px solid #334852;background:#071017;min-height:74px;padding:7px;position:relative}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
+.ddb-picker{margin-top:6px}.ddb-picker select{max-width:none;width:100%;background:#061016;border:1px solid #42616d;color:#dce8ec;padding:5px;font-size:12px}
+.inventory-browser{margin-top:10px;border:1px solid #38505b;background:#071017;padding:9px}.inventory-browser .browser-row{display:grid;grid-template-columns:1fr 180px 120px;gap:7px;align-items:end}.inventory-browser select{width:100%;background:#050a0e;border:1px solid #405a65;color:#eee;padding:8px}
+.badge{display:inline-block;padding:2px 6px;border:1px solid #45606b;margin-left:5px;font:500 10px Fira Mono;color:#8fd7e5}.badge.eq{border-color:#7a6422;color:#e8c75a}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.stat{border:1px solid #314752;background:#071017;text-align:center;padding:8px}.stat b{display:block;font:700 11px 'Cinzel';color:#8198a1}.stat .score{font:700 24px 'Fira Mono';color:#fff}.stat input{width:55px;background:#03080b;border:0;color:#fff;text-align:center;font:700 20px 'Fira Mono'}
 .field{margin:7px 0}.field label{display:block;color:#90a1a9;font:700 11px 'Cinzel';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}.field input,.field select{width:100%;background:#050a0e;border:1px solid #334b55;color:#eee;padding:8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .summary{border:1px solid #334b55;padding:9px;background:#071017;margin-bottom:8px}.summary strong{color:#e5ba44}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #314752;background:#071017;padding:7px}.tool .name{min-height:37px;color:#ddd}.tool select{width:100%;background:#050a0e;color:#eee;border:1px solid #405963;padding:6px}
@@ -50,7 +53,16 @@ button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;ju
     <div class="sheet">
       <div class="panel left">
         <h2>Equipped Inventory</h2>
-        <div id="equipLeft" class="equip-grid"></div>
+        <div class="inventory-browser">
+          <div class="browser-row">
+            <div class="field" style="margin:0"><label>D&D Beyond Inventory</label><select id="ddbInventory"><option value="">Load D&D Beyond inventory…</option></select></div>
+            <div class="field" style="margin:0"><label>Put In Slot</label><select id="ddbTargetSlot"></select></div>
+            <button id="addDdbItem">Add Item</button>
+          </div>
+          <div class="small" id="ddbInventoryNote" style="margin-top:6px">Use Refresh Inventory to load every item on the linked D&D Beyond character.</div>
+          <div class="actions" style="margin-top:6px"><button id="refreshDdbInventory">Refresh Inventory</button></div>
+        </div>
+        <div id="equipLeft" class="equip-grid" style="margin-top:8px"></div>
         <h3 style="margin-top:12px">Weapons & Extras</h3>
         <div id="equipBottom" class="equip-grid"></div>
         <div class="actions" style="margin-top:9px"><button id="saveGear">Save Loadout</button></div>
@@ -133,7 +145,7 @@ const $=id=>document.getElementById(id);
 const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak / Back",chest:"Chest / Armor",arms:"Arms / Bracers",hands:"Hands",waist:"Waist",legs:"Legs",feet:"Feet",main_hand:"Main Hand",off_hand:"Off Hand",ranged:"Ranged",ring_1:"Ring I",ring_2:"Ring II",trinket:"Trinket",other:"Other"};
 const leftSlots=["head","mask","neck","cloak","chest","arms","hands","waist","legs","feet"];
 const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
-let data=null,toolChoices=[];
+let data=null,toolChoices=[],ddbInventory=[];
 
 async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{...(opts.body instanceof Blob?{}:{"Content-Type":"application/json"}),...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b}
 function show(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
@@ -141,12 +153,52 @@ function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>
 function pb(n){n=Number(n||1);return n>=17?6:n>=13?5:n>=9?4:n>=5?3:2}
 function equipCard(slot,row={}){
  const name=row.itemName||"",rarity=row.rarity||"",attuned=!!row.attuned;
- return `<div class="equip" data-slot="${slot}"><div class="slot">${slotLabels[slot]}</div><input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty"><div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div></div>`;
+ return `<div class="equip" data-slot="${slot}"><div class="slot">${slotLabels[slot]}</div><input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty"><div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact","Magic"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div><div class="ddb-picker"><select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond inventory…</option></select></div></div>`;
 }
-function renderEquipment(rows=[]){const map=new Map(rows.map(x=>[x.slotKey,x]));$("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,map.get(s)||{})).join("");$("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,map.get(s)||{})).join("");updateAttune()}
+function renderEquipment(rows=[]){const map=new Map(rows.map(x=>[x.slotKey,x]));$("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,map.get(s)||{})).join("");$("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,map.get(s)||{})).join("");updateAttune();renderDdbInventory()}
+function inventoryLabel(x){
+  const bits=[x.name];
+  if(x.quantity>1)bits.push(`×${x.quantity}`);
+  if(x.equipped)bits.push("Equipped");
+  if(x.attuned)bits.push("Attuned");
+  return bits.join(" · ");
+}
+function renderDdbInventory(){
+  const opts='<option value="">Choose item…</option>'+ddbInventory.map((x,i)=>`<option value="${i}">${inventoryLabel(x)}</option>`).join("");
+  $("ddbInventory").innerHTML=opts;
+  $("ddbTargetSlot").innerHTML=Object.entries(slotLabels).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+  document.querySelectorAll(".slotDdbPicker").forEach(sel=>{
+    sel.innerHTML='<option value="">Choose from D&D Beyond inventory…</option>'+ddbInventory.map((x,i)=>`<option value="${i}">${inventoryLabel(x)}</option>`).join("");
+  });
+}
+function applyInventoryItemToSlot(item,slot){
+  const el=document.querySelector(`.equip[data-slot="${slot}"]`);
+  if(!el||!item)return;
+  el.querySelector(".itemName").value=item.name||"";
+  el.querySelector(".raritySel").value=item.rarity||"";
+  el.querySelector(".attuned").checked=!!item.attuned;
+  let tag=el.querySelector(".syncsrc");
+  if(!tag){tag=document.createElement("span");tag.className="syncsrc";tag.textContent="D&D BEYOND";el.querySelector(".meta").appendChild(tag)}
+  updateAttune();
+}
+async function loadDdbInventory(){
+  $("ddbInventoryNote").textContent="Loading D&D Beyond inventory…";
+  const d=await api("/api/character/dndbeyond-inventory");
+  ddbInventory=d.inventory||[];
+  renderDdbInventory();
+  $("ddbInventoryNote").textContent=`Loaded ${d.totalCount||ddbInventory.length} item(s), including ${d.equippedCount||0} currently equipped. Pick any item and assign it to a slot.`;
+}
+
 function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>({slotKey:el.dataset.slot,itemName:el.querySelector(".itemName").value.trim(),rarity:el.querySelector(".raritySel").value,attuned:el.querySelector(".attuned").checked,source:"manual"}))}
 function updateAttune(){$("attuneCount").textContent=`${document.querySelectorAll(".attuned:checked").length} / 3`}
-document.addEventListener("change",e=>{if(e.target.classList.contains("attuned"))updateAttune()});
+document.addEventListener("change",e=>{
+  if(e.target.classList.contains("attuned"))updateAttune();
+  if(e.target.classList.contains("slotDdbPicker") && e.target.value!==""){
+    const item=ddbInventory[Number(e.target.value)];
+    applyInventoryItemToSlot(item,e.target.dataset.slotPicker);
+    e.target.value="";
+  }
+});
 
 function renderTools(crafting){
  const p=crafting?.profile||{}, prof=new Set((crafting?.tools||[]).map(x=>x.tool_key)), expert=new Set([p.expert_tool,p.expert_tool_2].filter(Boolean));
@@ -181,9 +233,18 @@ $("loginBtn").onclick=async()=>{if($("loginBtn").textContent==="Logout"){await a
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value);$("pb").textContent=`+${pb($("level").value)}`};
 $("int").oninput=()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2)};
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Equipment loadout saved.","good")).catch(e=>show(e.message,"bad"));$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
-$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s) imported.`;show("D&D Beyond sync complete. Equipment and character information refreshed.","good");await load()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s) imported, ${d.sync.inventoryCount||ddbInventory.length} total inventory item(s) available.`;show("D&D Beyond sync complete. Equipped items were auto-filled, and the full D&D Beyond inventory is now available in the dropdowns.","good");await load();renderDdbInventory()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("sheetTab").classList.toggle("hidden",b.dataset.tab!=="sheet");$("craftingTab").classList.toggle("hidden",b.dataset.tab!=="crafting")});
 async function uploadPortrait(file){if(!file)return;if(file.size>5*1024*1024)return show("Portrait is larger than 5 MB.","bad");try{const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json();if(!r.ok)throw new Error(b.error||"Upload failed");$("portraitImg").src=API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");show("Character portrait uploaded.","good")}catch(e){show(e.message,"bad")}}
+
+$("refreshDdbInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));
+$("addDdbItem").onclick=()=>{
+  const idx=$("ddbInventory").value;
+  if(idx==="")return show("Choose an item from the D&D Beyond inventory first.","bad");
+  applyInventoryItemToSlot(ddbInventory[Number(idx)],$("ddbTargetSlot").value);
+  $("ddbInventory").value="";
+  show("Item added to the selected equipment slot. Click Save Loadout to keep it.","good");
+};
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]);
 ["dragenter","dragover"].forEach(ev=>$("portraitDrop").addEventListener(ev,e=>{e.preventDefault();e.dataTransfer.dropEffect="copy"}));$("portraitDrop").addEventListener("drop",e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0])});
 load();
