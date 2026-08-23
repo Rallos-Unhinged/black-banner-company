@@ -194,7 +194,7 @@ h1 {
   gap:.6rem;
   margin-bottom:.8rem;
 }
-input, select {
+input, select, textarea {
   width:100%;
   padding:.72rem .75rem;
   color:var(--text);
@@ -202,7 +202,7 @@ input, select {
   border:1px solid rgba(216,166,59,.34);
   font:inherit;
 }
-input:focus, select:focus { outline:1px solid var(--gold); }
+input:focus, select:focus, textarea:focus { outline:1px solid var(--gold); }
 select option { background:#100d0a; color:var(--text); }
 
 .table-wrap { overflow-x:auto; }
@@ -303,8 +303,8 @@ footer {
 
   <header class="hero">
     <div class="eyebrow">Black Banner Company Exchange</div>
-    <h1>Material Market</h1>
-    <p class="subtitle">Trade the resources of Thracia directly with other members beneath the Banner.</p>
+    <h1>Company Market</h1>
+    <p class="subtitle">Trade crafting materials and custom items directly with other members beneath the Banner.</p>
   </header>
 
   <div id="message" class="notice hidden"></div>
@@ -346,6 +346,18 @@ footer {
           <div class="empty">Login with Discord to load the Black Banner market.</div>
         </div>
       </section>
+
+      <section class="panel" style="margin-top:1rem">
+        <h2>Custom Items</h2>
+        <div class="rule"></div>
+        <div class="controls">
+          <input id="customSearch" placeholder="Search custom items...">
+          <select id="customRankFilter"><option value="">All Ranks</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select>
+          <select id="customSortBy"><option value="newest">Newest</option><option value="priceLow">Price: Low to High</option><option value="priceHigh">Price: High to Low</option><option value="name">Item Name</option></select>
+          <button id="refreshCustom">Refresh</button>
+        </div>
+        <div id="customMarket" class="card-list"><div class="empty">Login to view custom item listings.</div></div>
+      </section>
     </main>
 
     <aside>
@@ -365,14 +377,28 @@ footer {
       </section>
 
       <section class="panel" style="margin-top:1rem">
+        <h2>Sell Custom Item</h2>
+        <div class="rule"></div>
+        <p class="muted">Custom items are tracked by the website. Gold transfers automatically when sold.</p>
+        <h3>Item Name</h3><input id="customName" maxlength="120" placeholder="Item name">
+        <h3>Item Rank</h3><select id="customRank"><option value="">Unranked</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select>
+        <h3>Rarity</h3><select id="customRarity"><option value="">Not specified</option><option>Common</option><option>Uncommon</option><option>Rare</option><option>Very Rare</option><option>Legendary</option><option>Artifact</option><option>Other</option></select>
+        <h3>Description</h3><textarea id="customDescription" rows="5" maxlength="1500" placeholder="Paste the item's description/effects here."></textarea>
+        <h3>Item Link (Optional)</h3><input id="customUrl" maxlength="500" placeholder="https://...">
+        <h3>Quantity</h3><input id="customQty" type="number" min="1" max="99" value="1">
+        <h3>Price Per Item</h3><input id="customPrice" type="number" min="1" value="100">
+        <button id="customSellBtn" class="primary" style="margin-top:.8rem;width:100%" disabled>Create Custom Listing</button>
+      </section>
+
+      <section class="panel" style="margin-top:1rem">
+        <h2>My Purchased Custom Items</h2>
+        <div class="rule"></div>
+        <div id="customPurchases" class="card-list"><div class="empty">Login to view purchased custom items.</div></div>
+      </section>
+
+      <section class="panel" style="margin-top:1rem">
         <h2>My Inventory</h2>
         <div class="rule"></div>
-        <select id="inventorySort" style="margin-bottom:.75rem">
-          <option value="rankHigh">Rank: High to Low</option>
-          <option value="rankLow">Rank: Low to High</option>
-          <option value="name">Name: A to Z</option>
-          <option value="qtyHigh">Quantity: High to Low</option>
-        </select>
         <div id="inventory" class="card-list">
           <div class="empty">Login to view your crafting materials.</div>
         </div>
@@ -388,7 +414,7 @@ footer {
     </aside>
   </div>
 
-  <footer>Black Banner Company · Material Market · Drathmere Exchange</footer>
+  <footer>Black Banner Company · Company Market · Drathmere Exchange</footer>
 </div>
 
 <script>
@@ -399,12 +425,15 @@ footer {
   Before publishing for all players, replace API_BASE with your public HTTPS
   Black Banner API address, e.g. https://api.yourdomain.com
 */
-const API_BASE = "https://api.blackbannercompany.com";
+const API_BASE = "http://127.0.0.1:8787";
 
 let me = null;
 let inventory = [];
 let listings = [];
 let myListings = [];
+let customListings = [];
+let myCustomListings = [];
+let customPurchases = [];
 
 const $ = (id) => document.getElementById(id);
 
@@ -487,29 +516,10 @@ function renderInventory() {
   holder.innerHTML = "";
   select.innerHTML = '<option value="">Choose a material...</option>';
 
-  const rankOrder = { S: 6, A: 5, B: 4, C: 3, D: 2, E: 1, "": 0 };
-  const sortMode = $("inventorySort")?.value || "rankHigh";
-
-  const sortedInventory = [...inventory].sort((a, b) => {
-    const fa = friendlyItemKey(a.itemKey);
-    const fb = friendlyItemKey(b.itemKey);
-
-    if (sortMode === "rankHigh") {
-      return (rankOrder[fb.rank] - rankOrder[fa.rank]) || fa.name.localeCompare(fb.name);
-    }
-    if (sortMode === "rankLow") {
-      return (rankOrder[fa.rank] - rankOrder[fb.rank]) || fa.name.localeCompare(fb.name);
-    }
-    if (sortMode === "qtyHigh") {
-      return (Number(b.qty) - Number(a.qty)) || fa.name.localeCompare(fb.name);
-    }
-    return fa.name.localeCompare(fb.name);
-  });
-
-  if (!sortedInventory.length) {
+  if (!inventory.length) {
     holder.innerHTML = '<div class="empty">No crafting materials found.</div>';
   } else {
-    for (const row of sortedInventory) {
+    for (const row of inventory) {
       const f = friendlyItemKey(row.itemKey);
       const line = document.createElement("div");
       line.className = "inventory-row";
@@ -525,6 +535,7 @@ function renderInventory() {
   }
   select.disabled = false;
   $("sellBtn").disabled = false;
+  $("customSellBtn").disabled = false;
 }
 
 function listingRows(filtered) {
@@ -541,7 +552,7 @@ function listingRows(filtered) {
         <td>${f.rank ? `<span class="rank rank-${f.rank}">${f.rank}</span> ` : ""}${escapeHtml(f.name.replace(/^[EDCBAS]-Rank /,""))}</td>
         <td class="qty">${Number(x.quantityRemaining)}</td>
         <td class="gold">${Number(x.priceEach).toLocaleString()}g</td>
-        <td>${own ? "You" : escapeHtml(x.sellerName || `Member ${String(x.sellerId).slice(-6)}`)}</td>
+        <td>${own ? "You" : `Member ${escapeHtml(String(x.sellerId).slice(-6))}`}</td>
         <td><button ${own ? "disabled" : ""} onclick="buyListing(${Number(x.id)}, ${Number(x.quantityRemaining)}, ${Number(x.priceEach)}, '${escapeHtml(x.itemKey)}')">${own ? "Your Listing" : "Buy"}</button></td>
       </tr>`;
     }).join("")}</tbody>
@@ -569,6 +580,44 @@ function renderMarket() {
   $("market").innerHTML = listingRows(filtered);
 }
 
+function customListingCards(rows) {
+  if (!rows.length) return '<div class="empty">No active custom item listings match your filters.</div>';
+  return rows.map((x) => {
+    const own = me && String(x.sellerId) === String(me.user.id);
+    const rankBadge = x.itemRank ? `<span class="rank rank-${escapeHtml(x.itemRank)}">${escapeHtml(x.itemRank)}</span> ` : "";
+    const rarity = x.rarity ? ` · ${escapeHtml(x.rarity)}` : "";
+    const desc = x.description ? `<div class="muted" style="margin-top:.35rem;white-space:pre-wrap">${escapeHtml(x.description)}</div>` : "";
+    const link = x.itemUrl ? `<div style="margin-top:.35rem"><a class="gold" href="${escapeHtml(x.itemUrl)}" target="_blank" rel="noopener noreferrer">View Item Link</a></div>` : "";
+    return `<div class="listing-card">
+      <strong>${rankBadge}${escapeHtml(x.itemName)}</strong><span class="muted">${rarity}</span><br>
+      <span class="muted">Available:</span> ${Number(x.quantityRemaining)} · <span class="gold">${Number(x.priceEach).toLocaleString()}g each</span> · <span class="muted">Seller:</span> ${own ? "You" : `Member ${escapeHtml(String(x.sellerId).slice(-6))}`}
+      ${desc}${link}
+      <div class="action-row"><button ${own ? "disabled" : ""} onclick="buyCustomListing(${Number(x.id)},${Number(x.quantityRemaining)},${Number(x.priceEach)},'${escapeHtml(String(x.itemName)).replaceAll("'","&#039;")}')">${own ? "Your Listing" : "Buy"}</button></div>
+    </div>`;
+  }).join("");
+}
+
+function renderCustomMarket() {
+  const q = $("customSearch").value.trim().toLowerCase();
+  const rank = $("customRankFilter").value;
+  const sort = $("customSortBy").value;
+  let rows = customListings.filter((x) => (!q || `${x.itemName} ${x.rarity || ""} ${x.description || ""}`.toLowerCase().includes(q)) && (!rank || x.itemRank === rank));
+  rows.sort((a,b) => sort === "priceLow" ? a.priceEach-b.priceEach : sort === "priceHigh" ? b.priceEach-a.priceEach : sort === "name" ? a.itemName.localeCompare(b.itemName) : b.createdAt-a.createdAt);
+  $("customMarket").innerHTML = customListingCards(rows);
+}
+
+function renderMyCustomListings() {
+  const rows = myCustomListings.filter(x => x.status === "active" && x.quantityRemaining > 0);
+  if (!rows.length) return;
+  $("myListings").innerHTML += rows.map(x => `<div class="listing-card"><strong>Custom: ${escapeHtml(x.itemName)}</strong><br><span class="muted">Remaining:</span> ${Number(x.quantityRemaining)} · <span class="gold">${Number(x.priceEach).toLocaleString()}g each</span><div class="action-row"><button class="danger" onclick="cancelCustomListing(${Number(x.id)})">Cancel Custom Listing</button></div></div>`).join("");
+}
+
+function renderCustomPurchases() {
+  const holder = $("customPurchases");
+  if (!customPurchases.length) { holder.innerHTML = '<div class="empty">You have not purchased any custom items yet.</div>'; return; }
+  holder.innerHTML = customPurchases.map(x => `<div class="listing-card"><strong>${x.itemRank ? `<span class="rank rank-${escapeHtml(x.itemRank)}">${escapeHtml(x.itemRank)}</span> ` : ""}${escapeHtml(x.itemName)}</strong>${x.rarity ? ` <span class="muted">· ${escapeHtml(x.rarity)}</span>` : ""}<br><span class="muted">Quantity:</span> ${Number(x.quantity)} · <span class="gold">${Number(x.totalGold).toLocaleString()}g paid</span>${x.description ? `<div class="muted" style="margin-top:.35rem;white-space:pre-wrap">${escapeHtml(x.description)}</div>` : ""}${x.itemUrl ? `<div style="margin-top:.35rem"><a class="gold" href="${escapeHtml(x.itemUrl)}" target="_blank" rel="noopener noreferrer">View Item Link</a></div>` : ""}</div>`).join("");
+}
+
 function renderMyListings() {
   const holder = $("myListings");
   const active = myListings.filter(x => x.status === "active" && x.quantityRemaining > 0);
@@ -591,20 +640,29 @@ function renderMyListings() {
 
 async function loadAll() {
   try {
-    const [meData, invData, marketData, mineData] = await Promise.all([
+    const [meData, invData, marketData, mineData, customData, myCustomData, purchasesData] = await Promise.all([
       api("/api/me"),
       api("/api/inventory"),
       api("/api/market"),
-      api("/api/market/mine")
+      api("/api/market/mine"),
+      api("/api/custom-market"),
+      api("/api/custom-market/mine"),
+      api("/api/custom-market/purchases")
     ]);
     me = meData;
     inventory = invData.inventory || [];
     listings = marketData.listings || [];
     myListings = mineData.listings || [];
+    customListings = customData.listings || [];
+    myCustomListings = myCustomData.listings || [];
+    customPurchases = purchasesData.purchases || [];
     renderAccount();
     renderInventory();
     renderMarket();
+    renderCustomMarket();
     renderMyListings();
+    renderMyCustomListings();
+    renderCustomPurchases();
   } catch (err) {
     if (err.message === "LOGIN_REQUIRED") {
       $("loginBtn").textContent = "Login with Discord";
@@ -642,6 +700,40 @@ async function createListing() {
   } catch (err) {
     showMessage(err.message, "bad");
   }
+}
+
+async function createCustomListing() {
+  const payload = {
+    itemName: $("customName").value.trim(), itemRank: $("customRank").value,
+    rarity: $("customRarity").value, description: $("customDescription").value.trim(),
+    itemUrl: $("customUrl").value.trim(), quantity: Number($("customQty").value),
+    priceEach: Number($("customPrice").value)
+  };
+  if (!payload.itemName) return showMessage("Enter a custom item name.", "bad");
+  if (!Number.isInteger(payload.quantity) || payload.quantity < 1 || payload.quantity > 99) return showMessage("Custom item quantity must be 1 to 99.", "bad");
+  if (!Number.isInteger(payload.priceEach) || payload.priceEach < 1) return showMessage("Custom item price must be at least 1g.", "bad");
+  try {
+    await api("/api/custom-market/listings", { method:"POST", body:JSON.stringify(payload) });
+    $("customName").value = ""; $("customDescription").value = ""; $("customUrl").value = ""; $("customQty").value = "1";
+    await refreshData("Custom item listing created.");
+  } catch (err) { showMessage(err.message, "bad"); }
+}
+
+async function buyCustomListing(id, maxQty, priceEach, itemName) {
+  const raw = prompt(`Buy ${itemName}\nAvailable: ${maxQty}\nPrice: ${priceEach}g each\n\nHow many do you want to buy?`, "1");
+  if (raw === null) return;
+  const quantity = Number(raw);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > maxQty) return showMessage(`Enter a quantity from 1 to ${maxQty}.`, "bad");
+  const total = quantity * priceEach;
+  if (!confirm(`Buy ${quantity} × ${itemName} for ${total.toLocaleString()}g?`)) return;
+  try { await api(`/api/custom-market/listings/${id}/buy`, { method:"POST", body:JSON.stringify({quantity}) }); await refreshData(`Purchased ${quantity} × ${itemName}.`); }
+  catch (err) { showMessage(err.message, "bad"); }
+}
+
+async function cancelCustomListing(id) {
+  if (!confirm("Cancel this custom item listing?")) return;
+  try { await api(`/api/custom-market/listings/${id}`, { method:"DELETE" }); await refreshData("Custom item listing cancelled."); }
+  catch (err) { showMessage(err.message, "bad"); }
 }
 
 async function buyListing(id, maxQty, priceEach, itemKey) {
@@ -688,14 +780,20 @@ $("loginBtn").addEventListener("click", () => {
   location.href = API_BASE + "/auth/discord";
 });
 $("refreshMarket").addEventListener("click", () => refreshData("Market refreshed."));
+$("refreshCustom").addEventListener("click", () => refreshData("Custom item market refreshed."));
+$("customSellBtn").addEventListener("click", createCustomListing);
+$("customSearch").addEventListener("input", renderCustomMarket);
+$("customRankFilter").addEventListener("change", renderCustomMarket);
+$("customSortBy").addEventListener("change", renderCustomMarket);
 $("sellBtn").addEventListener("click", createListing);
 $("search").addEventListener("input", renderMarket);
 $("rankFilter").addEventListener("change", renderMarket);
 $("sortBy").addEventListener("change", renderMarket);
-$("inventorySort").addEventListener("change", renderInventory);
 
 window.buyListing = buyListing;
 window.cancelListing = cancelListing;
+window.buyCustomListing = buyCustomListing;
+window.cancelCustomListing = cancelCustomListing;
 
 loadAll();
 </script>
