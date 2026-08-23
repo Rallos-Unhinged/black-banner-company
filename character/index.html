@@ -55,6 +55,10 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 .theme-swatch[data-theme="blue"]{background:#2c91c4}.theme-swatch[data-theme="gold"]{background:#c99d35}.theme-swatch[data-theme="purple"]{background:#9b59b6}.theme-swatch[data-theme="green"]{background:#2fa866}.theme-swatch[data-theme="red"]{background:#b64d4d}.theme-swatch[data-theme="silver"]{background:#8fa3ad}
 .theme-swatch.active{outline:2px solid #f0cd73}
 
+
+.remove-image-btn{margin-top:5px;font:700 10px Cinzel;padding:4px 7px;border:1px solid var(--theme);background:#07131c;color:#e9d397;cursor:pointer}
+.remove-image-btn:hover{border-color:#d76e6e;color:#ffaaaa}
+
 </style>
 </head>
 <body><div class="shell">
@@ -204,10 +208,11 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 
 function rarityClass(r){return String(r||"").replace(/\s+/g,"-")}
 function equipCard(slot,row={}){
- const imageUrl=row.customImageUrl||row.imageUrl||"", name=row.itemName||"", rarity=row.rarity||"";
+ const imageUrl=row.customImageUrl||row.imageUrl||"", hasCustomImage=!!row.customImageUrl, name=row.itemName||"", rarity=row.rarity||"";
  return `<div class="equip ${imageUrl?"":"empty"}" data-slot="${slot}" data-image-url="${esc(imageUrl)}">
    ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="" onerror="this.style.display=\'none\';this.closest(\'.equip\').classList.add(\'image-broken\')">`:""}
    <div class="image-overlay owner-only" data-image-slot="${slot}">${imageUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE"}</div>
+   ${hasCustomImage?`<button type="button" class="remove-image-btn owner-only" data-remove-image-slot="${slot}">REMOVE CUSTOM IMAGE</button>`:""}
    <div class="slot-title">${slotLabels[slot]}</div>
    <div class="item-name">${esc(name||"Empty")}</div>
    <div class="rarity ${rarityClass(rarity)}">${esc(rarity||"")}</div>
@@ -246,6 +251,10 @@ function applyInventoryItemToSlot(item,slot){
 function bindEquipmentControls(){
  document.querySelectorAll(".slotDdbPicker").forEach(s=>s.onchange=()=>{if(s.value!==""){applyInventoryItemToSlot(ddbInventory[Number(s.value)],s.dataset.slotPicker);s.value=""}});
  document.querySelectorAll("[data-image-slot]").forEach(b=>b.onclick=e=>{e.stopPropagation();chooseEquipmentImage(b.dataset.imageSlot)});
+ document.querySelectorAll("[data-remove-image-slot]").forEach(b=>b.onclick=async e=>{
+   e.stopPropagation();
+   try{await removeEquipmentImage(b.dataset.removeImageSlot)}catch(err){show(err.message||"Could not remove custom image.","bad")}
+ });
  document.querySelectorAll(".equip").forEach(el=>{
    if(!currentViewingOwn)return;
    el.ondragover=e=>{e.preventDefault();el.classList.add("drag-image")};
@@ -398,8 +407,25 @@ async function uploadEquipmentImage(slot,file){
    if(overlay)overlay.innerHTML="CHANGE<br>IMAGE";
  }
  show(`${slotLabels[slot]} custom image updated.`,"good");
+ await load();
 }
-async function uploadPortrait(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");show("Portrait updated.","good");await load()}
+async function removeEquipmentImage(slot){
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"DELETE",credentials:"include"});
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||`Could not remove image (${r.status}).`);
+ show(`${slotLabels[slot]} custom image removed.`,"good");
+ await load();
+}
+async function uploadPortrait(file){
+ if(!file)return;
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Portrait must be PNG, JPG, or WebP.");
+ if(file.size>5*1024*1024)throw new Error("Portrait must be 5 MB or smaller.");
+ const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||`Portrait upload failed (${r.status}).`);
+ show("Custom portrait saved.","good");
+ await load();
+}
 async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
 
 async function loadCharacterDirectory(){const d=await api("/api/characters");characterDirectory=d.characters||[];renderDirectory("")}
