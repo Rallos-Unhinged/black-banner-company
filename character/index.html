@@ -38,7 +38,7 @@ body.readonly .owner-only{display:none!important}
 .equip:after{right:3px;bottom:3px;border-right:1px solid #d0a43d;border-bottom:1px solid #d0a43d}
 .slot-column .equip:has(.equip-img):hover .image-overlay{opacity:1}
 .image-overlay{position:absolute;left:50%;transform:translateX(-50%);top:39px;width:128px;height:128px;display:flex;align-items:center;justify-content:center;background:#02070bcc;border:1px solid #d5aa3b;color:#ffe49a;font:700 10px Cinzel;text-align:center;opacity:0;transition:.15s;cursor:pointer;z-index:3}
-.equip.empty .image-overlay{opacity:1;border-style:dashed;background:#06131c88;color:#8fcce8}
+.equip.empty .image-overlay,.equip.image-broken .image-overlay{opacity:1;border-style:dashed;background:#06131cdd;color:#8fcce8}
 .bottom-slots .image-overlay{left:50%;transform:translateX(-50%);top:39px;width:128px;height:128px}
 .equip.drag-image{outline:2px solid #f0cd73;box-shadow:0 0 20px #38b9ef88}
 .fantasy-divider{height:1px;background:linear-gradient(90deg,transparent,#2f8dbc,#d5aa3b,#2f8dbc,transparent);margin:6px 0}
@@ -189,8 +189,8 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 const API_BASE="https://api.blackbannercompany.com";
 const $=id=>document.getElementById(id);
 const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak",chest:"Chest",arms:"Arms",hands:"Hands",waist:"Waist",legs:"Legs",feet:"Feet",main_hand:"Main Hand",off_hand:"Off Hand",ranged:"Ranged",ring_1:"Ring 1",ring_2:"Ring 2",trinket:"Trinket / Other",other:"Other"};
-const leftSlots=["head","mask","neck","cloak","chest","arms"];
-const rightSlots=["hands","waist","legs","feet"];
+const leftSlots=["head","mask","neck","chest","hands"];
+const rightSlots=["cloak","arms","waist","legs","feet"];
 const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
 let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],characterDirectory=[],currentViewingOwn=true;
 
@@ -206,7 +206,7 @@ function rarityClass(r){return String(r||"").replace(/\s+/g,"-")}
 function equipCard(slot,row={}){
  const imageUrl=row.customImageUrl||row.imageUrl||"", name=row.itemName||"", rarity=row.rarity||"";
  return `<div class="equip ${imageUrl?"":"empty"}" data-slot="${slot}" data-image-url="${esc(imageUrl)}">
-   ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="">`:""}
+   ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="" onerror="this.style.display=\'none\';this.closest(\'.equip\').classList.add(\'image-broken\')">`:""}
    <div class="image-overlay owner-only" data-image-slot="${slot}">${imageUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE"}</div>
    <div class="slot-title">${slotLabels[slot]}</div>
    <div class="item-name">${esc(name||"Empty")}</div>
