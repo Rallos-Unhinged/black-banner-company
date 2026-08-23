@@ -24,7 +24,7 @@ body.readonly .equip input,body.readonly .equip select,body.readonly #characterN
 .portrait img{width:100%;height:100%;min-height:560px;object-fit:cover;display:block}.portrait-placeholder{color:#667982;font:700 16px 'Cinzel';text-align:center;padding:30px}.portrait-actions{display:flex;gap:6px;margin-top:7px}.portrait-actions>*{flex:1}.portrait input{display:none}
 .equip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.equip{border:1px solid #334852;background:#071017;min-height:74px;padding:7px;position:relative}
 .equip.has-image{padding-left:72px;min-height:90px}.equip-img{position:absolute;left:7px;top:24px;width:56px;height:56px;object-fit:contain;border:1px solid #36515e;background:#03080b;padding:2px}
-.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.skill-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #243941;padding:4px 2px}.skill-row b{color:#d7af42}.skill-bonus{font:600 13px Fira Mono;color:#aee0ed}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.skill-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #243941;padding:4px 2px}.skill-row b{color:#d7af42}.skill-bonus{font:600 13px Fira Mono;color:#aee0ed}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.equip-drop{margin-top:5px;border:1px dashed #385664;padding:4px;text-align:center;font-size:10px;color:#78929d;cursor:pointer}.equip-drop.drag{border-color:#c9a12f;color:#e0c168}.equip.has-image{padding-left:74px;min-height:94px}.equip-img{position:absolute;left:7px;top:24px;width:58px;height:58px;object-fit:contain;background:#03080b;border:1px solid #36515e;padding:2px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
 .ddb-picker{margin-top:6px}.ddb-picker select{max-width:none;width:100%;background:#061016;border:1px solid #42616d;color:#dce8ec;padding:5px;font-size:12px}
 .inventory-browser{margin-top:10px;border:1px solid #38505b;background:#071017;padding:9px}.inventory-browser .browser-row{display:grid;grid-template-columns:1fr 180px 120px;gap:7px;align-items:end}.inventory-browser select{width:100%;background:#050a0e;border:1px solid #405a65;color:#eee;padding:8px}
 .badge{display:inline-block;padding:2px 6px;border:1px solid #45606b;margin-left:5px;font:500 10px Fira Mono;color:#8fd7e5}.badge.eq{border-color:#7a6422;color:#e8c75a}
@@ -167,49 +167,24 @@ function show(t,type=""){const m=$("message");m.textContent=t;m.className="notic
 function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F"}
 function pb(n){n=Number(n||1);return n>=17?6:n>=13?5:n>=9?4:n>=5?3:2}
 function equipCard(slot,row={}){
- const name=row.itemName||"",rarity=row.rarity||"",attuned=!!row.attuned,imageUrl=row.imageUrl||"";
- return `<div class="equip ${imageUrl?"has-image":""}" data-slot="${slot}" data-image-url="${imageUrl.replace(/"/g,"&quot;")}">${imageUrl?`<img class="equip-img" src="${imageUrl.replace(/"/g,"&quot;")}" alt="">`:""}<div class="slot">${slotLabels[slot]}</div><input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty"><div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact","Magic"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div><div class="ddb-picker"><select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond inventory…</option></select></div></div>`;
+ const name=row.itemName||"",rarity=row.rarity||"",attuned=!!row.attuned,imageUrl=row.customImageUrl||row.imageUrl||"";
+ return `<div class="equip ${imageUrl?"has-image":""}" data-slot="${slot}" data-image-url="${imageUrl.replace(/"/g,"&quot;")}">
+ ${imageUrl?`<img class="equip-img" src="${imageUrl.replace(/"/g,"&quot;")}" alt="">`:""}
+ <div class="slot">${slotLabels[slot]}</div>
+ <input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty">
+ <div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact","Magic"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div>
+ <div class="ddb-picker owner-only"><select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond inventory…</option></select></div>
+ <div class="equip-drop owner-only" data-drop-slot="${slot}">Drop/click image</div>
+ </div>`;
 }
-function renderEquipment(rows=[]){const map=new Map(rows.map(x=>[x.slotKey,x]));$("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,map.get(s)||{})).join("");$("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,map.get(s)||{})).join("");updateAttune();renderDdbInventory()}
-function inventoryLabel(x){
-  const bits=[x.name];
-  if(x.quantity>1)bits.push(`×${x.quantity}`);
-  if(x.equipped)bits.push("Equipped");
-  if(x.attuned)bits.push("Attuned");
-  return bits.join(" · ");
+function renderEquipment(rows=[]){
+ const map=new Map(rows.map(x=>[x.slotKey,x]));
+ const imgs=(data&&data.equipmentImages)||{};
+ const decorate=s=>({...((map.get(s)||{})),customImageUrl:imgs[s]?.url||null});
+ $("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,decorate(s))).join("");
+ $("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,decorate(s))).join("");
+ updateAttune();renderDdbInventory();bindEquipmentImageDrops();
 }
-function renderDdbInventory(){
-  const opts='<option value="">Choose item…</option>'+ddbInventory.map((x,i)=>`<option value="${i}">${inventoryLabel(x)}</option>`).join("");
-  $("ddbInventory").innerHTML=opts;
-  $("ddbTargetSlot").innerHTML=Object.entries(slotLabels).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
-  document.querySelectorAll(".slotDdbPicker").forEach(sel=>{
-    sel.innerHTML='<option value="">Choose from D&D Beyond inventory…</option>'+ddbInventory.map((x,i)=>`<option value="${i}">${inventoryLabel(x)}</option>`).join("");
-  });
-}
-function applyInventoryItemToSlot(item,slot){
-  const el=document.querySelector(`.equip[data-slot="${slot}"]`);
-  if(!el||!item)return;
-  el.querySelector(".itemName").value=item.name||"";
-  el.querySelector(".raritySel").value=item.rarity||"";
-  el.querySelector(".attuned").checked=!!item.attuned;
-  el.dataset.imageUrl=item.imageUrl||"";
-  let img=el.querySelector(".equip-img");
-  if(item.imageUrl){
-    if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.prepend(img)}
-    img.src=item.imageUrl;el.classList.add("has-image");
-  }else if(img){img.remove();el.classList.remove("has-image")}
-  let tag=el.querySelector(".syncsrc");
-  if(!tag){tag=document.createElement("span");tag.className="syncsrc";tag.textContent="D&D BEYOND";el.querySelector(".meta").appendChild(tag)}
-  updateAttune();
-}
-async function loadDdbInventory(){
-  $("ddbInventoryNote").textContent="Loading D&D Beyond inventory…";
-  const d=await api("/api/character/dndbeyond-inventory");
-  ddbInventory=d.inventory||[];
-  renderDdbInventory();
-  $("ddbInventoryNote").textContent=`Loaded ${d.totalCount||ddbInventory.length} item(s), including ${d.equippedCount||0} currently equipped. Pick any item and assign it to a slot.`;
-}
-
 function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>({slotKey:el.dataset.slot,itemName:el.querySelector(".itemName").value.trim(),rarity:el.querySelector(".raritySel").value,attuned:el.querySelector(".attuned").checked,source:"manual",imageUrl:el.dataset.imageUrl||null}))}
 function updateAttune(){$("attuneCount").textContent=`${document.querySelectorAll(".attuned:checked").length} / 3`}
 document.addEventListener("change",e=>{
@@ -319,6 +294,39 @@ $("int").oninput=()=>{const n=Number($("int").value);if(Number.isFinite(n))$("in
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Equipment loadout saved.","good")).catch(e=>show(e.message,"bad"));$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s), ${d.sync.inventoryCount||ddbInventory.length} inventory item(s), ${(d.sync.skills||[]).length} skills updated.`;show("D&D Beyond sync complete. Equipped items were auto-filled, and the full D&D Beyond inventory is now available in the dropdowns.","good");await load();renderDdbInventory()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("sheetTab").classList.toggle("hidden",b.dataset.tab!=="sheet");$("craftingTab").classList.toggle("hidden",b.dataset.tab!=="crafting")});
+
+async function uploadEquipmentImage(slot,file){
+ if(!currentViewingOwn||!file)return;
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type))return show("Use a PNG, JPG, or WebP image for equipment slots.","bad");
+ if(file.size>5*1024*1024)return show("Equipment image is larger than 5 MB.","bad");
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||"Equipment image upload failed.");
+ if(!data.equipmentImages)data.equipmentImages={};
+ data.equipmentImages[slot]={url:b.url};
+ const el=document.querySelector(`.equip[data-slot="${slot}"]`);
+ if(el){
+   el.dataset.imageUrl=b.url||"";
+   let img=el.querySelector(".equip-img");
+   if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.prepend(img)}
+   img.src=b.url;el.classList.add("has-image");
+ }
+ show("Equipment slot image updated.","good");
+}
+function bindEquipmentImageDrops(){
+ document.querySelectorAll(".equip-drop").forEach(drop=>{
+   const slot=drop.dataset.dropSlot;
+   drop.onclick=()=>{
+     if(!currentViewingOwn)return;
+     const input=document.createElement("input");input.type="file";input.accept="image/png,image/jpeg,image/webp";
+     input.onchange=()=>uploadEquipmentImage(slot,input.files?.[0]).catch(e=>show(e.message,"bad"));
+     input.click();
+   };
+   ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{if(!currentViewingOwn)return;e.preventDefault();drop.classList.add("drag")}));
+   ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{if(!currentViewingOwn)return;e.preventDefault();drop.classList.remove("drag")}));
+   drop.addEventListener("drop",e=>uploadEquipmentImage(slot,e.dataTransfer?.files?.[0]).catch(err=>show(err.message,"bad")));
+ });
+}
 async function uploadPortrait(file){if(!file)return;if(file.size>5*1024*1024)return show("Portrait is larger than 5 MB.","bad");try{const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json();if(!r.ok)throw new Error(b.error||"Upload failed");$("portraitImg").src=API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");show("Character portrait uploaded.","good")}catch(e){show(e.message,"bad")}}
 
 $("refreshDdbInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));
