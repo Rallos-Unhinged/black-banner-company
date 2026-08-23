@@ -287,6 +287,21 @@ footer {
   .nav { justify-content:center; }
   .btn,button { width:100%; }
 }
+
+#market.active-list-scroll{
+  max-height:520px;
+  overflow-y:auto;
+  overflow-x:auto;
+  scrollbar-gutter:stable;
+  border:1px solid rgba(216,166,59,.14);
+}
+#market.active-list-scroll thead th{
+  position:sticky;
+  top:0;
+  z-index:2;
+  background:#100d0a;
+}
+
 </style>
 </head>
 <body>
@@ -342,7 +357,7 @@ footer {
           </select>
           <button id="refreshMarket">Refresh</button>
         </div>
-        <div id="market" class="table-wrap">
+        <div id="market" class="table-wrap active-list-scroll">
           <div class="empty">Login with Discord to load the Black Banner market.</div>
         </div>
       </section>
