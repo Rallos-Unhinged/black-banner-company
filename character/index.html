@@ -10,13 +10,21 @@
 .shell{width:min(1500px,calc(100% - 24px));margin:auto;padding:12px 0 40px}.bar,.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.bar{justify-content:space-between;border-bottom:1px solid #263842;padding:7px 0 12px}.nav{display:flex;gap:7px;flex-wrap:wrap}
 button,.btn{font:700 12px 'Cinzel',serif;letter-spacing:.05em;text-transform:uppercase;color:#e6c45a;background:linear-gradient(#14202a,#080d12);border:1px solid #566a70;padding:8px 12px;cursor:pointer;text-decoration:none}
 button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:18px 8px 12px;border-bottom:1px solid #30434c}.hero h1{font:900 clamp(28px,4vw,54px) 'Cinzel';margin:0;color:#e0b239}.subtitle{color:var(--muted)}
-.status{font:700 13px 'Cinzel';color:#68db87}.status:before{content:"●";margin-right:7px}.tabs{padding:10px 0}.tab{border-color:#324853;color:#9bb0b8}.tab.active{color:#f0c85d;border-color:#b38c28;background:#16150f}
+.status{font:700 13px 'Cinzel';color:#68db87}.status:before{content:"●";margin-right:7px}.tabs{padding:10px 0}
+.viewer{display:grid;grid-template-columns:minmax(180px,1fr) minmax(280px,2fr) auto;gap:7px;align-items:end;border:1px solid #334b55;background:#071017;padding:9px;margin:10px 0}
+.viewer input,.viewer select{width:100%;background:#050a0e;border:1px solid #405963;color:#eee;padding:8px}
+.readonly-note{font:700 12px Cinzel;color:#d6b44a;text-transform:uppercase;letter-spacing:.05em}
+body.readonly .owner-only{display:none!important}
+body.readonly .equip input,body.readonly .equip select,body.readonly #characterName,body.readonly #level,body.readonly #classSummary,body.readonly #ddbUrl,body.readonly .stat input{pointer-events:none;opacity:.82}
+.tab{border-color:#324853;color:#9bb0b8}.tab.active{color:#f0c85d;border-color:#b38c28;background:#16150f}
 .notice{padding:10px 14px;margin:8px 0;border:1px solid #4c3b16;background:#151109;color:#d8c48c}.notice.good{border-color:#2f6b42;color:#8ee1a8}.notice.bad{border-color:#754040;color:#e79a9a}.hidden{display:none!important}
 .sheet{display:grid;grid-template-columns:1fr 1.65fr 1fr;gap:10px}.panel{background:linear-gradient(180deg,#0c141a,#070b0f);border:1px solid #384f59;box-shadow:inset 0 0 0 1px #101d25;padding:10px;min-width:0}
 .panel h2,.panel h3{font:700 14px 'Cinzel';letter-spacing:.12em;color:#cda12d;text-transform:uppercase;margin:0 0 8px}.character-card{text-align:center;padding:8px;border:1px solid #8c6b22;background:#090b0d}
 .portrait{position:relative;min-height:560px;background:linear-gradient(#0d151b,#05080b);border:1px solid #5a6870;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .portrait img{width:100%;height:100%;min-height:560px;object-fit:cover;display:block}.portrait-placeholder{color:#667982;font:700 16px 'Cinzel';text-align:center;padding:30px}.portrait-actions{display:flex;gap:6px;margin-top:7px}.portrait-actions>*{flex:1}.portrait input{display:none}
-.equip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.equip{border:1px solid #334852;background:#071017;min-height:74px;padding:7px;position:relative}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
+.equip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.equip{border:1px solid #334852;background:#071017;min-height:74px;padding:7px;position:relative}
+.equip.has-image{padding-left:72px;min-height:90px}.equip-img{position:absolute;left:7px;top:24px;width:56px;height:56px;object-fit:contain;border:1px solid #36515e;background:#03080b;padding:2px}
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.skill-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #243941;padding:4px 2px}.skill-row b{color:#d7af42}.skill-bonus{font:600 13px Fira Mono;color:#aee0ed}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
 .ddb-picker{margin-top:6px}.ddb-picker select{max-width:none;width:100%;background:#061016;border:1px solid #42616d;color:#dce8ec;padding:5px;font-size:12px}
 .inventory-browser{margin-top:10px;border:1px solid #38505b;background:#071017;padding:9px}.inventory-browser .browser-row{display:grid;grid-template-columns:1fr 180px 120px;gap:7px;align-items:end}.inventory-browser select{width:100%;background:#050a0e;border:1px solid #405a65;color:#eee;padding:8px}
 .badge{display:inline-block;padding:2px 6px;border:1px solid #45606b;margin-left:5px;font:500 10px Fira Mono;color:#8fd7e5}.badge.eq{border-color:#7a6422;color:#e8c75a}
@@ -44,16 +52,22 @@ button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;ju
     <div><div id="heroRank" style="font:700 14px Cinzel;color:#d9b042"></div><div id="online" class="status hidden">Online</div></div>
   </div>
   <div id="message" class="notice hidden"></div>
+  <div class="viewer">
+    <div class="field" style="margin:0"><label>Find Character</label><input id="characterSearch" placeholder="Search player or character…"></div>
+    <div class="field" style="margin:0"><label>Visit Character Sheet</label><select id="characterSelect"><option value="">My Character</option></select></div>
+    <button id="visitCharacter">View Sheet</button>
+  </div>
+  <div id="viewingNote" class="readonly-note"></div>
   <div class="tabs">
     <button class="tab active" data-tab="sheet">Character Sheet</button>
-    <button class="tab" data-tab="crafting">Crafting Registry</button>
+    <button class="tab owner-only" data-tab="crafting">Crafting Registry</button>
   </div>
 
   <section id="sheetTab">
     <div class="sheet">
       <div class="panel left">
         <h2>Equipped Inventory</h2>
-        <div class="inventory-browser">
+        <div class="inventory-browser owner-only">
           <div class="browser-row">
             <div class="field" style="margin:0"><label>D&D Beyond Inventory</label><select id="ddbInventory"><option value="">Load D&D Beyond inventory…</option></select></div>
             <div class="field" style="margin:0"><label>Put In Slot</label><select id="ddbTargetSlot"></select></div>
@@ -65,7 +79,7 @@ button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;ju
         <div id="equipLeft" class="equip-grid" style="margin-top:8px"></div>
         <h3 style="margin-top:12px">Weapons & Extras</h3>
         <div id="equipBottom" class="equip-grid"></div>
-        <div class="actions" style="margin-top:9px"><button id="saveGear">Save Loadout</button></div>
+        <div class="actions owner-only" style="margin-top:9px"><button id="saveGear">Save Loadout</button></div>
       </div>
 
       <div class="panel">
@@ -75,7 +89,7 @@ button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;ju
             <img id="portraitImg" class="hidden" alt="Character portrait">
             <div id="portraitPlaceholder" class="portrait-placeholder">DROP CHARACTER PORTRAIT HERE<br><span class="small">PNG · JPG · WEBP · max 5 MB</span></div>
           </div>
-          <div class="portrait-actions">
+          <div class="portrait-actions owner-only">
             <button id="uploadBtn">Upload Portrait</button><input id="portraitFile" type="file" accept="image/png,image/jpeg,image/webp">
           </div>
           <div class="summary" style="margin-top:9px">
@@ -87,7 +101,7 @@ button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;ju
             <div class="field"><label>Class / Build</label><input id="classSummary"></div>
           </div>
           <div class="field"><label>D&D Beyond Character URL</label><input id="ddbUrl" placeholder="https://www.dndbeyond.com/characters/..."></div>
-          <div class="actions"><button id="syncBtn">Sync D&D Beyond</button><button id="saveCharacter">Save Character</button></div>
+          <div class="actions owner-only"><button id="syncBtn">Sync D&D Beyond</button><button id="saveCharacter">Save Character</button></div>
           <div id="syncNote" class="small" style="margin-top:7px">D&D Beyond sync is experimental.</div>
         </div>
       </div>
@@ -101,6 +115,7 @@ button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;ju
         <div class="summary" style="margin-top:10px"><strong>Proficiency Bonus</strong><div id="pb" style="font:700 30px Fira Mono;margin-top:4px">+2</div></div>
         <div class="summary"><strong>Equipment Source</strong><div class="small">D&D Beyond equipped items are imported automatically when you sync. You can edit any slot afterward.</div></div>
         <div class="summary"><strong>Attunement</strong><div id="attuneCount" style="font:700 22px Fira Mono">0 / 3</div></div>
+        <div class="summary"><strong>Skills</strong><div class="small" style="margin:3px 0 7px">Pulled automatically when you press Sync D&D Beyond.</div><div id="skillGrid" class="skill-grid"></div></div>
       </div>
     </div>
   </section>
@@ -145,15 +160,15 @@ const $=id=>document.getElementById(id);
 const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak / Back",chest:"Chest / Armor",arms:"Arms / Bracers",hands:"Hands",waist:"Waist",legs:"Legs",feet:"Feet",main_hand:"Main Hand",off_hand:"Off Hand",ranged:"Ranged",ring_1:"Ring I",ring_2:"Ring II",trinket:"Trinket",other:"Other"};
 const leftSlots=["head","mask","neck","cloak","chest","arms","hands","waist","legs","feet"];
 const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
-let data=null,toolChoices=[],ddbInventory=[];
+let data=null,toolChoices=[],ddbInventory=[],characterDirectory=[],currentViewingOwn=true;
 
 async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{...(opts.body instanceof Blob?{}:{"Content-Type":"application/json"}),...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b}
 function show(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
 function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F"}
 function pb(n){n=Number(n||1);return n>=17?6:n>=13?5:n>=9?4:n>=5?3:2}
 function equipCard(slot,row={}){
- const name=row.itemName||"",rarity=row.rarity||"",attuned=!!row.attuned;
- return `<div class="equip" data-slot="${slot}"><div class="slot">${slotLabels[slot]}</div><input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty"><div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact","Magic"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div><div class="ddb-picker"><select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond inventory…</option></select></div></div>`;
+ const name=row.itemName||"",rarity=row.rarity||"",attuned=!!row.attuned,imageUrl=row.imageUrl||"";
+ return `<div class="equip ${imageUrl?"has-image":""}" data-slot="${slot}" data-image-url="${imageUrl.replace(/"/g,"&quot;")}">${imageUrl?`<img class="equip-img" src="${imageUrl.replace(/"/g,"&quot;")}" alt="">`:""}<div class="slot">${slotLabels[slot]}</div><input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty"><div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact","Magic"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div><div class="ddb-picker"><select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond inventory…</option></select></div></div>`;
 }
 function renderEquipment(rows=[]){const map=new Map(rows.map(x=>[x.slotKey,x]));$("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,map.get(s)||{})).join("");$("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,map.get(s)||{})).join("");updateAttune();renderDdbInventory()}
 function inventoryLabel(x){
@@ -177,6 +192,12 @@ function applyInventoryItemToSlot(item,slot){
   el.querySelector(".itemName").value=item.name||"";
   el.querySelector(".raritySel").value=item.rarity||"";
   el.querySelector(".attuned").checked=!!item.attuned;
+  el.dataset.imageUrl=item.imageUrl||"";
+  let img=el.querySelector(".equip-img");
+  if(item.imageUrl){
+    if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.prepend(img)}
+    img.src=item.imageUrl;el.classList.add("has-image");
+  }else if(img){img.remove();el.classList.remove("has-image")}
   let tag=el.querySelector(".syncsrc");
   if(!tag){tag=document.createElement("span");tag.className="syncsrc";tag.textContent="D&D BEYOND";el.querySelector(".meta").appendChild(tag)}
   updateAttune();
@@ -189,11 +210,11 @@ async function loadDdbInventory(){
   $("ddbInventoryNote").textContent=`Loaded ${d.totalCount||ddbInventory.length} item(s), including ${d.equippedCount||0} currently equipped. Pick any item and assign it to a slot.`;
 }
 
-function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>({slotKey:el.dataset.slot,itemName:el.querySelector(".itemName").value.trim(),rarity:el.querySelector(".raritySel").value,attuned:el.querySelector(".attuned").checked,source:"manual"}))}
+function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>({slotKey:el.dataset.slot,itemName:el.querySelector(".itemName").value.trim(),rarity:el.querySelector(".raritySel").value,attuned:el.querySelector(".attuned").checked,source:"manual",imageUrl:el.dataset.imageUrl||null}))}
 function updateAttune(){$("attuneCount").textContent=`${document.querySelectorAll(".attuned:checked").length} / 3`}
 document.addEventListener("change",e=>{
   if(e.target.classList.contains("attuned"))updateAttune();
-  if(e.target.classList.contains("slotDdbPicker") && e.target.value!==""){
+  if(currentViewingOwn && e.target.classList.contains("slotDdbPicker") && e.target.value!==""){
     const item=ddbInventory[Number(e.target.value)];
     applyInventoryItemToSlot(item,e.target.dataset.slotPicker);
     e.target.value="";
@@ -209,14 +230,20 @@ function renderTools(crafting){
  $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;$("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;$("magicAdept").checked=!!p.has_magic_item_adept;
  $("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
 }
+
+function renderSkills(skills=[]){
+  const map=new Map((skills||[]).map(s=>[s.name,Number(s.bonus||0)]));
+  const names=["Acrobatics","Animal Handling","Arcana","Athletics","Deception","History","Insight","Intimidation","Investigation","Medicine","Nature","Perception","Performance","Persuasion","Religion","Sleight of Hand","Stealth","Survival"];
+  $("skillGrid").innerHTML=names.map(n=>{const b=map.has(n)?map.get(n):null;return `<div class="skill-row"><span>${n}</span><span class="skill-bonus">${b===null?"—":(b>=0?"+":"")+b}</span></div>`}).join("");
+}
 function fill(d){
  data=d;toolChoices=d.toolChoices||[];
  const c=d.character||{};
  $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level||1);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";
  [["str","strength_score"],["dex","dexterity_score"],["con","constitution_score"],["int","intelligence_score"],["wis","wisdom_score"],["cha","charisma_score"]].forEach(([id,k])=>$(id).value=c[k]??"");
  $("heroName").textContent=c.character_name||"MY CHARACTER";$("cardName").textContent=c.character_name||"Character";$("heroClass").textContent=c.class_summary||"";$("heroRank").textContent=`${$("rank").value}-Rank · Level ${$("level").value}`;$("pb").textContent=`+${pb($("level").value)}`;
- renderEquipment(d.equipment||[]);renderTools(d.crafting||{});
- if(d.portrait?.hasPortrait){$("portraitImg").src=API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden")}
+ renderEquipment(d.equipment||[]);renderTools(d.crafting||{});renderSkills(d.skills||[]);
+ if(d.portrait?.hasPortrait){$("portraitImg").src=d.portrait.url||API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden")}
  if(c.dndbeyond_last_sync)$("syncNote").textContent="Last D&D Beyond sync: "+new Date(Number(c.dndbeyond_last_sync)).toLocaleString();
 }
 function characterPayload(){
@@ -228,12 +255,69 @@ function characterPayload(){
  hasMagicItemAdept:$("magicAdept").checked,magicItemAdeptTool:$("magicAdeptTool").value,intelligenceModifier:Number($("intMod").value||0)}
 }
 async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register permanent Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});await api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})});show("Character and crafting registration saved.","good");await load()}
-async function load(){try{const s=await api("/api/session");$("account").textContent=s.user.globalName||s.user.username;$("loginBtn").textContent="Logout";$("online").classList.remove("hidden");const d=await api("/api/character/profile");fill(d);$("message").classList.add("hidden")}catch(e){$("loginBtn").textContent="Login";show("Login with Discord to open your Character Registry.","bad")}}
+
+async function loadCharacterDirectory(){
+  const d=await api("/api/characters");
+  characterDirectory=d.characters||[];
+  renderCharacterDirectory("");
+}
+function renderCharacterDirectory(filter=""){
+  const q=String(filter||"").trim().toLowerCase();
+  const rows=characterDirectory.filter(c=>!q || `${c.playerName||""} ${c.characterName||""} ${c.classSummary||""}`.toLowerCase().includes(q));
+  $("characterSelect").innerHTML='<option value="">My Character</option>'+rows
+    .filter(c=>!c.isMine)
+    .map(c=>`<option value="${c.userId}">${c.playerName||"Banner Member"} — ${c.characterName||"Character"}${c.rank?` · ${c.rank}-Rank`:""}</option>`).join("");
+}
+function setReadOnlyMode(readonly,ownerName=""){
+  currentViewingOwn=!readonly;
+  document.body.classList.toggle("readonly",readonly);
+  $("viewingNote").textContent=readonly?`Viewing ${ownerName||"another player's"} Character Sheet · Read Only`:"";
+  if(readonly){
+    $("craftingTab").classList.add("hidden");
+    $("sheetTab").classList.remove("hidden");
+    document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab==="sheet"));
+  }
+}
+async function visitCharacter(ownerId){
+  if(!ownerId){
+    history.replaceState({},document.title,location.pathname);
+    setReadOnlyMode(false);
+    const d=await api("/api/character/profile");
+    fill(d);
+    return;
+  }
+  const d=await api("/api/character/view?owner="+encodeURIComponent(ownerId));
+  history.replaceState({},document.title,location.pathname+"?owner="+encodeURIComponent(ownerId));
+  setReadOnlyMode(true,d.owner?.globalName||d.character?.character_name||"Banner Member");
+  fill(d);
+}
+async function load(){try{
+  const s=await api("/api/session");
+  $("account").textContent=s.user.globalName||s.user.username;
+  $("loginBtn").textContent="Logout";
+  $("online").classList.remove("hidden");
+  await loadCharacterDirectory();
+  const owner=new URLSearchParams(location.search).get("owner");
+  if(owner){
+    const d=await api("/api/character/view?owner="+encodeURIComponent(owner));
+    setReadOnlyMode(true,d.owner?.globalName||d.character?.character_name||"Banner Member");
+    fill(d);
+    $("characterSelect").value=owner;
+  }else{
+    setReadOnlyMode(false);
+    const d=await api("/api/character/profile");
+    fill(d);
+  }
+  $("message").classList.add("hidden");
+}catch(e){
+  $("loginBtn").textContent="Login";
+  show("Login with Discord to open the Character Registry.","bad");
+}}
 $("loginBtn").onclick=async()=>{if($("loginBtn").textContent==="Logout"){await api("/auth/logout",{method:"POST",body:"{}"});location.reload()}else location.href=API_BASE+"/auth/discord?return="+encodeURIComponent("/character/")};
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value);$("pb").textContent=`+${pb($("level").value)}`};
 $("int").oninput=()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2)};
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Equipment loadout saved.","good")).catch(e=>show(e.message,"bad"));$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
-$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s) imported, ${d.sync.inventoryCount||ddbInventory.length} total inventory item(s) available.`;show("D&D Beyond sync complete. Equipped items were auto-filled, and the full D&D Beyond inventory is now available in the dropdowns.","good");await load();renderDdbInventory()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s), ${d.sync.inventoryCount||ddbInventory.length} inventory item(s), ${(d.sync.skills||[]).length} skills updated.`;show("D&D Beyond sync complete. Equipped items were auto-filled, and the full D&D Beyond inventory is now available in the dropdowns.","good");await load();renderDdbInventory()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("sheetTab").classList.toggle("hidden",b.dataset.tab!=="sheet");$("craftingTab").classList.toggle("hidden",b.dataset.tab!=="crafting")});
 async function uploadPortrait(file){if(!file)return;if(file.size>5*1024*1024)return show("Portrait is larger than 5 MB.","bad");try{const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json();if(!r.ok)throw new Error(b.error||"Upload failed");$("portraitImg").src=API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");show("Character portrait uploaded.","good")}catch(e){show(e.message,"bad")}}
 
@@ -245,6 +329,10 @@ $("addDdbItem").onclick=()=>{
   $("ddbInventory").value="";
   show("Item added to the selected equipment slot. Click Save Loadout to keep it.","good");
 };
+
+$("characterSearch").addEventListener("input",e=>renderCharacterDirectory(e.target.value));
+$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
+$("characterSelect").addEventListener("change",()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad")));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]);
 ["dragenter","dragover"].forEach(ev=>$("portraitDrop").addEventListener(ev,e=>{e.preventDefault();e.dataTransfer.dropEffect="copy"}));$("portraitDrop").addEventListener("drop",e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0])});
 load();
