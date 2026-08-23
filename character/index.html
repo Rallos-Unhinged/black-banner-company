@@ -253,7 +253,24 @@ function bindEquipmentControls(){
    el.ondrop=e=>{e.preventDefault();el.classList.remove("drag-image");const f=e.dataTransfer?.files?.[0];if(f)uploadEquipmentImage(el.dataset.slot,f).catch(err=>show(err.message,"bad"))};
  });
 }
-function chooseEquipmentImage(slot){const i=document.createElement("input");i.type="file";i.accept="image/png,image/jpeg,image/webp";i.onchange=()=>uploadEquipmentImage(slot,i.files?.[0]);i.click()}
+function chooseEquipmentImage(slot){
+ const i=document.createElement("input");
+ i.type="file";
+ i.accept="image/png,image/jpeg,image/webp";
+ i.style.display="none";
+ document.body.appendChild(i);
+ i.onchange=async()=>{
+   try{
+     const file=i.files?.[0];
+     if(file)await uploadEquipmentImage(slot,file);
+   }catch(err){
+     show(err.message||"Equipment image upload failed.","bad");
+   }finally{
+     i.remove();
+   }
+ };
+ i.click();
+}
 
 function friendlyKey(k){return String(k||"").replace(/_/g," ").replace(/\b([edcbas])\b/gi,m=>m.toUpperCase()+"-Rank").replace(/\b\w/g,m=>m.toUpperCase())}
 function renderBags(){
@@ -322,8 +339,13 @@ function fill(d){
  $("topName").textContent=c.character_name||"My Character";$("topClass").textContent=c.class_summary||"";$("topRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
  renderEquipment(d.equipment||[]);renderStats(c,d.ddbDetails||{},d.skills||[]);renderTools(d.crafting||{});
  if(d.ddbInventory?.length){ddbInventory=d.ddbInventory;renderDdbPickers();renderBags()}
- if(d.portrait?.hasPortrait){$("portraitImg").src=d.portrait.url;$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");$("miniAvatar").src=d.portrait.url;$("miniAvatar").classList.remove("hidden")}
- else{$("portraitImg").classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}
+ const ddbPortrait=d.ddbDetails?.portraitUrl||null, customPortrait=d.portrait?.hasPortrait?d.portrait.url:null, portraitSrc=customPortrait||ddbPortrait;
+ if(portraitSrc){
+   const img=$("portraitImg"),mini=$("miniAvatar");
+   img.onerror=()=>{if(customPortrait&&ddbPortrait&&img.src!==ddbPortrait){img.src=ddbPortrait;mini.src=ddbPortrait}else{img.classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}};
+   mini.onerror=()=>{if(ddbPortrait&&mini.src!==ddbPortrait)mini.src=ddbPortrait};
+   img.src=portraitSrc;mini.src=portraitSrc;img.classList.remove("hidden");mini.classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");
+ }else{$("portraitImg").classList.add("hidden");$("miniAvatar").classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}
  if(d.crest?.hasCrest){$("crestImg").src=d.crest.url}else{$("crestImg").removeAttribute("src")}
  const ov=c.statOverrides||{};
  [["ovHpMax","hpMax"],["ovHpCurrent","hpCurrent"],["ovAc","armorClass"],["ovInitiative","initiative"],["ovSpeed","speed"],["ovPassive","passivePerception"],["ovSpellDC","spellSaveDC"],["ovSpellAttack","spellAttack"]].forEach(([id,k])=>{if($(id))$(id).value=ov[k]??""});
@@ -341,12 +363,41 @@ async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)th
 
 async function uploadEquipmentImage(slot,file){
  if(!file)return;
- if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Equipment picture must be PNG, JPG, or WebP.");
- if(file.size>5*1024*1024)throw new Error("Equipment picture must be 5 MB or smaller.");
- const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
- const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");
- if(!data.equipmentImages)data.equipmentImages={};data.equipmentImages[slot]={url:b.url};
- renderEquipment(data.equipment||[]);show(`${slotLabels[slot]} custom image updated.`,"good");
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type))
+   throw new Error("Equipment picture must be PNG, JPG, or WebP.");
+ if(file.size>5*1024*1024)
+   throw new Error("Equipment picture must be 5 MB or smaller.");
+
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{
+   method:"POST",
+   credentials:"include",
+   headers:{"Content-Type":file.type},
+   body:file
+ });
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||`Equipment image upload failed (${r.status}).`);
+
+ if(!data.equipmentImages)data.equipmentImages={};
+ const url=(b.url||"")+(String(b.url||"").includes("?")?"&":"?")+"_="+Date.now();
+ data.equipmentImages[slot]={url};
+
+ const el=document.querySelector(`.equip[data-slot="${slot}"]`);
+ if(el){
+   el.dataset.imageUrl=url;
+   let img=el.querySelector(".equip-img");
+   if(!img){
+     img=document.createElement("img");
+     img.className="equip-img";
+     img.alt="";
+     const overlay=el.querySelector(".image-overlay");
+     el.insertBefore(img,overlay||el.firstChild);
+   }
+   img.src=url;
+   el.classList.remove("empty");
+   const overlay=el.querySelector(".image-overlay");
+   if(overlay)overlay.innerHTML="CHANGE<br>IMAGE";
+ }
+ show(`${slotLabels[slot]} custom image updated.`,"good");
 }
 async function uploadPortrait(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");show("Portrait updated.","good");await load()}
 async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
@@ -359,7 +410,7 @@ async function load(){try{const s=await api("/api/session");$("online").classLis
 
 
 document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{if(!currentViewingOwn)return;applyTheme(b.dataset.theme)});
-$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete. Final abilities, HP, AC, initiative, speed, saves, skills, and portrait were refreshed.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
 $("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
 $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
