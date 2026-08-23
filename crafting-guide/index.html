@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Black Banner Company — Crafting Guide v3.7</title>
+<title>Black Banner Company — Crafting Guide v3.8</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
 
@@ -1119,7 +1119,7 @@ td {
 <aside id="sidebar">
 <div class="logo">
 <h2>Black Banner Company<br/>Crafting Guide</h2>
-<p>v3.7 · 40-Hour Downtime Update</p>
+<p>v3.8 · Bot Automation &amp; 40-Hour Downtime</p>
 </div>
 <nav>
 <div class="section-head">Downtime Rules</div>
@@ -1134,7 +1134,7 @@ td {
 <a href="#metals">Ore &amp; Exotic Metals</a>
 <a href="#stones">Woods, Stone &amp; Weaves</a>
 <a href="#herbs">Botanical Gathering</a>
-<div class="section-head">Crafting Trades</div>
+<div class="section-head">Bot Automation</div><a href="#bot-workflow">Bot Workflow</a><a href="#crafting-bot">Crafting Bot</a><a href="#inventory-bot">Inventory &amp; Materials</a><a href="#harvester-bot">Harvester Bot</a><a href="#facility-register">Facility Registration</a><a href="#bot-commands">Command Quick Reference</a><div class="section-head">Crafting Trades</div>
 <a href="#alchemist">Alchemist's Supplies</a>
 <a href="#brewer">Brewer's Supplies</a>
 <a href="#calligraphy">Calligraphy Supplies</a>
@@ -1174,7 +1174,7 @@ td {
 <a class="active" href="../crafting-guide/">Crafting Guide</a>
 <a href="../bastions/">Bastions Guide</a>
 </div>
-<div class="version">Official Guide · v3.7 · Created by Ooxy</div>
+<div class="version">Official Guide · v3.8 · Created by Ooxy</div>
 <h1>Black Banner Company<br/><span>Crafting Guide</span></h1>
 <p class="subtitle">Downtime rules for crafting, gathering, training, and paid trade work.</p>
 <div class="hero-pills">
@@ -1311,6 +1311,141 @@ A successful attempt containing a <b>Natural 20</b> can provide bonus earnings. 
 <div class="callout">
 <strong>Bot Results</strong>
 The Odd Jobs bot displays every required skill's d20 roll, modifier, individual total, the combined total, the Combined DC, and the minimum required result for each skill so the outcome can be reviewed clearly.
+</div>
+</div><div class="guide-section" id="bot-workflow">
+<h2 class="sec-title">Bot Workflow <span class="tag">Automation</span></h2>
+<p>The Black Banner crafting system is supported by several Discord commands that share the same character, Work Hour, facility, and crafting-material records. Register your character first, keep your crafting profile and Bastion crafting facilities current, then use the guided menus instead of manually calculating most routine crafting checks.</p>
+<div class="callout info">
+<strong>Typical Player Flow</strong>
+<b>1.</b> Register your character and skills with <b>/register</b>.<br/>
+<b>2.</b> Register permanent crafting proficiencies and features with <b>/craftregister</b>.<br/>
+<b>3.</b> Register any Workshop, Laboratory, or Library used for crafting.<br/>
+<b>4.</b> Earn Work Hours through Contract rewards.<br/>
+<b>5.</b> Gather materials through the Harvester commands or receive materials from Contract/Bastion rewards.<br/>
+<b>6.</b> Check materials with <b>/inventory view</b>.<br/>
+<b>7.</b> Use <b>/crafting</b> to select a profession and recipe. The bot checks your tracked requirements before it rolls.
+</div>
+</div><div class="guide-section" id="crafting-bot">
+<h2 class="sec-title">Crafting Bot <span class="tag">Discord</span></h2>
+<p><b>/crafting</b> opens the guided crafting menu. The player chooses a profession, then a recipe. Recipes that use a rank-based <b>+X</b> value also ask for the material rank. The guided flow supports crafting quantities from <b>1 to 10</b> at a time.</p>
+<h3 class="sub-title">What the Bot Checks Before a Roll</h3>
+<div class="callout">
+<strong>Automatic Validation</strong>
+The bot checks your available Work Hours, registered character rank, recipe/material rank, required Workshop or Library access, crafting proficiency, and tracked material inventory. If a required validation fails, the craft is stopped before the Profession Check and the bot does not intentionally spend Work Hours or tracked materials for that rejected attempt.
+</div>
+<p>When a recipe contains tracked harvesting materials, the menu displays an <b>Inventory Check</b>. If you are missing required tracked materials, the Craft button is disabled. The inventory is checked again when the Craft button is pressed so an old menu cannot spend materials that are no longer present.</p>
+<h3 class="sub-title">Profession Check</h3>
+<p>The bot resolves the Profession Check using your registered crafting proficiency. Permanent Expertise doubles the proficiency contribution. A temporary tool proficiency can grant proficiency, but temporary proficiency does not receive Expertise or reaction-based crafting modifiers.</p>
+<div class="callout">
+<strong>Advantage Sources</strong>
+The guided menu can record <b>Aid by another player</b>, <b>Homunculus Aid</b>, or <b>Workshop — Order: Assist</b>. Workshop Assist is valid only when the profession matches one of that Workshop's registered specialized tools.
+</div>
+<h3 class="sub-title">Crafting Results &amp; Resources</h3>
+<p>Every attempted craft consumes its required Work Hours, whether the roll succeeds or fails. The result message shows the d20 result, tool modifier, total against the recipe DC, Work Hours removed, Work Hours remaining, and any tracked materials removed from the personal crafting inventory.</p>
+<p><b>Adroit Crafter:</b> the bot halves machine-readable crafting time and retains tracked crafting components on a failed craft, including a Natural 1. Other recipe-specific success/failure rules are still resolved normally.</p>
+<p><b>Batch Crafting:</b> when more than one copy is selected, the bot makes separate crafting attempts and reports the number of successes and failures. Long batch results are split into multiple Discord messages rather than silently dropping later rolls.</p>
+<h3 class="sub-title">Spell Scroll Automation</h3>
+<p>Calligraphy scrolls use a guided ink-selection flow. Eligible tracked herbs and/or blood can be committed as ink value, and applicable Library benefits are calculated automatically. The bot records ink consumed, Gold removed, Herb Credit used or created, and the remaining Herb Credit balance.</p>
+<div class="callout info">
+<strong>Crafting Profile</strong>
+Use <b>/craftingsheet</b> to review the crafting setup currently registered for a character. The owner-only <b>/crafttest</b> command mirrors the crafting system without spending Work Hours, Gold, or tracked materials.
+</div>
+</div><div class="guide-section" id="inventory-bot">
+<h2 class="sec-title">Inventory &amp; Crafting Materials <span class="tag">Automation</span></h2>
+<p>The bot maintains a <b>personal crafting-material inventory</b> separate from a normal D&amp;D character-sheet equipment list. This inventory is used for harvested materials, herbs, metals, woods, creature parts, blood, meat, and other catalogued crafting resources.</p>
+<h3 class="sub-title">Player Inventory Commands</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Command</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td><strong>/inventory view</strong></td><td>Open your crafting-material inventory. Materials are organized through the guided category menus. DM/Admin users may view another player when permitted.</td></tr>
+<tr><td><strong>/inventory history</strong></td><td>Review recent additions, removals, transfers, and other tracked material changes.</td></tr>
+<tr><td><strong>/material give</strong></td><td>Transfer owned crafting materials from your personal inventory to another player through the guided flow.</td></tr>
+<tr><td><strong>/materialmarket list</strong></td><td>Show active player material listings.</td></tr>
+<tr><td><strong>/materialmarket sell</strong></td><td>Select one of your owned crafting materials and list units for sale.</td></tr>
+<tr><td><strong>/materialmarket buy</strong></td><td>Purchase a chosen quantity from an active listing by listing ID.</td></tr>
+<tr><td><strong>/materialmarket cancel</strong></td><td>Cancel your own active listing and return any unsold material to your inventory.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout">
+<strong>Automatic Material Handling</strong>
+Tracked materials are checked by the Crafting Bot when a recipe is selected and are rechecked immediately before the craft begins. When the craft consumes tracked materials, the bot removes those exact quantities and reports the removal in the crafting result. Contract-material assignments and compatible Bastion material rewards are also deposited directly into the player's personal crafting inventory.
+</div>
+<h3 class="sub-title">DM / Owner Inventory Corrections</h3>
+<p><b>/inventoryadmin</b> provides owner correction tools to import a pasted material list, add one or more materials, or manually remove a material. Imports can either <b>replace</b> the current tracked material inventory or <b>add</b> to it. These commands are administrative tools and are not normal player inventory actions.</p>
+<div class="callout danger">
+<strong>Do Not Replace Inventory by Accident</strong>
+Normal reward and harvesting deposits should <b>add to the quantity already owned</b>. The Replace option exists only in the owner import/correction command and should be used only when intentionally rebuilding a player's material inventory.
+</div>
+</div><div class="guide-section" id="harvester-bot">
+<h2 class="sec-title">Harvester Bot <span class="tag">Discord</span></h2>
+<p>The Harvester Bot shares Work Hours and character information with the other Black Banner systems. Use <b>/hours</b> to see the Work Hours currently available before choosing a gathering or Odd Job activity.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Command</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><strong>/mine</strong></td><td>Spend Work Hours mining ranked metals and related mining rewards.</td></tr>
+<tr><td><strong>/logging</strong></td><td>Spend Work Hours gathering ranked woods.</td></tr>
+<tr><td><strong>/foraging</strong></td><td>Spend Work Hours searching for ranked herbs and botanical materials.</td></tr>
+<tr><td><strong>/hunting</strong></td><td>Run the interactive hunting system: choose the time commitment, area, approach, and combat style to pursue hunting materials.</td></tr>
+<tr><td><strong>/oddjobs</strong></td><td>Spend Work Hours on the paid Odd Job system described earlier in this guide.</td></tr>
+<tr><td><strong>/hours</strong></td><td>Show your remaining shared Work Hours.</td></tr>
+<tr><td><strong>/sheet</strong></td><td>View a registered character profile and saved skill bonuses.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Mining, logging, and foraging write their successful material results into the shared inventory records used by the crafting system. Work Hours are deducted by the selected activity. If the activity's checks fail, the player may receive little or no material despite spending the time.</p>
+</div><div class="guide-section" id="facility-register">
+<h2 class="sec-title">Crafting Facility Registration <span class="tag">Automation</span></h2>
+<p>The Crafting Bot uses registered Bastion crafting facilities when checking benefits and recipe requirements. Keep these records updated whenever a facility changes rank, size, specialization, Order, upgrades, or hirelings.</p>
+<h3 class="sub-title">/workshopregister</h3>
+<p>Registers the Workshop rank, Mastercraft Workshop upgrade, Master Craftsman's Bench, current Workshop crafting Order, chosen Mastercraft tools/kits, and current hireling count.</p>
+<div class="callout">
+<strong>Workshop — Order: Assist</strong>
+Assist grants Advantage only when the profession/tool being used matches one of the Workshop's registered specialized tools.
+</div>
+<div class="callout">
+<strong>Mastercraft Workshop</strong>
+The Mastercraft benefit requires the upgrade, both hirelings, and the profession to be one of the chosen Workshop tools. When it qualifies, the bot applies Expertise and a <b>1d4</b> crafting bonus. A Mastercraft Workshop can support qualifying crafts through <b>one rank above the Workshop's own rank</b>. The Mastercraft 1d4 does not stack with Flash of Genius; when Flash of Genius is used, the 1d4 is suppressed.
+</div>
+<h3 class="sub-title">/labregister</h3>
+<p>Registers Laboratory ownership, specialization, rank, current Laboratory Order, Chemistry Station, and hireling count.</p>
+<p><b>Laboratory Assist / Expertise:</b> applies only to <b>Rare+</b> crafts when the Laboratory specialization matches the profession and the Laboratory rank is high enough for the craft. The selected Laboratory Order determines whether the benefit is Advantage or Expertise.</p>
+<p><b>Chemistry Station:</b> with both hirelings present, eligible potion, poison, and dilution crafts can receive the station's replica roll. The Chemistry Station's replica feature is not restricted by the Laboratory-rank check used for Assist/Expertise.</p>
+<h3 class="sub-title">/libraryregister</h3>
+<p>Registers Library ownership, rank, and Roomy/Vast size. The bot uses that information for Library recipe requirements and Arcane Insight.</p>
+<div class="callout">
+<strong>Arcane Insight</strong>
+The automated component-cost discount is <b>10% at D-Rank</b>, <b>20% at C-Rank</b>, and <b>30% at B-Rank or higher</b>. A Roomy Library applies the discount through B-Rank items. A Vast Library extends it to A- and S-Rank items. The bot also requires a Vast Library for 7th-, 8th-, and 9th-level Spell Scroll crafting.
+</div>
+</div><div class="guide-section" id="bot-commands">
+<h2 class="sec-title">Bot Command Quick Reference <span class="tag">Player</span></h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Command</th><th>What It Does</th></tr></thead>
+<tbody>
+<tr><td><strong>/register</strong></td><td>Register or update character name, rank, level, and saved skill modifiers.</td></tr>
+<tr><td><strong>/craftregister</strong></td><td>Register permanent crafting tools, Expert tools, Flash of Genius, Built for Success, Homunculus, Adroit Crafter, and supported temporary tool proficiency features.</td></tr>
+<tr><td><strong>/crafting</strong></td><td>Open the guided live crafting menu.</td></tr>
+<tr><td><strong>/craftingsheet</strong></td><td>Review the registered crafting setup.</td></tr>
+<tr><td><strong>/workshopregister</strong></td><td>Register/update Workshop crafting features.</td></tr>
+<tr><td><strong>/labregister</strong></td><td>Register/update Laboratory crafting features.</td></tr>
+<tr><td><strong>/libraryregister</strong></td><td>Register/update Library crafting features.</td></tr>
+<tr><td><strong>/inventory view</strong></td><td>View tracked crafting materials.</td></tr>
+<tr><td><strong>/inventory history</strong></td><td>View recent tracked material changes.</td></tr>
+<tr><td><strong>/material give</strong></td><td>Give owned crafting materials to another player.</td></tr>
+<tr><td><strong>/materialmarket</strong></td><td>List, sell, buy, or cancel player material-market listings.</td></tr>
+<tr><td><strong>/hours</strong></td><td>View shared Work Hours.</td></tr>
+<tr><td><strong>/mine /logging /foraging /hunting</strong></td><td>Spend Work Hours gathering materials.</td></tr>
+<tr><td><strong>/oddjobs</strong></td><td>Spend Work Hours earning Gold through multi-skill downtime jobs.</td></tr>
+<tr><td><strong>/training</strong></td><td>Record a training week and its Gold cost. Under the current server rule, a training week consumes the full 40-hour Work Week.</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout info">
+<strong>Keep Registrations Current</strong>
+The crafting system relies on saved character, tool, and facility records. If your rank, crafting proficiencies, Workshop, Laboratory, Library, hirelings, specialization, or crafting Order changes, update the related registration before crafting.
 </div>
 </div>
 <!-- HOW TO CRAFT -->
@@ -3949,7 +4084,7 @@ Crafted traps are intended to reward preparation, teamwork, and battlefield plan
 </div>
 </div><!-- /content -->
 <footer>
-   Black Banner Company Crafting Guide v3.7  ·  Created by Ooxy  ·  Last updated 8 August 2026
+   Black Banner Company Crafting Guide v3.8  ·  Created by Ooxy  ·  Last updated 8 August 2026
 </footer>
 <div class="guide-section" id="changelog">
 <p><strong>v20 Deep Flavor Pass:</strong> Standardized profession layout so flavor text appears before requirements, restored full flavor text for remaining professions, added consistent flavor dividers, and preserved profession-specific Prime/Base, recipe, expert, and special crafting rules.</p>
@@ -3957,14 +4092,14 @@ Crafted traps are intended to reward preparation, teamwork, and battlefield plan
 <strong>v24 Profession Content Restoration</strong>
 Restored expanded Woodcarver content and preserved profession content passes for Glassblower, Cooking, Leatherworker, Mason, Painter, Potter, Smith, and Weaver.
 </div>
-<h2 class="sec-title">Changelog <span class="tag">Advanced</span></h2>
+<h2 class="sec-title">Changelog <span class="tag">Advanced</span></h2><h3 class="sub-title">v3.8 (8/22/26)</h3><p>Added current Discord bot documentation for guided crafting, personal crafting-material inventory, material transfers and marketplace, Harvester commands, crafting profile registration, Workshop/Laboratory/Library registration, automatic inventory validation/consumption, and facility benefits.</p>
 <div class="callout info">
 <strong>Version History</strong>
 This section records major updates, rulings, balance changes, and additions made to the Black Banner Company Crafting Guide.
 </div>
 <h3 class="sub-title">v3.7 (8/22/26)</h3>
 <p>Expanded the standard Work Week to 40 hours. Updated training to use full 40-hour weeks, added specific Weapon and Shield Proficiency training, and introduced the Odd Jobs downtime system with multi-skill checks, rank-based DCs, and rank-based payouts.</p>
-<h3 class="sub-title">v3.6.0 (8/08/26)</h3>
+<h3 class="sub-title">v3.8 (8/08/26)</h3>
 <ul>
 <li>Added <strong>Trapmaking</strong> to Interdisciplinary Crafts.</li>
 <li>Added profession-built trap components and final assembly rules.</li>
