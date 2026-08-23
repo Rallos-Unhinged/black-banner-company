@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Banner Company — Material Market</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #050505;
+  --panel: rgba(13, 11, 9, 0.94);
+  --panel2: rgba(22, 17, 12, 0.96);
+  --gold: #d8a63b;
+  --gold-soft: #f1d994;
+  --ember: #d45b1f;
+  --blood: #8d2626;
+  --text: #efe4cc;
+  --muted: #c6b99c;
+  --faint: rgba(216, 166, 59, 0.28);
+  --good: #87c987;
+  --bad: #df8585;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top center, rgba(212, 91, 31, 0.15), transparent 32rem),
+    radial-gradient(circle at bottom center, rgba(216, 166, 59, 0.08), transparent 36rem),
+    linear-gradient(180deg, #090604 0%, #050505 48%, #080705 100%);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.55;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.86) 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018), rgba(255,255,255,.018) 1px, transparent 1px, transparent 5px);
+  pointer-events: none;
+}
+.page {
+  position: relative;
+  z-index: 1;
+  width: min(1240px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding-bottom: 3rem;
+}
+.topbar {
+  display: flex;
+  gap: .65rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+.nav {
+  display: flex;
+  gap: .55rem;
+  flex-wrap: wrap;
+}
+.btn, button {
+  appearance: none;
+  border: 1px solid rgba(216,166,59,.65);
+  background: rgba(216,166,59,.08);
+  color: var(--gold-soft);
+  padding: .72rem .95rem;
+  font-family: 'Cinzel', serif;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: .18s ease;
+}
+.btn:hover, button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(216,166,59,.18);
+  box-shadow: 0 0 20px rgba(216,166,59,.16);
+}
+button.primary, .btn.primary {
+  background: linear-gradient(135deg, rgba(141,38,38,.72), rgba(216,166,59,.18));
+  border-color: rgba(241,217,148,.8);
+}
+button.danger { border-color: rgba(190,70,70,.75); color: #ffc7c7; }
+button:disabled { opacity: .45; cursor: not-allowed; }
+
+.hero {
+  background:
+    linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.82)),
+    var(--panel);
+  border: 1px solid rgba(216,166,59,.55);
+  box-shadow: 0 2rem 5rem rgba(0,0,0,.6), inset 0 0 4rem rgba(216,166,59,.04);
+  padding: clamp(1.4rem, 4vw, 3rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url("../images/black_banner_epic.gif") center center no-repeat;
+  background-size:min(650px,80vw);
+  opacity:.08;
+  pointer-events:none;
+}
+.hero > * { position: relative; z-index: 1; }
+.eyebrow {
+  font-family:'Fira Mono', monospace;
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-size:.7rem;
+}
+h1,h2,h3 {
+  font-family:'Cinzel', serif;
+  margin:0;
+}
+h1 {
+  margin-top:.35rem;
+  color:var(--gold);
+  font-size:clamp(2.2rem,6vw,4.6rem);
+  line-height:1;
+}
+.subtitle { color:var(--gold-soft); font-style:italic; margin:.7rem auto 0; max-width:760px; }
+
+.accountbar {
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:1rem;
+  margin:1rem 0 0;
+  background:rgba(0,0,0,.32);
+  border:1px solid var(--faint);
+  padding:1rem;
+}
+.avatar {
+  width:58px; height:58px; border-radius:50%;
+  border:1px solid rgba(216,166,59,.7);
+  background:#111; object-fit:cover;
+}
+.account-name { font-family:'Cinzel',serif; color:var(--gold-soft); font-weight:700; }
+.account-meta { color:var(--muted); font-size:.92rem; }
+.statline { display:flex; flex-wrap:wrap; gap:.6rem; justify-content:flex-end; }
+.stat {
+  min-width:105px;
+  background:rgba(216,166,59,.07);
+  border:1px solid rgba(216,166,59,.23);
+  padding:.55rem .75rem;
+  text-align:center;
+}
+.stat strong { display:block; color:var(--gold-soft); font-family:'Cinzel',serif; }
+
+.market-layout {
+  display:grid;
+  grid-template-columns:minmax(0, 2fr) minmax(300px, 1fr);
+  gap:1rem;
+  margin-top:1rem;
+}
+.panel {
+  background:var(--panel);
+  border:1px solid var(--faint);
+  padding:1.1rem;
+  box-shadow:0 1rem 2.2rem rgba(0,0,0,.28);
+}
+.panel h2 {
+  color:var(--gold);
+  font-size:1.35rem;
+  margin-bottom:.2rem;
+}
+.panel h3 {
+  color:var(--gold-soft);
+  font-size:.9rem;
+  margin:1rem 0 .45rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.rule {
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(216,166,59,.7),transparent);
+  margin:.65rem 0 1rem;
+}
+.muted { color:var(--muted); }
+.controls {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.6rem;
+  margin-bottom:.8rem;
+}
+input, select {
+  width:100%;
+  padding:.72rem .75rem;
+  color:var(--text);
+  background:#100d0a;
+  border:1px solid rgba(216,166,59,.34);
+  font:inherit;
+}
+input:focus, select:focus { outline:1px solid var(--gold); }
+select option { background:#100d0a; color:var(--text); }
+
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:720px; }
+th {
+  text-align:left;
+  color:var(--gold);
+  font-family:'Cinzel',serif;
+  font-size:.74rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  padding:.7rem;
+  border-bottom:1px solid rgba(216,166,59,.45);
+}
+td {
+  padding:.75rem .7rem;
+  border-bottom:1px solid rgba(216,166,59,.14);
+  vertical-align:middle;
+}
+tr:hover td { background:rgba(216,166,59,.035); }
+.rank {
+  display:inline-block;
+  min-width:2.3rem;
+  text-align:center;
+  padding:.18rem .35rem;
+  border:1px solid currentColor;
+  font-family:'Cinzel',serif;
+  font-size:.7rem;
+}
+.rank-E{color:#ad1457}.rank-D{color:#2ecc71}.rank-C{color:#3498db}.rank-B{color:#6d62ff}.rank-A{color:#b26bd9}.rank-S{color:#f1c40f}
+.qty, .gold { color:var(--gold-soft); font-weight:600; }
+
+.card-list { display:grid; gap:.55rem; }
+.inventory-row, .listing-card {
+  border:1px solid rgba(216,166,59,.18);
+  background:var(--panel2);
+  padding:.7rem .8rem;
+}
+.inventory-row { display:flex; justify-content:space-between; gap:1rem; }
+.listing-card strong { color:var(--gold-soft); }
+.action-row { display:flex; gap:.45rem; flex-wrap:wrap; margin-top:.55rem; }
+
+.notice {
+  margin:1rem 0;
+  border-left:4px solid var(--ember);
+  background:rgba(212,91,31,.08);
+  padding:.85rem 1rem;
+  color:var(--gold-soft);
+}
+.notice.good { border-color:var(--good); color:#cce9cc; background:rgba(80,150,80,.08); }
+.notice.bad { border-color:var(--bad); color:#ffd0d0; background:rgba(160,60,60,.09); }
+.hidden { display:none !important; }
+
+.empty {
+  color:var(--muted);
+  text-align:center;
+  padding:1.5rem .5rem;
+  border:1px dashed rgba(216,166,59,.2);
+}
+footer {
+  text-align:center;
+  color:#9d854a;
+  font-family:'Cinzel',serif;
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  padding:2rem 0;
+}
+
+@media (max-width: 900px) {
+  .market-layout { grid-template-columns:1fr; }
+  .controls { grid-template-columns:1fr 1fr; }
+  .accountbar { grid-template-columns:auto 1fr; }
+  .statline { grid-column:1/-1; justify-content:flex-start; }
+}
+@media (max-width: 560px) {
+  .controls { grid-template-columns:1fr; }
+  .accountbar { grid-template-columns:1fr; text-align:center; }
+  .avatar { margin:auto; }
+  .statline { justify-content:center; }
+  .topbar { justify-content:center; }
+  .nav { justify-content:center; }
+  .btn,button { width:100%; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="nav">
+      <a class="btn" href="../">Home</a>
+      <a class="btn" href="../player-guide/">Player Guide</a>
+      <a class="btn" href="../crafting-guide/">Crafting Guide</a>
+      <a class="btn" href="../bastions/">Bastions</a>
+    </div>
+    <button id="loginBtn" class="primary">Login with Discord</button>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">Black Banner Company Exchange</div>
+    <h1>Material Market</h1>
+    <p class="subtitle">Trade the resources of Thracia directly with other members beneath the Banner.</p>
+  </header>
+
+  <div id="message" class="notice hidden"></div>
+
+  <section id="accountBar" class="accountbar hidden">
+    <img id="avatar" class="avatar" alt="Discord avatar">
+    <div>
+      <div id="accountName" class="account-name">—</div>
+      <div id="accountMeta" class="account-meta">Connected through Discord</div>
+    </div>
+    <div class="statline">
+      <div class="stat"><span>Gold</span><strong id="gold">0g</strong></div>
+      <div class="stat"><span>Work Hours</span><strong id="hours">0</strong></div>
+      <div class="stat"><span>PP</span><strong id="pp">0</strong></div>
+    </div>
+  </section>
+
+  <div class="market-layout">
+    <main>
+      <section class="panel">
+        <h2>Active Listings</h2>
+        <div class="rule"></div>
+        <div class="controls">
+          <input id="search" placeholder="Search materials...">
+          <select id="rankFilter">
+            <option value="">All Ranks</option>
+            <option>E</option><option>D</option><option>C</option>
+            <option>B</option><option>A</option><option>S</option>
+          </select>
+          <select id="sortBy">
+            <option value="newest">Newest</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
+            <option value="name">Material Name</option>
+          </select>
+          <button id="refreshMarket">Refresh</button>
+        </div>
+        <div id="market" class="table-wrap">
+          <div class="empty">Login with Discord to load the Black Banner market.</div>
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="panel">
+        <h2>Sell Material</h2>
+        <div class="rule"></div>
+        <p class="muted">Materials are reserved from your inventory as soon as the listing is created.</p>
+        <h3>Material</h3>
+        <select id="sellMaterial" disabled>
+          <option value="">Login to load inventory...</option>
+        </select>
+        <h3>Quantity</h3>
+        <input id="sellQty" type="number" min="1" value="1">
+        <h3>Price Per Unit</h3>
+        <input id="sellPrice" type="number" min="1" value="100">
+        <button id="sellBtn" class="primary" style="margin-top:.8rem;width:100%" disabled>Create Listing</button>
+      </section>
+
+      <section class="panel" style="margin-top:1rem">
+        <h2>My Inventory</h2>
+        <div class="rule"></div>
+        <div id="inventory" class="card-list">
+          <div class="empty">Login to view your crafting materials.</div>
+        </div>
+      </section>
+
+      <section class="panel" style="margin-top:1rem">
+        <h2>My Listings</h2>
+        <div class="rule"></div>
+        <div id="myListings" class="card-list">
+          <div class="empty">Login to view your listings.</div>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <footer>Black Banner Company · Material Market · Drathmere Exchange</footer>
+</div>
+
+<script>
+/*
+  LOCAL TESTING:
+    http://127.0.0.1:8787
+
+  Before publishing for all players, replace API_BASE with your public HTTPS
+  Black Banner API address, e.g. https://api.yourdomain.com
+*/
+const API_BASE = "http://127.0.0.1:8787";
+
+let me = null;
+let inventory = [];
+let listings = [];
+let myListings = [];
+
+const $ = (id) => document.getElementById(id);
+
+function friendlyItemKey(key) {
+  const parts = String(key || "").split("_");
+  const maybeRank = parts[parts.length - 1];
+  const hasRank = /^[EDCBAS]$/.test(maybeRank);
+  if (hasRank) parts.pop();
+
+  const name = parts.map((w) => w ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(" ")
+    .replace(/\bKorins\b/g, "Korin's")
+    .replace(/\bSky Shard\b/g, "Sky Shard");
+
+  return {
+    name: hasRank ? `${maybeRank}-Rank ${name}` : name,
+    rank: hasRank ? maybeRank : ""
+  };
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function showMessage(text, type = "") {
+  const el = $("message");
+  el.textContent = text;
+  el.className = `notice ${type}`.trim();
+  el.classList.remove("hidden");
+  clearTimeout(showMessage.timer);
+  showMessage.timer = setTimeout(() => el.classList.add("hidden"), 5000);
+}
+
+async function api(path, options = {}) {
+  const response = await fetch(API_BASE + path, {
+    credentials: "include",
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {})
+    }
+  });
+
+  const body = await response.json().catch(() => ({}));
+
+  if (response.status === 401) {
+    throw new Error("LOGIN_REQUIRED");
+  }
+  if (!response.ok) {
+    throw new Error(body.error || `Request failed (${response.status})`);
+  }
+  return body;
+}
+
+function discordAvatarUrl(user) {
+  if (!user?.avatar) return "";
+  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
+}
+
+function renderAccount() {
+  if (!me) return;
+  $("accountBar").classList.remove("hidden");
+  $("accountName").textContent = me.user.globalName || me.user.username || "Banner Member";
+  $("accountMeta").textContent = `@${me.user.username} · Discord ${me.user.id}`;
+  $("gold").textContent = `${Number(me.balance.gold || 0).toLocaleString()}g`;
+  $("hours").textContent = Number(me.balance.workHours || 0);
+  $("pp").textContent = Number(me.balance.progressPoints || 0);
+  const url = discordAvatarUrl(me.user);
+  if (url) $("avatar").src = url;
+  $("loginBtn").textContent = "Logout";
+}
+
+function renderInventory() {
+  const holder = $("inventory");
+  const select = $("sellMaterial");
+  holder.innerHTML = "";
+  select.innerHTML = '<option value="">Choose a material...</option>';
+
+  if (!inventory.length) {
+    holder.innerHTML = '<div class="empty">No crafting materials found.</div>';
+  } else {
+    for (const row of inventory) {
+      const f = friendlyItemKey(row.itemKey);
+      const line = document.createElement("div");
+      line.className = "inventory-row";
+      line.innerHTML = `<span>${f.rank ? `<span class="rank rank-${f.rank}">${f.rank}</span> ` : ""}${escapeHtml(f.name.replace(/^[EDCBAS]-Rank /,""))}</span><strong class="qty">×${Number(row.qty)}</strong>`;
+      holder.appendChild(line);
+
+      const option = document.createElement("option");
+      option.value = row.itemKey;
+      option.dataset.qty = row.qty;
+      option.textContent = `${f.name} — Owned: ${row.qty}`;
+      select.appendChild(option);
+    }
+  }
+  select.disabled = false;
+  $("sellBtn").disabled = false;
+}
+
+function listingRows(filtered) {
+  if (!filtered.length) return '<div class="empty">No active listings match your filters.</div>';
+
+  return `<table>
+    <thead><tr>
+      <th>Material</th><th>Quantity</th><th>Price Each</th><th>Seller</th><th></th>
+    </tr></thead>
+    <tbody>${filtered.map((x) => {
+      const f = friendlyItemKey(x.itemKey);
+      const own = me && String(x.sellerId) === String(me.user.id);
+      return `<tr>
+        <td>${f.rank ? `<span class="rank rank-${f.rank}">${f.rank}</span> ` : ""}${escapeHtml(f.name.replace(/^[EDCBAS]-Rank /,""))}</td>
+        <td class="qty">${Number(x.quantityRemaining)}</td>
+        <td class="gold">${Number(x.priceEach).toLocaleString()}g</td>
+        <td>${own ? "You" : `Member ${escapeHtml(String(x.sellerId).slice(-6))}`}</td>
+        <td><button ${own ? "disabled" : ""} onclick="buyListing(${Number(x.id)}, ${Number(x.quantityRemaining)}, ${Number(x.priceEach)}, '${escapeHtml(x.itemKey)}')">${own ? "Your Listing" : "Buy"}</button></td>
+      </tr>`;
+    }).join("")}</tbody>
+  </table>`;
+}
+
+function renderMarket() {
+  const q = $("search").value.trim().toLowerCase();
+  const rank = $("rankFilter").value;
+  const sort = $("sortBy").value;
+
+  let filtered = listings.filter((x) => {
+    const f = friendlyItemKey(x.itemKey);
+    return (!q || f.name.toLowerCase().includes(q))
+      && (!rank || f.rank === rank);
+  });
+
+  filtered.sort((a,b) => {
+    if (sort === "priceLow") return a.priceEach - b.priceEach;
+    if (sort === "priceHigh") return b.priceEach - a.priceEach;
+    if (sort === "name") return friendlyItemKey(a.itemKey).name.localeCompare(friendlyItemKey(b.itemKey).name);
+    return b.createdAt - a.createdAt;
+  });
+
+  $("market").innerHTML = listingRows(filtered);
+}
+
+function renderMyListings() {
+  const holder = $("myListings");
+  const active = myListings.filter(x => x.status === "active" && x.quantityRemaining > 0);
+  if (!active.length) {
+    holder.innerHTML = '<div class="empty">You have no active listings.</div>';
+    return;
+  }
+  holder.innerHTML = active.map((x) => {
+    const f = friendlyItemKey(x.itemKey);
+    return `<div class="listing-card">
+      <strong>${escapeHtml(f.name)}</strong><br>
+      <span class="muted">Remaining:</span> ${Number(x.quantityRemaining)} ·
+      <span class="gold">${Number(x.priceEach).toLocaleString()}g each</span>
+      <div class="action-row">
+        <button class="danger" onclick="cancelListing(${Number(x.id)})">Cancel Listing</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+async function loadAll() {
+  try {
+    const [meData, invData, marketData, mineData] = await Promise.all([
+      api("/api/me"),
+      api("/api/inventory"),
+      api("/api/market"),
+      api("/api/market/mine")
+    ]);
+    me = meData;
+    inventory = invData.inventory || [];
+    listings = marketData.listings || [];
+    myListings = mineData.listings || [];
+    renderAccount();
+    renderInventory();
+    renderMarket();
+    renderMyListings();
+  } catch (err) {
+    if (err.message === "LOGIN_REQUIRED") {
+      $("loginBtn").textContent = "Login with Discord";
+      return;
+    }
+    showMessage(err.message, "bad");
+  }
+}
+
+async function refreshData(successText = "") {
+  await loadAll();
+  if (successText) showMessage(successText, "good");
+}
+
+async function createListing() {
+  const itemKey = $("sellMaterial").value;
+  const quantity = Number($("sellQty").value);
+  const priceEach = Number($("sellPrice").value);
+
+  if (!itemKey) return showMessage("Choose a material to sell.", "bad");
+  const owned = Number($("sellMaterial").selectedOptions[0]?.dataset.qty || 0);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > owned) {
+    return showMessage(`Choose a quantity from 1 to ${owned}.`, "bad");
+  }
+  if (!Number.isInteger(priceEach) || priceEach < 1) {
+    return showMessage("Price per unit must be at least 1g.", "bad");
+  }
+
+  try {
+    await api("/api/market/listings", {
+      method: "POST",
+      body: JSON.stringify({ itemKey, quantity, priceEach })
+    });
+    await refreshData("Material listing created.");
+  } catch (err) {
+    showMessage(err.message, "bad");
+  }
+}
+
+async function buyListing(id, maxQty, priceEach, itemKey) {
+  const f = friendlyItemKey(itemKey);
+  const raw = prompt(`Buy ${f.name}\nAvailable: ${maxQty}\nPrice: ${priceEach}g each\n\nHow many do you want to buy?`, "1");
+  if (raw === null) return;
+  const quantity = Number(raw);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > maxQty) {
+    return showMessage(`Enter a quantity from 1 to ${maxQty}.`, "bad");
+  }
+  const total = quantity * priceEach;
+  if (!confirm(`Buy ${quantity} × ${f.name} for ${total.toLocaleString()}g?`)) return;
+
+  try {
+    await api(`/api/market/listings/${id}/buy`, {
+      method: "POST",
+      body: JSON.stringify({ quantity })
+    });
+    await refreshData(`Purchased ${quantity} × ${f.name}.`);
+  } catch (err) {
+    showMessage(err.message, "bad");
+  }
+}
+
+async function cancelListing(id) {
+  if (!confirm("Cancel this listing and return all unsold material to your inventory?")) return;
+  try {
+    await api(`/api/market/listings/${id}`, { method: "DELETE" });
+    await refreshData("Listing cancelled and unsold material returned.");
+  } catch (err) {
+    showMessage(err.message, "bad");
+  }
+}
+
+async function logout() {
+  try {
+    await api("/auth/logout", { method:"POST", body:"{}" });
+  } catch (_) {}
+  location.reload();
+}
+
+$("loginBtn").addEventListener("click", () => {
+  if (me) return logout();
+  location.href = API_BASE + "/auth/discord";
+});
+$("refreshMarket").addEventListener("click", () => refreshData("Market refreshed."));
+$("sellBtn").addEventListener("click", createListing);
+$("search").addEventListener("input", renderMarket);
+$("rankFilter").addEventListener("change", renderMarket);
+$("sortBy").addEventListener("change", renderMarket);
+
+window.buyListing = buyListing;
+window.cancelListing = cancelListing;
+
+loadAll();
+</script>
+</body>
+</html>
