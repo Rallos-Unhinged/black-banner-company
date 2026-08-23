@@ -333,6 +333,30 @@ footer {
     width: 100%;
   }
 }
+
+.site-account {
+  position: relative;
+  z-index: 2;
+  margin: 1rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+#siteUserName {
+  color: var(--gold-soft);
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+}
+
+.site-account .btn {
+  min-width: 190px;
+  cursor: pointer;
+}
+
 </style>
 </head>
 
@@ -394,6 +418,13 @@ footer {
           <a class="btn" href="bastions/">
             Bastions of the Black
           </a>
+        </div>
+
+        <div class="site-account">
+          <span id="siteUserName"></span>
+          <button id="siteLoginBtn" class="btn" type="button">
+            Login with Discord
+          </button>
         </div>
 
       </div>
@@ -607,5 +638,6 @@ footer {
     </footer>
 
   </div>
+  <script src="./site-login.js"></script>
 </body>
 </html>
