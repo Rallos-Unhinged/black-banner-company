@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Black Banner Company — Crafting Guide v3.6</title>
+<title>Black Banner Company — Crafting Guide v3.7</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
 
@@ -1119,21 +1119,22 @@ td {
 <aside id="sidebar">
 <div class="logo">
 <h2>Black Banner Company<br/>Crafting Guide</h2>
-<p>v3.6 · Trapmaking Expansion</p>
+<p>v3.7 · 40-Hour Downtime Update</p>
 </div>
 <nav>
-<div class="section-head">Core Rules</div>
-<a href="#intro">Introduction</a>
-<a href="#training">Training &amp; Learning</a>
-<a href="#rank-chart">Rank Chart</a>
-<a href="#how-to-craft">How to Craft</a>
-<a href="#prime-base">Prime/Base Materials</a>
-<div class="section-head">Gathering</div>
-<a href="#harvesting">Harvesting Creatures</a>
-<a href="#metals">Exotic Metals</a>
-<a href="#stones">Stones, Woods &amp; Weaves</a>
-<a href="#herbs">Plants &amp; Herbs</a>
-<div class="section-head">Professions</div>
+<div class="section-head">Downtime Rules</div>
+<a href="#intro">Using This Guide</a>
+<a href="#training">Downtime Training</a>
+<a href="#odd-jobs">Odd Jobs</a>
+<a href="#rank-chart">Rank &amp; Material Scale</a>
+<a href="#how-to-craft">Crafting Procedure</a>
+<a href="#prime-base">Prime &amp; Base Materials</a>
+<div class="section-head">Resource Gathering</div>
+<a href="#harvesting">Creature Harvesting</a>
+<a href="#metals">Ore &amp; Exotic Metals</a>
+<a href="#stones">Woods, Stone &amp; Weaves</a>
+<a href="#herbs">Botanical Gathering</a>
+<div class="section-head">Crafting Trades</div>
 <a href="#alchemist">Alchemist's Supplies</a>
 <a href="#brewer">Brewer's Supplies</a>
 <a href="#calligraphy">Calligraphy Supplies</a>
@@ -1153,13 +1154,13 @@ td {
 <a href="#forgery">Forgery Kit</a>
 <a href="#disguise">Disguise Kit</a>
 <a href="#poisoner">Poisoner's Kit</a>
-<div class="section-head">Advanced</div>
+<div class="section-head">Special Procedures</div>
 <a href="#interdisciplinary">Interdisciplinary Crafts</a>
 <a href="#trapmaking">Trapmaking</a>
-<a href="#repair">Item Repair</a>
-<a href="#spell-crafting">Spell Material Crafting</a>
-<a href="#spell-trading">Spell Trading</a>
-<a href="#modifiers">Crafting Modifier Rulings</a>
+<a href="#repair">Equipment Repair</a>
+<a href="#spell-crafting">Crafting Spell Components</a>
+<a href="#spell-trading">Wizard Spell Exchange</a>
+<a href="#modifiers">Crafting Check Modifiers</a>
 <a href="#changelog">Changelog</a>
 </nav>
 </aside>
@@ -1173,12 +1174,12 @@ td {
 <a class="active" href="../crafting-guide/">Crafting Guide</a>
 <a href="../bastions/">Bastions Guide</a>
 </div>
-<div class="version">Official Guide · v3.6 · Created by Hellbread · Edited by Ooxy</div>
+<div class="version">Official Guide · v3.7 · Created by Ooxy</div>
 <h1>Black Banner Company<br/><span>Crafting Guide</span></h1>
-<p class="subtitle">Potions, poisons, armour, blades, and everything in between.</p>
+<p class="subtitle">Downtime rules for crafting, gathering, training, and paid trade work.</p>
 <div class="hero-pills">
 <span class="pill">20 Professions</span>
-<span class="pill">32-hr Work Week</span>
+<span class="pill">40-hr Work Week</span>
 <span class="pill">6 Rarity Tiers</span>
 <span class="pill">Prime/Base System</span>
 <span class="pill">Ranks F → S</span>
@@ -1189,18 +1190,18 @@ td {
 <!-- CORE RULES -->
 <!-- ══════════════════════════════════════════════ -->
 <div class="guide-section" id="intro">
-<h2 class="sec-title">Introduction <span class="tag">Core</span></h2>
-<p>Welcome to Black Banner Company's crafting system. This guide covers everything you need to gather materials, learn professions, and craft items during your downtime weeks.</p>
+<h2 class="sec-title">Using This Guide <span class="tag">Core</span></h2>
+<p>This handbook is the Black Banner Company reference for downtime production. Use it to manage Work Hours, gather resources, train proficiencies, and turn materials into finished equipment and consumables.</p>
 <div class="callout">
 <strong>Three Key Systems</strong>
 <b>Rank System:</b> Your progression is broken into Ranks (F through S), each covering several levels. Ranks determine what materials you can find and craft.<br/><br/>
 <b>The Main Chart:</b> All exotic materials and loot have a rarity tied to the rank of the quest they're found on. Use this to know what you can find and what things are worth.<br/><br/>
-<b>The Work Week:</b> Between adventures you have a <em>32-hour work week</em>. All crafting times in this guide use those hours. If you spend hours crafting, you cannot also use those hours for training that week.
+<b>The Work Week:</b> Between adventures you have a <em>40-hour work week</em>. Crafting, harvesting, Odd Jobs, and training all draw from these Work Hours. Hours spent on one activity cannot also be spent on another.
       </div>
 </div>
 <!-- RANK CHART -->
 <div class="guide-section" id="rank-chart">
-<h2 class="sec-title">Rank Chart</h2>
+<h2 class="sec-title">Rank &amp; Material Scale</h2>
 <div class="table-wrap">
 <table>
 <thead>
@@ -1217,61 +1218,121 @@ td {
 </tbody>
 </table>
 </div>
-<p><em>Whenever a recipe or item says "+X", substitute the X value from the row matching that material's rank above.</em></p>
+<p>When a rule shows “+X,” use the +X value assigned to that material’s rank in this table.</p>
 </div>
 <!-- TRAINING -->
 <div class="guide-section" id="training">
-<h2 class="sec-title">Training &amp; Learning</h2>
-<p>To learn a new tool proficiency, hobby (musical instrument or gaming set), or language, follow these rules:</p>
+<h2 class="sec-title">Downtime Training</h2>
+<p>Characters may dedicate downtime to learning a new tool proficiency, hobby, language, specific weapon proficiency, or shield proficiency.</p>
+<h3 class="sub-title">Tool, Hobby &amp; Language Training</h3>
 <div class="callout">
 <strong>How Training Works</strong>
-        • <b>Duration:</b> 10 work weeks, committing all 32 hours each week.<br/>
+        • <b>Duration:</b> 10 work weeks.<br/>
+        • <b>Work Hours:</b> Training consumes the full <b>40 Work Hours</b> for each training week.<br/>
         • <b>Cost:</b> 25 gold per week (250g total).<br/>
-        • <b>You cannot craft during a training week.</b> Any crafting (even 2 hours) pauses training until the next week.<br/>
-        • <b>Retraining:</b> You can swap one proficiency for another with the same 10 weeks and 250g — even re-learning a lost one.<br/>
+        • <b>No Split Weeks:</b> Because training uses all 40 Work Hours, you cannot craft, harvest, perform Odd Jobs, or spend those same Work Hours on another activity during that training week.<br/>
+        • <b>Retraining:</b> You can swap one applicable proficiency for another with the same 10 weeks and 250g — even re-learning a lost one.<br/>
         • <b>Guild Bonus:</b> Upon joining Black Banner Company, you may train one additional tool/kit proficiency beyond your character sheet.
-      </div>
+</div>
+<h3 class="sub-title">Weapon &amp; Shield Proficiency Training</h3>
+<div class="callout">
+<strong>Weapon / Shield Training</strong>
+        • <b>Duration:</b> 15 work weeks.<br/>
+        • <b>Work Hours:</b> Training consumes the full <b>40 Work Hours</b> for each training week.<br/>
+        • <b>Cost:</b> 50 gold per week (750g total).<br/>
+        • <b>Specific Weapon Only:</b> Weapon training grants proficiency with <b>one specific weapon</b>, such as a Longbow, Greatsword, Rapier, or Heavy Crossbow.<br/>
+        • <b>Shield Training:</b> Shield Proficiency may be trained as its own proficiency.
+</div>
 <div class="callout danger">
 <strong>Important Restrictions</strong>
+        • You <b>cannot</b> train an entire weapon category such as <b>Simple Weapons</b> or <b>Martial Weapons</b>. Choose one specific weapon.<br/>
         • You may only become an <b>Expert</b> in <b>one</b> tool. This choice is permanent.<br/>
         • You can only have one <b>hobby</b> (instrument or gaming set) at a time; retrain to change it.<br/>
-        • Everyone must spend 10 weeks — no exceptions, no shortcuts.
-      </div>
+        • Training weeks cannot be shortened by spending partial Work Hours.
+</div>
+</div>
+<!-- ODD JOBS -->
+<div class="guide-section" id="odd-jobs">
+<h2 class="sec-title">Odd Jobs <span class="tag">Downtime</span></h2>
+<p>Instead of spending Work Hours harvesting, characters may take paid Odd Jobs using the <b>/oddjobs</b> command. You may commit <b>8, 16, 24, 32, or 40 Work Hours</b>. Every 8 hours represents one complete job attempt.</p>
+<div class="callout info">
+<strong>Every Listed Skill Is Rolled</strong>
+Odd Jobs do not use only your best applicable skill. If a job lists <b>two skills, both skills are rolled</b>. If a job lists <b>three skills, all three skills are rolled</b>. The skill totals are added together and compared against the Combined DC for your rank. In addition, <b>every individual skill roll must meet the minimum result for your rank</b>. One excellent skill cannot carry a poor result in another required skill.
+</div>
+<h3 class="sub-title">Odd Job List</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Odd Job</th><th>Required Skills — All Are Rolled</th></tr></thead>
+<tbody>
+<tr><td><strong>Tavern Entertainer</strong></td><td>Performance + Persuasion</td></tr>
+<tr><td><strong>Professional Thief</strong></td><td>Investigation + Stealth + Sleight of Hand</td></tr>
+<tr><td><strong>Traveling Preacher</strong></td><td>Religion + Persuasion + Performance</td></tr>
+<tr><td><strong>Street Hustler</strong></td><td>Deception + Insight + Sleight of Hand</td></tr>
+<tr><td><strong>Mercenary</strong></td><td>Athletics + Intimidation</td></tr>
+<tr><td><strong>Arcane Specialist</strong></td><td>Arcana + Investigation</td></tr>
+<tr><td><strong>Bounty Hunter</strong></td><td>Investigation + Survival + Perception</td></tr>
+<tr><td><strong>Wilderness Guide</strong></td><td>Survival + Nature + Animal Handling</td></tr>
+</tbody>
+</table>
+</div>
+<h3 class="sub-title">Rank-Based Difficulty</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Rank</th><th>2-Skill Combined DC</th><th>3-Skill Combined DC</th><th>Minimum Each Skill</th></tr></thead>
+<tbody>
+<tr><td><strong>E</strong></td><td>24</td><td>36</td><td>8</td></tr>
+<tr><td><strong>D</strong></td><td>26</td><td>39</td><td>9</td></tr>
+<tr><td><strong>C</strong></td><td>30</td><td>45</td><td>10</td></tr>
+<tr><td><strong>B</strong></td><td>34</td><td>51</td><td>11</td></tr>
+<tr><td><strong>A</strong></td><td>38</td><td>57</td><td>12</td></tr>
+<tr><td><strong>S</strong></td><td>42</td><td>63</td><td>13</td></tr>
+</tbody>
+</table>
+</div>
+<h3 class="sub-title">Maximum Standard Pay</h3>
+<p>The amounts below are the maximum standard earnings for committing the full 40-hour work week. Shorter Work Hour selections scale the potential payout proportionally.</p>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Rank</th><th>40-Hour Maximum Pay</th></tr></thead>
+<tbody>
+<tr><td><strong>E</strong></td><td>75g</td></tr>
+<tr><td><strong>D</strong></td><td>250g</td></tr>
+<tr><td><strong>C</strong></td><td>500g</td></tr>
+<tr><td><strong>B</strong></td><td>750g</td></tr>
+<tr><td><strong>A</strong></td><td>1,500g</td></tr>
+<tr><td><strong>S</strong></td><td>5,000g</td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout">
+<strong>Critical Results</strong>
+A successful attempt containing a <b>Natural 20</b> can provide bonus earnings. <b>Street Hustler</b> is especially risky: if any required Street Hustler skill rolls a <b>Natural 1</b>, the hustle backfires and the character loses gold equal to <b>10% of the selected potential payout</b>. A character's gold cannot be reduced below 0.
+</div>
+<div class="callout">
+<strong>Bot Results</strong>
+The Odd Jobs bot displays every required skill's d20 roll, modifier, individual total, the combined total, the Combined DC, and the minimum required result for each skill so the outcome can be reviewed clearly.
+</div>
 </div>
 <!-- HOW TO CRAFT -->
 <div class="guide-section" id="how-to-craft">
-<h2 class="sec-title">How to Craft</h2>
-<p>To craft any item in this guide, you need the appropriate tool, proficiency with that tool, any required equipment (Workshop, Lab, etc.), and the listed materials. Then roll:</p>
-<div class="callout">
-<strong>The Crafting Roll</strong>
-        Roll <b>1d20 + your Proficiency Modifier</b> vs. the recipe's DC. Meet it or beat it — it succeeds.<br/><br/>
-<em>Note: Ability score modifiers (STR, INT, etc.) are NOT added. Only your proficiency modifier applies.</em>
-</div>
-<div class="callout info">
-<strong>Rank Requirement</strong>
-        Your character level must be within one rank of the materials used to craft or wear an item. For example, an E-Rank character cannot craft or wear Ignum Fullplate, which requires B-Rank materials.
-      </div>
+<h2 class="sec-title">Crafting Procedure</h2>
+<p>Before making a crafting check, confirm that you have the listed materials, the correct tool or kit, proficiency with it, and any facility named by the recipe. Once those requirements are met, resolve the craft as follows:</p>
+<div class="callout">The Crafting Check Roll 1d20 and add only your Proficiency Modifier, then compare the result to the recipe DC. A total equal to or greater than the DC succeeds. Do not add Strength, Dexterity, Intelligence, or another ability modifier unless a specific rule says otherwise.</div>
+<div class="callout info">Rank Access A character must be within one Company Rank of the materials used to make or wear an item. As an example, E-Rank characters are too far below B-Rank Ignum to craft or equip Ignum Fullplate.</div>
 </div>
 <!-- PRIME/BASE SYSTEM -->
 <div class="guide-section" id="prime-base">
-<h2 class="sec-title">Prime / Base Material System</h2>
+<h2 class="sec-title">Prime &amp; Base Materials</h2>
 <p>Many exotic recipes use two types of materials:</p>
-<div class="callout">
-<strong>Prime Material</strong>
-        The main component that defines the item (e.g., Chitin in Chitin Half-Plate). Its properties always apply to the finished item.
-      </div>
-<div class="callout">
-<strong>Base Material</strong>
-        A secondary material consumed during crafting. Its properties are <em>normally lost</em> — <b>unless you roll a Natural 20</b>, in which case the item gains both Prime and Base properties (Critical Success!).<br/><br/>
-        If multiple units of base material are needed, they must all be the same material. No mixing.
-      </div>
-<p>You may use the same material as both Prime and Base, but a Nat 20 then yields no extra benefit. Diversify your materials for the best results.</p>
+<div class="callout">Prime Material The Prime Material is the defining exotic component of a craft. Its listed properties carry into the completed item; for example, Chitin is the Prime Material in Chitin Half-Plate.</div>
+<div class="callout">Base Material The Base Material supports the craft and is consumed normally without transferring its property. On a Natural 20, the finished item also gains the applicable Base Material property. If a recipe calls for several Base units, every Base unit must be the same material.</div>
+<p>A single material can fill both the Prime and Base roles, but doing so provides no additional Base-property benefit on a Natural 20.</p>
 </div>
 <!-- ══════════════════════════════════════════════ -->
 <!-- GATHERING -->
 <!-- ══════════════════════════════════════════════ -->
 <div class="guide-section" id="harvesting">
-<h2 class="sec-title">Harvesting Creatures <span class="tag">Gathering</span></h2>
+<h2 class="sec-title">Creature Harvesting <span class="tag">Gathering</span></h2>
 <p>Every corpse can be harvested. The skill check used depends on creature type:</p>
 <div class="table-wrap">
 <table>
@@ -1283,10 +1344,7 @@ td {
 </tbody>
 </table>
 </div>
-<div class="callout">
-<strong>Harvest DC</strong>
-<b>Parts:</b> DC 12 + ½ the creature's CR  |  <b>Venom Glands:</b> DC 12 + full CR (fail = destroyed + you're poisoned!)
-      </div>
+<div class="callout">Harvest DC Standard parts use DC 12 + half the creature’s CR. Venom glands use DC 12 + the creature’s full CR; failure destroys the gland and poisons the harvester.</div>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Creature Size</th><th>Max Harvest Checks</th><th>Max Units per Check</th><th>Meat Rations</th><th>Gallons of Blood</th></tr></thead>
@@ -1299,10 +1357,7 @@ td {
 </tbody>
 </table>
 </div>
-<div class="callout danger">
-<strong>Blood Spoilage</strong>
-        Fresh Beast blood can be drunk immediately. After 10 minutes, blood spoils — the drinker must make a DC 15 Con save or vomit.
-      </div>
+<div class="callout danger">Blood Spoilage Beast blood is safe to drink immediately after collection. After 10 minutes, untreated blood requires a DC 15 Constitution save to keep down.</div>
 <h3 class="sub-title">Harvestable Parts</h3>
 <div class="table-wrap">
 <table>
@@ -1324,9 +1379,9 @@ td {
 </div>
 <!-- EXOTIC METALS -->
 <div class="guide-section" id="metals">
-<h2 class="sec-title">Exotic Metals <span class="tag">Gathering</span></h2>
-<p>Use a miner's pick and make an Athletics check DC 15 + X to harvest an ore vein. Failure yields nothing. You can find ores up to the rank of the current quest/dungeon.</p>
-<p>Any exotic metal can substitute for iron in a mundane craft — e.g., two E-Rank Plaguesteels can cover 30g of material cost in a Fullplate recipe.</p>
+<h2 class="sec-title">Ore &amp; Exotic Metals <span class="tag">Gathering</span></h2>
+<p>To work an ore vein, use a miner’s pick and make an Athletics check against DC 15 + X. A failed check recovers no usable ore. The site cannot normally produce ore above the rank of the current contract or dungeon.</p>
+<p>When a mundane recipe calls for iron, exotic metal may replace an equal value of that iron. For example, two E-Rank Plaguesteel units can satisfy 30g of an iron requirement.</p>
 <div class="mat-list">
 <div class="mat-item"><span class="mat-ele">Physical</span><div><span class="mat-name">Adamantine</span> — The hardest metal known; crits against objects are automatic.</div></div>
 <div class="mat-item"><span class="mat-ele">Fire</span><div><span class="mat-name">Bloodmetal</span> — Crimson, blistering hot. From Gehenna and the Nine Hells.</div></div>
@@ -1341,7 +1396,7 @@ td {
 </div>
 <!-- STONES, WOODS, WEAVES -->
 <div class="guide-section" id="stones">
-<h2 class="sec-title">Stones, Woods &amp; Weaves <span class="tag">Gathering</span></h2>
+<h2 class="sec-title">Woods, Stone &amp; Woven Materials <span class="tag">Gathering</span></h2>
 <p>Collected with a <strong>DC 15 + X</strong> skill check. Woods require a <strong>greataxe</strong>. Stones, coral, and ice require a <strong>mining pick</strong>. Success yields <strong>1 unit</strong> of material, though the DM may grant more. A Natural 20 grants an additional unit or reveals another nearby source.</p>
 <h3 class="sub-title">Woods</h3>
 <div class="material-panel">
@@ -1374,8 +1429,8 @@ td {
 </div>
 <!-- PLANTS & HERBS -->
 <div class="guide-section" id="herbs">
-<h2 class="sec-title">Plants &amp; Herbs <span class="tag">Gathering</span></h2>
-<p>Finding herbs requires a DC 15 Nature check. Harvesting them requires a DC 15 + X Nature or Survival check (DM's discretion).</p>
+<h2 class="sec-title">Botanical Gathering <span class="tag">Gathering</span></h2>
+<p>First locate useful plants with a DC 15 Nature check. Once found, gather them with a Nature or Survival check at DC 15 + X, using whichever skill the DM judges appropriate.</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Rarity</th><th>Rank</th><th>Value</th><th>Key Examples</th></tr></thead>
@@ -1397,14 +1452,14 @@ td {
 <div class="guide-section" id="alchemist">
 <h2 class="sec-title">Alchemist's Supplies <span class="tag">Profession</span></h2>
 <p><strong>Alchemists brew potions of untold power!</strong> Remember, a potion may be expensive, but you can use them as a bonus action if it’s on your person and you drink it yourself!</p><hr class="flavor-divider"/>
-<p><strong>Requirements:</strong> Proficiency with Alchemist's Supplies, Alchemist's Supplies, Alchemy Lab.</p>
-<p>Potions can be used as a bonus action if you're holding them and drink them yourself.</p>
+<p><strong>Crafting Requirements:</strong> Proficiency with Alchemist's Supplies, Alchemist's Supplies, Alchemy Lab.</p>
+<p>A potion already in your hand may be consumed on yourself as a Bonus Action.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>You gain 1 extra potion.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>You gain 1 extra potion.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>You destroy 1/3 of the materials (rounded down, min 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div><h3 class="sub-title">Potion Miscibility</h3><p>Whenever a creature drinks two or more potions before the effects of the first potion expire, roll 1d100 and consult the Potion Miscibility table.</p><div class="callout danger"><strong>Mixing Potions</strong> Apply the result immediately after the second potion is consumed. When a result requires a choice, the DM makes the final determination.</div><div class="table-wrap"><table><thead><tr><th>1d100</th><th>Result</th></tr></thead><tbody><tr><td><strong>01</strong></td><td>Both potions lose their effects, and the mixture creates a magical explosion in a 5-foot-radius Sphere centered on itself. Each creature in that area takes 4d10 Force damage.</td></tr><tr><td><strong>02–08</strong></td><td>Both potions lose their effects, and the mixture becomes an ingested poison of your choice (see “Poison” in chapter 3).</td></tr><tr><td><strong>09–15</strong></td><td>Both potions lose their effects.</td></tr><tr><td><strong>16–25</strong></td><td>One potion loses its effect.</td></tr><tr><td><strong>26–35</strong></td><td>Both potions work, but with their numerical effects and durations halved (DM Discretion). If a potion has no numerical effect and no duration, it instead loses its effect. †</td></tr><tr><td><strong>36–90</strong></td><td>Both potions work normally.</td></tr><tr><td><strong>91–99</strong></td><td>Both potions work, but the numerical effects and duration of one potion are doubled (DM Discretion). If neither potion has anything to double in this way, they work normally. †</td></tr><tr><td><strong>00</strong></td><td>Both potions work and the effects of one of them becomes semi-permanent. You and the DM decide one power from either potion to remain as an effect until the end of the quest. For example, a Potion of Healing might increase your Hit Point maximum by 2d4 + 2, or a Potion of Maximum Power allows you to use maximum damage once per minute. At the DM’s discretion, a Dispel Magic spell or similar magic might end this lasting effect.</td></tr></tbody></table></div><p><em>† Numerical effects and durations are modified at the DM’s discretion.</em></p>
 <h3 class="sub-title">Common Potions (Workshop Optional)</h3>
 <div class="card-grid">
@@ -1789,16 +1844,13 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <h2 class="sec-title">Brewer's Supplies <span class="tag">Profession</span></h2>
 <p><strong>Have you imagined splitting a potion in half?</strong> Well, Brewers might just be mad enough to give it a try! If you like taking fate into your own hands, and possibly see God in the process, this is the profession for you. 10lbs of produce can be bought for 2g.</p><hr class="flavor-divider"/>
 <br/>
-
-
 <div class="roll-box" id="brewer-crafting-roll-outcomes">
-<h4>Crafting Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Produce 1 additional dilution without spending additional materials.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Crafting Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Produce 1 additional dilution without spending additional materials.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Waste 1/3 of the materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div>
-
 <div class="callout info" id="brewer-drunk-check">
 <strong>Drunk Check</strong>
         When drinking a diluted potion, there is a chance things can go very wrong… or very right. Roll <b>1d20 minus your Constitution modifier</b> to find out how the dilution went. For example, if the drinker has a Constitution score of 19, which is +4, they roll <b>1d20 - 4</b>; if the drinker has a Constitution score of 6, which is -2, they roll <b>1d20 + 2</b>.<br/><br/>
@@ -1806,21 +1858,21 @@ While you have one or more Fragments of Possibility from this potion, you can’
       </div>
 <div class="roll-box" id="brewer-drunk-check-outcomes">
 <h4>Drunk Check Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 1</span><span>The diluted potion works as intended and you gain <b>2d4 + Constitution modifier</b> maximum HP for 2 hours.</span></div>
+<div class="roll-item"><span class="roll-die great">Natural 1</span><span>The diluted potion works as intended and you gain <b>2d4 + Constitution modifier</b> maximum HP for 2 hours.</span></div>
 <div class="roll-item"><span class="roll-die great">0–5</span><span>The diluted potion works as intended.</span></div>
 <div class="roll-item"><span class="roll-die">6–10</span><span>The diluted potion works as intended… at the end of the drinker’s next turn.</span></div>
 <div class="roll-item"><span class="roll-die bad">11–16</span><span>The diluted potion works as intended… at the end of the drinker’s next turn, or roll on the Failed Drunk Chart. Choose beforehand. If you have poison resistance, you get advantage on this roll.</span></div>
 <div class="roll-item"><span class="roll-die bad">17–19+</span><span>The diluted potion does not take effect. Roll on the Failed Drunk Chart. If you have poison resistance, you get advantage on this roll.</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 20</span><span>The diluted potion does not take effect. Roll on the Failed Drunk Chart twice; both effects happen immediately. If you have poison resistance, you get advantage on these rolls.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 20</span><span>The diluted potion does not take effect. Roll on the Failed Drunk Chart twice; both effects happen immediately. If you have poison resistance, you get advantage on these rolls.</span></div>
 </div>
-<p><strong>Requirements:</strong> Proficiency with Brewer's Supplies, Brewer's Supplies, a keg. 10 lbs of produce = 2g.</p>
-<p>Brewers can dilute potions with exotic alcohol to create two weaker doses from one potion. Great for stretching your supplies — but there's a risk of getting too drunk.</p>
+<p>Brewing setup: You must be proficient with Brewer's Supplies and have the supplies and a keg available. Treat 10 lb. of produce as 2g of ingredients.</p>
+<p>Exotic alcohol allows a brewer to divide one potion into two diluted doses. This stretches a potion farther, but the weaker mixture also carries the system’s intoxication risk.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Gain 1 extra potion/dilution.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
-<div class="roll-item"><span class="roll-die bad">Failure</span><span>Equipment failure — burn 1 unit of the alcohol or herb used (whichever costs more).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials wasted.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Gain 1 extra potion/dilution.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
+<div class="roll-item">Failure A mishap ruins 1 unit of whichever consumed alcohol or herb has the higher value.</div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div>
 <div class="table-wrap">
 <table>
@@ -1838,13 +1890,9 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<div class="callout danger">
-<strong>Drunk Check — When Drinking a Diluted Potion</strong>
-        Roll 1d20 <em>minus</em> your Con modifier (positive Con = lower roll = better). Poison immunity = can't benefit at all. Poison resistance = −2 to roll.<br/><br/>
-<b>Nat 1:</b> Potion works + gain 2d4+Con max HP for 2 hours. <b>0–5:</b> Potion works. <b>6–10:</b> Potion works at end of your next turn. <b>11–16:</b> Works at end of next turn OR roll Failed Drunk Chart. <b>17–19:</b> No effect, roll Failed Drunk Chart. <b>Nat 20:</b> No effect, roll Failed Drunk Chart twice.
-      </div>
+<div class="callout danger">Drunk Check for Diluted Potions Roll 1d20 and subtract your Constitution modifier; a positive Constitution modifier therefore improves the result by lowering the roll. Poison immunity prevents any benefit. Poison resistance applies −2 to the roll. Natural 1: potion works and you gain 2d4 + Con maximum HP for 2 hours. 0–5: potion works. 6–10: it takes effect at the end of your next turn. 11–16: it works at the end of your next turn or you roll on the Failed Drunk Chart. 17–19: no potion effect and roll on that chart. Natural 20: no potion effect and roll twice on the Failed Drunk Chart.</div>
 <h3 class="sub-title">Failed Drunk Chart</h3>
-<p>Roll a straight d20. All effects happen immediately and last 1 minute unless noted. Some effects are removed by a long rest or magic. (Poison resistance grants advantage on this roll where the Drunk Check directs you here.)</p>
+<p>Make an unmodified d20 roll. Unless an entry says otherwise, its effect begins immediately and lasts for 1 minute. Certain results end only after a Long Rest or appropriate magic. When the Drunk Check sends you to this chart, poison resistance grants Advantage on this roll.</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>d20</th><th>Effect</th></tr></thead>
@@ -1865,7 +1913,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<p><strong>Expert Perks:</strong> <em>Brew Expert</em> — advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning drinks (DM's discretion), plus advantage on Insight to tell if a drink is bad or poisoned. <em>Hardened Liver</em> — advantage on Constitution saves to avoid getting drunk (unless you want to).</p>
+<p>Expert Benefits Brew Expert grants Advantage, when the DM finds it relevant, on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks involving drinks; it also grants Advantage on Insight checks to detect spoiled or poisoned beverages. Hardened Liver grants Advantage on Constitution saves against intoxication unless the character chooses not to resist.</p>
 <br/>
 <p><strong>Hardened Liver</strong></p>
 <p>A lifetime of alcoholism has left you very functional. You get advantage on Constitution Saves to avoid getting drunk, unless you want to, of course.</p>
@@ -1890,15 +1938,15 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <li>For additional details on how spell scrolls function, consult the Spell Scroll item description on D&amp;D Beyond.</li>
 </ul>
 </div>
-<p><strong>Requirements:</strong> Proficiency with Calligraphy Supplies. Higher level scrolls require a Workshop/Library.</p>
-<p>Scroll makers can use rare herbs or blood as ink — their market value is deducted from the scroll's crafting cost. You must be able to cast the spell yourself to scribe it. Scrolls are price-controlled and cannot be sold below market value.</p>
+<p>Calligraphy setup: Proficiency with Calligraphy Supplies is required. Higher-level scroll work also requires the listed Workshop or Library access.</p>
+<p>Rare herbs and blood can replace part of a scroll’s ink cost at their listed market value. The scribe must be capable of casting the spell being recorded. Finished Spell Scrolls remain price-controlled and may not be sold below market value.</p>
 <div class="roll-box">
-<h4>Roll Outcomes — Calligraphy Proficiency Check (not Arcana)</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Gain 1 extra scroll.</span></div>
+<h4>Craft Results — Calligraphy Proficiency Check (not Arcana)</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Gain 1 extra scroll.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Spill Ink — Lose 50% of the scroll's crafting cost in materials. If herbs or blood were used, that loss must come from those ingredients first.</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials and hours wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials and hours wasted.</span></div>
 </div>
-<p>You must be able to cast the spell yourself to scribe it. Multiple herbs/bloods may be used per craft, but each must individually meet the scroll's level requirement, and excess value over the scroll's cost is not refunded.</p>
+<p>To scribe a scroll, you must personally be able to cast its spell. Several herbs or blood components can contribute to one craft, but every component must independently qualify for that spell level. Value beyond the required scroll cost is lost rather than refunded.</p>
 <h3 class="sub-title">Herb &amp; Blood Ink Values for Scroll Crafting</h3>
 <div class="table-wrap">
 <table>
@@ -1930,11 +1978,8 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<div class="callout info">
-<strong>Scroll Use Rules (Black Banner)</strong>
-        Any class may use any spell scroll. If the spell is not on your class list, you must use the Magic Action. If it is on your list, use the normal casting time. Maximum 2 spell scrolls per contract.
-      </div>
-<p><strong>Master Scrivener:</strong> reduces all materials needed and craft times by 50%. (Scrolls remain price-controlled and cannot be sold below market value, even to other players.)</p>
+<div class="callout info">Black Banner Scroll Use Any class may activate a Spell Scroll. A spell outside your class list requires the Magic Action; a spell on your class list uses its normal casting time. A character may use no more than 2 Spell Scrolls during a contract.</div>
+<p>Master Scrivener: Halve the required materials and crafting time. Spell Scroll pricing remains controlled, so a scroll cannot be sold below its market value, including player-to-player sales.</p>
 </div>
 <!-- More professions are summarized for conciseness -->
 <!-- CARPENTER -->
@@ -1942,17 +1987,14 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <h2 class="sec-title">Carpenter's Tools <span class="tag">Profession</span></h2>
 <p><strong>Where there's wood, there's a way.</strong> That's what carpenters say! They are not your typical profession. While others are making equipment or goods for use and sale, carpenters are keeping the roofs over our heads and the walls around our cities. From sturdy fortifications to elegant furnishings, their craftsmanship forms the backbone of every settlement and Bastion.</p>
 <hr/>
-<p><strong>Requirements:</strong> Proficiency with Carpenter's Tools, Carpenter's Tools, and the required wood or exotic wood materials.</p>
-
+<p><strong>Crafting Requirements:</strong> Proficiency with Carpenter's Tools, Carpenter's Tools, and the required wood or exotic wood materials.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Exceptional craftsmanship — refund 50% of the materials used.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Exceptional craftsmanship — refund 50% of the materials used.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Waste 1/3 of the prime materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div>
-
-
 <div class="callout info">
 <strong>Bastion Furnishings</strong>
         Carpenters can craft furnishings for Bastion Facilities. A furnishing only grants its benefit while installed in the appropriate facility. Unless a feature says otherwise, a facility can benefit from only one Carpenter furnishing at a time, and duplicate copies of the same furnishing do not stack.
@@ -2080,32 +2122,23 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<p><strong>Expert Perks:</strong> Emergency Repairman (reduce city damage repair cost by 20%), Handyman (5% rent reduction, stacks with other Handymen), Caravan/Ship Carpenter (50% off travel costs), Wood Expert (advantage on social checks concerning wood; sometimes on Nature checks to identify trees).</p>
-<div class="callout">
-<strong>Home Decoration</strong>
-        A permanent skill-boosting artwork made in two parts: the <em>Picture Frame</em> (Carpenter) and the <em>Painting</em> (Painter). The Frame gives +X to the related skill. You can benefit from only one Home Decoration buff at a time and must spend 10 minutes marveling at it every 24 hours to use the buff.
-      </div>
-<div class="callout info">
-<strong>Exotic Hand Gliders</strong>
-        Carries one Medium or smaller creature, max 150 lbs + 50 lbs per X. Flying speed 60 ft; must descend at least 20 ft each round. AC 12 + X, 35 HP + 10 per X, immune to poison and psychic. Piloted as an action (proficiency with flying/water vehicles, or DC 10 Acrobatics/Sleight of Hand). Nat 1 or over-weight = nose-dive 60 ft. Material grants resistance: Demon Leather (fire), Spirit Pelt (force), Deadwood (acid), Summitwood (cold).
-      </div>
+<p>Expert Benefits Emergency Repairman cuts city damage-repair costs by 20%. Handyman provides a 5% rent reduction and can stack with other Handymen. Caravan/Ship Carpenter halves applicable travel costs. Wood Expert grants Advantage on appropriate social checks involving wood and, when the DM allows, Nature checks made to identify trees.</p>
+<div class="callout">Home Decoration This permanent artwork has two crafted pieces: a Carpenter-made Picture Frame and a Painter-made Painting. The Frame provides +X to the linked skill. Only one Home Decoration benefit can affect you at a time, and you must spend 10 minutes appreciating the piece once every 24 hours to maintain access to the benefit.</div>
+<div class="callout info">Exotic Hand Gliders A glider carries one Medium or smaller creature up to 150 lb. + 50 lb. per X. It flies at 60 ft but must lose at least 20 ft of altitude each round. Statistics: AC 12+X, 35 HP + 10 per X, immunity to poison and psychic damage. Piloting uses an Action and either flying/water-vehicle proficiency or a DC 10 Acrobatics or Sleight of Hand check. A Natural 1 or exceeding the weight limit causes a 60-ft nose-dive. Material resistance: Demon Leather—fire; Spirit Pelt—force; Deadwood—acid; Summitwood—cold.</div>
 </div>
 <!-- COBBLER -->
 <div class="guide-section" id="cobbler">
 <h2 class="sec-title">Cobbler's Tools <span class="tag">Profession</span></h2>
 <p><strong>The ancient discipline of footwear!</strong> Truly a noble calling if I ever heard one. There are stories of some cobblers becoming so skillful they can make boots that walk on lava or even over clouds!</p>
 <hr/>
-<p><strong>Requirements:</strong> Proficiency with Cobbler's Tools, Cobbler's Tools.</p>
-
+<p><strong>Crafting Requirements:</strong> Proficiency with Cobbler's Tools, Cobbler's Tools.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Reactivate the Base Material — the finished item gains both its Prime and Base Material properties.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Reactivate the Base Material — the finished item gains both its Prime and Base Material properties.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Waste 1/3 of the prime materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div>
-
-
 <p>Exotic recipes for Cobbler’s Tools use a Prime/Base Material system. The Prime Material, typically the main component like <b>Adamantine</b> in <b>Door Bashers</b>, defines the item. The Base Material, secondary and consumed in crafting, usually doesn’t transfer its properties to the final item, except when rolling a <b>NAT 20</b> during crafting. This grants the item both Prime and Base Material properties.</p>
 <p>Each recipe requires 1 unit of prime material + 1 unit of same-rank base material unless the recipe says otherwise.</p>
 <div class="table-wrap">
@@ -2140,7 +2173,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </div>
 <!-- COOKING -->
 <div class="guide-section" id="cooking">
-<h2 class="sec-title">Cooking Utensils <span class="tag">Profession</span></h2><p><em>Do you smell what the Dobbledobble is cooking? That! Is the aroma of decadence! A good cook is worth their weight in platinum, if you ask me! Interested? Let’s get cooking!</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Cooking Utensils, Cook’s Utensils, a spice pouch, and a fire.</p>
+<h2 class="sec-title">Cooking Utensils <span class="tag">Profession</span></h2><p><em>Do you smell what the Dobbledobble is cooking? That! Is the aroma of decadence! A good cook is worth their weight in platinum, if you ask me! Interested? Let’s get cooking!</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Cooking Utensils, Cook’s Utensils, a spice pouch, and a fire.</p>
 <div class="callout">
 <strong>Cooking Basics</strong>
         Every recipe you cook yields a number of treats equal to your <b>Proficiency Bonus</b>.<br/><br/>
@@ -2150,11 +2183,11 @@ While you have one or more Fragments of Possibility from this potion, you can’
         A chef must carry a <b>Spice Pouch</b>. Each treat requires <b>1 pinch of spice</b>. One full spice pouch contains <b>10 pinches</b> and costs <b>5 gold</b>.
       </div>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Perfect recipe — 50% more treats (rounded up).</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Perfect recipe — 50% more treats (rounded up).</span></div>
 <div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal, producing treats equal to your Proficiency Bonus.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>You burn the food — only 1 treat this craft (no retry needed).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>A raccoon ate the whole recipe. Nothing left!</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>A raccoon ate the whole recipe. Nothing left!</span></div>
 </div>
 <h3 class="sub-title">Rations &amp; Prep Recipes</h3>
 <div class="table-wrap">
@@ -2198,16 +2231,14 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </div>
 <!-- GLASSBLOWER -->
 <div class="guide-section" id="glassblower">
-<h2 class="sec-title">Glassblower's Tools <span class="tag">Profession</span></h2><p><em>What isn’t there to love about glassblowing? Every building needs windows, and some of them are stained glass! Truly beautiful. But in case that hasn’t piqued your interest, some exotic weapons and even spell components can be made from rare sands and multicoloured crystals!</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Glassblower’s Tools. C-Rank and above recipes require a Workshop.</p>
-
+<h2 class="sec-title">Glassblower's Tools <span class="tag">Profession</span></h2><p><em>What isn’t there to love about glassblowing? Every building needs windows, and some of them are stained glass! Truly beautiful. But in case that hasn’t piqued your interest, some exotic weapons and even spell components can be made from rare sands and multicoloured crystals!</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Glassblower’s Tools. C-Rank and above recipes require a Workshop.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Reactivate the Base Material — the finished item gains both its Prime and Base Material properties. If the recipe has no Base Material, refund 50% of the materials used.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Reactivate the Base Material — the finished item gains both its Prime and Base Material properties. If the recipe has no Base Material, refund 50% of the materials used.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>The glass cracks or the shaping fails. Waste 1/3 of the prime materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>The piece shatters. All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>The piece shatters. All materials committed to the attempt are consumed.</span></div>
 </div>
-
 <p>You can ask another glassblower to aid you in your crafting, which gives you advantage, but they must also spend the same amount of time from their workweek to do so.</p><p>Some exotic recipes for Glassblowers use a Prime/Base Material system. The Prime Material, typically the main component (like Eternal Ice in an Eternal Ice Longsword), defines the item. The Base Material, secondary and consumed in crafting, usually doesn’t transfer its properties to the final item, except when rolling a NAT 20 during crafting! This grants the item both Prime and Base Material properties! Wow! If multiple base materials are needed, they must all be the same material. You can find the special properties of Adamantine, Cold Iron, and Mithril down in Smith’s Tools.</p><p><strong>Glass:</strong> Glassblowers craft decorative objects, weapons from exotic crystals, Planeshift Forks, and syringes. Weapons deal +X bonus damage of the prime material’s element.</p>
 <div class="table-wrap">
 <table>
@@ -2231,14 +2262,8 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<div class="callout info">
-<strong>Unattuned Planeshift Fork</strong>
-        Inert until attuned to a specific plane (then enables Planeshift). Attuning takes three successful DC 25 Arcana checks, made every 4 hours while on the target plane. Three failures, removal from the plane, or 24 hours elapsing destroys it. Skyshard forks tune to Elemental Air or Elemental Chaos; Eternal Ice forks tune to the Far Realms.
-      </div>
-<div class="callout">
-<strong>Recovery &amp; Alchemical Darts</strong>
-        A syringe thrown as a dart (10/20 ft by hand, 25/100 ft from a blowgun). Against a willing target, attack vs. AC 13; against an unwilling target, attack vs. their AC. On a hit the potion takes effect. A miss has a 50% chance to break and spill. A Critical Strike doubles healing dice (Recovery) or grants the target +1 AC and saves for 2 turns (Alchemical), and negates a diluted potion's downsides.
-      </div>
+<div class="callout info">Unattuned Planeshift Fork The fork has no function until keyed to a plane, after which it can serve for Planeshift. While on the destination plane, make a DC 25 Arcana check every 4 hours until you accumulate three successes. The fork is destroyed after three failures, if it leaves the plane before completion, or when 24 hours pass. Skyshard forks may key to Elemental Air or Elemental Chaos; Eternal Ice forks may key to the Far Realms.</div>
+<div class="callout">Recovery &amp; Alchemical Darts Load a syringe as a dart: range 10/20 ft by hand or 25/100 ft with a blowgun. A willing creature is treated as AC 13; an unwilling creature uses its normal AC. A hit delivers the potion. On a miss, the syringe has a 50% chance to break and spill. A Critical Strike doubles Recovery healing dice or, for an Alchemical Dart, grants +1 AC and saving throws for 2 turns; either critical result also removes the drawbacks of a diluted potion.</div>
 <div class="callout">
 <strong>Weapon Properties</strong>
         All glass weapons may convert all weapon damage (including Sneak Attack, Divine Smite, etc.) to their Prime Material's damage type.<br/>
@@ -2246,17 +2271,17 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <b>Skyshard:</b> use your Dexterity modifier for attack and damage rolls; +X Lightning damage.<br/>
 <b>Obsidian:</b> slashing or piercing weapons deal +X extra slashing or piercing damage.
       </div>
-<p><strong>Expert Perks:</strong> <em>Glasswork Expert</em> — advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning glass (DM's discretion). <em>Glassblown Weaponmaster</em> — if you're proficient with a glassblower-made weapon (yours or another's), you deal +1 damage with it.</p>
+<p><strong>Expert Benefits:</strong> <em>Glasswork Expert</em> — advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning glass (DM's discretion). <em>Glassblown Weaponmaster</em> — if you're proficient with a glassblower-made weapon (yours or another's), you deal +1 damage with it.</p>
 </div>
 <!-- JEWELLER -->
 <div class="guide-section" id="jeweller">
-<h2 class="sec-title">Jeweller's Tools <span class="tag">Profession</span></h2><p><em>Are you ready for the sparkling world of Jeweller’s Tools? Well, with just your proficiency and a trusty Workshop, you’re set to turn rough stones into dazzling jewels! Picture this: you’re carefully cutting a gemstone and—bam!—you strike an unexpected bonus, crafting an extra gem worth a nifty 25% of the original, just like that. But beware, a slip of the hand could mean equipment damage or, worse, turning a precious stone into worthless pebbles. From crafting magnifying glasses to intricate jewelry like rings, amulets, pins, and brooches, the possibilities are endless! Whether it’s persuading a noble with your gem knowledge or deciphering the history behind an ancient brooch, your Jeweller’s flair might just give you the edge. So grab your tools, and let’s start bedazzling!</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Jeweller’s Tools and a Workshop. Gems over 500g require a Workshop.</p>
+<h2 class="sec-title">Jeweller's Tools <span class="tag">Profession</span></h2><p><em>Are you ready for the sparkling world of Jeweller’s Tools? Well, with just your proficiency and a trusty Workshop, you’re set to turn rough stones into dazzling jewels! Picture this: you’re carefully cutting a gemstone and—bam!—you strike an unexpected bonus, crafting an extra gem worth a nifty 25% of the original, just like that. But beware, a slip of the hand could mean equipment damage or, worse, turning a precious stone into worthless pebbles. From crafting magnifying glasses to intricate jewelry like rings, amulets, pins, and brooches, the possibilities are endless! Whether it’s persuading a noble with your gem knowledge or deciphering the history behind an ancient brooch, your Jeweller’s flair might just give you the edge. So grab your tools, and let’s start bedazzling!</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Jeweller’s Tools and a Workshop. Gems over 500g require a Workshop.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span><b>Gem Cutting:</b> While cutting the gemstone, you find an especially large chunk and cut it into an extra gemstone worth 25% of the gemstone you were cutting, rounded up. <b>Jewellery Crafting:</b> When crafting jewellery such as rings, necklaces, amulets, pins, brooches, or other settings, the finished piece is exceptional. Increase the finished piece’s mundane/resale value by 25%, rounded up. Enhancement jewellery does not gain an additional mechanical bonus from this result unless the DM approves it.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span><b>Gem Cutting:</b> While cutting the gemstone, you find an especially large chunk and cut it into an extra gemstone worth 25% of the gemstone you were cutting, rounded up. <b>Jewellery Crafting:</b> When crafting jewellery such as rings, necklaces, amulets, pins, brooches, or other settings, the finished piece is exceptional. Increase the finished piece’s mundane/resale value by 25%, rounded up. Enhancement jewellery does not gain an additional mechanical bonus from this result unless the DM approves it.</span></div>
 <div class="roll-item"><span class="roll-die">Success</span><span>If your roll meets or beats the DC, the gemstone, ring, necklace, or other jewellery craft succeeds.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span><b>Gem Cutting:</b> You break your equipment. You do not need to try the cut again, but you must spend 1/3 of the failed cut’s market value in gold to fix your equipment. <b>Jewellery Crafting:</b> The setting fails or the piece needs major reworking. The cut gemstones remain intact, but you must spend 1/3 of the jewellery craft’s non-gem material value in gold to repair your tools, replace damaged fittings, and finish the piece.</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span><b>Gem Cutting:</b> Your gemstone turns out to be a complete fake. It is totally worthless. <b>Jewellery Crafting:</b> The ring, necklace, or other jewellery piece is ruined, false, or unusably flawed. The base metal and setting materials are wasted; any cut gemstones set into the piece can only be recovered at the DM’s discretion.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span><b>Gem Cutting:</b> Your gemstone turns out to be a complete fake. It is totally worthless. <b>Jewellery Crafting:</b> The ring, necklace, or other jewellery piece is ruined, false, or unusably flawed. The base metal and setting materials are wasted; any cut gemstones set into the piece can only be recovered at the DM’s discretion.</span></div>
 </div>
 <div class="callout info">
 <strong>Crafting Jewellery</strong>
@@ -2307,7 +2332,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </div>
 <!-- LEATHERWORKER -->
 <div class="guide-section" id="leatherworker">
-<h2 class="sec-title">Leatherworker's Tools <span class="tag">Profession</span></h2><p><em>The art of dismembering a creature—I mean—quartering your prey is as ancient as spears! Maybe ancienter! Leatherworkers are your go-to if you’ve come upon a hide, a leather, or a random creature needing harvesting. They are effective at crafting armour, cloaks, and neck guards! And let me tell you, there are a lot of different kinds of creatures out there.</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Leatherworker’s Tools. C-Rank and above recipes require a Workshop.</p><p>Exotic recipes for Leatherworkers use a Prime/Base Material system. The Prime Material, typically the main component (like Chitin in Chitin Half-Plate, or Demon Leather in Demon Hide Armour), defines the item. The Base Material, secondary and consumed in crafting, usually doesn’t transfer its properties to the final item, except when rolling a NAT 20 during crafting! This grants the item both Prime and Base Material properties! Wow! If multiple base materials are needed, they must all be the same material.</p><p><strong>Leatherworker’s Tools Base Materials:</strong> Abominable Skin, Chitin, Bone, Ellond Hide, Thick Hide, and Monster Scales.</p>
+<h2 class="sec-title">Leatherworker's Tools <span class="tag">Profession</span></h2><p><em>The art of dismembering a creature—I mean—quartering your prey is as ancient as spears! Maybe ancienter! Leatherworkers are your go-to if you’ve come upon a hide, a leather, or a random creature needing harvesting. They are effective at crafting armour, cloaks, and neck guards! And let me tell you, there are a lot of different kinds of creatures out there.</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Leatherworker’s Tools. C-Rank and above recipes require a Workshop.</p><p>Exotic recipes for Leatherworkers use a Prime/Base Material system. The Prime Material, typically the main component (like Chitin in Chitin Half-Plate, or Demon Leather in Demon Hide Armour), defines the item. The Base Material, secondary and consumed in crafting, usually doesn’t transfer its properties to the final item, except when rolling a NAT 20 during crafting! This grants the item both Prime and Base Material properties! Wow! If multiple base materials are needed, they must all be the same material.</p><p><strong>Leatherworker’s Tools Base Materials:</strong> Abominable Skin, Chitin, Bone, Ellond Hide, Thick Hide, and Monster Scales.</p>
 <h3 class="sub-title">Armour Properties by Material</h3>
 <div class="table-wrap">
 <table>
@@ -2326,13 +2351,13 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </table>
 </div>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Reactivates the Base Material (item gains both properties).</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Reactivates the Base Material (item gains both properties).</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Lose 1/3 of the prime materials (rounded up, min 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div>
 <h3 class="sub-title">Exotic Armours</h3>
-<p><em>(L) Light · (M) Medium · (H) Heavy. Each recipe also takes 1 unit of same-rank base material unless noted.</em></p>
+<p>Armour codes: (L) Light, (M) Medium, (H) Heavy. Unless a recipe says otherwise, include 1 unit of Base Material of the same rank.</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Recipe</th><th>Prime Material</th><th>Time</th><th>DC</th></tr></thead>
@@ -2384,17 +2409,17 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<p><em>You cannot mix scales/bones of different dragons unless their elements match. A dragon's element equals its breath weapon's damage type.</em></p>
+<p>Dragon scales or bones may be combined only when the dragons share the same element. For this rule, a dragon’s element is the damage type of its breath weapon.</p>
 <p><strong>Leather Expert:</strong> advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning leather (DM's discretion).</p>
 </div>
 <!-- MASON -->
 <div class="guide-section" id="mason">
-<h2 class="sec-title">Mason's Tools <span class="tag">Profession</span></h2><p><em>Well, now you’ve stumbled upon a treasure trove of knowledge that will turn you into the artisan extraordinaire of stone and all things robust! With your trusty mason’s tools, you can fashion stone furniture, from small trinkets to grand pieces, in a variety of styles to suit every taste.</em></p><p><em>But wait, there’s more! Ever dreamed of forging your own Ignum armor or weapons? Look no further, for you’ll learn to shape the powerful Ignum, that fiery essence from the Elemental Plane of Fire, into formidable gear. And don’t even get me started on the art of crafting Planeshift Forks! Oh, the planes will be your playground. But! Being a Stone Expert isn’t just about the craft; it’s about understanding the very soul of stone. Your journey into masonry promises not just craftsmanship but a legacy carved in stone and tales as enduring as the rocks themselves!</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Mason’s Tools. C-Rank and above recipes require a Workshop.</p><p>Some exotic recipes for Masons use a Prime/Base Material system. The Prime Material, typically the main component (like Ignum in Ignum Half-Plate), defines the item. The Base Material, secondary and consumed in crafting, usually doesn’t transfer its properties to the final item, except when rolling a NAT 20 during crafting! This grants the item both Prime and Base Material properties! Wow! If multiple base materials are needed, they must all be the same material.</p><p>Masons craft stone furniture, exotic stone/bone weapons and armour, and Planeshift Forks. Base materials for armour include Abominable Skin, Chitin, Thick Hide, and Monster Scales.</p>
+<h2 class="sec-title">Mason's Tools <span class="tag">Profession</span></h2><p><em>Well, now you’ve stumbled upon a treasure trove of knowledge that will turn you into the artisan extraordinaire of stone and all things robust! With your trusty mason’s tools, you can fashion stone furniture, from small trinkets to grand pieces, in a variety of styles to suit every taste.</em></p><p><em>But wait, there’s more! Ever dreamed of forging your own Ignum armor or weapons? Look no further, for you’ll learn to shape the powerful Ignum, that fiery essence from the Elemental Plane of Fire, into formidable gear. And don’t even get me started on the art of crafting Planeshift Forks! Oh, the planes will be your playground. But! Being a Stone Expert isn’t just about the craft; it’s about understanding the very soul of stone. Your journey into masonry promises not just craftsmanship but a legacy carved in stone and tales as enduring as the rocks themselves!</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Mason’s Tools. C-Rank and above recipes require a Workshop.</p><p>Some exotic recipes for Masons use a Prime/Base Material system. The Prime Material, typically the main component (like Ignum in Ignum Half-Plate), defines the item. The Base Material, secondary and consumed in crafting, usually doesn’t transfer its properties to the final item, except when rolling a NAT 20 during crafting! This grants the item both Prime and Base Material properties! Wow! If multiple base materials are needed, they must all be the same material.</p><p>Masons craft stone furniture, exotic stone/bone weapons and armour, and Planeshift Forks. Base materials for armour include Abominable Skin, Chitin, Thick Hide, and Monster Scales.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Refunds 50% of the materials.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Refunds 50% of the materials.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Waste 1/3 of the prime materials (rounded down, min 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div>
 <h3 class="sub-title">Stone Furniture</h3>
 <div class="table-wrap">
@@ -2410,7 +2435,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </table>
 </div>
 <h3 class="sub-title">Weapons &amp; Armour</h3>
-<p><em>Each recipe also takes 1 unit of same-rank base material (2 for half-plate, 3 for full-plate).</em></p>
+<p>Add same-rank Base Material to each recipe: 1 unit normally, 2 units for half-plate, and 3 units for full-plate.</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Recipe</th><th>Prime Material</th><th>Time</th><th>DC</th></tr></thead>
@@ -2435,26 +2460,19 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<div class="callout">
-<strong>Material Properties</strong>
-<b>Bone:</b> +X piercing damage; any weapon can be bone (dragon bone counts).<br/>
-<b>Dragon Bone:</b> +X damage of the dragon's element instead of piercing.<br/>
-<b>Coral:</b> no underwater disadvantage, thrown weapons fly full range underwater, reroll 1s on underwater damage, +X thunder.<br/>
-<b>Ignum:</b> armour gives fire resistance; bludgeoning weapons +X fire.<br/>
-<b>Obsidian:</b> armour deals X piercing/turn to a creature you grapple; weapons +X slashing/piercing.
-      </div>
-<p><strong>Expert Perks:</strong> Emergency Repairman (20% city repair reduction), Handyman (5% rent reduction), Stone Expert (advantage on social and stone-identification checks). Planeshift forks: Ignum → Elemental Fire, Coral → Elemental Water, Obsidian → Elemental Earth or Ysgard.</p>
+<div class="callout">Material Effects Bone adds +X piercing damage and may be used for any weapon; Dragon Bone qualifies as bone. Dragon Bone instead adds +X damage matching the dragon’s element. Coral removes underwater disadvantage, preserves full thrown-weapon range underwater, allows rerolling 1s on underwater damage, and adds +X thunder. Ignum armour grants fire resistance while Ignum bludgeoning weapons add +X fire. Obsidian armour deals X piercing damage each turn to a creature you grapple, while Obsidian weapons add +X slashing or piercing damage.</div>
+<p>Expert Benefits Emergency Repairman reduces city repair charges by 20%. Handyman reduces rent by 5%. Stone Expert grants Advantage when appropriate on social checks involving stonework and on checks to identify stone. Planeshift Fork associations: Ignum—Elemental Fire; Coral—Elemental Water; Obsidian—Elemental Earth or Ysgard.</p>
 </div>
 <!-- PAINTER -->
 <div class="guide-section" id="painter">
-<h2 class="sec-title">Painter's Supplies <span class="tag">Profession</span></h2><p><em>Welcome to the enchanting world of Painter’s Supplies, your portal to a realm where the stroke of your brush can weave magical wonders. With proficiency in these supplies, you embark on a journey of crafting paintings and diagrams that elevate your skills and aid your adventures. Whether it’s an ‘Incredible Animal Picture’ or a ‘Robust Professional Blueprint,’ each creation bestows advantage and +X to a relevant skill, offering a unique advantage when the need arises. Dive into the artistic tapestry, where every brushstroke holds the potential to enhance your abilities and shape the destiny of your quests. May your imagination flourish on the canvas of possibilities!</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Painter’s Supplies. C-Rank and above recipes require a Workshop.</p><p>Painters create skill-boosting Field Artworks (temporary, consumable) and Home Decorations (permanent). Each painting grants advantage and +X to the related skill when used as described below.</p>
+<h2 class="sec-title">Painter's Supplies <span class="tag">Profession</span></h2><p><em>Welcome to the enchanting world of Painter’s Supplies, your portal to a realm where the stroke of your brush can weave magical wonders. With proficiency in these supplies, you embark on a journey of crafting paintings and diagrams that elevate your skills and aid your adventures. Whether it’s an ‘Incredible Animal Picture’ or a ‘Robust Professional Blueprint,’ each creation bestows advantage and +X to a relevant skill, offering a unique advantage when the need arises. Dive into the artistic tapestry, where every brushstroke holds the potential to enhance your abilities and shape the destiny of your quests. May your imagination flourish on the canvas of possibilities!</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Painter’s Supplies. C-Rank and above recipes require a Workshop.</p><p>Painters create skill-boosting Field Artworks (temporary, consumable) and Home Decorations (permanent). Each painting grants advantage and +X to the related skill when used as described below.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Flash of genius — make a second copy with a different triggering statement.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item">Natural 20 A flash of inspiration lets you produce a second copy that uses a different triggering statement.</div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Waste 1/3 of the prime materials (rounded down, min 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials committed to the attempt are consumed.</span></div>
 </div>
-<p><em>Every painting costs X units of any-rank herb/plant + X gallons of same-rarity blood, takes 5 hrs × X, and is DC 12 + X. The blood source determines the skill it boosts.</em></p>
+<p>For a painting, spend X units of any-rank herbs or plants plus X gallons of blood of the same rarity. Crafting takes 5 hours × X at DC 12 + X. The creature that supplied the blood determines which skill receives the benefit.</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Painting / Diagram</th><th>Blood Source</th><th>Boosts (typical skill)</th></tr></thead>
@@ -2475,26 +2493,19 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<div class="callout">
-<strong>Field Artwork vs. Home Decoration</strong>
-<b>Field Artwork:</b> grants X+1 to a related skill. Consumable — takes 1 minute to read and expires after one check or a rest. The crafter needs proficiency in the skill (helpers can aid); the user does not.<br/>
-<b>Home Decoration:</b> permanent two-part item (Frame by a Carpenter + Painting by you). The Painting grants half of X (rounded down) additional uses; S-rank rounds up. Only one Home Decoration buff at a time; marvel at it 10 minutes every 24 hours to use it.
-      </div>
+<div class="callout">Field Artwork and Home Decoration Field Artwork is a consumable that grants X+1 to its linked skill after 1 minute of reading and ends after one check or a rest. The crafter must be proficient in that skill, though helpers may assist; the user need not be proficient. Home Decoration is permanent and consists of a Carpenter’s Frame plus the Painter’s work. The Painting provides additional uses equal to half X, rounded down except at S-Rank, which rounds up. Only one Home Decoration benefit can apply at once, and maintaining it requires 10 minutes of appreciation every 24 hours.</div>
 <p><strong>The Artist:</strong> advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning art (DM's discretion).</p>
 </div>
 <!-- POTTER -->
 <div class="guide-section" id="potter">
-<h2 class="sec-title">Potter's Tools <span class="tag">Profession</span></h2><p><em>From shaping vessels that burst magical spells to concocting clever pots with hidden compartments, your creations will be more than mere clay—they’ll be artefacts of wonder and utility! So roll up your sleeves, prepare your materials, and let’s shape some magic with these Potter’s Tools! If you wish to attack the ground with a pot, it has an AC of 10 (adjustable by the DM based on circumstances).</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Potter’s Tools and Potter’s Tools. C-Rank and above recipes require a Workshop.</p>
-
+<h2 class="sec-title">Potter's Tools <span class="tag">Profession</span></h2><p><em>From shaping vessels that burst magical spells to concocting clever pots with hidden compartments, your creations will be more than mere clay—they’ll be artefacts of wonder and utility! So roll up your sleeves, prepare your materials, and let’s shape some magic with these Potter’s Tools! If you wish to attack the ground with a pot, it has an AC of 10 (adjustable by the DM based on circumstances).</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Potter’s Tools and Potter’s Tools. C-Rank and above recipes require a Workshop.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Perfect firing — create 1 additional copy of the crafted item when the recipe produces a discrete consumable or vessel. Otherwise, refund 50% of the materials used.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Perfect firing — create 1 additional copy of the crafted item when the recipe produces a discrete consumable or vessel. Otherwise, refund 50% of the materials used.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>The piece cracks or fails during firing. Waste 1/3 of the materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>The firing is ruined. All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>The firing is ruined. All materials committed to the attempt are consumed.</span></div>
 </div>
-
-
 <h3 class="sub-title">Specialty Crafts</h3>
 <div class="table-wrap">
 <table>
@@ -2520,13 +2531,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
-<div class="callout">
-<strong>Bomb Mechanics</strong>
-<b>Throw:</b> Action, 30 ft (or 60 ft with sling). No attack roll — choose a target point and it detonates.<br/>
-<b>Sleep Bomb:</b> 10-ft sphere. DC 10+X Con save or unconscious for X turns.<br/>
-<b>Explosive Bomb:</b> 5-ft radius per X. Xd8+2d8 damage of the material's type. DC 13+X Dex save for half.<br/>
-<b>Smoke Bomb:</b> 10-ft radius (min), lasts 1+X turns. Material determines additional effects (Deadwood = blinding, Summitwood = slow movement, etc.)
-      </div>
+<div class="callout">Bomb Use Throwing a bomb takes an Action and reaches 30 ft, or 60 ft with a sling. Choose a point; no attack roll is made. Sleep Bomb: 10-ft sphere, DC 10+X Constitution save or unconscious for X turns. Explosive Bomb: radius 5 ft per X, dealing Xd8+2d8 of the material’s damage type; DC 13+X Dexterity save halves the damage. Smoke Bomb: at least a 10-ft radius for 1+X turns, with extra effects determined by material, such as Deadwood blinding or Summitwood slowing movement.</div>
 </div>
 <!-- SMITH -->
 <!-- SMITH -->
@@ -2536,17 +2541,17 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <hr class="flavor-divider"/>
 <p><strong>Smith's Tools Armour Base Materials:</strong> Abominable Skin, Chitin, Ellond Hide, Thick Hide, Monster Scales, and Bones.</p>
 <p><strong>Smith's Tools Weapon Base Materials:</strong> Adamantine, Cold Iron, and Mithril.</p>
-<p><strong>Requirements:</strong> Proficiency with Smith's Tools, Smith's Tools, C-Rank and above require a Workshop.</p>
+<p><strong>Crafting Requirements:</strong> Proficiency with Smith's Tools, Smith's Tools, C-Rank and above require a Workshop.</p>
 <div class="callout">
 <strong>Prime / Base Material System</strong>
 The Prime Material, usually the main component, defines the item. The Base Material is consumed during crafting and normally does not transfer its properties to the final item. If you roll a Natural 20 during crafting, the item gains both Prime and Base Material properties. If multiple base materials are needed, they must all be the same material.
 </div>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>You reactivate the base material and the item gains both Prime and Base Material properties. If the recipe has no base material, you are refunded half of the materials.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>You reactivate the base material and the item gains both Prime and Base Material properties. If the recipe has no base material, you are refunded half of the materials.</span></div>
 <div class="roll-item"><span class="roll-die">Success</span><span>If it meets the DC, it beats the DC. The craft succeeds.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>You waste 1/3 of the prime materials, rounded down, minimum 1.</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials are wasted.</span></div>
 </div>
 <h3 class="sub-title">Crafts</h3>
 <div class="table-wrap">
@@ -2681,17 +2686,14 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <h2 class="sec-title">Weaver's Tools <span class="tag">Profession</span></h2>
 <p><em>Greetings, aspiring weavers and fabric enthusiasts! I’m thrilled to introduce you to the intricate and magical world of Weaver’s Tools. Imagine a loom where not just threads but dreams are woven, creating fabrics that blend the mundane with the mystical! Whether you’re crafting a simple leafweave robe to blend seamlessly into forest backdrops, or a radiant heavenweave gown shimmering with resistance to the celestial, your creations will be as practical as they are enchanting. So, ready your threads and set your loom, for the world of weaving awaits your skilled hands and imaginative heart!</em></p>
 <hr class="flavor-divider"/>
-<p><strong>Requirements:</strong> Proficiency with Weaver's Tools, Weaver's Tools, Workshop.</p>
-
+<p><strong>Crafting Requirements:</strong> Proficiency with Weaver's Tools, Weaver's Tools, Workshop.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Reactivate the Base Material — the finished item gains both its Prime and Base Material properties. If the recipe has no Base Material, refund 50% of the materials used.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Reactivate the Base Material — the finished item gains both its Prime and Base Material properties. If the recipe has no Base Material, refund 50% of the materials used.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>The weave tears or must be discarded. Waste 1/3 of the prime materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>The entire weave is ruined. All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>The entire weave is ruined. All materials committed to the attempt are consumed.</span></div>
 </div>
-
-
 <div class="callout">
 <strong>Prime / Base Material System</strong>
     Exotic recipes use a Prime/Base Material system. The Prime Material, typically the main component, defines the item. The Base Material, secondary and consumed in crafting, usually doesn’t transfer its properties to the final item, except when rolling a <b>Natural 20</b> during crafting. This grants the item both Prime and Base Material properties. If multiple base materials are needed, they must all be the same material.
@@ -2834,17 +2836,14 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <h2 class="sec-title">Woodcarver's Tools <span class="tag">Profession</span></h2>
 <p><em>With these tools in hand and a Workshop at your disposal, the forest’s bounty becomes your canvas. Whether you’re carving delicate arrowheads from darkwood or shaping armours from any material imaginable — yes, literally anything — your creations will embody both artistry and function. Imagine crafting arrows that transform their damage type to match their prime material, like bone arrows turning all damage into bludgeoning — perfect for those pesky skeletons! Or fashioning Darkwood armours that are as light as a feather yet tough as nails. And don’t forget the flight arrows that extend your weapon’s range, or signal arrows that whistle their way through the air, alerting allies from afar. So, ready your tools and let your creativity flow like the sap in the trees, for the world of woodcarving is full of endless possibilities and wonders waiting to be discovered by your skilled hands!</em></p>
 <hr class="flavor-divider"/>
-<p><strong>Requirements:</strong> Proficiency with Woodcarver’s Tools and a Workshop. C-Rank and above recipes require a Workshop.</p>
-
+<p><strong>Crafting Requirements:</strong> Proficiency with Woodcarver’s Tools and a Workshop. C-Rank and above recipes require a Workshop.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Reactivate the Base Material when the recipe uses the Prime/Base Material system; the finished item gains both properties. If no Base Material is used, refund 50% of the materials.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Reactivate the Base Material when the recipe uses the Prime/Base Material system; the finished item gains both properties. If no Base Material is used, refund 50% of the materials.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Waste 1/3 of the prime materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>The primary material is ruined. All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>The primary material is ruined. All materials committed to the attempt are consumed.</span></div>
 </div>
-
-
 <p><strong>Base Materials for Woodcarver Arrows/Bolts/Weapons:</strong> Darkwood, Deadwood, Summitwood.</p>
 <p><strong>Base Materials for Woodcarver Armours:</strong> Varies. See armour notes below.</p>
 <h3 class="sub-title">Exotic Arrows</h3>
@@ -2952,12 +2951,9 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <!-- HERBALISM -->
 <div class="guide-section" id="herbalism">
 <h2 class="sec-title">Herbalism Kit <span class="tag">Profession</span></h2>
-
 <p><em>Herbalists are the backbone of any party! The healers that don’t need to be there to heal!</em></p>
 <p><em>Gather herbs, stock your supplies well, and keep your allies alive. A prepared herbalist can save lives long before a healer ever arrives.</em></p>
-
 <hr class="flavor-divider"/>
-
 <div class="callout info">
 <strong>Requirements</strong>
 <p>Proficiency with a <b>Herbalism Kit</b>.</p>
@@ -2965,20 +2961,16 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <p><b>Rare</b> potions require access to a properly equipped <b>Workshop</b>.</p>
 <p><b>Very Rare</b> and <b>Legendary</b> potions require access to both a properly equipped <b>Workshop</b> and a <b>Lab</b>.</p>
 </div>
-
 <p>Herbalism works a little differently than Alchemy. Unlike other plants, herbs have fixed crafting requirements and are used directly to create potions and remedies.</p>
 <p>To craft a potion, you must possess the required herbal materials listed for that recipe. No additional gold cost is required unless a recipe specifically lists one.</p>
-
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Gain 1 extra potion.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Gain 1 extra potion.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>Waste 1/3 of your exotic materials (rounded down, minimum 1, most expensive first).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>All materials are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>All materials are wasted.</span></div>
 </div>
-
 <h3 class="sub-title">Common Potions</h3>
 <div class="card-grid">
-
 <div class="card common">
 <div class="card-name">Antitoxin</div>
 <div class="card-meta"><span class="badge common">Common</span><span class="badge">DC 7</span></div>
@@ -2989,7 +2981,6 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Value</span><span class="val">50g</span></div>
 </div>
 </div>
-
 <div class="card common">
 <div class="card-name">Potion of Healing</div>
 <div class="card-meta"><span class="badge common">Common</span><span class="badge">DC 8</span></div>
@@ -3000,7 +2991,6 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Value</span><span class="val">50g</span></div>
 </div>
 </div>
-
 <div class="card common">
 <div class="card-name">Willowshade Oil</div>
 <div class="card-meta"><span class="badge common">Common</span><span class="badge">DC 8</span></div>
@@ -3011,7 +3001,6 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Value</span><span class="val">30g</span></div>
 </div>
 </div>
-
 <div class="card common">
 <div class="card-name">Potion of Comprehension</div>
 <div class="card-meta"><span class="badge common">Common</span><span class="badge">DC 10</span></div>
@@ -3021,7 +3010,6 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Crafting Time</span><span class="val">2 hrs</span></div>
 </div>
 </div>
-
 <div class="card common">
 <div class="card-name">Potion of Watchful Rest</div>
 <div class="card-meta"><span class="badge common">Common</span><span class="badge">DC 11</span></div>
@@ -3031,12 +3019,9 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Crafting Time</span><span class="val">2 hrs</span></div>
 </div>
 </div>
-
 </div>
-
 <h3 class="sub-title">Uncommon Potions</h3>
 <div class="card-grid">
-
 <div class="card uncommon">
 <div class="card-name">Potion of Greater Healing</div>
 <div class="card-meta"><span class="badge uncommon">Uncommon</span><span class="badge">DC 10</span></div>
@@ -3047,7 +3032,6 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Value</span><span class="val">100g</span></div>
 </div>
 </div>
-
 <div class="card uncommon">
 <div class="card-name">Equisetum sp. Potion</div>
 <div class="card-meta"><span class="badge uncommon">Uncommon</span><span class="badge">DC 12</span></div>
@@ -3057,12 +3041,9 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Crafting Time</span><span class="val">4 hrs</span></div>
 </div>
 </div>
-
 </div>
-
 <h3 class="sub-title">Rare Potions (Workshop Required)</h3>
 <div class="card-grid">
-
 <div class="card rare">
 <div class="card-name">Potion of Superior Healing</div>
 <div class="card-meta"><span class="badge rare">Rare</span><span class="badge">DC 15</span></div>
@@ -3073,7 +3054,6 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Value</span><span class="val">1,000g</span></div>
 </div>
 </div>
-
 <div class="card rare">
 <div class="card-name">Elixir of Health</div>
 <div class="card-meta"><span class="badge rare">Rare</span><span class="badge">DC 13</span></div>
@@ -3083,7 +3063,6 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Crafting Time</span><span class="val">4 hrs</span></div>
 </div>
 </div>
-
 <div class="card rare">
 <div class="card-name">Potion of Heroism</div>
 <div class="card-meta"><span class="badge rare">Rare</span><span class="badge">DC 14</span></div>
@@ -3093,12 +3072,9 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="stat-block"><span>Crafting Time</span><span class="val">4 hrs</span></div>
 </div>
 </div>
-
 </div>
-
 <h3 class="sub-title">Very Rare Potions (Workshop + Lab Required)</h3>
 <div class="card-grid">
-
 <div class="card veryrare">
 <div class="card-name">Potion of Supreme Healing</div>
 <div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 20</span></div>
@@ -3111,20 +3087,16 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 </div>
 <div class="card veryrare">
 <div class="card-name">Rejuvenation Potion</div>
-
 <div class="card-meta">
 <span class="badge veryrare">Very Rare</span>
 <span class="badge">DC 20</span>
 </div>
-
 <div class="card-ing">
 <strong>Ingredients:</strong> Viping Vitalis ×2, Black Lotus ×1
 </div>
-
 <div class="card-effect">
 <strong>Effect:</strong> When you drink this potion, you immediately gain the benefits of a Short Rest. Once you benefit from a Rejuvenation Potion, you can't benefit from another Rejuvenation Potion until you finish 1d6 Long Rests.
 </div>
-
 <div class="card-stats">
 <div class="stat-block">
 <span>Crafting Time</span>
@@ -3135,23 +3107,18 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 </div>
 <h3 class="sub-title">Legendary Potions (Workshop + Lab Required)</h3>
 <div class="card-grid">
-
 <div class="card legendary">
 <div class="card-name">Greater Rejuvenation Potion</div>
-
 <div class="card-meta">
 <span class="badge legendary">Legendary</span>
 <span class="badge">DC 23</span>
 </div>
-
 <div class="card-ing">
 <strong>Ingredients:</strong> Black Lotus ×2, Viping Vitalis ×1
 </div>
-
 <div class="card-effect">
 <strong>Effect:</strong> When you drink this potion, you immediately gain the benefits of a Long Rest. Once you benefit from a Greater Rejuvenation Potion, you can't benefit from another Greater Rejuvenation Potion until you finish 3d6 Long Rests.
 </div>
-
 <div class="card-stats">
 <div class="stat-block">
 <span>Crafting Time</span>
@@ -3159,15 +3126,12 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 </div>
 </div>
 </div>
-
 </div>
 <div class="callout">
 <strong>Herbalist</strong>
 You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning plants, at the DM’s discretion.
 </div>
-
 </div>
-
 <!-- FORGERY -->
 <div class="guide-section" id="forgery">
 <h2 class="sec-title">
@@ -3190,7 +3154,7 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
 </p>
 <hr class="flavor-divider"/>
 <p>
-<strong>Requirements:</strong>
+<strong>Crafting Requirements:</strong>
   Proficiency with Forgery Kit, a Forgery Kit, and access to a Library.
   C-Rank and higher recipes require a Workshop.
 </p>
@@ -3204,9 +3168,9 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
   cannot be used with products created using the Forgery Kit.
 </div>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
+<h4>Craft Results</h4>
 <div class="roll-item">
-<span class="roll-die great">Nat 20</span>
+<span class="roll-die great">Natural 20</span>
 <span>
       Refund 1 unit of exotic material. If no exotic material was used,
       refund 50% of the mundane materials.
@@ -3227,8 +3191,8 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
     </span>
 </div>
 <div class="roll-item">
-<span class="roll-die bad">Nat 1</span>
-<span>All materials used in the craft are wasted.</span>
+<span class="roll-die bad">Natural 1</span>
+<span>All materials committed to the attempt are consumed.</span>
 </div>
 </div>
 <h3 class="sub-title">Forgery Recipes</h3>
@@ -3421,17 +3385,14 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
 </div>
 <!-- DISGUISE -->
 <div class="guide-section" id="disguise">
-<h2 class="sec-title">Disguise Kit <span class="tag">Profession</span></h2><p><em>Ah, my dear aspiring masters of masquerade and mischief! Let’s take a look at the wondrous world of the Disguise Kit, a haven for those who delight in deception and creative guile. With just your proficiency and this nifty set, the art of illusion is at your fingertips. Imagine the possibilities: feigning your demise, or convincing foes you’re plagued by the most dreadful of diseases—all in the spirit of good fun and strategy, of course! And let’s not forget the art of False Casting, where your performance can make even the most skeptical believe in your magical façade. So, grab your kit, and let’s dive into a world where appearances are everything, and a well-played disguise can turn the tides of any encounter!</em></p><hr class="flavor-divider"/><p><strong>Requirements:</strong> Proficiency with Disguise Kit.</p>
-
+<h2 class="sec-title">Disguise Kit <span class="tag">Profession</span></h2><p><em>Ah, my dear aspiring masters of masquerade and mischief! Let’s take a look at the wondrous world of the Disguise Kit, a haven for those who delight in deception and creative guile. With just your proficiency and this nifty set, the art of illusion is at your fingertips. Imagine the possibilities: feigning your demise, or convincing foes you’re plagued by the most dreadful of diseases—all in the spirit of good fun and strategy, of course! And let’s not forget the art of False Casting, where your performance can make even the most skeptical believe in your magical façade. So, grab your kit, and let’s dive into a world where appearances are everything, and a well-played disguise can turn the tides of any encounter!</em></p><hr class="flavor-divider"/><p><strong>Crafting Requirements:</strong> Proficiency with Disguise Kit.</p>
 <div class="roll-box">
-<h4>Roll Outcomes</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Masterwork disguise — refund 50% of the materials used.</span></div>
-<div class="roll-item"><span class="roll-die">Success</span><span>Craft succeeds as normal.</span></div>
+<h4>Craft Results</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Masterwork disguise — refund 50% of the materials used.</span></div>
+<div class="roll-item"><span class="roll-die">Success</span><span>The craft is completed successfully.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>The disguise or prepared effect is unusable. Waste 1/3 of the materials used (rounded down, minimum 1).</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>The disguise is completely ruined. All materials used in the craft are wasted.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>The disguise is completely ruined. All materials committed to the attempt are consumed.</span></div>
 </div>
-
-
 <div class="table-wrap">
 <table>
 <thead><tr><th>Item</th><th>Materials</th><th>Time</th><th>DC</th><th>Effect</th></tr></thead>
@@ -3443,17 +3404,16 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
 </tbody>
 </table>
 </div>
-<p><em>All Emergency Reactions are the same resource — using one prevents using others until a short or long rest.</em></p>
+<p>Emergency Reactions share a single use. Once any one of them is spent, none of the others can be used again until you finish a Short or Long Rest.</p>
 <p><strong>Master of Disguise:</strong> advantage on Persuasion, History, Arcana, Religion, Deception, Insight, and Performance checks concerning appearance (DM's discretion).</p>
 </div>
 <!-- POISONER -->
 <div class="guide-section" id="poisoner">
-  <h2 class="sec-title">
+<h2 class="sec-title">
     Poisoner's Kit <span class="tag">Profession</span>
-  </h2>
-
-  <p>
-    <em>
+</h2>
+<p>
+<em>
       Hail assassins, rogues, vagabonds, and miscreants! May I never see you again!
       But in the meantime, this is where you come to learn the ways of dying. Some
       are quick, while others are slow and painful. Like alchemy, poisons are crafted
@@ -3462,80 +3422,64 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
       reduces the crafting time of poisons made at an Alchemist Workshop by 50%,
       rounded up. Crafting time is not reduced when crafting in the field.
     </em>
-  </p>
-
-  <hr class="flavor-divider"/>
-
-  <p>
-    <strong>Requirements:</strong> Proficiency with Poisoner’s Kit. C-Rank and higher
+</p>
+<hr class="flavor-divider"/>
+<p>
+<strong>Crafting Requirements:</strong> Proficiency with Poisoner’s Kit. C-Rank and higher
     poisons require an Alchemist Workshop unless the crafter has the Poisoner feat.
   </p>
-
-  <div class="roll-box">
-    <h4>Roll Outcomes</h4>
-
-    <div class="roll-item">
-      <span class="roll-die great">Nat 20</span>
-      <span>Gain 1 additional dose of the crafted poison.</span>
-    </div>
-
-    <div class="roll-item">
-      <span class="roll-die bad">Failure</span>
-      <span>
+<div class="roll-box">
+<h4>Craft Results</h4>
+<div class="roll-item">
+<span class="roll-die great">Natural 20</span>
+<span>Gain 1 additional dose of the crafted poison.</span>
+</div>
+<div class="roll-item">
+<span class="roll-die bad">Failure</span>
+<span>
         Waste one-third of the required Prime Materials, rounded up to a minimum of 1,
         and accidentally expose yourself to the poison.
       </span>
-    </div>
-
-    <div class="roll-item">
-      <span class="roll-die bad">Nat 1</span>
-      <span>All materials used in the crafting attempt are wasted.</span>
-    </div>
-  </div>
-
-  <!-- COMMON POISONS -->
-  <h3 class="sub-title">Common Poisons</h3>
-
-  <div class="card-grid">
-    <div class="card common">
-      <div class="card-name">Poison, Basic (Injury)</div>
-
-      <div class="card-meta">
-        <span class="badge common">Common</span>
-        <span class="badge">DC 12</span>
+</div>
+<div class="roll-item">
+<span class="roll-die bad">Natural 1</span>
+<span>All materials used in the crafting attempt are wasted.</span>
+</div>
+</div>
+<!-- COMMON POISONS -->
+<h3 class="sub-title">Common Poisons</h3>
+<div class="card-grid">
+<div class="card common">
+<div class="card-name">Poison, Basic (Injury)</div>
+<div class="card-meta">
+<span class="badge common">Common</span>
+<span class="badge">DC 12</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Blood Herbs ×3
       </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Blood Herbs ×3
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         Coat 1 weapon or 3 pieces of ammunition. A creature hit by the coated weapon
         or ammunition takes an additional 1d4 poison damage. The coating lasts for
         1 minute.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">2 hrs</span>
-        </div>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">2 hrs</span>
+</div>
+</div>
+</div>
+<div class="card common">
+<div class="card-name">Potion of Poison (Ingested)</div>
+<div class="card-meta">
+<span class="badge common">Common</span>
+<span class="badge">DC 12</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Blood Herbs ×2, Blue Herbs ×1
       </div>
-    </div>
-
-    <div class="card common">
-      <div class="card-name">Potion of Poison (Ingested)</div>
-
-      <div class="card-meta">
-        <span class="badge common">Common</span>
-        <span class="badge">DC 12</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Blood Herbs ×2, Blue Herbs ×1
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         This potion appears to be a healing potion. A creature that drinks it takes
         3d6 poison damage and must succeed on a DC 13 Constitution saving throw or
         become poisoned. While poisoned, the creature takes 3d6 poison damage at the
@@ -3543,278 +3487,231 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
         throw, reducing the damage by 1d6 after each successful save until the effect
         ends.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">8 hrs</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card common">
-      <div class="card-name">Antitoxin</div>
-
-      <div class="card-meta">
-        <span class="badge common">Common</span>
-        <span class="badge">DC 7</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Ellond Scrub ×1 plus 1 additional unit of Kreen
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">8 hrs</span>
+</div>
+</div>
+</div>
+<div class="card common">
+<div class="card-name">Antitoxin</div>
+<div class="card-meta">
+<span class="badge common">Common</span>
+<span class="badge">DC 7</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Ellond Scrub ×1 plus 1 additional unit of Kreen
         Paste, Ellond Scrub, or Blue Herb
       </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         A creature that drinks this antitoxin has advantage on saving throws against
         poison for 1 hour.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">1 hr</span>
-        </div>
-
-        <div class="stat-block">
-          <span>Value</span>
-          <span class="val">50g</span>
-        </div>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">1 hr</span>
+</div>
+<div class="stat-block">
+<span>Value</span>
+<span class="val">50g</span>
+</div>
+</div>
+</div>
+</div>
+<!-- UNCOMMON POISONS -->
+<h3 class="sub-title">Uncommon Poisons</h3>
+<div class="card-grid">
+<div class="card uncommon">
+<div class="card-name">Assassin's Blood (Ingested)</div>
+<div class="card-meta">
+<span class="badge uncommon">Uncommon</span>
+<span class="badge">DC 13</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Corpse Flower ×1
       </div>
-    </div>
-  </div>
-
-  <!-- UNCOMMON POISONS -->
-  <h3 class="sub-title">Uncommon Poisons</h3>
-
-  <div class="card-grid">
-    <div class="card uncommon">
-      <div class="card-name">Assassin's Blood (Ingested)</div>
-
-      <div class="card-meta">
-        <span class="badge uncommon">Uncommon</span>
-        <span class="badge">DC 13</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Corpse Flower ×1
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         A creature exposed to this poison must succeed on a DC 10 Constitution saving
         throw or take 1d12 poison damage and become poisoned for 24 hours.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">4 hrs</span>
-        </div>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">4 hrs</span>
+</div>
+</div>
+</div>
+<div class="card uncommon">
+<div class="card-name">Burnt Othur Fumes (Inhaled)</div>
+<div class="card-meta">
+<span class="badge uncommon">Uncommon</span>
+<span class="badge">DC 15</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Othur Stalk ×3
       </div>
-    </div>
-
-    <div class="card uncommon">
-      <div class="card-name">Burnt Othur Fumes (Inhaled)</div>
-
-      <div class="card-meta">
-        <span class="badge uncommon">Uncommon</span>
-        <span class="badge">DC 15</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Othur Stalk ×3
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         A creature exposed to the fumes must succeed on a DC 13 Constitution saving
         throw or take 3d6 poison damage. The creature repeats the saving throw at the
         start of each of its turns, taking 3d6 poison damage on a failed save. The
         effect ends after 3 successful saves.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">8 hrs</span>
-        </div>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">8 hrs</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RARE POISONS -->
+<h3 class="sub-title">Rare Poisons <span class="tag">Workshop Required</span></h3>
+<div class="card-grid">
+<div class="card rare">
+<div class="card-name">Sleeping Gas (Inhaled)</div>
+<div class="card-meta">
+<span class="badge rare">Rare</span>
+<span class="badge">DC 16</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Ghost Blossom ×1
       </div>
-    </div>
-  </div>
-
-  <!-- RARE POISONS -->
-  <h3 class="sub-title">Rare Poisons <span class="tag">Workshop Required</span></h3>
-
-  <div class="card-grid">
-    <div class="card rare">
-      <div class="card-name">Sleeping Gas (Inhaled)</div>
-
-      <div class="card-meta">
-        <span class="badge rare">Rare</span>
-        <span class="badge">DC 16</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Ghost Blossom ×1
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         A creature exposed to the gas must succeed on a DC 15 Constitution saving
         throw or fall unconscious for 8 hours. The effect ends early if the creature
         takes damage or another creature uses an action to shake it awake.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">12 hrs</span>
-        </div>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">12 hrs</span>
+</div>
+</div>
+</div>
+<div class="card rare">
+<div class="card-name">Truth Serum (Ingested)</div>
+<div class="card-meta">
+<span class="badge rare">Rare</span>
+<span class="badge">DC 14</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Chromatic Mud ×1
       </div>
-    </div>
-
-    <div class="card rare">
-      <div class="card-name">Truth Serum (Ingested)</div>
-
-      <div class="card-meta">
-        <span class="badge rare">Rare</span>
-        <span class="badge">DC 14</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Chromatic Mud ×1
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         A creature that ingests the serum must succeed on a DC 16 Constitution saving
         throw or become unable to knowingly speak a lie for 1 hour, as though affected
         by the Zone of Truth spell.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">2 hrs</span>
-        </div>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">2 hrs</span>
+</div>
+</div>
+</div>
+<div class="card rare">
+<div class="card-name">Blackout Powder (Contact)</div>
+<div class="card-meta">
+<span class="badge rare">Rare</span>
+<span class="badge">DC 16</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Xeni Leaves ×1
       </div>
-    </div>
-
-    <div class="card rare">
-      <div class="card-name">Blackout Powder (Contact)</div>
-
-      <div class="card-meta">
-        <span class="badge rare">Rare</span>
-        <span class="badge">DC 16</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Xeni Leaves ×1
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         Blow the powder in a 10-foot cone. Each creature in the cone must succeed on a
         DC 15 Constitution saving throw or become poisoned and blinded for 1 hour.
         Closing its eyes does not protect a creature from the powder.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">12 hrs</span>
-        </div>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">12 hrs</span>
+</div>
+</div>
+</div>
+<div class="card rare">
+<div class="card-name">Psychedelic Decoction (Ingested)</div>
+<div class="card-meta">
+<span class="badge rare">Rare</span>
+<span class="badge">DC 16</span>
+</div>
+<div class="card-ing">
+<strong>Ingredients:</strong> Korin's Fang ×1, Ghost Blossom ×1
       </div>
-    </div>
-
-    <div class="card rare">
-      <div class="card-name">Psychedelic Decoction (Ingested)</div>
-
-      <div class="card-meta">
-        <span class="badge rare">Rare</span>
-        <span class="badge">DC 16</span>
-      </div>
-
-      <div class="card-ing">
-        <strong>Ingredients:</strong> Korin's Fang ×1, Ghost Blossom ×1
-      </div>
-
-      <div class="card-effect">
+<div class="card-effect">
         A creature that ingests the decoction must succeed on a DC 15 Constitution
         saving throw or become incapacitated for 2d4 hours while experiencing a
         fantastical spiritual journey.
       </div>
-
-      <div class="card-stats">
-        <div class="stat-block">
-          <span>Time</span>
-          <span class="val">12 hrs</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Add future Very Rare poison cards here. -->
-  <!-- Add future Legendary poison cards here. -->
-
-  <div class="callout">
-    <strong>Variable-Rarity Poisons: Creature Venom</strong>
-    <p>
+<div class="card-stats">
+<div class="stat-block">
+<span>Time</span>
+<span class="val">12 hrs</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Add future Very Rare poison cards here. -->
+<!-- Add future Legendary poison cards here. -->
+<div class="callout">
+<strong>Variable-Rarity Poisons: Creature Venom</strong>
+<p>
       Poisons can be crafted from harvested venom glands. The crafting DC equals the
       poison's saving throw DC +3, or +5 for a specialized toxin. The finished poison
       replicates the creature's original venom effect. Paralytic Balm, Spider Bite,
       Venom, Sensory Decay, and Specialized Toxins all use this framework.
     </p>
-  </div>
-
-  <div class="callout info">
-    <strong>Blood Poisons</strong>
-    <p>
+</div>
+<div class="callout info">
+<strong>Blood Poisons</strong>
+<p>
       Adding non-humanoid blood worth at least half the poison's total material cost
       grants 1d4−2 additional doses, to a minimum of 1, and reduces the crafting DC by
       5. The blood must be equal to or higher than the poison's rank. When using a
       crafting bench, roll only once to determine the number of additional doses.
     </p>
-  </div>
-
-  <h3 class="sub-title">Special Crafts</h3>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Item</th>
-          <th>Materials</th>
-          <th>Time</th>
-          <th>DC</th>
-          <th>Effect</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr>
-          <td>Plague Doctor's Mask</td>
-          <td>1 D+ Deadwood + 1 same-rank Plaguesteel</td>
-          <td>8 hrs</td>
-          <td>16</td>
-          <td>
+</div>
+<h3 class="sub-title">Special Crafts</h3>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Materials</th>
+<th>Time</th>
+<th>DC</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plague Doctor's Mask</td>
+<td>1 D+ Deadwood + 1 same-rank Plaguesteel</td>
+<td>8 hrs</td>
+<td>16</td>
+<td>
             While holding your breath, you ignore nonmagical inhaled poisons whose
             rank is equal to or lower than the rank of the mask's materials.
           </td>
-        </tr>
-
-        <tr>
-          <td>Malice Cube</td>
-          <td>3 units C+ Plaguesteel + 6 units same-rank Blood</td>
-          <td>8 hrs</td>
-          <td>16 + X</td>
-          <td>
+</tr>
+<tr>
+<td>Malice Cube</td>
+<td>3 units C+ Plaguesteel + 6 units same-rank Blood</td>
+<td>8 hrs</td>
+<td>16 + X</td>
+<td>
             Once, change a poison's damage type to poison or necrotic and increase its
             saving throw DC by X.
           </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <p>
-    <strong>Master Poisoner:</strong> You have advantage on Persuasion, History,
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+<strong>Master Poisoner:</strong> You have advantage on Persuasion, History,
     Arcana, Religion, Deception, Insight, and Performance checks concerning poisons,
     at the DM's discretion.
   </p>
@@ -3827,17 +3724,13 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
 <p><em>Crafts in this section require you to be potentially aided by another crafter with the necessary tool proficiencies, or for you to have them all! If you do not need aid, you double the workhours. If working in pairs, one crafter will roll while the other aids, also granting advantage.</em></p>
 <hr class="flavor-divider"/>
 <p>At least two crafters are likely needed for interdisciplinary crafts: Smiths for metals, Masons for stones, bones, and ices, Leatherworkers for leathers, bones, and venom glands, Poisoners for poisons and venom glands, Weavers for weaves and silks, Woodcarvers and Carpenters for woods, Potters for ceramic housings, and Glassblowers for crystal vessels.</p>
-
 <div class="roll-box">
-<h4>Roll Outcomes — Interdisciplinary Crafts</h4>
-<div class="roll-item"><span class="roll-die great">Nat 20</span><span>Masterwork Craft — apply the recipe's specific Natural 20 effect if it has one. If the recipe has no specific Natural 20 effect, refund 50% of the materials used in the Final Assembly.</span></div>
+<h4>Craft Results — Interdisciplinary Crafts</h4>
+<div class="roll-item"><span class="roll-die great">Natural 20</span><span>Masterwork Craft — apply the recipe's specific Natural 20 effect if it has one. If the recipe has no specific Natural 20 effect, refund 50% of the materials used in the Final Assembly.</span></div>
 <div class="roll-item"><span class="roll-die">Success</span><span>The Final Assembly succeeds and the completed item or trap is created.</span></div>
 <div class="roll-item"><span class="roll-die bad">Failure</span><span>The Final Assembly fails. Waste 1/3 of the Prime Materials committed to the Final Assembly (rounded down, minimum 1). Completed components not consumed by the failed assembly remain intact unless the recipe specifically says otherwise.</span></div>
-<div class="roll-item"><span class="roll-die bad">Nat 1</span><span>Catastrophic assembly failure — all materials committed to the Final Assembly are wasted. Completed components are also lost unless the recipe specifically says otherwise.</span></div>
+<div class="roll-item"><span class="roll-die bad">Natural 1</span><span>Catastrophic assembly failure — all materials committed to the Final Assembly are wasted. Completed components are also lost unless the recipe specifically says otherwise.</span></div>
 </div>
-
-
-
 <h3 class="sub-title">Exotic Elemental Shields</h3>
 <p>These advanced crafts combine multiple disciplines and use exotic elemental materials to shape defensive gear.</p>
 <div class="table-wrap">
@@ -3848,12 +3741,10 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
 </tbody>
 </table>
 </div>
-<p>Only non-physical elements qualify (e.g., Eternal Ice, Dragon Bones/Scales). The reduction applies after saving throws and resistances.</p>
-
+<p>This benefit applies only to non-physical elements, such as Eternal Ice or elemental Dragon Bones/Scales. Resolve saving throws and resistances before applying the reduction.</p>
 <div id="trapmaking"></div>
 <h3 class="sub-title">Trapmaking — Interdisciplinary Crafts</h3>
 <p>Trapmaking combines separately crafted components into a finished device. Each listed component is crafted by the profession shown. A character may craft more than one component only if they have the required proficiencies. Components may be traded between players before final assembly.</p>
-
 <div class="callout info">
 <strong>Trapmaking Rules</strong>
 <b>Deployment:</b> Unless a trap says otherwise, deploying a finished trap takes 1 minute and it occupies one 5-foot space. A trap cannot normally be deployed during combat.<br/><br/>
@@ -3864,12 +3755,10 @@ You have Advantage on Persuasion, History, Arcana, Religion, Deception, Insight,
 <b>Saving Throw DC:</b> Use the Save DC printed in the recipe. Trap effects are nonmagical unless the recipe explicitly describes them as magical.<br/><br/>
 <b>Maximum Deployment:</b> A character can have a number of their crafted traps deployed at one time equal to their Proficiency Bonus. You cannot deploy another crafted trap until one of your currently deployed traps is triggered, recovered, or deliberately disarmed.
 </div>
-
 <div class="callout">
 <strong>Component Crafting &amp; Final Assembly</strong>
 Each component requires its own listed materials, Work Hours, and crafting check. The materials are consumed on a failed component craft as normal. Once every component is complete, make the listed <b>Final Assembly</b> check. The final assembly requires the proficiencies listed for that trap and follows the normal Interdisciplinary Craft rules above. If one crafter has every required proficiency and assembles it alone, double only the <b>Final Assembly</b> Work Hours; component crafting times are not doubled a second time.
 </div>
-
 <h3 class="sub-title">E-Rank Traps — Common</h3>
 <h4 class="item-title">Hunter's Snare</h4>
 <div class="table-wrap"><table>
@@ -3880,7 +3769,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Hunter's Snare</td><td>Snare Cord + Trigger Frame</td><td>2 hrs</td><td>12</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 12 · Disarm DC 12 · Save DC 12.</strong> When a Small or larger creature enters the trapped space, it must succeed on a Dexterity saving throw or become <strong>Restrained</strong>. A Restrained creature can use its action to make a DC 12 Strength (Athletics) or Dexterity (Acrobatics) check, ending the condition on a success.</p>
-
 <h3 class="sub-title">D-Rank Traps — Uncommon</h3>
 <h4 class="item-title">Flash Trap</h4>
 <div class="table-wrap"><table>
@@ -3892,7 +3780,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Flash Trap</td><td>Flash Chamber + Flash Compound + Spring Trigger</td><td>2 hrs</td><td>14</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 13 · Disarm DC 14 · Save DC 13.</strong> The trap erupts in a brilliant flash. Each creature within 10 feet that can see the trap must make a Constitution saving throw or become <strong>Blinded until the end of its next turn</strong>.</p>
-
 <h4 class="item-title">Tanglewire Trap</h4>
 <div class="table-wrap"><table>
 <thead><tr><th>Profession</th><th>Component</th><th>Materials</th><th>Time</th><th>DC</th></tr></thead>
@@ -3902,7 +3789,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Tanglewire Trap</td><td>Barbed Wire Assembly + Binding Mesh</td><td>2 hrs</td><td>14</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 13 · Disarm DC 14 · Save DC 13.</strong> Hooked wire and sticky silk burst across a 10-foot-square area centered on the trigger. The area becomes <strong>Difficult Terrain</strong> for 1 minute. Creatures in the area when it triggers must succeed on a Dexterity saving throw or become <strong>Restrained</strong>. A Restrained creature can use an action to make a DC 13 Strength (Athletics) or Dexterity (Acrobatics) check, escaping on a success.</p>
-
 <h3 class="sub-title">C-Rank Traps — Rare <span class="tag">Workshop Required</span></h3>
 <h4 class="item-title">Elemental Pressure Mine</h4>
 <p>Elemental Pressure Mines share one chassis. The payload material determines the damage type, allowing the same recipe to be adapted to available materials.</p>
@@ -3929,7 +3815,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td>Venom Gland</td><td>Poisoner</td><td>Poison</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 15 · Disarm DC 16 · Save DC 15.</strong> When triggered, the mine explodes in a 10-foot-radius sphere. Creatures in the area make a Dexterity saving throw, taking <strong>4d6 damage</strong> of the payload's type on a failure or half as much on a success.</p>
-
 <h4 class="item-title">Sleeping Gas Trap</h4>
 <div class="table-wrap"><table>
 <thead><tr><th>Profession</th><th>Component</th><th>Materials</th><th>Time</th><th>DC</th></tr></thead>
@@ -3940,7 +3825,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Sleeping Gas Trap</td><td>Sleeping Gas Charge + Gas Vessel + Pressure Trigger</td><td>4 hrs</td><td>16</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 15 · Disarm DC 16.</strong> When triggered, the vessel disperses the finished Sleeping Gas into a <strong>10-foot-radius sphere</strong>. Each breathing creature in the area is exposed to the existing Sleeping Gas poison and uses that poison's saving throw and effect. The poison is consumed when the trap triggers.</p>
-
 <h4 class="item-title">Blackout Trap</h4>
 <div class="table-wrap"><table>
 <thead><tr><th>Profession</th><th>Component</th><th>Materials</th><th>Time</th><th>DC</th></tr></thead>
@@ -3951,7 +3835,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Blackout Trap</td><td>Blackout Charge + Dispersal Vessel + Trip Trigger</td><td>4 hrs</td><td>16</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 15 · Disarm DC 16.</strong> When triggered, the vessel disperses the finished Blackout Powder in a <strong>10-foot-radius sphere</strong>. Each creature in the area is exposed to the existing Blackout Powder poison and uses that poison's saving throw and effect. The poison is consumed when the trap triggers.</p>
-
 <h3 class="sub-title">B-Rank Traps — Rare+ <span class="tag">Workshop Required</span></h3>
 <h4 class="item-title">Grasping Chain Trap</h4>
 <div class="table-wrap"><table>
@@ -3963,7 +3846,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Grasping Chain Trap</td><td>Grasping Chains + Constricting Core + Arcane Trigger Frame</td><td>6 hrs</td><td>18</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 17 · Disarm DC 18 · Save DC 16.</strong> Chains lash through a 15-foot-radius area. Creatures of Large size or smaller in the area make a Dexterity saving throw or become <strong>Restrained</strong> for up to 1 minute. A Restrained creature can use an action to make a DC 16 Strength (Athletics) or Dexterity (Acrobatics) check, ending the condition on a success.</p>
-
 <h4 class="item-title">Magebreaker Trap</h4>
 <div class="table-wrap"><table>
 <thead><tr><th>Profession</th><th>Component</th><th>Materials</th><th>Time</th><th>DC</th></tr></thead>
@@ -3974,7 +3856,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Magebreaker Trap</td><td>Magebreaker Housing + Disruption Filament + Trigger Crystal</td><td>6 hrs</td><td>19</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 18 · Disarm DC 19 · Save DC 16.</strong> The triggering creature must make a Dexterity saving throw, taking <strong>5d6 Force damage</strong> on a failed save or half as much on a success. On a failed save, it also cannot take Reactions until the start of its next turn. If the creature is Concentrating, it has disadvantage on the first Constitution saving throw it makes to maintain Concentration as a result of this trap's damage.</p>
-
 <h3 class="sub-title">A-Rank Traps — Very Rare <span class="tag">Workshop Required</span></h3>
 <h4 class="item-title">Void Snare</h4>
 <div class="table-wrap"><table>
@@ -3986,7 +3867,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Void Snare</td><td>Void Anchor + Shadow Restraints + Anchor Stone</td><td>8 hrs</td><td>20</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 19 · Disarm DC 20 · Save DC 17.</strong> The triggering creature takes <strong>6d8 Necrotic damage</strong> and must make a Dexterity saving throw. On a failure, it becomes <strong>Restrained</strong> for up to 1 minute. While Restrained by the Void Snare, the creature cannot teleport or voluntarily travel to another plane. It can use an action to make a DC 17 Strength (Athletics) or Dexterity (Acrobatics) check, ending the effect on a success.</p>
-
 <h4 class="item-title">Dragonfire Mine</h4>
 <div class="table-wrap"><table>
 <thead><tr><th>Profession</th><th>Component</th><th>Materials</th><th>Time</th><th>DC</th></tr></thead>
@@ -3997,7 +3877,6 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Dragonfire Mine</td><td>Dragonfire Core + Reinforced Housing + Detonation Chamber</td><td>8 hrs</td><td>20</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 19 · Disarm DC 20 · Save DC 17.</strong> The mine erupts in draconic flame in a <strong>20-foot-radius sphere</strong>. Creatures in the area make a Dexterity saving throw, taking <strong>8d6 Fire damage</strong> on a failure or half as much on a success. Unattended flammable objects in the area ignite.</p>
-
 <h3 class="sub-title">S-Rank Traps — Legendary <span class="tag">Workshop Required</span></h3>
 <h4 class="item-title">Cataclysm Mine</h4>
 <p>The Cataclysm Mine is a guild-scale masterwork assembled from four disciplines. Its Elemental Core determines the mine's damage type.</p>
@@ -4011,33 +3890,20 @@ Each component requires its own listed materials, Work Hours, and crafting check
 <tr><td><strong>Final Assembly</strong></td><td>Cataclysm Mine</td><td>Legendary Housing + Cataclysm Chamber + Elemental Core + Arcane Binding</td><td>12 hrs</td><td>22</td></tr>
 </tbody></table></div>
 <p><strong>Detection DC 21 · Disarm DC 22 · Save DC 19.</strong> The mine detonates in a <strong>20-foot-radius sphere</strong>. Creatures in the area make a Dexterity saving throw, taking <strong>10d8 damage</strong> on a failure or half as much on a success. Ignum deals Fire, Eternal Ice deals Cold, Skyshard deals Lightning, and Dragon Bone deals the dragon's associated breath-weapon damage type.</p>
-
 <div class="callout danger">
 <strong>Trap Balance &amp; Adjudication</strong>
 Crafted traps are intended to reward preparation, teamwork, and battlefield planning rather than function as thrown explosives. A deployed trap must have a valid trigger and a physical location. The DM may rule that a creature avoids a trap when its movement, size, senses, flight, incorporeal nature, or other circumstances would reasonably prevent the trigger from functioning.
 </div>
 </div>
 <div class="guide-section" id="repair">
-<h2 class="sec-title">Item Repair <span class="tag">Advanced</span></h2>
-<p>Non-magical weapons, armour, shields, and tools can be damaged in play. A character proficient with the appropriate crafting tool can repair them.</p>
-<div class="callout">
-<strong>Repair Rules</strong>
-<b>Cost:</b> 50% of the prime material cost to craft a new item of the same type.<br/>
-<b>Time:</b> Half the normal crafting time.<br/>
-<b>On Success:</b> Item fully restored. <b>On Failure:</b> Materials consumed, item still damaged (can retry).
-      </div>
-<div class="repair-ranks">
-<span class="rank-badge">E-Rank: DC 12</span>
-<span class="rank-badge">D-Rank: DC 13</span>
-<span class="rank-badge">C-Rank: DC 14</span>
-<span class="rank-badge">B-Rank: DC 15</span>
-<span class="rank-badge">A-Rank: DC 16</span>
-<span class="rank-badge">S-Rank: DC 17</span>
-</div>
-<p>Items that are completely destroyed cannot be repaired and must be crafted anew.</p>
+<h2 class="sec-title">Equipment Repair <span class="tag">Advanced</span></h2>
+<p>Mundane weapons, armour, shields, and tools may suffer damage during play. Repairs may be attempted by a character proficient with the tool appropriate to that item.</p>
+<div class="callout">Repair Procedure Cost: pay half the Prime Material cost of crafting a replacement item of that type. Time: use half of the normal crafting time. Success restores the item completely. Failure consumes the repair materials but leaves the item damaged; another attempt may be made.</div>
+<div class="repair-ranks">Repair DC by rank: E 12 · D 13 · C 14 · B 15 · A 16 · S 17.</div>
+<p>If an item has been destroyed outright, repair is no longer possible; a replacement must be crafted instead.</p>
 </div>
 <div class="guide-section" id="spell-crafting">
-<h2 class="sec-title">Spell Material Crafting <span class="tag">Advanced</span></h2><p><em>Do you have a spell that requires a strange material in order to cast? Well, look no further! Here, you can find out how to best approach the crafting of these materials so that you don’t need to buy them full price from a merchant! Those greedy merchants… Anyway!</em></p><hr class="flavor-divider"/><p>If the spell material has a listed price, pay 50% of that price in raw materials and use the DC and craft time below to make it. Likewise, your crafting profession must arguably be a logical choice for the creation of the spell material. For example, Chromatic Orb requires a diamond worth at least 50g. A jeweller is the most logical profession to cut the necessary gem.</p><p>Failing the DC results in 1/3 of the materials being wasted (rounded down, minimum 1). Rolling a Nat 1 wastes all materials, and rolling a Nat 20 refunds half of your material cost in gold!</p>
+<h2 class="sec-title">Crafting Spell Components <span class="tag">Advanced</span></h2><p><em>Do you have a spell that requires a strange material in order to cast? Well, look no further! Here, you can find out how to best approach the crafting of these materials so that you don’t need to buy them full price from a merchant! Those greedy merchants… Anyway!</em></p><hr class="flavor-divider"/><p>If the spell material has a listed price, pay 50% of that price in raw materials and use the DC and craft time below to make it. Likewise, your crafting profession must arguably be a logical choice for the creation of the spell material. For example, Chromatic Orb requires a diamond worth at least 50g. A jeweller is the most logical profession to cut the necessary gem.</p><p>Failing the DC results in 1/3 of the materials being wasted (rounded down, minimum 1). Rolling a Natural 1 wastes all materials, and rolling a Natural 20 refunds half of your material cost in gold!</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Spell Level</th><th>Craft Time</th><th>DC</th></tr></thead>
@@ -4056,18 +3922,12 @@ Crafted traps are intended to reward preparation, teamwork, and battlefield plan
 </div>
 </div>
 <div class="guide-section" id="spell-trading">
-<h2 class="sec-title">Spell Trading <span class="tag">Advanced</span></h2>
-<p>Wizards can copy spells from each other's spellbooks or from scrolls without destroying the original. Cost: 2 hours + 50g per spell level.</p>
-<div class="callout">
-<strong>Rules</strong>
-        • You can only trade spells with a wizard within one rank of yourself. All trades are 1:1.<br/>
-        • You cannot copy a spell you lack spell slots to cast. Spell must have the 'wizard' tag.<br/>
-        • Copying from a scroll requires a DC 10 + spell level Arcana check; failure destroys the scroll.<br/>
-        • Savants and Order of Scribes halve the time (Savants also halve the cost).
-      </div>
+<h2 class="sec-title">Wizard Spell Exchange <span class="tag">Advanced</span></h2>
+<p>A wizard may transcribe a spell from another wizard’s spellbook, or from a scroll when permitted by the rules. The process costs 2 hours and 50g for each spell level.</p>
+<div class="callout">Exchange Rules • The other wizard must be within one rank of you, and spell trades are one-for-one. • You cannot copy a spell above the level of spell slots you possess, and the spell must carry the wizard tag. • Copying from a scroll requires an Arcana check at DC 10 + spell level; failure destroys that scroll. • Savant features and Order of Scribes halve the transcription time; Savants also halve the cost.</div>
 </div>
 <div class="guide-section" id="modifiers">
-<h2 class="sec-title">Crafting Modifier Rulings <span class="tag">Advanced</span></h2><p><em>Once again, if you have the tools or kit and the relevant proficiency with it, roll a 1d20 + your proficiency modifier in order to craft anything in this book, unless otherwise noted. This is the standard formula for the Profession Check. Below are rulings for quick reference.</em></p><hr class="flavor-divider"/><p>The standard crafting roll is <strong>1d20 + Proficiency Modifier only</strong>. Ability score modifiers such as STR, DEX, or INT are not added unless a specific feature in this guide says otherwise.</p>
+<h2 class="sec-title">Crafting Check Modifiers <span class="tag">Advanced</span></h2><p><em>Once again, if you have the tools or kit and the relevant proficiency with it, roll a 1d20 + your proficiency modifier in order to craft anything in this book, unless otherwise noted. This is the standard formula for the Profession Check. Below are rulings for quick reference.</em></p><hr class="flavor-divider"/><p>The standard crafting roll is <strong>1d20 + Proficiency Modifier only</strong>. Ability score modifiers such as STR, DEX, or INT are not added unless a specific feature in this guide says otherwise.</p>
 <div class="table-wrap">
 <table>
 <thead><tr><th>Feature</th><th>Ruling</th></tr></thead>
@@ -4089,25 +3949,21 @@ Crafted traps are intended to reward preparation, teamwork, and battlefield plan
 </div>
 </div><!-- /content -->
 <footer>
-   Black Banner Company Crafting Guide v3.6.0 &nbsp;·&nbsp; Created by Hellbread &nbsp;·&nbsp; Edited by Ooxy &nbsp;·&nbsp; Last updated 8 August 2026
+   Black Banner Company Crafting Guide v3.7  ·  Created by Ooxy  ·  Last updated 8 August 2026
 </footer>
-
 <div class="guide-section" id="changelog">
-
 <p><strong>v20 Deep Flavor Pass:</strong> Standardized profession layout so flavor text appears before requirements, restored full flavor text for remaining professions, added consistent flavor dividers, and preserved profession-specific Prime/Base, recipe, expert, and special crafting rules.</p>
-
 <div class="callout info">
 <strong>v24 Profession Content Restoration</strong>
 Restored expanded Woodcarver content and preserved profession content passes for Glassblower, Cooking, Leatherworker, Mason, Painter, Potter, Smith, and Weaver.
 </div>
-
 <h2 class="sec-title">Changelog <span class="tag">Advanced</span></h2>
-
 <div class="callout info">
 <strong>Version History</strong>
 This section records major updates, rulings, balance changes, and additions made to the Black Banner Company Crafting Guide.
 </div>
-
+<h3 class="sub-title">v3.7 (8/22/26)</h3>
+<p>Expanded the standard Work Week to 40 hours. Updated training to use full 40-hour weeks, added specific Weapon and Shield Proficiency training, and introduced the Odd Jobs downtime system with multi-skill checks, rank-based DCs, and rank-based payouts.</p>
 <h3 class="sub-title">v3.6.0 (8/08/26)</h3>
 <ul>
 <li>Added <strong>Trapmaking</strong> to Interdisciplinary Crafts.</li>
@@ -4116,16 +3972,14 @@ This section records major updates, rulings, balance changes, and additions made
 <li>Added trap deployment, detection, disarming, triggering, saving throw, consumption, and maximum deployment rules.</li>
 <li>Trap recipes now use existing Black Banner materials and existing Poisoner's Kit products where applicable.</li>
 </ul>
-
 <h3 class="sub-title">v3.4.0 (8/01/26)</h3>
-
 <ul>
 <li>Completely reorganized the <strong>Herbalism Kit Profession</strong> into rarity-based sections (Common, Uncommon, Rare, Very Rare, and Legendary).</li>
 <li>Updated Herbalism crafting requirements:
     <ul>
-        <li><strong>Rare</strong> potions now require a <strong>Workshop</strong>.</li>
-        <li><strong>Very Rare</strong> and <strong>Legendary</strong> potions now require both a <strong>Workshop</strong> and a <strong>Lab</strong>.</li>
-    </ul>
+<li><strong>Rare</strong> potions now require a <strong>Workshop</strong>.</li>
+<li><strong>Very Rare</strong> and <strong>Legendary</strong> potions now require both a <strong>Workshop</strong> and a <strong>Lab</strong>.</li>
+</ul>
 </li>
 <li>Added official-style recipes, crafting DCs, crafting times, ingredients, and effects for numerous Herbalism potions.</li>
 <li>Added <strong>Potion Miscibility</strong> rules to the Alchemist profession.</li>
@@ -4138,25 +3992,18 @@ This section records major updates, rulings, balance changes, and additions made
 <li>Corrected numerous HTML formatting and layout issues affecting potion card grids and recipe organization.</li>
 <li>Improved overall consistency between Alchemist and Herbalism profession layouts.</li>
 </ul>
-
 <h3 class="sub-title">v3.3.1 (6/06/26)</h3>
 <p>Herbalism gold requirements removed. Item Repair System added. Crafting Modifier Rulings updated.</p>
-
 <h3 class="sub-title">v3.2.7 (5/31/26)</h3>
 <p>Manifold Tool, Adroit Crafter, and Homunculus rulings updated for 2024 crafting rules.</p>
-
 <h3 class="sub-title">v3.2.6 (3/02/26)</h3>
 <p>Flight Arrow ranges adjusted. Mithril Arrows updated. Smithing and Glassblower weapons now convert all weapon damage to their Prime Material damage type.</p>
-
 <h3 class="sub-title">v3.2.5 (2/01/26)</h3>
 <p>Added custom ring options for Jewelcrafters.</p>
-
 <h3 class="sub-title">v3.2.4 (7/14/25)</h3>
 <p>Poisons can now be applied to exotic weapons. Added Malice Cube, Det-Caps, Potter's Wheel, and False Aura.</p>
-
 <h3 class="sub-title">Legacy Changelog (v3.2.3 - v3.1.1)</h3>
 <p>Previous historical updates retained from the original guide including Dragon Scale Mail changes, Pottery overhaul, Black Lotus, Voidblossom replacement, Spell Trading revisions, Artificer revisions, Deadwood, Ironwood, Summitwood, Spider Silk, Interdisciplinary Crafts, Exotic Shields, and numerous balance updates.</p>
-
 </div>
 </div></main>
 </body>
