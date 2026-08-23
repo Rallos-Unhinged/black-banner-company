@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Black Banner Company — Character</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
+:root{--bg:#080706;--panel:#11100c;--panel2:#17140d;--gold:#c8960a;--gold2:#e4bb4c;--text:#e7dcc2;--muted:#b5a47c;--border:#4a3810;--good:#7fb07f;--bad:#c87878}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#080706,#0b0a08);color:var(--text);font:18px/1.5 'Crimson Pro',Georgia,serif}
+.page{width:min(1100px,calc(100% - 2rem));margin:auto;padding-bottom:3rem}.topbar{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:1rem 0}.nav{display:flex;gap:.5rem;flex-wrap:wrap}
+.btn,button{border:1px solid #8c6818;background:linear-gradient(180deg,#171108,#0d0a06);color:#e0c35f;padding:.7rem 1rem;text-decoration:none;font:700 .72rem 'Cinzel',serif;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
+.btn:hover,button:hover{background:#211708;color:#ffe49a}.hero{border:1px solid #6d5215;background:#0d0b08;padding:2rem;text-align:center}.hero h1{margin:.2rem 0;color:#d8a92f;font:700 clamp(2rem,6vw,4rem) 'Cinzel',serif}.muted{color:var(--muted)}
+.notice{margin:1rem 0;padding:.85rem 1rem;border-left:4px solid var(--gold);background:#17140d}.notice.good{border-color:var(--good)}.notice.bad{border-color:var(--bad)}.hidden{display:none!important}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}.panel{border:1px solid var(--border);background:var(--panel);padding:1rem}.panel.full{grid-column:1/-1}.panel h2{margin:0;color:#d4a62e;font:1.1rem 'Cinzel',serif}.rule{height:1px;background:linear-gradient(90deg,transparent,#6f5418,transparent);margin:.55rem 0 .9rem}
+.field{margin:.6rem 0}.field label{display:block;color:var(--muted);margin-bottom:.2rem}.field input,.field select{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:16px 'Crimson Pro',serif}
+.abilities{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}.checkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem}.check{display:flex;gap:.55rem;align-items:center;border:1px solid #3c2e0d;background:#151109;padding:.55rem}.check input{width:auto}
+.toolgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.toolrow{display:grid;grid-template-columns:1fr 110px;gap:.5rem;align-items:center;border:1px solid #3c2e0d;background:#151109;padding:.55rem}.toolrow select{width:100%;background:#0d0a06;color:var(--text);border:1px solid #6d5215;padding:.45rem}
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}.actions button{flex:1}.syncbox{border:1px solid #5b4312;background:#0d0a06;padding:.8rem;margin-top:.7rem}.pill{display:inline-block;border:1px solid #5e4712;padding:.18rem .45rem;background:#100d08;color:var(--gold2);margin:.15rem}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.panel.full{grid-column:auto}.abilities,.checkgrid,.toolgrid{grid-template-columns:1fr}.toolrow{grid-template-columns:1fr}.btn,button{width:100%}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="nav">
+      <a class="btn" href="../">Home</a>
+      <a class="btn" href="../player-guide/">Player Guide</a>
+      <a class="btn" href="../crafting-guide/">Crafting Guide</a>
+      <a class="btn" href="../material-market/">Market</a>
+      <a class="btn" href="../bastions/my-bastion/">My Bastion</a>
+    </div>
+    <button id="loginBtn">Login with Discord</button>
+  </div>
+
+  <header class="hero">
+    <div class="muted">Black Banner Company · Character Registry</div>
+    <h1>My Character</h1>
+    <p class="muted">Register the information used by website and Discord crafting.</p>
+  </header>
+
+  <div id="message" class="notice hidden"></div>
+  <main id="content" class="grid hidden">
+    <section class="panel">
+      <h2>Character</h2><div class="rule"></div>
+      <div class="field"><label>Character Name</label><input id="characterName" maxlength="100"></div>
+      <div class="field"><label>Level</label><input id="characterLevel" type="number" min="1" max="20" value="1"></div>
+      <div class="field"><label>Black Banner Rank</label><input id="characterRank" readonly></div>
+      <div class="field"><label>Class / Build Summary</label><input id="classSummary" maxlength="300" placeholder="Example: Wizard 9 / Fighter 2"></div>
+      <div class="abilities">
+        <div class="field"><label>STR</label><input id="str" type="number"></div>
+        <div class="field"><label>DEX</label><input id="dex" type="number"></div>
+        <div class="field"><label>CON</label><input id="con" type="number"></div>
+        <div class="field"><label>INT</label><input id="int" type="number"></div>
+        <div class="field"><label>WIS</label><input id="wis" type="number"></div>
+        <div class="field"><label>CHA</label><input id="cha" type="number"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>D&D Beyond Sync</h2><div class="rule"></div>
+      <p class="muted">Paste the character-sheet URL. Sync is experimental because D&D Beyond does not provide a supported public character API.</p>
+      <div class="field"><label>D&D Beyond Character URL</label><input id="ddbUrl" placeholder="https://www.dndbeyond.com/characters/123456789"></div>
+      <div class="actions"><button id="syncBtn" type="button">Sync From D&D Beyond</button></div>
+      <div id="syncStatus" class="syncbox muted">No sync run yet.</div>
+    </section>
+
+    <section class="panel full">
+      <h2>Crafting Tool Proficiencies</h2><div class="rule"></div>
+      <p class="muted">Choose Proficient or Expertise. Expertise is limited to two permanent tools, matching the crafting registry.</p>
+      <div id="tools" class="toolgrid"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Crafting Features</h2><div class="rule"></div>
+      <div class="checkgrid">
+        <label class="check"><input id="adroit" type="checkbox"> Adroit Crafter</label>
+        <label class="check"><input id="flash" type="checkbox"> Flash of Genius</label>
+        <label class="check"><input id="built" type="checkbox"> Built for Success</label>
+        <label class="check"><input id="homunculus" type="checkbox"> Homunculus Aid</label>
+      </div>
+      <div class="field"><label>Intelligence Modifier</label><input id="intMod" type="number" min="-5" max="10" value="0"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Temporary Tool Proficiency</h2><div class="rule"></div>
+      <div class="field"><label>Feature</label>
+        <select id="tempFeature">
+          <option value="none">None</option>
+          <option value="astral">Astral Knowledge / Trance / Whispers</option>
+          <option value="knowledge">Knowledge of the Ages</option>
+          <option value="manifold">Manifold Tool</option>
+        </select>
+      </div>
+      <div class="field"><label>Temporary Tool 1</label><select id="temp1"><option value="">None</option></select></div>
+      <div class="field"><label>Temporary Tool 2</label><select id="temp2"><option value="">None</option></select></div>
+    </section>
+
+    <section class="panel full">
+      <div class="actions"><button id="saveBtn" type="button">Save Character & Crafting Registration</button></div>
+      <p class="muted" style="margin-top:.7rem">Workshop/Laboratory specialization and orders remain Bastion settings because they belong to the Bastion, not the character.</p>
+    </section>
+  </main>
+</div>
+<script>
+const API_BASE="https://api.blackbannercompany.com";
+const $=id=>document.getElementById(id);
+let toolChoices=[];
+function msg(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");}
+async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",mode:"cors",headers:{"Content-Type":"application/json",...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b;}
+function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F";}
+function renderTools(crafting){
+  const prof=new Set((crafting?.tools||[]).map(x=>x.tool_key));
+  const p=crafting?.profile||{};
+  const expert=new Set([p.expert_tool,p.expert_tool_2].filter(Boolean));
+  $("tools").innerHTML=toolChoices.map(t=>`<div class="toolrow"><span>${t.name}</span><select data-tool="${t.toolKey}"><option value="none">Not Registered</option><option value="proficient" ${prof.has(t.toolKey)&&!expert.has(t.toolKey)?"selected":""}>Proficient</option><option value="expertise" ${expert.has(t.toolKey)?"selected":""}>Expertise</option></select></div>`).join("");
+  const opts='<option value="">None</option>'+toolChoices.map(t=>`<option value="${t.toolKey}">${t.name}</option>`).join("");
+  $("temp1").innerHTML=opts;$("temp2").innerHTML=opts;
+  $("temp1").value=p.temp_tool||"";$("temp2").value=p.temp_tool_2||"";
+}
+function fill(data){
+  toolChoices=data.toolChoices||[];
+  const c=data.character||{}, p=data.crafting?.profile||{};
+  $("characterName").value=c.character_name||"";
+  $("characterLevel").value=c.character_level||1;
+  $("characterRank").value=c.character_rank||rankFromLevel(c.character_level||1);
+  $("classSummary").value=c.class_summary||"";
+  $("ddbUrl").value=c.dndbeyond_url||"";
+  $("str").value=c.strength_score??"";$("dex").value=c.dexterity_score??"";$("con").value=c.constitution_score??"";
+  $("int").value=c.intelligence_score??"";$("wis").value=c.wisdom_score??"";$("cha").value=c.charisma_score??"";
+  $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;
+  $("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;
+  $("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
+  renderTools(data.crafting);
+  if(c.dndbeyond_last_sync)$("syncStatus").textContent="Last D&D Beyond sync: "+new Date(Number(c.dndbeyond_last_sync)).toLocaleString();
+}
+function payload(){
+  const proficientTools=[],expertTools=[];
+  document.querySelectorAll("[data-tool]").forEach(s=>{if(s.value==="proficient"||s.value==="expertise")proficientTools.push(s.dataset.tool);if(s.value==="expertise")expertTools.push(s.dataset.tool);});
+  return {characterName:$("characterName").value,characterLevel:Number($("characterLevel").value),classSummary:$("classSummary").value,dndBeyondUrl:$("ddbUrl").value,
+    strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,
+    proficientTools,expertTools,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),
+    hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,intelligenceModifier:Number($("intMod").value||0)};
+}
+async function load(){
+  try{const d=await api("/api/character/profile");fill(d);$("content").classList.remove("hidden");$("loginBtn").textContent="Logout";}catch(e){msg("Login with Discord to manage your Character Registry.","bad");}
+}
+$("characterLevel").addEventListener("input",()=>$("characterRank").value=rankFromLevel($("characterLevel").value));
+$("int").addEventListener("input",()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2);});
+$("saveBtn").addEventListener("click",async()=>{try{const p=payload();if(p.expertTools.length>2)throw new Error("You can register Expertise in a maximum of two permanent crafting tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});msg("Character and crafting registration saved.","good");await load();}catch(e){msg(e.message,"bad");}});
+$("syncBtn").addEventListener("click",async()=>{try{$("syncBtn").disabled=true;$("syncStatus").textContent="Syncing from D&D Beyond…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});$("syncStatus").textContent=`Sync complete. Detected ${d.sync.detectedTools.length} crafting tool proficiencies. ${d.warning}`;msg("D&D Beyond sync completed. Review the imported information, then Save if you make manual changes.","good");await load();}catch(e){$("syncStatus").textContent=e.message;msg(e.message,"bad");}finally{$("syncBtn").disabled=false;}});
+$("loginBtn").addEventListener("click",async()=>{if($("loginBtn").textContent==="Logout"){location.href=API_BASE+"/auth/logout?return="+encodeURIComponent(location.href);}else{location.href=API_BASE+"/auth/discord?return="+encodeURIComponent(location.href);}});
+load();
+</script>
+</body>
+</html>
