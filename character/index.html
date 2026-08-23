@@ -1,193 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Black Banner Company — Character</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
-:root{--bg:#080706;--panel:#11100c;--panel2:#17140d;--gold:#c8960a;--gold2:#e4bb4c;--text:#e7dcc2;--muted:#b5a47c;--border:#4a3810;--good:#7fb07f;--bad:#c87878}
-*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#080706,#0b0a08);color:var(--text);font:18px/1.5 'Crimson Pro',Georgia,serif}
-.page{width:min(1100px,calc(100% - 2rem));margin:auto;padding-bottom:3rem}.topbar{display:flex;justify-content:space-between;gap:.6rem;flex-wrap:wrap;padding:1rem 0}.nav{display:flex;gap:.5rem;flex-wrap:wrap}
-.btn,button{border:1px solid #8c6818;background:linear-gradient(180deg,#171108,#0d0a06);color:#e0c35f;padding:.7rem 1rem;text-decoration:none;font:700 .72rem 'Cinzel',serif;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
-.btn:hover,button:hover{background:#211708;color:#ffe49a}.hero{border:1px solid #6d5215;background:#0d0b08;padding:2rem;text-align:center}.hero h1{margin:.2rem 0;color:#d8a92f;font:700 clamp(2rem,6vw,4rem) 'Cinzel',serif}.muted{color:var(--muted)}
-.notice{margin:1rem 0;padding:.85rem 1rem;border-left:4px solid var(--gold);background:#17140d}.notice.good{border-color:var(--good)}.notice.bad{border-color:var(--bad)}.hidden{display:none!important}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}.panel{border:1px solid var(--border);background:var(--panel);padding:1rem}.panel.full{grid-column:1/-1}.panel h2{margin:0;color:#d4a62e;font:1.1rem 'Cinzel',serif}.rule{height:1px;background:linear-gradient(90deg,transparent,#6f5418,transparent);margin:.55rem 0 .9rem}
-.field{margin:.6rem 0}.field label{display:block;color:var(--muted);margin-bottom:.2rem}.field input,.field select{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:16px 'Crimson Pro',serif}
-.abilities{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}.checkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem}.check{display:flex;gap:.55rem;align-items:center;border:1px solid #3c2e0d;background:#151109;padding:.55rem}.check input{width:auto}
-.toolgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem}.toolrow{display:grid;grid-template-columns:1fr 110px;gap:.5rem;align-items:center;border:1px solid #3c2e0d;background:#151109;padding:.55rem}.toolrow select{width:100%;background:#0d0a06;color:var(--text);border:1px solid #6d5215;padding:.45rem}
-.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}.actions button{flex:1}.syncbox{border:1px solid #5b4312;background:#0d0a06;padding:.8rem;margin-top:.7rem}.pill{display:inline-block;border:1px solid #5e4712;padding:.18rem .45rem;background:#100d08;color:var(--gold2);margin:.15rem}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.panel.full{grid-column:auto}.abilities,.checkgrid,.toolgrid{grid-template-columns:1fr}.toolrow{grid-template-columns:1fr}.btn,button{width:100%}}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
+:root{--bg:#030609;--panel:#081017;--panel2:#0b151d;--edge:#35505c;--edge2:#84631b;--gold:#d3a62b;--gold2:#f0c858;--txt:#e8e6dd;--muted:#8fa1a8;--cyan:#49c8e8;--green:#59c77b;--red:#d76e6e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#10202b 0,#05090d 38%,#020405 100%);color:var(--txt);font:17px/1.4 'Crimson Pro',serif}
+.shell{width:min(1500px,calc(100% - 24px));margin:auto;padding:12px 0 40px}.bar,.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.bar{justify-content:space-between;border-bottom:1px solid #263842;padding:7px 0 12px}.nav{display:flex;gap:7px;flex-wrap:wrap}
+button,.btn{font:700 12px 'Cinzel',serif;letter-spacing:.05em;text-transform:uppercase;color:#e6c45a;background:linear-gradient(#14202a,#080d12);border:1px solid #566a70;padding:8px 12px;cursor:pointer;text-decoration:none}
+button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:18px 8px 12px;border-bottom:1px solid #30434c}.hero h1{font:900 clamp(28px,4vw,54px) 'Cinzel';margin:0;color:#e0b239}.subtitle{color:var(--muted)}
+.status{font:700 13px 'Cinzel';color:#68db87}.status:before{content:"●";margin-right:7px}.tabs{padding:10px 0}.tab{border-color:#324853;color:#9bb0b8}.tab.active{color:#f0c85d;border-color:#b38c28;background:#16150f}
+.notice{padding:10px 14px;margin:8px 0;border:1px solid #4c3b16;background:#151109;color:#d8c48c}.notice.good{border-color:#2f6b42;color:#8ee1a8}.notice.bad{border-color:#754040;color:#e79a9a}.hidden{display:none!important}
+.sheet{display:grid;grid-template-columns:1fr 1.65fr 1fr;gap:10px}.panel{background:linear-gradient(180deg,#0c141a,#070b0f);border:1px solid #384f59;box-shadow:inset 0 0 0 1px #101d25;padding:10px;min-width:0}
+.panel h2,.panel h3{font:700 14px 'Cinzel';letter-spacing:.12em;color:#cda12d;text-transform:uppercase;margin:0 0 8px}.character-card{text-align:center;padding:8px;border:1px solid #8c6b22;background:#090b0d}
+.portrait{position:relative;min-height:560px;background:linear-gradient(#0d151b,#05080b);border:1px solid #5a6870;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.portrait img{width:100%;height:100%;min-height:560px;object-fit:cover;display:block}.portrait-placeholder{color:#667982;font:700 16px 'Cinzel';text-align:center;padding:30px}.portrait-actions{display:flex;gap:6px;margin-top:7px}.portrait-actions>*{flex:1}.portrait input{display:none}
+.equip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.equip{border:1px solid #334852;background:#071017;min-height:74px;padding:7px;position:relative}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.stat{border:1px solid #314752;background:#071017;text-align:center;padding:8px}.stat b{display:block;font:700 11px 'Cinzel';color:#8198a1}.stat .score{font:700 24px 'Fira Mono';color:#fff}.stat input{width:55px;background:#03080b;border:0;color:#fff;text-align:center;font:700 20px 'Fira Mono'}
+.field{margin:7px 0}.field label{display:block;color:#90a1a9;font:700 11px 'Cinzel';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}.field input,.field select{width:100%;background:#050a0e;border:1px solid #334b55;color:#eee;padding:8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.summary{border:1px solid #334b55;padding:9px;background:#071017;margin-bottom:8px}.summary strong{color:#e5ba44}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #314752;background:#071017;padding:7px}.tool .name{min-height:37px;color:#ddd}.tool select{width:100%;background:#050a0e;color:#eee;border:1px solid #405963;padding:6px}
+.feature-list{display:grid;gap:6px}.toggle{display:flex;gap:8px;align-items:center;border:1px solid #334a54;background:#071017;padding:8px}.toggle input{accent-color:#c9a12f}
+.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{flex:1}.warn{color:#e7c66a;font-size:14px}.small{font-size:13px;color:var(--muted)}.classline{color:#c6d2d7}
+@media(max-width:1050px){.sheet{grid-template-columns:1fr 1fr}.right{grid-column:1/-1}.tool-list{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.sheet,.craft,.row{grid-template-columns:1fr}.tool-list,.equip-grid{grid-template-columns:1fr}.portrait,.portrait img{min-height:420px}.bar .nav{width:100%}.btn,button{flex:1}}
 </style>
 </head>
-<body>
-<div class="page">
-  <div class="topbar">
+<body><div class="shell">
+  <div class="bar">
     <div class="nav">
-      <a class="btn" href="../">Home</a>
-      <a class="btn" href="../player-guide/">Player Guide</a>
-      <a class="btn" href="../crafting-guide/">Crafting Guide</a>
-      <a class="btn" href="../material-market/">Market</a>
+      <a class="btn" href="../">Home</a><a class="btn" href="../player-guide/">Player Guide</a>
+      <a class="btn" href="../crafting-guide/">Crafting Guide</a><a class="btn" href="../material-market/">Market</a>
       <a class="btn" href="../bastions/my-bastion/">My Bastion</a>
     </div>
-    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap"><span id="accountLabel" class="muted"></span><button id="loginBtn" class="hidden">Login with Discord</button></div>
+    <div><span id="account" class="small"></span> <button id="loginBtn">Login</button></div>
   </div>
 
-  <header class="hero">
-    <div class="muted">Black Banner Company · Character Registry</div>
-    <h1>My Character</h1>
-    <p class="muted">Register the information used by website and Discord crafting.</p>
-  </header>
-
+  <div class="hero">
+    <div><div class="subtitle">Black Banner Company · Character Registry</div><h1 id="heroName">MY CHARACTER</h1><div id="heroClass" class="classline"></div></div>
+    <div><div id="heroRank" style="font:700 14px Cinzel;color:#d9b042"></div><div id="online" class="status hidden">Online</div></div>
+  </div>
   <div id="message" class="notice hidden"></div>
-  <main id="content" class="grid hidden">
-    <section class="panel">
-      <h2>Character</h2><div class="rule"></div>
-      <div class="field"><label>Character Name</label><input id="characterName" maxlength="100"></div>
-      <div class="field"><label>Level</label><input id="characterLevel" type="number" min="1" max="20" value="1"></div>
-      <div class="field"><label>Black Banner Rank</label><input id="characterRank" readonly></div>
-      <div class="field"><label>Class / Build Summary</label><input id="classSummary" maxlength="300" placeholder="Example: Wizard 9 / Fighter 2"></div>
-      <div class="abilities">
-        <div class="field"><label>STR</label><input id="str" type="number"></div>
-        <div class="field"><label>DEX</label><input id="dex" type="number"></div>
-        <div class="field"><label>CON</label><input id="con" type="number"></div>
-        <div class="field"><label>INT</label><input id="int" type="number"></div>
-        <div class="field"><label>WIS</label><input id="wis" type="number"></div>
-        <div class="field"><label>CHA</label><input id="cha" type="number"></div>
+  <div class="tabs">
+    <button class="tab active" data-tab="sheet">Character Sheet</button>
+    <button class="tab" data-tab="crafting">Crafting Registry</button>
+  </div>
+
+  <section id="sheetTab">
+    <div class="sheet">
+      <div class="panel left">
+        <h2>Equipped Inventory</h2>
+        <div id="equipLeft" class="equip-grid"></div>
+        <h3 style="margin-top:12px">Weapons & Extras</h3>
+        <div id="equipBottom" class="equip-grid"></div>
+        <div class="actions" style="margin-top:9px"><button id="saveGear">Save Loadout</button></div>
       </div>
-    </section>
 
-    <section class="panel">
-      <h2>D&D Beyond Sync</h2><div class="rule"></div>
-      <p class="muted">Paste the character-sheet URL. Sync is experimental because D&D Beyond does not provide a supported public character API.</p>
-      <div class="field"><label>D&D Beyond Character URL</label><input id="ddbUrl" placeholder="https://www.dndbeyond.com/characters/123456789"></div>
-      <div class="actions"><button id="syncBtn" type="button">Sync From D&D Beyond</button></div>
-      <div id="syncStatus" class="syncbox muted">No sync run yet.</div>
-    </section>
-
-    <section class="panel full">
-      <h2>Crafting Tool Proficiencies</h2><div class="rule"></div>
-      <p class="muted">Choose Proficient or Expertise. Expertise is limited to two permanent tools, matching the crafting registry.</p>
-      <div id="tools" class="toolgrid"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Crafting Features</h2><div class="rule"></div>
-      <div class="checkgrid">
-        <label class="check"><input id="adroit" type="checkbox"> Adroit Crafter</label>
-        <label class="check"><input id="flash" type="checkbox"> Flash of Genius</label>
-        <label class="check"><input id="built" type="checkbox"> Built for Success</label>
-        <label class="check"><input id="homunculus" type="checkbox"> Homunculus Aid</label>
+      <div class="panel">
+        <div class="character-card">
+          <h2 id="cardName">Character</h2>
+          <div id="portraitDrop" class="portrait">
+            <img id="portraitImg" class="hidden" alt="Character portrait">
+            <div id="portraitPlaceholder" class="portrait-placeholder">DROP CHARACTER PORTRAIT HERE<br><span class="small">PNG · JPG · WEBP · max 5 MB</span></div>
+          </div>
+          <div class="portrait-actions">
+            <button id="uploadBtn">Upload Portrait</button><input id="portraitFile" type="file" accept="image/png,image/jpeg,image/webp">
+          </div>
+          <div class="summary" style="margin-top:9px">
+            <div class="field"><label>Character Name</label><input id="characterName"></div>
+            <div class="row">
+              <div class="field"><label>Level</label><input id="level" type="number" min="1" max="20"></div>
+              <div class="field"><label>Rank</label><input id="rank" readonly></div>
+            </div>
+            <div class="field"><label>Class / Build</label><input id="classSummary"></div>
+          </div>
+          <div class="field"><label>D&D Beyond Character URL</label><input id="ddbUrl" placeholder="https://www.dndbeyond.com/characters/..."></div>
+          <div class="actions"><button id="syncBtn">Sync D&D Beyond</button><button id="saveCharacter">Save Character</button></div>
+          <div id="syncNote" class="small" style="margin-top:7px">D&D Beyond sync is experimental.</div>
+        </div>
       </div>
-      <div class="field"><label>Intelligence Modifier</label><input id="intMod" type="number" min="-5" max="10" value="0"></div>
-    </section>
 
-    <section class="panel">
-      <h2>Temporary Tool Proficiency</h2><div class="rule"></div>
-      <div class="field"><label>Feature</label>
-        <select id="tempFeature">
+      <div class="panel right">
+        <h2>Character Statistics</h2>
+        <div class="stats">
+          <div class="stat"><b>STR</b><input id="str" type="number"></div><div class="stat"><b>DEX</b><input id="dex" type="number"></div><div class="stat"><b>CON</b><input id="con" type="number"></div>
+          <div class="stat"><b>INT</b><input id="int" type="number"></div><div class="stat"><b>WIS</b><input id="wis" type="number"></div><div class="stat"><b>CHA</b><input id="cha" type="number"></div>
+        </div>
+        <div class="summary" style="margin-top:10px"><strong>Proficiency Bonus</strong><div id="pb" style="font:700 30px Fira Mono;margin-top:4px">+2</div></div>
+        <div class="summary"><strong>Equipment Source</strong><div class="small">D&D Beyond equipped items are imported automatically when you sync. You can edit any slot afterward.</div></div>
+        <div class="summary"><strong>Attunement</strong><div id="attuneCount" style="font:700 22px Fira Mono">0 / 3</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="craftingTab" class="hidden">
+    <div class="craft">
+      <div class="panel">
+        <h2>Profession / Tool Registration</h2>
+        <p class="small">Choose every permanent tool proficiency. Mark up to two permanent tools as Expertise. These are the same database registrations the Discord crafting bot reads.</p>
+        <div id="toolList" class="tool-list"></div>
+      </div>
+      <div class="panel">
+        <h2>Crafting Features</h2>
+        <div class="feature-list">
+          <label class="toggle"><input id="adroit" type="checkbox"> Adroit Crafter</label>
+          <label class="toggle"><input id="flash" type="checkbox"> Flash of Genius</label>
+          <div class="field"><label>Flash of Genius INT Modifier</label><input id="intMod" type="number" min="-5" max="10"></div>
+          <label class="toggle"><input id="built" type="checkbox"> Built for Success</label>
+          <label class="toggle"><input id="homunculus" type="checkbox"> Homunculus Aid</label>
+          <label class="toggle"><input id="magicAdept" type="checkbox"> Magic Item Adept</label>
+          <div class="field"><label>Magic Item Adept Expertise Tool</label><select id="magicAdeptTool"><option value="">None</option></select></div>
+        </div>
+        <h3 style="margin-top:14px">Temporary Tool Proficiency</h3>
+        <div class="field"><label>Feature</label><select id="tempFeature">
           <option value="none">None</option>
           <option value="astral">Astral Knowledge / Trance / Whispers</option>
           <option value="knowledge">Knowledge of the Ages</option>
           <option value="manifold">Manifold Tool</option>
-        </select>
+        </select></div>
+        <div class="field"><label>Temporary Tool 1</label><select id="temp1"><option value="">None</option></select></div>
+        <div class="field"><label>Temporary Tool 2</label><select id="temp2"><option value="">None</option></select></div>
+        <p class="warn">Temporary tool proficiency never grants Expertise. Knowledge of the Ages remains limited to crafts taking 10 minutes or less.</p>
+        <div class="actions"><button id="saveCrafting">Save Crafting Registry</button></div>
       </div>
-      <div class="field"><label>Temporary Tool 1</label><select id="temp1"><option value="">None</option></select></div>
-      <div class="field"><label>Temporary Tool 2</label><select id="temp2"><option value="">None</option></select></div>
-    </section>
-
-    <section class="panel full">
-      <div class="actions"><button id="saveBtn" type="button">Save Character & Crafting Registration</button></div>
-      <p class="muted" style="margin-top:.7rem">Workshop/Laboratory specialization and orders remain Bastion settings because they belong to the Bastion, not the character.</p>
-    </section>
-  </main>
+    </div>
+  </section>
 </div>
+
 <script>
 const API_BASE="https://api.blackbannercompany.com";
 const $=id=>document.getElementById(id);
-let toolChoices=[];
-function msg(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");}
-async function api(path,opts={}){
-  const init={
-    credentials:"include",
-    headers:{"Content-Type":"application/json",...(opts.headers||{})},
-    ...opts
-  };
-  const r=await fetch(API_BASE+path,init);
-  const b=await r.json().catch(()=>({}));
-  if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);
-  return b;
-}
-function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F";}
-function renderTools(crafting){
-  const prof=new Set((crafting?.tools||[]).map(x=>x.tool_key));
-  const p=crafting?.profile||{};
-  const expert=new Set([p.expert_tool,p.expert_tool_2].filter(Boolean));
-  $("tools").innerHTML=toolChoices.map(t=>`<div class="toolrow"><span>${t.name}</span><select data-tool="${t.toolKey}"><option value="none">Not Registered</option><option value="proficient" ${prof.has(t.toolKey)&&!expert.has(t.toolKey)?"selected":""}>Proficient</option><option value="expertise" ${expert.has(t.toolKey)?"selected":""}>Expertise</option></select></div>`).join("");
-  const opts='<option value="">None</option>'+toolChoices.map(t=>`<option value="${t.toolKey}">${t.name}</option>`).join("");
-  $("temp1").innerHTML=opts;$("temp2").innerHTML=opts;
-  $("temp1").value=p.temp_tool||"";$("temp2").value=p.temp_tool_2||"";
-}
-function fill(data){
-  toolChoices=data.toolChoices||[];
-  const c=data.character||{}, p=data.crafting?.profile||{};
-  $("characterName").value=c.character_name||"";
-  $("characterLevel").value=c.character_level||1;
-  $("characterRank").value=c.character_rank||rankFromLevel(c.character_level||1);
-  $("classSummary").value=c.class_summary||"";
-  $("ddbUrl").value=c.dndbeyond_url||"";
-  $("str").value=c.strength_score??"";$("dex").value=c.dexterity_score??"";$("con").value=c.constitution_score??"";
-  $("int").value=c.intelligence_score??"";$("wis").value=c.wisdom_score??"";$("cha").value=c.charisma_score??"";
-  $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;
-  $("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;
-  $("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
-  renderTools(data.crafting);
-  if(c.dndbeyond_last_sync)$("syncStatus").textContent="Last D&D Beyond sync: "+new Date(Number(c.dndbeyond_last_sync)).toLocaleString();
-}
-function payload(){
-  const proficientTools=[],expertTools=[];
-  document.querySelectorAll("[data-tool]").forEach(s=>{if(s.value==="proficient"||s.value==="expertise")proficientTools.push(s.dataset.tool);if(s.value==="expertise")expertTools.push(s.dataset.tool);});
-  return {characterName:$("characterName").value,characterLevel:Number($("characterLevel").value),classSummary:$("classSummary").value,dndBeyondUrl:$("ddbUrl").value,
-    strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,
-    proficientTools,expertTools,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),
-    hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,intelligenceModifier:Number($("intMod").value||0)};
-}
-async function load(){
-  try{
-    const session=await api("/api/session");
-    const name=session?.user?.globalName||session?.user?.username||"Black Banner Member";
-    $("accountLabel").textContent=`Logged in as ${name}`;
-    $("loginBtn").textContent="Logout";
-    $("loginBtn").classList.remove("hidden");
+const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak / Back",chest:"Chest / Armor",arms:"Arms / Bracers",hands:"Hands",waist:"Waist",legs:"Legs",feet:"Feet",main_hand:"Main Hand",off_hand:"Off Hand",ranged:"Ranged",ring_1:"Ring I",ring_2:"Ring II",trinket:"Trinket",other:"Other"};
+const leftSlots=["head","mask","neck","cloak","chest","arms","hands","waist","legs","feet"];
+const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
+let data=null,toolChoices=[];
 
-    const d=await api("/api/character/profile");
-    fill(d);
-    $("content").classList.remove("hidden");
-    $("message").classList.add("hidden");
-  }catch(e){
-    $("accountLabel").textContent="";
-    $("loginBtn").textContent="Login with Discord";
-    $("loginBtn").classList.remove("hidden");
-    $("content").classList.add("hidden");
-    msg(`Login/session not detected: ${e.message}`,"bad");
-  }
+async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{...(opts.body instanceof Blob?{}:{"Content-Type":"application/json"}),...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b}
+function show(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
+function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F"}
+function pb(n){n=Number(n||1);return n>=17?6:n>=13?5:n>=9?4:n>=5?3:2}
+function equipCard(slot,row={}){
+ const name=row.itemName||"",rarity=row.rarity||"",attuned=!!row.attuned;
+ return `<div class="equip" data-slot="${slot}"><div class="slot">${slotLabels[slot]}</div><input class="itemName" value="${name.replace(/"/g,"&quot;")}" placeholder="Empty"><div class="meta"><select class="raritySel"><option value="">Rarity</option>${["Common","Uncommon","Rare","Rare+","Very Rare","Legendary","Artifact"].map(x=>`<option ${rarity===x?"selected":""}>${x}</option>`).join("")}</select><label class="attune"><input class="attuned" type="checkbox" ${attuned?"checked":""}> Attuned</label>${row.source==="dndbeyond"?'<span class="syncsrc">D&D BEYOND</span>':""}</div></div>`;
 }
-$("characterLevel").addEventListener("input",()=>$("characterRank").value=rankFromLevel($("characterLevel").value));
-$("int").addEventListener("input",()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2);});
-$("saveBtn").addEventListener("click",async()=>{try{const p=payload();if(p.expertTools.length>2)throw new Error("You can register Expertise in a maximum of two permanent crafting tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});msg("Character and crafting registration saved.","good");await load();}catch(e){msg(e.message,"bad");}});
-$("syncBtn").addEventListener("click",async()=>{try{$("syncBtn").disabled=true;$("syncStatus").textContent="Syncing from D&D Beyond…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});$("syncStatus").textContent=`Sync complete. Detected ${d.sync.detectedTools.length} crafting tool proficiencies. ${d.warning}`;msg("D&D Beyond sync completed. Review the imported information, then Save if you make manual changes.","good");await load();}catch(e){$("syncStatus").textContent=e.message;msg(e.message,"bad");}finally{$("syncBtn").disabled=false;}});
-$("loginBtn").addEventListener("click",async()=>{
-  const returnPath="/character/";
-  if($("loginBtn").textContent==="Logout"){
-    try{
-      await api("/auth/logout",{method:"POST",body:"{}"});
-      location.href="../character/";
-    }catch(e){msg(e.message,"bad");}
-  }else{
-    location.href=API_BASE+"/auth/discord?return="+encodeURIComponent(returnPath);
-  }
-});
+function renderEquipment(rows=[]){const map=new Map(rows.map(x=>[x.slotKey,x]));$("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,map.get(s)||{})).join("");$("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,map.get(s)||{})).join("");updateAttune()}
+function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>({slotKey:el.dataset.slot,itemName:el.querySelector(".itemName").value.trim(),rarity:el.querySelector(".raritySel").value,attuned:el.querySelector(".attuned").checked,source:"manual"}))}
+function updateAttune(){$("attuneCount").textContent=`${document.querySelectorAll(".attuned:checked").length} / 3`}
+document.addEventListener("change",e=>{if(e.target.classList.contains("attuned"))updateAttune()});
+
+function renderTools(crafting){
+ const p=crafting?.profile||{}, prof=new Set((crafting?.tools||[]).map(x=>x.tool_key)), expert=new Set([p.expert_tool,p.expert_tool_2].filter(Boolean));
+ $("toolList").innerHTML=toolChoices.map(t=>`<div class="tool"><div class="name">${t.name}</div><select data-tool="${t.toolKey}"><option value="none">Not Registered</option><option value="proficient" ${prof.has(t.toolKey)&&!expert.has(t.toolKey)?"selected":""}>Proficient</option><option value="expertise" ${expert.has(t.toolKey)?"selected":""}>Expertise</option></select></div>`).join("");
+ const opts='<option value="">None</option>'+toolChoices.map(t=>`<option value="${t.toolKey}">${t.name}</option>`).join("");
+ $("temp1").innerHTML=opts;$("temp2").innerHTML=opts;$("magicAdeptTool").innerHTML=opts;
+ $("temp1").value=p.temp_tool||"";$("temp2").value=p.temp_tool_2||"";$("magicAdeptTool").value=p.magic_item_adept_tool||"";
+ $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;$("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;$("magicAdept").checked=!!p.has_magic_item_adept;
+ $("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
+}
+function fill(d){
+ data=d;toolChoices=d.toolChoices||[];
+ const c=d.character||{};
+ $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level||1);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";
+ [["str","strength_score"],["dex","dexterity_score"],["con","constitution_score"],["int","intelligence_score"],["wis","wisdom_score"],["cha","charisma_score"]].forEach(([id,k])=>$(id).value=c[k]??"");
+ $("heroName").textContent=c.character_name||"MY CHARACTER";$("cardName").textContent=c.character_name||"Character";$("heroClass").textContent=c.class_summary||"";$("heroRank").textContent=`${$("rank").value}-Rank · Level ${$("level").value}`;$("pb").textContent=`+${pb($("level").value)}`;
+ renderEquipment(d.equipment||[]);renderTools(d.crafting||{});
+ if(d.portrait?.hasPortrait){$("portraitImg").src=API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden")}
+ if(c.dndbeyond_last_sync)$("syncNote").textContent="Last D&D Beyond sync: "+new Date(Number(c.dndbeyond_last_sync)).toLocaleString();
+}
+function characterPayload(){
+ const prof=[],exp=[];document.querySelectorAll("[data-tool]").forEach(s=>{if(s.value!=="none")prof.push(s.dataset.tool);if(s.value==="expertise")exp.push(s.dataset.tool)});
+ return {characterName:$("characterName").value,characterLevel:Number($("level").value),classSummary:$("classSummary").value,dndBeyondUrl:$("ddbUrl").value,
+ strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,
+ proficientTools:prof,expertTools:exp,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),
+ hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,
+ hasMagicItemAdept:$("magicAdept").checked,magicItemAdeptTool:$("magicAdeptTool").value,intelligenceModifier:Number($("intMod").value||0)}
+}
+async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register permanent Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});await api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})});show("Character and crafting registration saved.","good");await load()}
+async function load(){try{const s=await api("/api/session");$("account").textContent=s.user.globalName||s.user.username;$("loginBtn").textContent="Logout";$("online").classList.remove("hidden");const d=await api("/api/character/profile");fill(d);$("message").classList.add("hidden")}catch(e){$("loginBtn").textContent="Login";show("Login with Discord to open your Character Registry.","bad")}}
+$("loginBtn").onclick=async()=>{if($("loginBtn").textContent==="Logout"){await api("/auth/logout",{method:"POST",body:"{}"});location.reload()}else location.href=API_BASE+"/auth/discord?return="+encodeURIComponent("/character/")};
+$("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value);$("pb").textContent=`+${pb($("level").value)}`};
+$("int").oninput=()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2)};
+$("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Equipment loadout saved.","good")).catch(e=>show(e.message,"bad"));$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s) imported.`;show("D&D Beyond sync complete. Equipment and character information refreshed.","good");await load()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("sheetTab").classList.toggle("hidden",b.dataset.tab!=="sheet");$("craftingTab").classList.toggle("hidden",b.dataset.tab!=="crafting")});
+async function uploadPortrait(file){if(!file)return;if(file.size>5*1024*1024)return show("Portrait is larger than 5 MB.","bad");try{const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json();if(!r.ok)throw new Error(b.error||"Upload failed");$("portraitImg").src=API_BASE+"/api/character/portrait?v="+Date.now();$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");show("Character portrait uploaded.","good")}catch(e){show(e.message,"bad")}}
+$("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]);
+["dragenter","dragover"].forEach(ev=>$("portraitDrop").addEventListener(ev,e=>{e.preventDefault();e.dataTransfer.dropEffect="copy"}));$("portraitDrop").addEventListener("drop",e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0])});
 load();
 </script>
-</body>
-</html>
+</body></html>
