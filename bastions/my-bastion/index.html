@@ -56,6 +56,27 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .chat-help{margin-top:.4rem;color:var(--muted);font-size:.9rem}
 @media(max-width:760px){.chat-compose{grid-template-columns:1fr}.chat-log{height:300px}}
 
+
+.bastion-banner-wrap{margin:1rem 0;border:1px solid var(--border);background:#0b0906;overflow:hidden}
+.bastion-banner{width:100%;aspect-ratio:16/5;object-fit:cover;display:block;background:linear-gradient(135deg,#171108,#080706)}
+.banner-empty{aspect-ratio:16/5;display:grid;place-items:center;color:#7f6d44;font-style:italic;background:radial-gradient(circle at center,#17130b,#090806)}
+.owner-tools{margin:1rem 0;border:1px solid #7c5d17;background:linear-gradient(180deg,#151107,#0c0a07);padding:1rem}
+.owner-tools h2{color:var(--gold2);font-size:1.15rem}
+.owner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.owner-card{border:1px solid #4a3810;background:#17140d;padding:1rem}
+.owner-card h3{color:var(--gold2);font-size:.9rem;margin-bottom:.5rem}
+.owner-card label{display:block;color:var(--muted);margin:.45rem 0 .2rem}
+.owner-card select,.owner-card input{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.65rem;font:16px 'Crimson Pro',serif}
+.dropzone{border:2px dashed #6d5215;background:#0c0a07;padding:1.2rem;text-align:center;cursor:pointer}
+.dropzone.drag{border-color:var(--gold2);background:#181309}
+.dropzone input{display:none}
+.manage-summary{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}
+.manage-pill{border:1px solid #5e4712;padding:.25rem .55rem;background:#100d08;color:var(--gold2)}
+.purchase-preview{margin:.7rem 0;padding:.65rem;border-left:3px solid var(--gold);background:#100d08}
+.owner-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
+.owner-actions button{flex:1}
+@media(max-width:760px){.owner-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -88,6 +109,59 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <button id="visitBtn" type="button">Visit Bastion</button>
     </div>
     <div id="viewingNote" class="viewing-note">Choose a player to view their Bastion read-only.</div>
+  </section>
+
+
+  <section id="bannerWrap" class="bastion-banner-wrap">
+    <img id="bastionBanner" class="bastion-banner hidden" alt="Bastion banner">
+    <div id="bannerEmpty" class="banner-empty">No Bastion banner has been added yet.</div>
+  </section>
+
+  <section id="ownerTools" class="owner-tools hidden">
+    <h2>Manage My Bastion</h2>
+    <div class="rule"></div>
+    <div class="manage-summary">
+      <span class="manage-pill">Gold: <strong id="manageGold">0 GP</strong></span>
+      <span class="manage-pill">Owner-only controls</span>
+    </div>
+    <div class="owner-grid">
+      <div class="owner-card">
+        <h3>Build & Upgrade</h3>
+        <label for="purchaseOption">Available Purchase</label>
+        <select id="purchaseOption"><option value="">Choose an eligible purchase…</option></select>
+
+        <div id="discountWrap">
+          <label for="purchaseDiscount">Construction Discount</label>
+          <select id="purchaseDiscount">
+            <option value="0">No Discount</option>
+            <option value="10">10% — Carpenter/Mason</option>
+            <option value="20">20% — Carpenter/Mason</option>
+          </select>
+        </div>
+
+        <div id="harvestWrap" class="hidden">
+          <label for="harvestSpec">Harvestarium Specialization</label>
+          <select id="harvestSpec"></select>
+        </div>
+
+        <div id="purchasePreview" class="purchase-preview">Choose a purchase to see its price.</div>
+        <div class="owner-actions">
+          <button id="purchaseBtn" class="primary" type="button">Purchase</button>
+        </div>
+      </div>
+
+      <div class="owner-card">
+        <h3>Bastion Banner</h3>
+        <div id="bannerDrop" class="dropzone" tabindex="0">
+          <strong>Drop Bastion Banner Here</strong><br>
+          <span class="muted">or click to choose JPEG, PNG, or WebP · max 5 MB</span>
+          <input id="bannerFile" type="file" accept="image/jpeg,image/png,image/webp">
+        </div>
+        <div class="owner-actions">
+          <button id="removeBannerBtn" type="button">Remove Banner</button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <section id="account" class="account hidden">
@@ -227,6 +301,108 @@ async function visitSelected(){
 }
 
 
+
+let manageOptions=[];
+let currentViewingOwn=false;
+
+function renderBanner(url){
+  const img=$("bastionBanner"), emptyEl=$("bannerEmpty");
+  if(url){
+    img.src=url;
+    img.classList.remove("hidden");
+    emptyEl.classList.add("hidden");
+  }else{
+    img.removeAttribute("src");
+    img.classList.add("hidden");
+    emptyEl.classList.remove("hidden");
+  }
+}
+
+async function loadManagement(){
+  if(!currentViewingOwn)return;
+  try{
+    const data=await api("/api/bastion/manage/options");
+    manageOptions=data.options||[];
+    $("manageGold").textContent=Number(data.gold||0).toLocaleString()+" GP";
+    const sel=$("purchaseOption");
+    sel.innerHTML='<option value="">Choose an eligible purchase…</option>'+
+      manageOptions.map((o,i)=>`<option value="${i}">${esc(o.label)} — ${Number(o.cost).toLocaleString()} GP${o.turns?` · ${o.turns} turns`:""}</option>`).join("");
+    $("harvestSpec").innerHTML=(data.harvestariumSpecializations||[]).map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
+    updatePurchasePreview();
+  }catch(err){message(err.message,"bad");}
+}
+
+function selectedPurchase(){
+  const i=Number($("purchaseOption").value);
+  return Number.isInteger(i)&&i>=0?manageOptions[i]:null;
+}
+
+function updatePurchasePreview(){
+  const o=selectedPurchase();
+  const preview=$("purchasePreview");
+  if(!o){preview.textContent="Choose a purchase to see its price.";return;}
+  const isSpecial=o.action==="special_upgrade";
+  $("discountWrap").classList.toggle("hidden",isSpecial);
+  $("harvestWrap").classList.toggle("hidden",!o.needsHarvestarium);
+  const discount=isSpecial?0:Number($("purchaseDiscount").value||0);
+  const final=Math.round(Number(o.cost||0)*(1-discount/100));
+  preview.innerHTML=`<strong>${esc(o.label)}</strong><br>${final.toLocaleString()} GP${discount?` after ${discount}% discount`:""}${o.turns?` · ${o.turns} construction turns`:" · immediate"}`;
+}
+
+async function buySelected(){
+  const o=selectedPurchase();
+  if(!o){message("Choose a Bastion purchase first.","bad");return;}
+  const discount=o.action==="special_upgrade"?0:Number($("purchaseDiscount").value||0);
+  const payload={
+    action:o.action,
+    facility:o.facility,
+    specialUpgrade:o.specialUpgrade||null,
+    discount,
+    harvestariumSpecialization:o.needsHarvestarium?$("harvestSpec").value:null
+  };
+  const final=Math.round(Number(o.cost||0)*(1-discount/100));
+  if(!confirm(`Purchase ${o.label} for ${final.toLocaleString()} GP?`))return;
+  $("purchaseBtn").disabled=true;
+  try{
+    const result=await api("/api/bastion/manage/purchase",{method:"POST",body:JSON.stringify(payload)});
+    message(`Purchase complete. ${Number(result.cost).toLocaleString()} GP spent. ${Number(result.remainingGold).toLocaleString()} GP remaining.`,"good");
+    await reloadOwnBastion();
+  }catch(err){message(err.message,"bad");}
+  finally{$("purchaseBtn").disabled=false;}
+}
+
+async function reloadOwnBastion(){
+  const data=await api("/api/bastion/me");
+  render(data);
+  await loadManagement();
+}
+
+async function uploadBanner(file){
+  if(!file)return;
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){message("Use a JPEG, PNG, or WebP image.","bad");return;}
+  if(file.size>5*1024*1024){message("Banner image must be 5 MB or smaller.","bad");return;}
+  message("Uploading Bastion banner…");
+  try{
+    const r=await fetch(API_BASE+"/api/bastion/banner",{
+      method:"POST",credentials:"include",mode:"cors",headers:{"Content-Type":file.type},body:file
+    });
+    const body=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(body.error||`Upload failed (${r.status})`);
+    renderBanner(body.bannerUrl);
+    message("Bastion banner updated.","good");
+  }catch(err){message(err.message,"bad");}
+}
+
+async function removeBanner(){
+  if(!confirm("Remove your Bastion banner?"))return;
+  try{
+    await api("/api/bastion/banner",{method:"DELETE",body:"{}"});
+    renderBanner(null);
+    message("Bastion banner removed.","good");
+  }catch(err){message(err.message,"bad");}
+}
+
+
 let currentChatOwner=null;
 let chatLastId=0;
 let chatTimer=null;
@@ -312,6 +488,9 @@ async function sendChat(){
 
 function render(data){
   me=data;
+  currentViewingOwn=!!data.viewingOwn;
+  $("ownerTools").classList.toggle("hidden",!currentViewingOwn);
+  renderBanner(data.bannerUrl||null);
   startChat(data.owner.id, data.owner.globalName||data.owner.username||"Banner Member");
   $("account").classList.remove("hidden");
   $("dashboard").classList.remove("hidden");
@@ -363,6 +542,8 @@ function render(data){
     `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
   ].join("");
 
+  if(currentViewingOwn) loadManagement();
+
   const params=new URLSearchParams(location.search);
   if(params.get("login")==="success"){
     message("Discord login successful.","good");
@@ -397,6 +578,25 @@ $("bastionSearch").addEventListener("input",filterBastions);
 $("visitBtn").addEventListener("click",visitSelected);
 $("bastionSelect").addEventListener("change",()=>{if($("bastionSelect").value) visitSelected();});
 
+
+
+$("purchaseOption").addEventListener("change",updatePurchasePreview);
+$("purchaseDiscount").addEventListener("change",updatePurchasePreview);
+$("purchaseBtn").addEventListener("click",buySelected);
+$("removeBannerBtn").addEventListener("click",removeBanner);
+
+const bannerDrop=$("bannerDrop");
+const bannerFile=$("bannerFile");
+bannerDrop.addEventListener("click",()=>bannerFile.click());
+bannerDrop.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();bannerFile.click();}});
+bannerFile.addEventListener("change",()=>uploadBanner(bannerFile.files?.[0]));
+for(const ev of ["dragenter","dragover"]){
+  bannerDrop.addEventListener(ev,e=>{e.preventDefault();bannerDrop.classList.add("drag");});
+}
+for(const ev of ["dragleave","drop"]){
+  bannerDrop.addEventListener(ev,e=>{e.preventDefault();bannerDrop.classList.remove("drag");});
+}
+bannerDrop.addEventListener("drop",e=>uploadBanner(e.dataTransfer?.files?.[0]));
 
 $("chatSend").addEventListener("click",sendChat);
 $("chatInput").addEventListener("keydown",(event)=>{
