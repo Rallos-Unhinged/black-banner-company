@@ -204,7 +204,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
         <div class="craft-field"><label for="craftRecipe">Recipe</label><select id="craftRecipe" disabled><option value="">Choose a profession first…</option></select></div>
         <div class="craft-field"><label for="craftRank">Material Rank (for +X / variable-rank recipes)</label><select id="craftRank"><option value="">Use recipe rank / not needed</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
         <div class="craft-field"><label for="craftQty">Quantity / Attempts</label><input id="craftQty" type="number" min="1" max="20" value="1"></div>
-        <div class="craft-field"><label for="craftAdvantage">Additional Advantage</label><select id="craftAdvantage"><option value="none">None</option><option value="aid">Aid from another proficient crafter</option><option value="homunculus">Homunculus Aid</option></select></div>
+        <div class="craft-field"><label for="craftAdvantage">Additional Advantage</label><select id="craftAdvantage"><option value="none">None</option><option value="aid">Aid from another proficient crafter</option><option value="homunculus">Homunculus Aid</option><option value="workshop">Workshop Order: Assist</option></select></div>
       </div>
       <div id="craftAutoBonus" class="craft-preview">Automatic Bastion bonuses will appear here.</div>
       <div id="craftPreview" class="craft-preview">Choose a profession and recipe.</div>
@@ -467,8 +467,9 @@ async function updateCraftAutoBonus(){
     const rank=$("craftRank").value||"";
     const data=await api("/api/bastion/crafting/preview?profession="+encodeURIComponent(p)+"&recipe="+encodeURIComponent(r.name)+"&rank="+encodeURIComponent(rank));
     const lines=[`Registered Tool: ${data.toolStatus||"Unknown"}`];
-    if(data.automaticAdvantage?.length) lines.push(`ADVANTAGE ACTIVE: ${data.automaticAdvantage.join(" + ")}`);
-    else lines.push("Automatic Advantage: None");
+    if(data.automaticAdvantage?.some(x=>x.startsWith("Workshop Order: Assist"))) lines.push("Workshop Order: Assist: AVAILABLE — choose it under Additional Advantage to use it.");
+    if(data.automaticAdvantage?.some(x=>x.startsWith("Laboratory Order: Assist"))) lines.push("Laboratory Order: Assist: ACTIVE automatically.");
+    if(!data.automaticAdvantage?.length) lines.push("Bastion Advantage: None");
     if(data.automaticExpertise?.length) lines.push(`Expertise Bonus: ${data.automaticExpertise.join(" + ")}`);
     if(data.mastercraft) lines.push("Mastercraft Workshop: 1d4 bonus active");
     if(data.chemistryStation) lines.push("Chemistry Station: replica roll active on successful qualifying crafts");
