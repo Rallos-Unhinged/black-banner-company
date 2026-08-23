@@ -77,6 +77,17 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .owner-actions button{flex:1}
 @media(max-width:760px){.owner-grid{grid-template-columns:1fr}}
 
+
+.crafting-panel{grid-column:1/-1}
+.craft-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+.craft-field label{display:block;color:var(--muted);margin-bottom:.25rem}
+.craft-field select,.craft-field input{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.65rem;font:16px 'Crimson Pro',serif}
+.craft-preview{margin-top:.75rem;border:1px solid #4a3810;background:#0d0a06;padding:.8rem;white-space:pre-wrap}
+.craft-result{margin-top:.75rem;padding:1rem;border:1px solid #6d5215;background:#151109}
+.craft-result.success{border-color:#5d8b5d}.craft-result.failure{border-color:#9b5151}.craft-result.mixed{border-color:#a67c28}
+.craft-result strong{color:var(--gold2)}
+@media(max-width:760px){.craft-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -183,6 +194,23 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <h2>Facilities</h2><div class="rule"></div>
       <div id="facilities" class="cards scroll"></div>
     </section>
+
+
+    <section id="craftingPanel" class="panel full crafting-panel hidden">
+      <h2>Crafting</h2><div class="rule"></div>
+      <p class="muted">Craft from your Bastion. The website shows the outcome and what to add to your character inventory. The actual dice rolls are posted in the Discord Crafting Channel.</p>
+      <div class="craft-grid">
+        <div class="craft-field"><label for="craftProfession">Profession</label><select id="craftProfession"><option value="">Choose a profession…</option></select></div>
+        <div class="craft-field"><label for="craftRecipe">Recipe</label><select id="craftRecipe" disabled><option value="">Choose a profession first…</option></select></div>
+        <div class="craft-field"><label for="craftRank">Material Rank (for +X / variable-rank recipes)</label><select id="craftRank"><option value="">Use recipe rank / not needed</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
+        <div class="craft-field"><label for="craftQty">Quantity / Attempts</label><input id="craftQty" type="number" min="1" max="20" value="1"></div>
+        <div class="craft-field"><label for="craftAdvantage">Advantage</label><select id="craftAdvantage"><option value="none">None / automatic facility bonuses only</option><option value="aid">Aid from another proficient crafter</option><option value="homunculus">Homunculus Aid</option></select></div>
+      </div>
+      <div id="craftPreview" class="craft-preview">Choose a profession and recipe.</div>
+      <div class="owner-actions"><button id="craftBtn" class="primary" type="button">Craft</button></div>
+      <div id="craftResult" class="craft-result hidden"></div>
+    </section>
+
 
     <section class="panel">
       <h2>Current Construction</h2><div class="rule"></div>
@@ -403,6 +431,56 @@ async function removeBanner(){
 }
 
 
+
+let craftRecipes=[];
+let craftMeta={workHours:0,adroitCrafter:false};
+async function loadCrafting(){
+  if(!currentViewingOwn)return;
+  try{
+    const data=await api("/api/bastion/crafting/professions");
+    craftMeta=data;
+    $("craftProfession").innerHTML='<option value="">Choose a profession…</option>'+data.professions.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
+    updateCraftPreview();
+  }catch(err){$("craftPreview").textContent="Crafting unavailable: "+err.message;}
+}
+async function loadCraftRecipes(){
+  const id=$("craftProfession").value;
+  craftRecipes=[];
+  if(!id){$("craftRecipe").disabled=true;$("craftRecipe").innerHTML='<option value="">Choose a profession first…</option>';updateCraftPreview();return;}
+  try{
+    const data=await api("/api/bastion/crafting/recipes?profession="+encodeURIComponent(id));
+    craftRecipes=data.recipes||[];
+    $("craftRecipe").disabled=false;
+    $("craftRecipe").innerHTML='<option value="">Choose a recipe…</option>'+craftRecipes.map((r,i)=>`<option value="${i}">${esc(r.name)}${r.rarity?` · ${esc(r.rarity)}`:""}</option>`).join("");
+    updateCraftPreview();
+  }catch(err){message(err.message,"bad");}
+}
+function selectedCraftRecipe(){const i=Number($("craftRecipe").value);return Number.isInteger(i)&&i>=0?craftRecipes[i]:null;}
+function updateCraftPreview(){
+  const r=selectedCraftRecipe(), qty=Math.max(1,Number($("craftQty").value)||1);
+  if(!r){$("craftPreview").textContent=`Work Hours available: ${Number(craftMeta.workHours||0)}${craftMeta.adroitCrafter?" · Adroit Crafter registered":""}\nChoose a recipe to see requirements.`;return;}
+  const shownHours=craftMeta.adroitCrafter?Number(r.hours)/2:Number(r.hours);
+  $("craftPreview").textContent=`${r.name}\nDC: ${r.dc} · Base time: ${r.time||r.hours+" hrs"}${craftMeta.adroitCrafter?` · Adroit time: ${shownHours} hrs`:""}\nMaterials: ${r.materials||"See Crafting Guide."}${r.facility?`\nFacility: ${r.facility}`:""}${r.scroll?"\nSpell scrolls use the Discord guided crafter for ink/Gold selection.":""}\nAttempts: ${qty}`;
+}
+async function doBastionCraft(){
+  const r=selectedCraftRecipe(); if(!r){message("Choose a crafting recipe first.","bad");return;}
+  const payload={professionId:$("craftProfession").value,recipeName:r.name,materialRank:$("craftRank").value||null,quantity:Number($("craftQty").value)||1,advantageSource:$("craftAdvantage").value};
+  if(!confirm(`Attempt ${payload.quantity} × ${r.name}? Work Hours and applicable materials will be spent according to the crafting result.`))return;
+  $("craftBtn").disabled=true;$("craftResult").className="craft-result";$("craftResult").textContent="Crafting…";$("craftResult").classList.remove("hidden");
+  try{
+    const data=await api("/api/bastion/crafting/craft",{method:"POST",body:JSON.stringify(payload)});
+    craftMeta.workHours=data.workHoursRemaining;
+    const add=data.addToInventory?`ADD TO YOUR CHARACTER INVENTORY: ${data.addToInventory}`:"Do not add anything to your character inventory.";
+    const mat=data.materialsRemoved?.length?`\nMaterials removed: ${data.materialsRemoved.map(x=>`${x.name} ×${x.qty}`).join(", ")}`:"";
+    const title=data.outcome==="success"?"CRAFTING SUCCESS":data.outcome==="failure"?"CRAFTING FAILED":"MIXED CRAFTING RESULTS";
+    const details=`${data.successes} succeeded · ${data.failures} failed\n${add}\nWork Hours used: ${data.workHoursRemoved} · Remaining: ${data.workHoursRemaining}${mat}\nFull dice rolls posted in the Discord Crafting Channel.`;
+    $("craftResult").className=`craft-result ${data.outcome}`;
+    $("craftResult").innerHTML=`<strong>${title}</strong><br>${esc(details).replaceAll("\n","<br>")}`;
+    message("Crafting attempt complete.",data.failures?"":"good");
+  }catch(err){$("craftResult").className="craft-result failure";$("craftResult").textContent=err.message;message(err.message,"bad");}
+  finally{$("craftBtn").disabled=false;}
+}
+
 let currentChatOwner=null;
 let chatLastId=0;
 let chatTimer=null;
@@ -490,6 +568,7 @@ function render(data){
   me=data;
   currentViewingOwn=!!data.viewingOwn;
   $("ownerTools").classList.toggle("hidden",!currentViewingOwn);
+  $("craftingPanel").classList.toggle("hidden",!currentViewingOwn);
   renderBanner(data.bannerUrl||null);
   startChat(data.owner.id, data.owner.globalName||data.owner.username||"Banner Member");
   $("account").classList.remove("hidden");
@@ -542,7 +621,7 @@ function render(data){
     `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
   ].join("");
 
-  if(currentViewingOwn) loadManagement();
+  if(currentViewingOwn){ loadManagement(); loadCrafting(); }
 
   const params=new URLSearchParams(location.search);
   if(params.get("login")==="success"){
@@ -579,6 +658,13 @@ $("visitBtn").addEventListener("click",visitSelected);
 $("bastionSelect").addEventListener("change",()=>{if($("bastionSelect").value) visitSelected();});
 
 
+
+
+$("craftProfession").addEventListener("change",loadCraftRecipes);
+$("craftRecipe").addEventListener("change",updateCraftPreview);
+$("craftRank").addEventListener("change",updateCraftPreview);
+$("craftQty").addEventListener("input",updateCraftPreview);
+$("craftBtn").addEventListener("click",doBastionCraft);
 
 $("purchaseOption").addEventListener("change",updatePurchasePreview);
 $("purchaseDiscount").addEventListener("change",updatePurchasePreview);
