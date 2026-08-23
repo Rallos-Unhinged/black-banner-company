@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,33 +5,44 @@
 <title>Black Banner Company — Character</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
-:root{--bg:#040504;--panel:#080b0b;--panel2:#0b0e0e;--edge:#564019;--gold:#d5aa3b;--gold2:#f0cd73;--text:#eee7d7;--muted:#9b927f;--green:#58c769;--blue:#42a9e5;--purple:#c86cff;--red:#d76e6e}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 48% 0,#14110a 0,#050606 38%,#020202 100%);color:var(--text);font:17px/1.35 'Crimson Pro',serif}
-button,.btn{font:700 12px Cinzel;color:#e7c461;background:linear-gradient(#171108,#090603);border:1px solid #76571b;padding:9px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
-button:hover,.btn:hover{border-color:#d5aa3b;color:#ffe7a2}.hidden{display:none!important}.owner-only{}
+:root{--bg:#02070b;--panel:#071017;--panel2:#0a151d;--edge:#1e648b;--edge2:#8a6720;--gold:#d5aa3b;--gold2:#f0cd73;--text:#eee7d7;--muted:#8da4b1;--green:#58c769;--blue:#38b9ef;--purple:#c86cff;--red:#d76e6e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 48% 0,#102536 0,#030b11 42%,#010304 100%);color:var(--text);font:17px/1.35 'Crimson Pro',serif}
+button,.btn{font:700 12px Cinzel;color:#e7c461;background:linear-gradient(#102331,#061019);border:1px solid #236d96;padding:9px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+button:hover,.btn:hover{border-color:#d5aa3b;box-shadow:0 0 10px #1f6f9c66;color:#ffe7a2}.hidden{display:none!important}.owner-only{}
 body.readonly .owner-only{display:none!important}
 .shell{width:min(1600px,100%);margin:auto;min-height:100vh}
-.topbar{height:80px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #554017;background:#050707}
+.topbar{height:80px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #31546a;background:linear-gradient(180deg,#07131c,#03080c)}
 .identity{display:flex;gap:14px;align-items:center}.mini-avatar{width:58px;height:58px;object-fit:cover;border:1px solid #806220;border-radius:5px;background:#0b0b0b}
 .identity h1{font:700 28px Cinzel;margin:0;color:#f3eee2}.identity .sub{color:#b7ac96}.online{color:#50cc68}.top-actions{display:flex;gap:12px}
 .viewer{display:grid;grid-template-columns:220px 1fr auto;gap:8px;padding:8px 14px;border-bottom:1px solid #342810;background:#080a09}.viewer input,.viewer select{width:100%;background:#050606;color:#eee;border:1px solid #5c4519;padding:7px}
 .notice{margin:8px 14px;padding:10px;border:1px solid #76571b;background:#171108}.notice.bad{border-color:#7d3333;color:#ef9c9c}.notice.good{border-color:#2d6d3d;color:#95dfa4}
 .workspace{display:grid;grid-template-columns:215px minmax(0,1fr);min-height:calc(100vh - 130px)}
-.sidebar{border-right:1px solid #493613;background:#070909;position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#35220b,#100d07);color:#f4d46f;border-left:4px solid #c69c31}.side-icon{width:25px;text-align:center;color:#cbb68f}
+.sidebar{border-right:1px solid #31546a;background:linear-gradient(180deg,#061018,#020608);position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#12344a,#07131c);color:#f4d46f;border-left:4px solid #38b9ef;box-shadow:inset 0 0 16px #17638b33}.side-icon{width:25px;text-align:center;color:#cbb68f}
 .bag-zone{padding:10px;border-top:1px solid #463412}.bag-zone h3{font:700 13px Cinzel;color:#d2ad45;margin:4px 4px 8px}.bag{border:1px solid #493714;background:#0b0c0b;margin-bottom:6px}.bag summary{cursor:pointer;padding:8px 9px;color:#e5c663;font:700 12px Cinzel;list-style:none}.bag summary::-webkit-details-marker{display:none}.bag summary:before{content:"▸";margin-right:7px}.bag[open] summary:before{content:"▾"}.bag-items{padding:0 8px 8px;max-height:220px;overflow:auto}.bag-item{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-top:1px solid #1f1d17;color:#ccc;font-size:13px}.bag-item span:last-child{color:#efcf6f}
 .materials-link{margin-top:8px;width:100%}
 .load-card{position:absolute;bottom:12px;left:10px;right:10px;border:1px solid #5b4518;padding:12px;text-align:center;background:#0a0a08}.load-card h4{font:700 12px Cinzel;color:#ddb848;margin:0 0 6px}.load-card .green{color:#64d078;font-size:18px}.attune-gems{font-size:25px;color:#4ccd67;letter-spacing:4px}
 .main{min-width:0}.equipment-layout{display:grid;grid-template-columns:260px minmax(410px,1fr) 260px 340px;gap:10px;padding:10px}
-.slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:118px;border:1px solid #5b4317;background:linear-gradient(135deg,#0a0d0d,#080706);padding:10px 10px 8px 105px;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
-.equip.empty{padding-left:12px}.equip-img{position:absolute;left:10px;top:13px;width:82px;height:82px;object-fit:contain;border:1px solid #6d521d;background:#020404;padding:3px}.slot-title{font:700 16px Cinzel;color:#e1b64b;margin-bottom:3px}.item-name{font-size:18px}.rarity{font-size:15px}.rarity.Common{color:#ddd}.rarity.Uncommon{color:#48d050}.rarity.Rare{color:#39bafa}.rarity.Very-Rare,.rarity.Legendary{color:#c968ef}.slot-edit{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}.slot-edit select{max-width:100%;background:#050606;color:#ddd;border:1px solid #594317;font-size:11px}.slot-image-btn{font-size:9px;padding:4px 6px}
-.center-stage{border:1px solid #604818;background:#050707;padding:8px;min-width:0}.stage-title{text-align:center;font:700 22px Cinzel;color:#e5bf57;padding:4px;border-bottom:1px solid #5b4317;margin-bottom:7px}.portrait{height:650px;position:relative;border:1px solid #816321;background:#050606;display:flex;align-items:center;justify-content:center;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover}.portrait-placeholder{text-align:center;color:#8b8170;font:700 14px Cinzel}.portrait-upload{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2}
+.slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:130px;border:1px solid #287aa5;background:linear-gradient(135deg,#081722,#03090e);box-shadow:inset 0 0 0 1px #0d3045,0 0 12px #07131c;padding:10px 10px 8px 118px;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
+.equip.empty{padding-left:12px}.equip-img{position:absolute;left:10px;top:13px;width:94px;height:94px;object-fit:contain;border:1px solid #2b88b8;background:#02080d;padding:3px;box-shadow:inset 0 0 12px #0a496a,0 0 8px #1d709655}.slot-title{font:700 16px Cinzel;color:#e1b64b;margin-bottom:3px}.item-name{font-size:18px}.rarity{font-size:15px}.rarity.Common{color:#ddd}.rarity.Uncommon{color:#48d050}.rarity.Rare{color:#39bafa}.rarity.Very-Rare,.rarity.Legendary{color:#c968ef}.slot-edit{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}.slot-edit select{max-width:100%;background:#050606;color:#ddd;border:1px solid #594317;font-size:11px}.slot-image-btn{font-size:9px;padding:4px 6px}
+.center-stage{border:1px solid #367e9f;background:linear-gradient(#06131c,#02070b);padding:8px;min-width:0;box-shadow:inset 0 0 0 2px #0c2d3e}.stage-title{text-align:center;font:700 22px Cinzel;color:#e5bf57;padding:4px;border-bottom:1px solid #5b4317;margin-bottom:7px}.portrait{height:650px;position:relative;border:1px solid #3e92b9;background:#03090e;box-shadow:inset 0 0 0 3px #0c2736,0 0 18px #0b3d5666;display:flex;align-items:center;justify-content:center;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover}.portrait-placeholder{text-align:center;color:#8b8170;font:700 14px Cinzel}.portrait-upload{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2}
 .bottom-slots{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;padding:0 10px 12px;margin-right:350px}.bottom-slots .equip{padding:10px;min-height:178px;text-align:center}.bottom-slots .equip-img{position:static;width:92px;height:92px;margin:auto;display:block}.bottom-slots .item-name{font-size:16px}.bottom-slots .slot-title{font-size:14px}
-.stats-panel{border:1px solid #5c4519;background:#070909;padding:10px;align-self:start}.stats-section{border:1px solid #493714;background:#090b0b;margin-bottom:9px;padding:10px}.stats-section h3{font:700 14px Cinzel;color:#d8b14c;margin:0 0 10px;border-bottom:1px solid #302712;padding-bottom:5px}.general-head{display:grid;grid-template-columns:1fr 92px;gap:10px}.crest{width:88px;height:104px;object-fit:contain;border:1px dashed #76571b;background:#050606;cursor:pointer}.general-lines{font-size:16px}.statline{display:flex;justify-content:space-between;padding:2px 0}.statline .hp{color:#57ce68}.statline .power{color:#4cbcf0}.abilities .statline{font-size:15px}.attack-row,.save-row{display:flex;justify-content:space-between;padding:3px 0}.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}.skill-row{display:flex;justify-content:space-between;border-bottom:1px solid #1e1b13;padding:2px 0;font-size:13px}.skill-bonus{color:#e7c766}
+.stats-panel{border:1px solid #315f77;background:linear-gradient(#071119,#03080c);padding:10px;align-self:start}.stats-section{border:1px solid #244e65;background:linear-gradient(#08131b,#04090d);margin-bottom:9px;padding:10px}.stats-section h3{font:700 14px Cinzel;color:#d8b14c;margin:0 0 10px;border-bottom:1px solid #302712;padding-bottom:5px}.general-head{display:grid;grid-template-columns:1fr 92px;gap:10px}.crest{width:88px;height:104px;object-fit:contain;border:1px dashed #76571b;background:#050606;cursor:pointer}.general-lines{font-size:16px}.statline{display:flex;justify-content:space-between;padding:2px 0}.statline .hp{color:#57ce68}.statline .power{color:#4cbcf0}.abilities .statline{font-size:15px}.attack-row,.save-row{display:flex;justify-content:space-between;padding:3px 0}.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}.skill-row{display:flex;justify-content:space-between;border-bottom:1px solid #1e1b13;padding:2px 0;font-size:13px}.skill-bonus{color:#e7c766}
 .character-edit{margin:0 10px 12px;border:1px solid #554017;background:#080907;padding:10px}.edit-grid{display:grid;grid-template-columns:2fr 80px 80px 2fr;gap:7px}.edit-grid input{width:100%;background:#050606;border:1px solid #5c4519;color:#eee;padding:7px}.edit-actions{display:flex;gap:8px;margin-top:8px}
 .tabs{display:flex;gap:8px;padding:8px 10px;border-top:1px solid #362a12}.craft-wrap{padding:10px}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.panel{border:1px solid #564019;background:#080b0b;padding:10px}.panel h2,.panel h3{font:700 14px Cinzel;color:#d4ad42}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #4c3b16;padding:7px}.tool select,.field input,.field select{width:100%;background:#050606;border:1px solid #5c4519;color:#eee;padding:6px}.field{margin:7px 0}.field label{display:block;font:700 11px Cinzel;color:#c1ab7d}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}.feature-list{display:grid;gap:6px}.toggle{border:1px solid #4c3b16;padding:7px}.actions{display:flex;gap:7px}.small{font-size:13px;color:var(--muted)}.warn{color:#e7c66a}
 @media(max-width:1350px){.equipment-layout{grid-template-columns:230px minmax(360px,1fr) 230px 310px}.bottom-slots{margin-right:320px}}
 @media(max-width:1050px){.workspace{grid-template-columns:180px 1fr}.equipment-layout{grid-template-columns:1fr 1.3fr}.slot-right,.stats-panel{grid-column:auto}.stats-panel{grid-column:1/-1}.bottom-slots{margin-right:0;grid-template-columns:repeat(4,1fr)}}
 @media(max-width:720px){.workspace{grid-template-columns:1fr}.sidebar{display:none}.equipment-layout{grid-template-columns:1fr}.bottom-slots{grid-template-columns:repeat(2,1fr)}.viewer{grid-template-columns:1fr}.edit-grid{grid-template-columns:1fr 1fr}.craft{grid-template-columns:1fr}.tool-list{grid-template-columns:1fr}}
+
+.equip:before,.equip:after{content:"";position:absolute;width:13px;height:13px;border-color:#d0a43d;pointer-events:none}
+.equip:before{left:3px;top:3px;border-left:1px solid #d0a43d;border-top:1px solid #d0a43d}
+.equip:after{right:3px;bottom:3px;border-right:1px solid #d0a43d;border-bottom:1px solid #d0a43d}
+.slot-column .equip:has(.equip-img):hover .image-overlay{opacity:1}
+.image-overlay{position:absolute;left:10px;top:13px;width:94px;height:94px;display:flex;align-items:center;justify-content:center;background:#02070bcc;border:1px solid #d5aa3b;color:#ffe49a;font:700 10px Cinzel;text-align:center;opacity:0;transition:.15s;cursor:pointer;z-index:3}
+.equip.empty .image-overlay{opacity:1;border-style:dashed;background:#06131c88;color:#8fcce8}
+.bottom-slots .image-overlay{left:50%;transform:translateX(-50%);top:34px;width:92px;height:92px}
+.equip.drag-image{outline:2px solid #f0cd73;box-shadow:0 0 20px #38b9ef88}
+.fantasy-divider{height:1px;background:linear-gradient(90deg,transparent,#2f8dbc,#d5aa3b,#2f8dbc,transparent);margin:6px 0}
+
 </style>
 </head>
 <body><div class="shell">
@@ -50,14 +60,12 @@ body.readonly .owner-only{display:none!important}
 <div class="workspace">
 <aside class="sidebar">
   <div class="side-link" data-jump="overview"><span class="side-icon">⌂</span>Overview</div>
-  <div class="side-link active" data-jump="inventory"><span class="side-icon">🎒</span>Inventory</div>
+  <div class="side-link active" data-jump="bagZone"><span class="side-icon">🎒</span>Inventory</div>
   <div class="side-link" data-jump="equipment"><span class="side-icon">⚔</span>Equipment</div>
   <div class="side-link owner-only" data-tablink="crafting"><span class="side-icon">⚒</span>Crafting</div>
   <a class="side-link" href="../bastions/my-bastion/"><span class="side-icon">♜</span>Bastions</a>
   <div class="side-link"><span class="side-icon">▣</span>Contracts</div>
   <div class="side-link" data-jump="skills"><span class="side-icon">✥</span>Skills</div>
-  <div class="side-link"><span class="side-icon">▤</span>Notes</div>
-  <div class="side-link"><span class="side-icon">◷</span>Activity</div>
   <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button></div>
   <div class="load-card"><h4>Equipment Load</h4><div class="green">Character Inventory</div><div id="loadCount">— items</div><hr style="border-color:#342812"><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
 </aside>
@@ -79,9 +87,8 @@ body.readonly .owner-only{display:none!important}
   <aside class="stats-panel">
     <div id="overview" class="stats-section">
       <h3>General</h3>
-      <div class="general-head"><div class="general-lines"><div id="generalLevel">Level —</div><div id="generalClass">—</div><div id="generalRank">—</div><hr style="border-color:#2d2514">
+      <div class="small" style="color:#6cbde7;margin-bottom:7px">Final D&D Beyond values are used when the character service exposes them; otherwise the API resolves permanent character/item modifiers.</div><div class="general-head"><div class="general-lines"><div id="generalLevel">Level —</div><div id="generalClass">—</div><div id="generalRank">—</div><hr style="border-color:#2d2514">
         <div class="statline"><span>Health</span><span id="hpLine" class="hp">—</span></div>
-        <div class="statline"><span>Power</span><span id="powerLine" class="power">—</span></div>
         <div class="statline"><span>Armor Class</span><span id="acLine">—</span></div>
         <div class="statline"><span>Initiative</span><span id="initLine">—</span></div>
         <div class="statline"><span>Speed</span><span id="speedLine">—</span></div>
@@ -90,7 +97,6 @@ body.readonly .owner-only{display:none!important}
       <input id="crestFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
     <div class="stats-section abilities"><h3>⚄ Ability Scores</h3><div id="abilityList"></div></div>
-    <div class="stats-section"><h3>⚔ Attacks</h3><div id="attackList"></div></div>
     <div class="stats-section"><h3>⚙ Saving Throws</h3><div id="saveList"></div></div>
     <div class="stats-section"><div class="statline"><span style="color:#d8b14c">Passive Perception</span><span id="passivePerception">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Save DC</span><span id="spellDC">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Attack</span><span id="spellAttack">—</span></div></div>
     <div id="skills" class="stats-section"><h3>Skills</h3><div id="skillGrid" class="skill-grid"></div></div>
@@ -165,12 +171,12 @@ function equipCard(slot,row={}){
  const imageUrl=row.customImageUrl||row.imageUrl||"", name=row.itemName||"", rarity=row.rarity||"";
  return `<div class="equip ${imageUrl?"":"empty"}" data-slot="${slot}" data-image-url="${esc(imageUrl)}">
    ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="">`:""}
+   <div class="image-overlay owner-only" data-image-slot="${slot}">${imageUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE"}</div>
    <div class="slot-title">${slotLabels[slot]}</div>
    <div class="item-name">${esc(name||"Empty")}</div>
    <div class="rarity ${rarityClass(rarity)}">${esc(rarity||"")}</div>
    <div class="slot-edit owner-only">
      <select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond…</option></select>
-     <button class="slot-image-btn" data-image-slot="${slot}">Image</button>
      <label style="font-size:10px;color:#cba9ff"><input class="attuned" type="checkbox" ${row.attuned?"checked":""}> Attuned</label>
    </div>
  </div>`;
@@ -203,7 +209,13 @@ function applyInventoryItemToSlot(item,slot){
 }
 function bindEquipmentControls(){
  document.querySelectorAll(".slotDdbPicker").forEach(s=>s.onchange=()=>{if(s.value!==""){applyInventoryItemToSlot(ddbInventory[Number(s.value)],s.dataset.slotPicker);s.value=""}});
- document.querySelectorAll("[data-image-slot]").forEach(b=>b.onclick=()=>chooseEquipmentImage(b.dataset.imageSlot));
+ document.querySelectorAll("[data-image-slot]").forEach(b=>b.onclick=e=>{e.stopPropagation();chooseEquipmentImage(b.dataset.imageSlot)});
+ document.querySelectorAll(".equip").forEach(el=>{
+   if(!currentViewingOwn)return;
+   el.ondragover=e=>{e.preventDefault();el.classList.add("drag-image")};
+   el.ondragleave=()=>el.classList.remove("drag-image");
+   el.ondrop=e=>{e.preventDefault();el.classList.remove("drag-image");const f=e.dataTransfer?.files?.[0];if(f)uploadEquipmentImage(el.dataset.slot,f).catch(err=>show(err.message,"bad"))};
+ });
 }
 function chooseEquipmentImage(slot){const i=document.createElement("input");i.type="file";i.accept="image/png,image/jpeg,image/webp";i.onchange=()=>uploadEquipmentImage(slot,i.files?.[0]);i.click()}
 
@@ -237,11 +249,9 @@ async function loadDdbInventory(){
 function renderStats(c,details={},skills=[]){
  $("generalLevel").textContent=`Level ${c.character_level||"—"}`;$("generalClass").textContent=c.class_summary||"—";$("generalRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
  const hp=details.hp||{};$("hpLine").textContent=hp.max?`${hp.current} / ${hp.max}${hp.temp?` (+${hp.temp})`:""}`:"—";
- const pow=details.power||{};$("powerLine").textContent=pow.max?`${pow.current} / ${pow.max}`:"—";
  $("acLine").textContent=details.armorClass??"—";$("initLine").textContent=details.initiative!=null?signed(details.initiative):"—";$("speedLine").textContent=details.speed?`${details.speed} ft.`:"—";$("inspLine").textContent=details.inspiration?"◆":"◇";
  const abilities=[["STR",c.strength_score,"Strength"],["DEX",c.dexterity_score,"Dexterity"],["CON",c.constitution_score,"Constitution"],["INT",c.intelligence_score,"Intelligence"],["WIS",c.wisdom_score,"Wisdom"],["CHA",c.charisma_score,"Charisma"]];
  $("abilityList").innerHTML=abilities.map(([abbr,score])=>`<div class="statline"><span>${abbr}</span><span>${score??"—"}</span><span>${score!=null?signed(mod(score)):"—"}</span></div>`).join("");
- $("attackList").innerHTML=(details.attacks||[]).map(a=>`<div class="attack-row"><span>${esc(a.name)}</span><span>${signed(a.bonus)}</span></div>`).join("")||'<div class="small">Sync D&D Beyond to load attacks.</div>';
  $("saveList").innerHTML=(details.savingThrows||[]).map(s=>`<div class="save-row"><span>${esc(s.name)}</span><span>${signed(s.bonus)}</span></div>`).join("")||'<div class="small">Sync D&D Beyond to load saves.</div>';
  $("passivePerception").textContent=details.passivePerception??"—";$("spellDC").textContent=details.spell?.saveDC??"—";$("spellAttack").textContent=details.spell?.attack!=null?signed(details.spell.attack):"—";
  renderSkills(skills);
@@ -275,7 +285,15 @@ function characterPayload(){
 }
 async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});await api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})});show("Character saved.","good");await load()}
 
-async function uploadEquipmentImage(slot,file){if(!file)return;const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");if(!data.equipmentImages)data.equipmentImages={};data.equipmentImages[slot]={url:b.url};renderEquipment(data.equipment||[])}
+async function uploadEquipmentImage(slot,file){
+ if(!file)return;
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Equipment picture must be PNG, JPG, or WebP.");
+ if(file.size>5*1024*1024)throw new Error("Equipment picture must be 5 MB or smaller.");
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
+ const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");
+ if(!data.equipmentImages)data.equipmentImages={};data.equipmentImages[slot]={url:b.url};
+ renderEquipment(data.equipment||[]);show(`${slotLabels[slot]} custom image updated.`,"good");
+}
 async function uploadPortrait(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Upload failed");show("Portrait updated.","good");await load()}
 async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
 
@@ -298,7 +316,10 @@ $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int"
 document.querySelectorAll("[data-tablink='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
 document.querySelectorAll("[data-tab='sheet']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.remove("hidden");$("craftingTab").classList.add("hidden")});
 document.querySelectorAll("[data-tab='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
-document.querySelectorAll("[data-jump]").forEach(x=>x.onclick=()=>document.getElementById(x.dataset.jump)?.scrollIntoView({behavior:"smooth"}));
+document.querySelectorAll("[data-jump]").forEach(x=>x.onclick=()=>{
+ $("craftingTab").classList.add("hidden");$("sheetTab").classList.remove("hidden");
+ requestAnimationFrame(()=>document.getElementById(x.dataset.jump)?.scrollIntoView({behavior:"smooth",block:"start"}));
+});
 load();
 </script>
 </body></html>
