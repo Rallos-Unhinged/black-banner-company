@@ -149,7 +149,17 @@ $("characterLevel").addEventListener("input",()=>$("characterRank").value=rankFr
 $("int").addEventListener("input",()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2);});
 $("saveBtn").addEventListener("click",async()=>{try{const p=payload();if(p.expertTools.length>2)throw new Error("You can register Expertise in a maximum of two permanent crafting tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});msg("Character and crafting registration saved.","good");await load();}catch(e){msg(e.message,"bad");}});
 $("syncBtn").addEventListener("click",async()=>{try{$("syncBtn").disabled=true;$("syncStatus").textContent="Syncing from D&D Beyond…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});$("syncStatus").textContent=`Sync complete. Detected ${d.sync.detectedTools.length} crafting tool proficiencies. ${d.warning}`;msg("D&D Beyond sync completed. Review the imported information, then Save if you make manual changes.","good");await load();}catch(e){$("syncStatus").textContent=e.message;msg(e.message,"bad");}finally{$("syncBtn").disabled=false;}});
-$("loginBtn").addEventListener("click",async()=>{if($("loginBtn").textContent==="Logout"){location.href=API_BASE+"/auth/logout?return="+encodeURIComponent(location.href);}else{location.href=API_BASE+"/auth/discord?return="+encodeURIComponent(location.href);}});
+$("loginBtn").addEventListener("click",async()=>{
+  const returnPath=location.pathname+location.search+location.hash;
+  if($("loginBtn").textContent==="Logout"){
+    try{
+      await api("/auth/logout",{method:"POST",body:"{}"});
+      location.href="../character/";
+    }catch(e){msg(e.message,"bad");}
+  }else{
+    location.href=API_BASE+"/auth/discord?return="+encodeURIComponent(returnPath);
+  }
+});
 load();
 </script>
 </body>
