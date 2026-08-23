@@ -204,8 +204,9 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
         <div class="craft-field"><label for="craftRecipe">Recipe</label><select id="craftRecipe" disabled><option value="">Choose a profession first…</option></select></div>
         <div class="craft-field"><label for="craftRank">Material Rank (for +X / variable-rank recipes)</label><select id="craftRank"><option value="">Use recipe rank / not needed</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
         <div class="craft-field"><label for="craftQty">Quantity / Attempts</label><input id="craftQty" type="number" min="1" max="20" value="1"></div>
-        <div class="craft-field"><label for="craftAdvantage">Advantage</label><select id="craftAdvantage"><option value="none">None / automatic facility bonuses only</option><option value="aid">Aid from another proficient crafter</option><option value="homunculus">Homunculus Aid</option></select></div>
+        <div class="craft-field"><label for="craftAdvantage">Additional Advantage</label><select id="craftAdvantage"><option value="none">None</option><option value="aid">Aid from another proficient crafter</option><option value="homunculus">Homunculus Aid</option></select></div>
       </div>
+      <div id="craftAutoBonus" class="craft-preview">Automatic Bastion bonuses will appear here.</div>
       <div id="craftPreview" class="craft-preview">Choose a profession and recipe.</div>
       <div class="owner-actions"><button id="craftBtn" class="primary" type="button">Craft</button></div>
       <div id="craftResult" class="craft-result hidden"></div>
@@ -453,9 +454,28 @@ async function loadCraftRecipes(){
     $("craftRecipe").disabled=false;
     $("craftRecipe").innerHTML='<option value="">Choose a recipe…</option>'+craftRecipes.map((r,i)=>`<option value="${i}">${esc(r.name)}${r.rarity?` · ${esc(r.rarity)}`:""}</option>`).join("");
     updateCraftPreview();
+    updateCraftAutoBonus();
   }catch(err){message(err.message,"bad");}
 }
 function selectedCraftRecipe(){const i=Number($("craftRecipe").value);return Number.isInteger(i)&&i>=0?craftRecipes[i]:null;}
+
+async function updateCraftAutoBonus(){
+  const r=selectedCraftRecipe();
+  const p=$("craftProfession").value;
+  if(!r||!p){$("craftAutoBonus").textContent="Automatic Bastion bonuses will appear here.";return;}
+  try{
+    const rank=$("craftRank").value||"";
+    const data=await api("/api/bastion/crafting/preview?profession="+encodeURIComponent(p)+"&recipe="+encodeURIComponent(r.name)+"&rank="+encodeURIComponent(rank));
+    const lines=[`Registered Tool: ${data.toolStatus||"Unknown"}`];
+    if(data.automaticAdvantage?.length) lines.push(`ADVANTAGE ACTIVE: ${data.automaticAdvantage.join(" + ")}`);
+    else lines.push("Automatic Advantage: None");
+    if(data.automaticExpertise?.length) lines.push(`Expertise Bonus: ${data.automaticExpertise.join(" + ")}`);
+    if(data.mastercraft) lines.push("Mastercraft Workshop: 1d4 bonus active");
+    if(data.chemistryStation) lines.push("Chemistry Station: replica roll active on successful qualifying crafts");
+    $("craftAutoBonus").textContent=lines.join("\n");
+  }catch(err){$("craftAutoBonus").textContent="Could not load Bastion bonuses: "+err.message;}
+}
+
 function updateCraftPreview(){
   const r=selectedCraftRecipe(), qty=Math.max(1,Number($("craftQty").value)||1);
   if(!r){$("craftPreview").textContent=`Work Hours available: ${Number(craftMeta.workHours||0)}${craftMeta.adroitCrafter?" · Adroit Crafter registered":""}\nChoose a recipe to see requirements.`;return;}
@@ -661,8 +681,8 @@ $("bastionSelect").addEventListener("change",()=>{if($("bastionSelect").value) v
 
 
 $("craftProfession").addEventListener("change",loadCraftRecipes);
-$("craftRecipe").addEventListener("change",updateCraftPreview);
-$("craftRank").addEventListener("change",updateCraftPreview);
+$("craftRecipe").addEventListener("change",()=>{updateCraftPreview();updateCraftAutoBonus();});
+$("craftRank").addEventListener("change",()=>{updateCraftPreview();updateCraftAutoBonus();});
 $("craftQty").addEventListener("input",updateCraftPreview);
 $("craftBtn").addEventListener("click",doBastionCraft);
 
