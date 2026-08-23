@@ -32,6 +32,14 @@ h1,h2,h3{font-family:'Cinzel',serif;margin:0}h1{font-size:clamp(2rem,6vw,4rem);c
 .scroll{max-height:430px;overflow:auto;scrollbar-gutter:stable;padding-right:.2rem}
 footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transform:uppercase;letter-spacing:.1em;padding:2rem 0}
 @media(max-width:760px){.grid{grid-template-columns:1fr}.panel.full{grid-column:auto}.account{grid-template-columns:1fr;text-align:center}.avatar{margin:auto}.stats{justify-content:center}.btn,button{width:100%}.nav{width:100%}}
+
+.visitbar{margin:1rem 0;border:1px solid var(--border);background:var(--panel);padding:1rem}
+.visitbar h2{color:#d4a62e;font-size:1rem;margin-bottom:.6rem}
+.visit-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(220px,1fr) auto;gap:.6rem}
+.visit-controls input,.visit-controls select{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:600 .8rem 'Cinzel',serif}
+.viewing-note{margin-top:.6rem;color:var(--muted)}
+@media(max-width:760px){.visit-controls{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -52,6 +60,19 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
   </header>
 
   <div id="message" class="notice hidden"></div>
+
+
+  <section class="visitbar">
+    <h2>Visit Another Bastion</h2>
+    <div class="visit-controls">
+      <input id="bastionSearch" type="search" placeholder="Search player name…" autocomplete="off">
+      <select id="bastionSelect" aria-label="Choose a player's Bastion">
+        <option value="">Choose a player…</option>
+      </select>
+      <button id="visitBtn" type="button">Visit Bastion</button>
+    </div>
+    <div id="viewingNote" class="viewing-note">Choose a player to view their Bastion read-only.</div>
+  </section>
 
   <section id="account" class="account hidden">
     <img id="avatar" class="avatar" alt="Discord avatar">
@@ -132,13 +153,53 @@ function avatarUrl(u){return u?.avatar?`https://cdn.discordapp.com/avatars/${u.i
 function pretty(v){return String(v||"").replaceAll("_"," ").replace(/\b\w/g,c=>c.toUpperCase());}
 function empty(text){return `<div class="empty">${esc(text)}</div>`;}
 
+
+let bastionDirectory=[];
+
+function fillBastionSelect(rows){
+  const select=$("bastionSelect");
+  const current=select.value;
+  select.innerHTML='<option value="">Choose a player…</option>'+
+    rows.map(b=>`<option value="${esc(b.ownerId)}">${esc(b.playerName)}${b.isMine?" (You)":""}</option>`).join("");
+  if(rows.some(b=>String(b.ownerId)===String(current))) select.value=current;
+}
+
+async function loadBastionDirectory(){
+  try{
+    const data=await api("/api/bastions");
+    bastionDirectory=data.bastions||[];
+    fillBastionSelect(bastionDirectory);
+  }catch(err){
+    if(err.message!=="LOGIN_REQUIRED") message(err.message,"bad");
+  }
+}
+
+function filterBastions(){
+  const q=$("bastionSearch").value.trim().toLowerCase();
+  fillBastionSelect(!q ? bastionDirectory : bastionDirectory.filter(b=>
+    String(b.playerName||"").toLowerCase().includes(q)
+  ));
+}
+
+async function visitSelected(){
+  const owner=$("bastionSelect").value;
+  if(!owner){message("Choose a player first.","bad");return;}
+  try{
+    const data=await api("/api/bastion/view?owner="+encodeURIComponent(owner));
+    render(data);
+    $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
+    history.replaceState({},document.title,location.pathname+"?owner="+encodeURIComponent(owner));
+    window.scrollTo({top:0,behavior:"smooth"});
+  }catch(err){message(err.message,"bad");}
+}
+
 function render(data){
   me=data;
   $("account").classList.remove("hidden");
   $("dashboard").classList.remove("hidden");
   $("accountName").textContent=data.owner.globalName||data.owner.username||"Banner Member";
-  $("accountMeta").textContent=`@${data.owner.username} · Discord ${data.owner.id}`;
-  const av=avatarUrl(data.owner); if(av)$("avatar").src=av;
+  $("accountMeta").textContent=data.viewingOwn ? "Your Bastion" : "Visiting Bastion · Read Only";
+  const av=avatarUrl(data.owner); if(av){$("avatar").src=av;$("avatar").style.display="block";}else{$("avatar").style.display="none";}
   $("status").textContent=data.status;
   $("facilityCount").textContent=data.summary.facilities;
   $("personnelCount").textContent=data.summary.personnel;
@@ -191,7 +252,16 @@ function render(data){
   }
 }
 async function load(){
-  try{render(await api("/api/bastion/me"));}
+  try{
+    await loadBastionDirectory();
+    const params=new URLSearchParams(location.search);
+    const owner=params.get("owner");
+    const data=owner
+      ? await api("/api/bastion/view?owner="+encodeURIComponent(owner))
+      : await api("/api/bastion/me");
+    render(data);
+    if(owner) $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
+  }
   catch(err){
     if(err.message==="LOGIN_REQUIRED"){
       $("loginBtn").textContent="Login with Discord";
@@ -205,6 +275,10 @@ async function logout(){
   try{await api("/auth/logout",{method:"POST",body:"{}"});}catch(_){}
   location.reload();
 }
+$("bastionSearch").addEventListener("input",filterBastions);
+$("visitBtn").addEventListener("click",visitSelected);
+$("bastionSelect").addEventListener("change",()=>{if($("bastionSelect").value) visitSelected();});
+
 $("loginBtn").addEventListener("click",()=>{
   if(me)return logout();
   window.location.assign(API_BASE+"/auth/discord?return="+encodeURIComponent("/bastions/my-bastion/"));
