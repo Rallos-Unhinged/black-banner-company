@@ -107,7 +107,17 @@ const API_BASE="https://api.blackbannercompany.com";
 const $=id=>document.getElementById(id);
 let toolChoices=[];
 function msg(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");}
-async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",mode:"cors",headers:{"Content-Type":"application/json",...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b;}
+async function api(path,opts={}){
+  const init={
+    credentials:"include",
+    headers:{"Content-Type":"application/json",...(opts.headers||{})},
+    ...opts
+  };
+  const r=await fetch(API_BASE+path,init);
+  const b=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);
+  return b;
+}
 function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F";}
 function renderTools(crafting){
   const prof=new Set((crafting?.tools||[]).map(x=>x.tool_key));
@@ -153,12 +163,13 @@ async function load(){
     const d=await api("/api/character/profile");
     fill(d);
     $("content").classList.remove("hidden");
+    $("message").classList.add("hidden");
   }catch(e){
     $("accountLabel").textContent="";
     $("loginBtn").textContent="Login with Discord";
     $("loginBtn").classList.remove("hidden");
     $("content").classList.add("hidden");
-    msg("Login with Discord to manage your Character Registry.","bad");
+    msg(`Login/session not detected: ${e.message}`,"bad");
   }
 }
 $("characterLevel").addEventListener("input",()=>$("characterRank").value=rankFromLevel($("characterLevel").value));
