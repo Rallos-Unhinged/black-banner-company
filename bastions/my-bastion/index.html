@@ -1,616 +1,773 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Black Banner Company — My Bastion</title>
+<title>Black Banner Company — Material Market</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
-:root{
-  --bg:#080706;--panel:#11100c;--panel2:#17140d;--gold:#c8960a;--gold2:#e4bb4c;
-  --text:#e7dcc2;--muted:#b5a47c;--border:#4a3810;--good:#7fb07f;--bad:#c87878;
+
+:root {
+  --bg: #050505;
+  --panel: rgba(13, 11, 9, 0.94);
+  --panel2: rgba(22, 17, 12, 0.96);
+  --gold: #d8a63b;
+  --gold-soft: #f1d994;
+  --ember: #d45b1f;
+  --blood: #8d2626;
+  --text: #efe4cc;
+  --muted: #c6b99c;
+  --faint: rgba(216, 166, 59, 0.28);
+  --good: #87c987;
+  --bad: #df8585;
 }
-*{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#080706,#0b0a08);color:var(--text);font:18px/1.55 'Crimson Pro',Georgia,serif;min-height:100vh}
-.page{width:min(1180px,calc(100% - 2rem));margin:auto;padding-bottom:3rem}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;padding:1rem 0}
-.nav{display:flex;gap:.55rem;flex-wrap:wrap}
-.btn,button{border:1px solid #8c6818;background:linear-gradient(180deg,#171108,#0d0a06);color:#e0c35f;padding:.7rem 1rem;text-decoration:none;font:700 .72rem 'Cinzel',serif;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
-.btn:hover,button:hover{background:#211708;color:#ffe49a}
-button.primary{background:linear-gradient(135deg,#3a160d,#181309)}
-.hero{border:1px solid #6d5215;background:linear-gradient(rgba(5,5,4,.94),rgba(8,7,6,.97));padding:2rem;text-align:center}
-.eyebrow{font:.68rem 'Fira Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#9b7925}
-h1,h2,h3{font-family:'Cinzel',serif;margin:0}h1{font-size:clamp(2rem,6vw,4rem);color:#d8a92f}.subtitle{color:#c6baa0;font-style:italic}
-.notice{margin:1rem 0;padding:.85rem 1rem;border-left:4px solid var(--gold);background:#17140d}.notice.good{border-color:var(--good)}.notice.bad{border-color:var(--bad)}.hidden{display:none!important}
-.account{margin-top:1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;border:1px solid var(--border);background:var(--panel);padding:1rem}
-.avatar{width:58px;height:58px;border-radius:50%;border:1px solid #8c6818;background:#080706;object-fit:cover}
-.account-name{font:700 1rem 'Cinzel',serif;color:var(--gold2)}.muted{color:var(--muted)}
-.stats{display:flex;gap:.55rem;flex-wrap:wrap;justify-content:flex-end}.stat{min-width:105px;text-align:center;border:1px solid var(--border);background:var(--panel2);padding:.5rem}.stat strong{display:block;color:var(--gold2);font-family:'Cinzel',serif}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}.panel{border:1px solid var(--border);background:var(--panel);padding:1rem;min-width:0}.panel.full{grid-column:1/-1}.panel h2{color:#d4a62e;font-size:1.2rem}.rule{height:1px;background:linear-gradient(90deg,transparent,#6f5418,transparent);margin:.55rem 0 .9rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem}.card{border:1px solid #4a3810;background:#17140d;padding:.8rem}.card strong{color:var(--gold2)}.badges{display:flex;gap:.35rem;flex-wrap:wrap;margin:.35rem 0}.badge{border:1px solid #554214;background:#1b170e;color:#c7ad65;padding:.08rem .4rem;font:.62rem 'Fira Mono',monospace;text-transform:uppercase}
-.list{display:grid;gap:.5rem}.row{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid #30260e;padding:.5rem 0}.empty{color:var(--muted);padding:.75rem 0;font-style:italic}
-.scroll{max-height:430px;overflow:auto;scrollbar-gutter:stable;padding-right:.2rem}
-footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transform:uppercase;letter-spacing:.1em;padding:2rem 0}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.panel.full{grid-column:auto}.account{grid-template-columns:1fr;text-align:center}.avatar{margin:auto}.stats{justify-content:center}.btn,button{width:100%}.nav{width:100%}}
 
-.visitbar{margin:1rem 0;border:1px solid var(--border);background:var(--panel);padding:1rem}
-.visitbar h2{color:#d4a62e;font-size:1rem;margin-bottom:.6rem}
-.visit-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(220px,1fr) auto;gap:.6rem}
-.visit-controls input,.visit-controls select{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:600 .8rem 'Cinzel',serif}
-.viewing-note{margin-top:.6rem;color:var(--muted)}
-@media(max-width:760px){.visit-controls{grid-template-columns:1fr}}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top center, rgba(212, 91, 31, 0.15), transparent 32rem),
+    radial-gradient(circle at bottom center, rgba(216, 166, 59, 0.08), transparent 36rem),
+    linear-gradient(180deg, #090604 0%, #050505 48%, #080705 100%);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  font-size: 18px;
+  line-height: 1.55;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.86) 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.018), rgba(255,255,255,.018) 1px, transparent 1px, transparent 5px);
+  pointer-events: none;
+}
+.page {
+  position: relative;
+  z-index: 1;
+  width: min(1240px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding-bottom: 3rem;
+}
+.topbar {
+  display: flex;
+  gap: .65rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+.nav {
+  display: flex;
+  gap: .55rem;
+  flex-wrap: wrap;
+}
+.btn, button {
+  appearance: none;
+  border: 1px solid rgba(216,166,59,.65);
+  background: rgba(216,166,59,.08);
+  color: var(--gold-soft);
+  padding: .72rem .95rem;
+  font-family: 'Cinzel', serif;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: .18s ease;
+}
+.btn:hover, button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(216,166,59,.18);
+  box-shadow: 0 0 20px rgba(216,166,59,.16);
+}
+button.primary, .btn.primary {
+  background: linear-gradient(135deg, rgba(141,38,38,.72), rgba(216,166,59,.18));
+  border-color: rgba(241,217,148,.8);
+}
+button.danger { border-color: rgba(190,70,70,.75); color: #ffc7c7; }
+button:disabled { opacity: .45; cursor: not-allowed; }
 
+.hero {
+  background:
+    linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.82)),
+    var(--panel);
+  border: 1px solid rgba(216,166,59,.55);
+  box-shadow: 0 2rem 5rem rgba(0,0,0,.6), inset 0 0 4rem rgba(216,166,59,.04);
+  padding: clamp(1.4rem, 4vw, 3rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url("../images/black_banner_epic.gif") center center no-repeat;
+  background-size:min(650px,80vw);
+  opacity:.08;
+  pointer-events:none;
+}
+.hero > * { position: relative; z-index: 1; }
+.eyebrow {
+  font-family:'Fira Mono', monospace;
+  color:var(--gold);
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-size:.7rem;
+}
+h1,h2,h3 {
+  font-family:'Cinzel', serif;
+  margin:0;
+}
+h1 {
+  margin-top:.35rem;
+  color:var(--gold);
+  font-size:clamp(2.2rem,6vw,4.6rem);
+  line-height:1;
+}
+.subtitle { color:var(--gold-soft); font-style:italic; margin:.7rem auto 0; max-width:760px; }
 
-.chat-panel{grid-column:1/-1}
-.chat-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap}
-.chat-room-name{color:var(--muted);font-style:italic}
-.chat-log{height:360px;overflow-y:auto;border:1px solid #3c2e0d;background:#0b0906;padding:.8rem;display:flex;flex-direction:column;gap:.65rem;scrollbar-gutter:stable}
-.chat-message{border-left:3px solid #5f4915;background:#151109;padding:.55rem .7rem}
-.chat-message.mine{border-left-color:#c8960a}
-.chat-message-head{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
-.chat-author{font:700 .75rem 'Cinzel',serif;color:var(--gold2)}
-.chat-time{font:.6rem 'Fira Mono',monospace;color:#88754b;white-space:nowrap}
-.chat-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:.2rem}
-.chat-compose{display:grid;grid-template-columns:1fr auto;gap:.55rem;margin-top:.6rem}
-.chat-compose textarea{resize:vertical;min-height:70px;max-height:180px;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:17px/1.35 'Crimson Pro',serif}
-.chat-help{margin-top:.4rem;color:var(--muted);font-size:.9rem}
-@media(max-width:760px){.chat-compose{grid-template-columns:1fr}.chat-log{height:300px}}
+.accountbar {
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  align-items:center;
+  gap:1rem;
+  margin:1rem 0 0;
+  background:rgba(0,0,0,.32);
+  border:1px solid var(--faint);
+  padding:1rem;
+}
+.avatar {
+  width:58px; height:58px; border-radius:50%;
+  border:1px solid rgba(216,166,59,.7);
+  background:#111; object-fit:cover;
+}
+.account-name { font-family:'Cinzel',serif; color:var(--gold-soft); font-weight:700; }
+.account-meta { color:var(--muted); font-size:.92rem; }
+.statline { display:flex; flex-wrap:wrap; gap:.6rem; justify-content:flex-end; }
+.stat {
+  min-width:105px;
+  background:rgba(216,166,59,.07);
+  border:1px solid rgba(216,166,59,.23);
+  padding:.55rem .75rem;
+  text-align:center;
+}
+.stat strong { display:block; color:var(--gold-soft); font-family:'Cinzel',serif; }
 
+.market-layout {
+  display:grid;
+  grid-template-columns:minmax(0, 2fr) minmax(300px, 1fr);
+  gap:1rem;
+  margin-top:1rem;
+}
+.panel {
+  background:var(--panel);
+  border:1px solid var(--faint);
+  padding:1.1rem;
+  box-shadow:0 1rem 2.2rem rgba(0,0,0,.28);
+}
+.panel h2 {
+  color:var(--gold);
+  font-size:1.35rem;
+  margin-bottom:.2rem;
+}
+.panel h3 {
+  color:var(--gold-soft);
+  font-size:.9rem;
+  margin:1rem 0 .45rem;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+}
+.rule {
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(216,166,59,.7),transparent);
+  margin:.65rem 0 1rem;
+}
+.muted { color:var(--muted); }
+.controls {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:.6rem;
+  margin-bottom:.8rem;
+}
+input, select, textarea {
+  width:100%;
+  padding:.72rem .75rem;
+  color:var(--text);
+  background:#100d0a;
+  border:1px solid rgba(216,166,59,.34);
+  font:inherit;
+}
+input:focus, select:focus, textarea:focus { outline:1px solid var(--gold); }
+select option { background:#100d0a; color:var(--text); }
 
-.bastion-banner-wrap{margin:1rem 0;border:1px solid var(--border);background:#0b0906;overflow:hidden}
-.bastion-banner{width:100%;aspect-ratio:16/5;object-fit:cover;display:block;background:linear-gradient(135deg,#171108,#080706)}
-.banner-empty{aspect-ratio:16/5;display:grid;place-items:center;color:#7f6d44;font-style:italic;background:radial-gradient(circle at center,#17130b,#090806)}
-.owner-tools{margin:1rem 0;border:1px solid #7c5d17;background:linear-gradient(180deg,#151107,#0c0a07);padding:1rem}
-.owner-tools h2{color:var(--gold2);font-size:1.15rem}
-.owner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
-.owner-card{border:1px solid #4a3810;background:#17140d;padding:1rem}
-.owner-card h3{color:var(--gold2);font-size:.9rem;margin-bottom:.5rem}
-.owner-card label{display:block;color:var(--muted);margin:.45rem 0 .2rem}
-.owner-card select,.owner-card input{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.65rem;font:16px 'Crimson Pro',serif}
-.dropzone{border:2px dashed #6d5215;background:#0c0a07;padding:1.2rem;text-align:center;cursor:pointer}
-.dropzone.drag{border-color:var(--gold2);background:#181309}
-.dropzone input{display:none}
-.manage-summary{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}
-.manage-pill{border:1px solid #5e4712;padding:.25rem .55rem;background:#100d08;color:var(--gold2)}
-.purchase-preview{margin:.7rem 0;padding:.65rem;border-left:3px solid var(--gold);background:#100d08}
-.owner-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
-.owner-actions button{flex:1}
-@media(max-width:760px){.owner-grid{grid-template-columns:1fr}}
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:720px; }
+th {
+  text-align:left;
+  color:var(--gold);
+  font-family:'Cinzel',serif;
+  font-size:.74rem;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+  padding:.7rem;
+  border-bottom:1px solid rgba(216,166,59,.45);
+}
+td {
+  padding:.75rem .7rem;
+  border-bottom:1px solid rgba(216,166,59,.14);
+  vertical-align:middle;
+}
+tr:hover td { background:rgba(216,166,59,.035); }
+.rank {
+  display:inline-block;
+  min-width:2.3rem;
+  text-align:center;
+  padding:.18rem .35rem;
+  border:1px solid currentColor;
+  font-family:'Cinzel',serif;
+  font-size:.7rem;
+}
+.rank-E{color:#ad1457}.rank-D{color:#2ecc71}.rank-C{color:#3498db}.rank-B{color:#6d62ff}.rank-A{color:#b26bd9}.rank-S{color:#f1c40f}
+.qty, .gold { color:var(--gold-soft); font-weight:600; }
 
+.card-list { display:grid; gap:.55rem; }
+.inventory-row, .listing-card {
+  border:1px solid rgba(216,166,59,.18);
+  background:var(--panel2);
+  padding:.7rem .8rem;
+}
+.inventory-row { display:flex; justify-content:space-between; gap:1rem; }
+.listing-card strong { color:var(--gold-soft); }
+.action-row { display:flex; gap:.45rem; flex-wrap:wrap; margin-top:.55rem; }
+
+.notice {
+  margin:1rem 0;
+  border-left:4px solid var(--ember);
+  background:rgba(212,91,31,.08);
+  padding:.85rem 1rem;
+  color:var(--gold-soft);
+}
+.notice.good { border-color:var(--good); color:#cce9cc; background:rgba(80,150,80,.08); }
+.notice.bad { border-color:var(--bad); color:#ffd0d0; background:rgba(160,60,60,.09); }
+.hidden { display:none !important; }
+
+.empty {
+  color:var(--muted);
+  text-align:center;
+  padding:1.5rem .5rem;
+  border:1px dashed rgba(216,166,59,.2);
+}
+footer {
+  text-align:center;
+  color:#9d854a;
+  font-family:'Cinzel',serif;
+  font-size:.7rem;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  padding:2rem 0;
+}
+
+@media (max-width: 900px) {
+  .market-layout { grid-template-columns:1fr; }
+  .controls { grid-template-columns:1fr 1fr; }
+  .accountbar { grid-template-columns:auto 1fr; }
+  .statline { grid-column:1/-1; justify-content:flex-start; }
+}
+@media (max-width: 560px) {
+  .controls { grid-template-columns:1fr; }
+  .accountbar { grid-template-columns:1fr; text-align:center; }
+  .avatar { margin:auto; }
+  .statline { justify-content:center; }
+  .topbar { justify-content:center; }
+  .nav { justify-content:center; }
+  .btn,button { width:100%; }
+}
 </style>
 </head>
 <body>
 <div class="page">
   <div class="topbar">
     <div class="nav">
-      <a class="btn" href="../../">Home</a>
-      <a class="btn" href="../">Bastions Guide</a>
-      <a class="btn" href="../../material-market/">Market</a>
+      <a class="btn" href="../">Home</a>
+      <a class="btn" href="../player-guide/">Player Guide</a>
+      <a class="btn" href="../crafting-guide/">Crafting Guide</a>
+      <a class="btn" href="../bastions/">Bastions</a>
     </div>
     <button id="loginBtn" class="primary">Login with Discord</button>
   </div>
 
   <header class="hero">
-    <div class="eyebrow">Black Banner Company · Personal Stronghold</div>
-    <h1>My Bastion</h1>
-    <p class="subtitle">A read-only view of your Bastion records from the Black Banner system.</p>
+    <div class="eyebrow">Black Banner Company Exchange</div>
+    <h1>Company Market</h1>
+    <p class="subtitle">Trade crafting materials and custom items directly with other members beneath the Banner.</p>
   </header>
 
   <div id="message" class="notice hidden"></div>
 
-
-  <section class="visitbar">
-    <h2>Visit Another Bastion</h2>
-    <div class="visit-controls">
-      <input id="bastionSearch" type="search" placeholder="Search player name…" autocomplete="off">
-      <select id="bastionSelect" aria-label="Choose a player's Bastion">
-        <option value="">Choose a player…</option>
-      </select>
-      <button id="visitBtn" type="button">Visit Bastion</button>
-    </div>
-    <div id="viewingNote" class="viewing-note">Choose a player to view their Bastion read-only.</div>
-  </section>
-
-
-  <section id="bannerWrap" class="bastion-banner-wrap">
-    <img id="bastionBanner" class="bastion-banner hidden" alt="Bastion banner">
-    <div id="bannerEmpty" class="banner-empty">No Bastion banner has been added yet.</div>
-  </section>
-
-  <section id="ownerTools" class="owner-tools hidden">
-    <h2>Manage My Bastion</h2>
-    <div class="rule"></div>
-    <div class="manage-summary">
-      <span class="manage-pill">Gold: <strong id="manageGold">0 GP</strong></span>
-      <span class="manage-pill">Owner-only controls</span>
-    </div>
-    <div class="owner-grid">
-      <div class="owner-card">
-        <h3>Build & Upgrade</h3>
-        <label for="purchaseOption">Available Purchase</label>
-        <select id="purchaseOption"><option value="">Choose an eligible purchase…</option></select>
-
-        <div id="discountWrap">
-          <label for="purchaseDiscount">Construction Discount</label>
-          <select id="purchaseDiscount">
-            <option value="0">No Discount</option>
-            <option value="10">10% — Carpenter/Mason</option>
-            <option value="20">20% — Carpenter/Mason</option>
-          </select>
-        </div>
-
-        <div id="harvestWrap" class="hidden">
-          <label for="harvestSpec">Harvestarium Specialization</label>
-          <select id="harvestSpec"></select>
-        </div>
-
-        <div id="purchasePreview" class="purchase-preview">Choose a purchase to see its price.</div>
-        <div class="owner-actions">
-          <button id="purchaseBtn" class="primary" type="button">Purchase</button>
-        </div>
-      </div>
-
-      <div class="owner-card">
-        <h3>Bastion Banner</h3>
-        <div id="bannerDrop" class="dropzone" tabindex="0">
-          <strong>Drop Bastion Banner Here</strong><br>
-          <span class="muted">or click to choose JPEG, PNG, or WebP · max 5 MB</span>
-          <input id="bannerFile" type="file" accept="image/jpeg,image/png,image/webp">
-        </div>
-        <div class="owner-actions">
-          <button id="removeBannerBtn" type="button">Remove Banner</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="account" class="account hidden">
+  <section id="accountBar" class="accountbar hidden">
     <img id="avatar" class="avatar" alt="Discord avatar">
     <div>
       <div id="accountName" class="account-name">—</div>
-      <div id="accountMeta" class="muted">Connected through Discord</div>
+      <div id="accountMeta" class="account-meta">Connected through Discord</div>
     </div>
-    <div class="stats">
-      <div class="stat"><span>Status</span><strong id="status">—</strong></div>
-      <div class="stat"><span>Facilities</span><strong id="facilityCount">0</strong></div>
-      <div class="stat"><span>Personnel</span><strong id="personnelCount">0</strong></div>
-      <div class="stat"><span>Bastion Turn</span><strong id="turnStatus">—</strong></div>
+    <div class="statline">
+      <div class="stat"><span>Gold</span><strong id="gold">0g</strong></div>
+      <div class="stat"><span>Work Hours</span><strong id="hours">0</strong></div>
+      <div class="stat"><span>PP</span><strong id="pp">0</strong></div>
     </div>
   </section>
 
-  <main id="dashboard" class="grid hidden">
-    <section class="panel full">
-      <h2>Facilities</h2><div class="rule"></div>
-      <div id="facilities" class="cards scroll"></div>
-    </section>
+  <div class="market-layout">
+    <main>
+      <section class="panel">
+        <h2>Active Listings</h2>
+        <div class="rule"></div>
+        <div class="controls">
+          <input id="search" placeholder="Search materials...">
+          <select id="rankFilter">
+            <option value="">All Ranks</option>
+            <option>E</option><option>D</option><option>C</option>
+            <option>B</option><option>A</option><option>S</option>
+          </select>
+          <select id="sortBy">
+            <option value="newest">Newest</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
+            <option value="name">Material Name</option>
+          </select>
+          <button id="refreshMarket">Refresh</button>
+        </div>
+        <div id="market" class="table-wrap">
+          <div class="empty">Login with Discord to load the Black Banner market.</div>
+        </div>
+      </section>
 
-    <section class="panel">
-      <h2>Current Construction</h2><div class="rule"></div>
-      <div id="construction" class="list"></div>
-    </section>
+      <section class="panel" style="margin-top:1rem">
+        <h2>Custom Items</h2>
+        <div class="rule"></div>
+        <div class="controls">
+          <input id="customSearch" placeholder="Search custom items...">
+          <select id="customRankFilter"><option value="">All Ranks</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select>
+          <select id="customSortBy"><option value="newest">Newest</option><option value="priceLow">Price: Low to High</option><option value="priceHigh">Price: High to Low</option><option value="name">Item Name</option></select>
+          <button id="refreshCustom">Refresh</button>
+        </div>
+        <div id="customMarket" class="card-list"><div class="empty">Login to view custom item listings.</div></div>
+      </section>
+    </main>
 
-    <section class="panel">
-      <h2>Current Orders</h2><div class="rule"></div>
-      <div id="orders" class="list"></div>
-    </section>
+    <aside>
+      <section class="panel">
+        <h2>Sell Material</h2>
+        <div class="rule"></div>
+        <p class="muted">Materials are reserved from your inventory as soon as the listing is created.</p>
+        <h3>Material</h3>
+        <select id="sellMaterial" disabled>
+          <option value="">Login to load inventory...</option>
+        </select>
+        <h3>Quantity</h3>
+        <input id="sellQty" type="number" min="1" value="1">
+        <h3>Price Per Unit</h3>
+        <input id="sellPrice" type="number" min="1" value="100">
+        <button id="sellBtn" class="primary" style="margin-top:.8rem;width:100%" disabled>Create Listing</button>
+      </section>
 
-    <section class="panel">
-      <h2>Hirelings</h2><div class="rule"></div>
-      <div id="hirelings" class="list scroll"></div>
-    </section>
+      <section class="panel" style="margin-top:1rem">
+        <h2>Sell Custom Item</h2>
+        <div class="rule"></div>
+        <p class="muted">Custom items are tracked by the website. Gold transfers automatically when sold.</p>
+        <h3>Item Name</h3><input id="customName" maxlength="120" placeholder="Item name">
+        <h3>Item Rank</h3><select id="customRank"><option value="">Unranked</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select>
+        <h3>Rarity</h3><select id="customRarity"><option value="">Not specified</option><option>Common</option><option>Uncommon</option><option>Rare</option><option>Very Rare</option><option>Legendary</option><option>Artifact</option><option>Other</option></select>
+        <h3>Description</h3><textarea id="customDescription" rows="5" maxlength="1500" placeholder="Paste the item's description/effects here."></textarea>
+        <h3>Item Link (Optional)</h3><input id="customUrl" maxlength="500" placeholder="https://...">
+        <h3>Quantity</h3><input id="customQty" type="number" min="1" max="99" value="1">
+        <h3>Price Per Item</h3><input id="customPrice" type="number" min="1" value="100">
+        <button id="customSellBtn" class="primary" style="margin-top:.8rem;width:100%" disabled>Create Custom Listing</button>
+      </section>
 
-    <section class="panel">
-      <h2>Defenders & Personnel</h2><div class="rule"></div>
-      <div id="personnel" class="list scroll"></div>
-    </section>
+      <section class="panel" style="margin-top:1rem">
+        <h2>My Purchased Custom Items</h2>
+        <div class="rule"></div>
+        <div id="customPurchases" class="card-list"><div class="empty">Login to view purchased custom items.</div></div>
+      </section>
 
-    <section class="panel">
-      <h2>Combined Bastion</h2><div class="rule"></div>
-      <div id="combined" class="list"></div>
-    </section>
+      <section class="panel" style="margin-top:1rem">
+        <h2>My Inventory</h2>
+        <div class="rule"></div>
+        <div id="inventory" class="card-list">
+          <div class="empty">Login to view your crafting materials.</div>
+        </div>
+      </section>
 
-    <section class="panel">
-      <h2>Bastion Status</h2><div class="rule"></div>
-      <div id="turnDetails" class="list"></div>
-    </section>
+    </aside>
+  </div>
 
-    <section class="panel full chat-panel">
-      <div class="chat-head">
-        <h2>Bastion RP Chat</h2>
-        <span id="chatRoomName" class="chat-room-name">Bastion chat</span>
-      </div>
-      <div class="rule"></div>
-      <div id="chatLog" class="chat-log">
-        <div class="empty">Loading Bastion chat…</div>
-      </div>
-      <div class="chat-compose">
-        <textarea id="chatInput" maxlength="1000" placeholder="Speak, act, or roleplay in this Bastion…"></textarea>
-        <button id="chatSend" class="primary" type="button">Send</button>
-      </div>
-      <div class="chat-help">Messages are shared with everyone visiting this Bastion. Press Ctrl+Enter to send.</div>
-    </section>
-
-  </main>
-
-  <footer>Black Banner Company · Bastions of the Black · Read-Only Dashboard</footer>
+  <footer>Black Banner Company · Company Market · Drathmere Exchange</footer>
 </div>
 
 <script>
 const API_BASE = "https://api.blackbannercompany.com";
+
 let me = null;
+let inventory = [];
+let listings = [];
+let customListings = [];
+let customPurchases = [];
 
 const $ = (id) => document.getElementById(id);
-const esc = (v) => String(v ?? "")
-  .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 
-function message(text,type=""){
-  const el=$("message"); el.textContent=text; el.className=`notice ${type}`.trim(); el.classList.remove("hidden");
+function friendlyItemKey(key) {
+  const parts = String(key || "").split("_");
+  const maybeRank = parts[parts.length - 1];
+  const hasRank = /^[EDCBAS]$/.test(maybeRank);
+  if (hasRank) parts.pop();
+
+  const name = parts.map((w) => w ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(" ")
+    .replace(/\bKorins\b/g, "Korin's")
+    .replace(/\bSky Shard\b/g, "Sky Shard");
+
+  return {
+    name: hasRank ? `${maybeRank}-Rank ${name}` : name,
+    rank: hasRank ? maybeRank : ""
+  };
 }
-async function api(path,options={}){
-  const headers={...(options.headers||{})};
-  if(options.body!=null&&!headers["Content-Type"]) headers["Content-Type"]="application/json";
-  const r=await fetch(API_BASE+path,{mode:"cors",credentials:"include",cache:"no-store",...options,headers});
-  const body=await r.json().catch(()=>({}));
-  if(r.status===401) throw new Error("LOGIN_REQUIRED");
-  if(!r.ok) throw new Error(body.error||`Request failed (${r.status})`);
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function showMessage(text, type = "") {
+  const el = $("message");
+  el.textContent = text;
+  el.className = `notice ${type}`.trim();
+  el.classList.remove("hidden");
+  clearTimeout(showMessage.timer);
+  showMessage.timer = setTimeout(() => el.classList.add("hidden"), 5000);
+}
+
+async function api(path, options = {}) {
+  const headers = { ...(options.headers || {}) };
+  if (options.body != null && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  const response = await fetch(API_BASE + path, {
+    mode: "cors",
+    credentials: "include",
+    cache: "no-store",
+    ...options,
+    headers
+  });
+
+  const body = await response.json().catch(() => ({}));
+
+  if (response.status === 401) {
+    throw new Error("LOGIN_REQUIRED");
+  }
+  if (!response.ok) {
+    throw new Error(body.error || `Request failed (${response.status})`);
+  }
   return body;
 }
-function avatarUrl(u){return u?.avatar?`https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png?size=128`:"";}
-function pretty(v){return String(v||"").replaceAll("_"," ").replace(/\b\w/g,c=>c.toUpperCase());}
-function empty(text){return `<div class="empty">${esc(text)}</div>`;}
 
-
-let bastionDirectory=[];
-
-function fillBastionSelect(rows){
-  const select=$("bastionSelect");
-  const current=select.value;
-  select.innerHTML='<option value="">Choose a player…</option>'+
-    rows.map(b=>`<option value="${esc(b.ownerId)}">${esc(b.playerName)}${b.isMine?" (You)":""}</option>`).join("");
-  if(rows.some(b=>String(b.ownerId)===String(current))) select.value=current;
+function discordAvatarUrl(user) {
+  if (!user?.avatar) return "";
+  return `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=128`;
 }
 
-async function loadBastionDirectory(){
-  try{
-    const data=await api("/api/bastions");
-    bastionDirectory=data.bastions||[];
-    fillBastionSelect(bastionDirectory);
-  }catch(err){
-    if(err.message!=="LOGIN_REQUIRED") message(err.message,"bad");
-  }
+function renderAccount() {
+  if (!me) return;
+  $("accountBar").classList.remove("hidden");
+  $("accountName").textContent = me.user.globalName || me.user.username || "Banner Member";
+  $("accountMeta").textContent = `@${me.user.username} · Discord ${me.user.id}`;
+  $("gold").textContent = `${Number(me.balance.gold || 0).toLocaleString()}g`;
+  $("hours").textContent = Number(me.balance.workHours || 0);
+  $("pp").textContent = Number(me.balance.progressPoints || 0);
+  const url = discordAvatarUrl(me.user);
+  if (url) $("avatar").src = url;
+  $("loginBtn").textContent = "Logout";
 }
 
-function filterBastions(){
-  const q=$("bastionSearch").value.trim().toLowerCase();
-  fillBastionSelect(!q ? bastionDirectory : bastionDirectory.filter(b=>
-    String(b.playerName||"").toLowerCase().includes(q)
-  ));
-}
+function renderInventory() {
+  const holder = $("inventory");
+  const select = $("sellMaterial");
+  holder.innerHTML = "";
+  select.innerHTML = '<option value="">Choose a material...</option>';
 
-async function visitSelected(){
-  const owner=$("bastionSelect").value;
-  if(!owner){message("Choose a player first.","bad");return;}
-  try{
-    const data=await api("/api/bastion/view?owner="+encodeURIComponent(owner));
-    render(data);
-    $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
-    history.replaceState({},document.title,location.pathname+"?owner="+encodeURIComponent(owner));
-    window.scrollTo({top:0,behavior:"smooth"});
-  }catch(err){message(err.message,"bad");}
-}
+  if (!inventory.length) {
+    holder.innerHTML = '<div class="empty">No crafting materials found.</div>';
+  } else {
+    for (const row of inventory) {
+      const f = friendlyItemKey(row.itemKey);
+      const line = document.createElement("div");
+      line.className = "inventory-row";
+      line.innerHTML = `<span>${f.rank ? `<span class="rank rank-${f.rank}">${f.rank}</span> ` : ""}${escapeHtml(f.name.replace(/^[EDCBAS]-Rank /,""))}</span><strong class="qty">×${Number(row.qty)}</strong>`;
+      holder.appendChild(line);
 
-
-
-let manageOptions=[];
-let currentViewingOwn=false;
-
-function renderBanner(url){
-  const img=$("bastionBanner"), emptyEl=$("bannerEmpty");
-  if(url){
-    img.src=url;
-    img.classList.remove("hidden");
-    emptyEl.classList.add("hidden");
-  }else{
-    img.removeAttribute("src");
-    img.classList.add("hidden");
-    emptyEl.classList.remove("hidden");
-  }
-}
-
-async function loadManagement(){
-  if(!currentViewingOwn)return;
-  try{
-    const data=await api("/api/bastion/manage/options");
-    manageOptions=data.options||[];
-    $("manageGold").textContent=Number(data.gold||0).toLocaleString()+" GP";
-    const sel=$("purchaseOption");
-    sel.innerHTML='<option value="">Choose an eligible purchase…</option>'+
-      manageOptions.map((o,i)=>`<option value="${i}">${esc(o.label)} — ${Number(o.cost).toLocaleString()} GP${o.turns?` · ${o.turns} turns`:""}</option>`).join("");
-    $("harvestSpec").innerHTML=(data.harvestariumSpecializations||[]).map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
-    updatePurchasePreview();
-  }catch(err){message(err.message,"bad");}
-}
-
-function selectedPurchase(){
-  const i=Number($("purchaseOption").value);
-  return Number.isInteger(i)&&i>=0?manageOptions[i]:null;
-}
-
-function updatePurchasePreview(){
-  const o=selectedPurchase();
-  const preview=$("purchasePreview");
-  if(!o){preview.textContent="Choose a purchase to see its price.";return;}
-  const isSpecial=o.action==="special_upgrade";
-  $("discountWrap").classList.toggle("hidden",isSpecial);
-  $("harvestWrap").classList.toggle("hidden",!o.needsHarvestarium);
-  const discount=isSpecial?0:Number($("purchaseDiscount").value||0);
-  const final=Math.round(Number(o.cost||0)*(1-discount/100));
-  preview.innerHTML=`<strong>${esc(o.label)}</strong><br>${final.toLocaleString()} GP${discount?` after ${discount}% discount`:""}${o.turns?` · ${o.turns} construction turns`:" · immediate"}`;
-}
-
-async function buySelected(){
-  const o=selectedPurchase();
-  if(!o){message("Choose a Bastion purchase first.","bad");return;}
-  const discount=o.action==="special_upgrade"?0:Number($("purchaseDiscount").value||0);
-  const payload={
-    action:o.action,
-    facility:o.facility,
-    specialUpgrade:o.specialUpgrade||null,
-    discount,
-    harvestariumSpecialization:o.needsHarvestarium?$("harvestSpec").value:null
-  };
-  const final=Math.round(Number(o.cost||0)*(1-discount/100));
-  if(!confirm(`Purchase ${o.label} for ${final.toLocaleString()} GP?`))return;
-  $("purchaseBtn").disabled=true;
-  try{
-    const result=await api("/api/bastion/manage/purchase",{method:"POST",body:JSON.stringify(payload)});
-    message(`Purchase complete. ${Number(result.cost).toLocaleString()} GP spent. ${Number(result.remainingGold).toLocaleString()} GP remaining.`,"good");
-    await reloadOwnBastion();
-  }catch(err){message(err.message,"bad");}
-  finally{$("purchaseBtn").disabled=false;}
-}
-
-async function reloadOwnBastion(){
-  const data=await api("/api/bastion/me");
-  render(data);
-  await loadManagement();
-}
-
-async function uploadBanner(file){
-  if(!file)return;
-  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){message("Use a JPEG, PNG, or WebP image.","bad");return;}
-  if(file.size>5*1024*1024){message("Banner image must be 5 MB or smaller.","bad");return;}
-  message("Uploading Bastion banner…");
-  try{
-    const r=await fetch(API_BASE+"/api/bastion/banner",{
-      method:"POST",credentials:"include",mode:"cors",headers:{"Content-Type":file.type},body:file
-    });
-    const body=await r.json().catch(()=>({}));
-    if(!r.ok)throw new Error(body.error||`Upload failed (${r.status})`);
-    renderBanner(body.bannerUrl);
-    message("Bastion banner updated.","good");
-  }catch(err){message(err.message,"bad");}
-}
-
-async function removeBanner(){
-  if(!confirm("Remove your Bastion banner?"))return;
-  try{
-    await api("/api/bastion/banner",{method:"DELETE",body:"{}"});
-    renderBanner(null);
-    message("Bastion banner removed.","good");
-  }catch(err){message(err.message,"bad");}
-}
-
-
-let currentChatOwner=null;
-let chatLastId=0;
-let chatTimer=null;
-let chatViewerId=null;
-
-function chatTime(ts){
-  const d=new Date(Number(ts)||Date.now());
-  return d.toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
-}
-
-function chatMessageHtml(m){
-  const mine=String(m.authorId)===String(chatViewerId);
-  return `<div class="chat-message${mine?" mine":""}" data-chat-id="${Number(m.id)||0}">
-    <div class="chat-message-head">
-      <span class="chat-author">${esc(m.authorName||"Banner Member")}</span>
-      <span class="chat-time">${esc(chatTime(m.createdAt))}</span>
-    </div>
-    <div class="chat-text">${esc(m.message)}</div>
-  </div>`;
-}
-
-function setChatMessages(messages, append=false){
-  const log=$("chatLog");
-  if(!append){
-    log.innerHTML=messages.length ? messages.map(chatMessageHtml).join("") : empty("No one has spoken here yet. Start the RP.");
-  }else if(messages.length){
-    if(log.querySelector(".empty")) log.innerHTML="";
-    log.insertAdjacentHTML("beforeend",messages.map(chatMessageHtml).join(""));
-  }
-  if(messages.length) chatLastId=Math.max(chatLastId,...messages.map(m=>Number(m.id)||0));
-  if(!append || messages.length) log.scrollTop=log.scrollHeight;
-}
-
-async function loadChat(ownerId, reset=true){
-  if(!ownerId)return;
-  if(reset){
-    currentChatOwner=String(ownerId);
-    chatLastId=0;
-    $("chatLog").innerHTML=empty("Loading Bastion chat…");
-  }
-  try{
-    const suffix=reset||!chatLastId ? "" : "&after="+encodeURIComponent(chatLastId);
-    const data=await api("/api/bastion/chat?owner="+encodeURIComponent(ownerId)+suffix);
-    if(String(ownerId)!==String(currentChatOwner))return;
-    chatViewerId=data.viewerId;
-    setChatMessages(data.messages||[],!reset && chatLastId>0);
-  }catch(err){
-    if(err.message!=="LOGIN_REQUIRED") $("chatLog").innerHTML=empty("Chat unavailable: "+err.message);
-  }
-}
-
-function startChat(ownerId, ownerName){
-  currentChatOwner=String(ownerId);
-  $("chatRoomName").textContent=(ownerName||"This")+" Bastion";
-  if(chatTimer){clearInterval(chatTimer);chatTimer=null;}
-  loadChat(currentChatOwner,true);
-  chatTimer=setInterval(()=>{
-    if(currentChatOwner && !document.hidden) loadChat(currentChatOwner,false);
-  },3000);
-}
-
-async function sendChat(){
-  const input=$("chatInput");
-  const text=input.value.trim();
-  if(!text||!currentChatOwner)return;
-  $("chatSend").disabled=true;
-  try{
-    const data=await api("/api/bastion/chat",{
-      method:"POST",
-      body:JSON.stringify({ownerId:currentChatOwner,message:text})
-    });
-    input.value="";
-    chatViewerId=chatViewerId||data.message?.authorId;
-    if(data.message){
-      setChatMessages([data.message],true);
-    }else{
-      await loadChat(currentChatOwner,false);
+      const option = document.createElement("option");
+      option.value = row.itemKey;
+      option.dataset.qty = row.qty;
+      option.textContent = `${f.name} — Owned: ${row.qty}`;
+      select.appendChild(option);
     }
-    input.focus();
-  }catch(err){message(err.message,"bad");}
-  finally{$("chatSend").disabled=false;}
+  }
+  select.disabled = false;
+  $("sellBtn").disabled = false;
+  $("customSellBtn").disabled = false;
 }
 
-function render(data){
-  me=data;
-  currentViewingOwn=!!data.viewingOwn;
-  $("ownerTools").classList.toggle("hidden",!currentViewingOwn);
-  renderBanner(data.bannerUrl||null);
-  startChat(data.owner.id, data.owner.globalName||data.owner.username||"Banner Member");
-  $("account").classList.remove("hidden");
-  $("dashboard").classList.remove("hidden");
-  $("accountName").textContent=data.owner.globalName||data.owner.username||"Banner Member";
-  $("accountMeta").textContent=data.viewingOwn ? "Your Bastion" : "Visiting Bastion · Read Only";
-  const av=avatarUrl(data.owner); if(av){$("avatar").src=av;$("avatar").style.display="block";}else{$("avatar").style.display="none";}
-  $("status").textContent=data.status;
-  $("facilityCount").textContent=data.summary.facilities;
-  $("personnelCount").textContent=data.summary.personnel;
-  $("turnStatus").textContent=data.summary.pendingBastionTurn?"Ready":"None";
-  $("loginBtn").textContent="Logout";
+function listingRows(filtered) {
+  if (!filtered.length) return '<div class="empty">No active listings match your filters.</div>';
 
-  $("facilities").innerHTML=data.facilities.length?data.facilities.map(f=>{
-    const specs=f.harvestariumSpecializations||[];
-    const extras=[];
-    if(f.workshopTool1) extras.push(`Workshop: ${esc(f.workshopTool1)}${f.workshopTool2?`, ${esc(f.workshopTool2)}`:""}`);
-    if(f.laboratorySpecialization) extras.push(`Lab: ${esc(f.laboratorySpecialization)}`);
-    if(specs.length) extras.push(`Harvestarium: ${specs.map(esc).join(", ")}`);
-    if(f.hasMasterCraftsmansBench) extras.push("Master Craftsman's Bench");
-    return `<div class="card">
-      <strong>${esc(f.facility)}</strong>
-      <div class="badges"><span class="badge">${esc(f.facilityType||"Facility")}</span>${f.rank?`<span class="badge">Rank ${esc(f.rank)}</span>`:""}${f.size?`<span class="badge">${esc(f.size)}</span>`:""}</div>
-      ${(f.upgrades||[]).length?`<div class="muted">Upgrades: ${f.upgrades.map(esc).join(", ")}</div>`:""}
-      ${extras.length?`<div class="muted">${extras.join(" · ")}</div>`:""}
+  return `<table>
+    <thead><tr>
+      <th>Material</th><th>Quantity</th><th>Price Each</th><th>Seller</th><th></th>
+    </tr></thead>
+    <tbody>${filtered.map((x) => {
+      const f = friendlyItemKey(x.itemKey);
+      const own = me && String(x.sellerId) === String(me.user.id);
+      return `<tr>
+        <td>${f.rank ? `<span class="rank rank-${f.rank}">${f.rank}</span> ` : ""}${escapeHtml(f.name.replace(/^[EDCBAS]-Rank /,""))}</td>
+        <td class="qty">${Number(x.quantityRemaining)}</td>
+        <td class="gold">${Number(x.priceEach).toLocaleString()}g</td>
+        <td>${own ? "You" : escapeHtml(x.sellerName || `Member ${String(x.sellerId).slice(-6)}`)}</td>
+        <td>${own
+          ? `<button class="danger" onclick="cancelListing(${Number(x.id)})">Cancel</button>`
+          : `<button onclick="buyListing(${Number(x.id)}, ${Number(x.quantityRemaining)}, ${Number(x.priceEach)}, '${escapeHtml(x.itemKey)}')">Buy</button>`
+        }</td>
+      </tr>`;
+    }).join("")}</tbody>
+  </table>`;
+}
+
+function renderMarket() {
+  const q = $("search").value.trim().toLowerCase();
+  const rank = $("rankFilter").value;
+  const sort = $("sortBy").value;
+
+  let filtered = listings.filter((x) => {
+    const f = friendlyItemKey(x.itemKey);
+    return (!q || f.name.toLowerCase().includes(q))
+      && (!rank || f.rank === rank);
+  });
+
+  filtered.sort((a,b) => {
+    if (sort === "priceLow") return a.priceEach - b.priceEach;
+    if (sort === "priceHigh") return b.priceEach - a.priceEach;
+    if (sort === "name") return friendlyItemKey(a.itemKey).name.localeCompare(friendlyItemKey(b.itemKey).name);
+    return b.createdAt - a.createdAt;
+  });
+
+  $("market").innerHTML = listingRows(filtered);
+}
+
+function customListingCards(rows) {
+  if (!rows.length) return '<div class="empty">No active custom item listings match your filters.</div>';
+  return rows.map((x) => {
+    const own = me && String(x.sellerId) === String(me.user.id);
+    const rankBadge = x.itemRank ? `<span class="rank rank-${escapeHtml(x.itemRank)}">${escapeHtml(x.itemRank)}</span> ` : "";
+    const rarity = x.rarity ? ` · ${escapeHtml(x.rarity)}` : "";
+    const desc = x.description ? `<div class="muted" style="margin-top:.35rem;white-space:pre-wrap">${escapeHtml(x.description)}</div>` : "";
+    const link = x.itemUrl ? `<div style="margin-top:.35rem"><a class="gold" href="${escapeHtml(x.itemUrl)}" target="_blank" rel="noopener noreferrer">View Item Link</a></div>` : "";
+    return `<div class="listing-card">
+      <strong>${rankBadge}${escapeHtml(x.itemName)}</strong><span class="muted">${rarity}</span><br>
+      <span class="muted">Available:</span> ${Number(x.quantityRemaining)} · <span class="gold">${Number(x.priceEach).toLocaleString()}g each</span> · <span class="muted">Seller:</span> ${own ? "You" : escapeHtml(x.sellerName || `Member ${String(x.sellerId).slice(-6)}`)}
+      ${desc}${link}
+      <div class="action-row">${own
+        ? `<button class="danger" onclick="cancelCustomListing(${Number(x.id)})">Cancel</button>`
+        : `<button onclick="buyCustomListing(${Number(x.id)},${Number(x.quantityRemaining)},${Number(x.priceEach)},'${escapeHtml(String(x.itemName)).replaceAll("'","&#039;")}')">Buy</button>`
+      }</div>
     </div>`;
-  }).join(""):empty("No completed Bastion facilities are registered.");
-
-  $("construction").innerHTML=data.construction.length?data.construction.map(c=>`<div class="row"><span><strong>${esc(c.facility)}</strong><br><span class="muted">${esc(pretty(c.projectType))}</span></span><span>${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span></div>`).join(""):empty("No active construction.");
-
-  $("orders").innerHTML=data.orders.length?data.orders.map(o=>`<div class="row"><strong>${esc(o.facility)}</strong><span>${esc(pretty(o.order))}</span></div>`).join(""):empty("No active facility orders.");
-
-  const hirelings=data.personnel.filter(p=>p.personnelType==="hireling");
-  $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span>Hireling</span></div>`).join(""):empty("No hirelings registered.");
-
-  const others=data.personnel.filter(p=>p.personnelType!=="hireling");
-  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span>${esc(pretty(p.personnelType))}</span></div>`).join(""):empty("No defenders, ronin, knights, or monsters registered.");
-
-  if(data.combined?.members?.length){
-    $("combined").innerHTML=data.combined.members.map(m=>`<div class="row"><span>${String(m.userId)===String(data.owner.id)?"You":esc(m.displayName||`Member ${String(m.userId).slice(-6)}`)}</span><span>${String(m.userId)===String(data.combined.createdBy)?"Founder":"Resident"}</span></div>`).join("");
-  }else{
-    $("combined").innerHTML=empty("Not currently part of a Combined Bastion.");
-  }
-
-  const turn=data.turn;
-  const effect=data.effects;
-  $("turnDetails").innerHTML=[
-    `<div class="row"><span>Individual Bastion Turn</span><strong>${turn?.pending?"Pending":"None Pending"}</strong></div>`,
-    `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}</span></div>`,
-    `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
-  ].join("");
-
-  if(currentViewingOwn) loadManagement();
-
-  const params=new URLSearchParams(location.search);
-  if(params.get("login")==="success"){
-    message("Discord login successful.","good");
-    history.replaceState({},document.title,location.pathname+location.hash);
-  }
+  }).join("");
 }
-async function load(){
-  try{
-    await loadBastionDirectory();
-    const params=new URLSearchParams(location.search);
-    const owner=params.get("owner");
-    const data=owner
-      ? await api("/api/bastion/view?owner="+encodeURIComponent(owner))
-      : await api("/api/bastion/me");
-    render(data);
-    if(owner) $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
-  }
-  catch(err){
-    if(err.message==="LOGIN_REQUIRED"){
-      $("loginBtn").textContent="Login with Discord";
-      if(new URLSearchParams(location.search).get("login")==="success") message("Discord authorized, but the Bastion session was not found. Click Login with Discord once more.","bad");
+
+function renderCustomMarket() {
+  const q = $("customSearch").value.trim().toLowerCase();
+  const rank = $("customRankFilter").value;
+  const sort = $("customSortBy").value;
+  let rows = customListings.filter((x) => (!q || `${x.itemName} ${x.rarity || ""} ${x.description || ""}`.toLowerCase().includes(q)) && (!rank || x.itemRank === rank));
+  rows.sort((a,b) => sort === "priceLow" ? a.priceEach-b.priceEach : sort === "priceHigh" ? b.priceEach-a.priceEach : sort === "name" ? a.itemName.localeCompare(b.itemName) : b.createdAt-a.createdAt);
+  $("customMarket").innerHTML = customListingCards(rows);
+}
+
+function renderCustomPurchases() {
+  const holder = $("customPurchases");
+  if (!customPurchases.length) { holder.innerHTML = '<div class="empty">You have not purchased any custom items yet.</div>'; return; }
+  holder.innerHTML = customPurchases.map(x => `<div class="listing-card"><strong>${x.itemRank ? `<span class="rank rank-${escapeHtml(x.itemRank)}">${escapeHtml(x.itemRank)}</span> ` : ""}${escapeHtml(x.itemName)}</strong>${x.rarity ? ` <span class="muted">· ${escapeHtml(x.rarity)}</span>` : ""}<br><span class="muted">Quantity:</span> ${Number(x.quantity)} · <span class="gold">${Number(x.totalGold).toLocaleString()}g paid</span>${x.description ? `<div class="muted" style="margin-top:.35rem;white-space:pre-wrap">${escapeHtml(x.description)}</div>` : ""}${x.itemUrl ? `<div style="margin-top:.35rem"><a class="gold" href="${escapeHtml(x.itemUrl)}" target="_blank" rel="noopener noreferrer">View Item Link</a></div>` : ""}</div>`).join("");
+}
+
+async function loadAll() {
+  try {
+    const [meData, invData, marketData, customData, purchasesData] = await Promise.all([
+      api("/api/me"),
+      api("/api/inventory"),
+      api("/api/market"),
+      api("/api/custom-market"),
+      api("/api/custom-market/purchases")
+    ]);
+    me = meData;
+    inventory = invData.inventory || [];
+    listings = marketData.listings || [];
+    customListings = customData.listings || [];
+    customPurchases = purchasesData.purchases || [];
+    renderAccount();
+    renderInventory();
+    renderMarket();
+    renderCustomMarket();
+    renderCustomPurchases();
+
+    const params = new URLSearchParams(location.search);
+    if (params.get("login") === "success") {
+      showMessage("Discord login successful.", "good");
+      history.replaceState({}, document.title, location.pathname + location.hash);
+    }
+  } catch (err) {
+    if (err.message === "LOGIN_REQUIRED") {
+      $("loginBtn").textContent = "Login with Discord";
+      const params = new URLSearchParams(location.search);
+      if (params.get("login") === "success") {
+        showMessage("Discord authorized, but the website session was not found. Please click Login with Discord once more.", "bad");
+      }
       return;
     }
-    message(err.message,"bad");
+    showMessage(err.message, "bad");
   }
 }
-async function logout(){
-  try{await api("/auth/logout",{method:"POST",body:"{}"});}catch(_){}
+
+async function refreshData(successText = "") {
+  await loadAll();
+  if (successText) showMessage(successText, "good");
+}
+
+async function createListing() {
+  const itemKey = $("sellMaterial").value;
+  const quantity = Number($("sellQty").value);
+  const priceEach = Number($("sellPrice").value);
+
+  if (!itemKey) return showMessage("Choose a material to sell.", "bad");
+  const owned = Number($("sellMaterial").selectedOptions[0]?.dataset.qty || 0);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > owned) {
+    return showMessage(`Choose a quantity from 1 to ${owned}.`, "bad");
+  }
+  if (!Number.isInteger(priceEach) || priceEach < 1) {
+    return showMessage("Price per unit must be at least 1g.", "bad");
+  }
+
+  try {
+    await api("/api/market/listings", {
+      method: "POST",
+      body: JSON.stringify({ itemKey, quantity, priceEach })
+    });
+    await refreshData("Material listing created.");
+  } catch (err) {
+    showMessage(err.message, "bad");
+  }
+}
+
+async function createCustomListing() {
+  const payload = {
+    itemName: $("customName").value.trim(), itemRank: $("customRank").value,
+    rarity: $("customRarity").value, description: $("customDescription").value.trim(),
+    itemUrl: $("customUrl").value.trim(), quantity: Number($("customQty").value),
+    priceEach: Number($("customPrice").value)
+  };
+  if (!payload.itemName) return showMessage("Enter a custom item name.", "bad");
+  if (!Number.isInteger(payload.quantity) || payload.quantity < 1 || payload.quantity > 99) return showMessage("Custom item quantity must be 1 to 99.", "bad");
+  if (!Number.isInteger(payload.priceEach) || payload.priceEach < 1) return showMessage("Custom item price must be at least 1g.", "bad");
+  try {
+    await api("/api/custom-market/listings", { method:"POST", body:JSON.stringify(payload) });
+    $("customName").value = ""; $("customDescription").value = ""; $("customUrl").value = ""; $("customQty").value = "1";
+    await refreshData("Custom item listing created.");
+  } catch (err) { showMessage(err.message, "bad"); }
+}
+
+async function buyCustomListing(id, maxQty, priceEach, itemName) {
+  const raw = prompt(`Buy ${itemName}\nAvailable: ${maxQty}\nPrice: ${priceEach}g each\n\nHow many do you want to buy?`, "1");
+  if (raw === null) return;
+  const quantity = Number(raw);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > maxQty) return showMessage(`Enter a quantity from 1 to ${maxQty}.`, "bad");
+  const total = quantity * priceEach;
+  if (!confirm(`Buy ${quantity} × ${itemName} for ${total.toLocaleString()}g?`)) return;
+  try { await api(`/api/custom-market/listings/${id}/buy`, { method:"POST", body:JSON.stringify({quantity}) }); await refreshData(`Purchased ${quantity} × ${itemName}.`); }
+  catch (err) { showMessage(err.message, "bad"); }
+}
+
+async function cancelCustomListing(id) {
+  if (!confirm("Cancel this custom item listing?")) return;
+  try { await api(`/api/custom-market/listings/${id}`, { method:"DELETE" }); await refreshData("Custom item listing cancelled."); }
+  catch (err) { showMessage(err.message, "bad"); }
+}
+
+async function buyListing(id, maxQty, priceEach, itemKey) {
+  const f = friendlyItemKey(itemKey);
+  const raw = prompt(`Buy ${f.name}\nAvailable: ${maxQty}\nPrice: ${priceEach}g each\n\nHow many do you want to buy?`, "1");
+  if (raw === null) return;
+  const quantity = Number(raw);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > maxQty) {
+    return showMessage(`Enter a quantity from 1 to ${maxQty}.`, "bad");
+  }
+  const total = quantity * priceEach;
+  if (!confirm(`Buy ${quantity} × ${f.name} for ${total.toLocaleString()}g?`)) return;
+
+  try {
+    await api(`/api/market/listings/${id}/buy`, {
+      method: "POST",
+      body: JSON.stringify({ quantity })
+    });
+    await refreshData(`Purchased ${quantity} × ${f.name}.`);
+  } catch (err) {
+    showMessage(err.message, "bad");
+  }
+}
+
+async function cancelListing(id) {
+  if (!confirm("Cancel this listing and return all unsold material to your inventory?")) return;
+  try {
+    await api(`/api/market/listings/${id}`, { method: "DELETE" });
+    await refreshData("Listing cancelled and unsold material returned.");
+  } catch (err) {
+    showMessage(err.message, "bad");
+  }
+}
+
+async function logout() {
+  try {
+    await api("/auth/logout", { method:"POST", body:"{}" });
+  } catch (_) {}
   location.reload();
 }
-$("bastionSearch").addEventListener("input",filterBastions);
-$("visitBtn").addEventListener("click",visitSelected);
-$("bastionSelect").addEventListener("change",()=>{if($("bastionSelect").value) visitSelected();});
 
-
-
-$("purchaseOption").addEventListener("change",updatePurchasePreview);
-$("purchaseDiscount").addEventListener("change",updatePurchasePreview);
-$("purchaseBtn").addEventListener("click",buySelected);
-$("removeBannerBtn").addEventListener("click",removeBanner);
-
-const bannerDrop=$("bannerDrop");
-const bannerFile=$("bannerFile");
-bannerDrop.addEventListener("click",()=>bannerFile.click());
-bannerDrop.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();bannerFile.click();}});
-bannerFile.addEventListener("change",()=>uploadBanner(bannerFile.files?.[0]));
-for(const ev of ["dragenter","dragover"]){
-  bannerDrop.addEventListener(ev,e=>{e.preventDefault();bannerDrop.classList.add("drag");});
-}
-for(const ev of ["dragleave","drop"]){
-  bannerDrop.addEventListener(ev,e=>{e.preventDefault();bannerDrop.classList.remove("drag");});
-}
-bannerDrop.addEventListener("drop",e=>uploadBanner(e.dataTransfer?.files?.[0]));
-
-$("chatSend").addEventListener("click",sendChat);
-$("chatInput").addEventListener("keydown",(event)=>{
-  if(event.key==="Enter" && event.ctrlKey){
-    event.preventDefault();
-    sendChat();
-  }
+$("loginBtn").addEventListener("click", () => {
+  if (me) return logout();
+  window.location.assign(API_BASE + "/auth/discord");
 });
+$("refreshMarket").addEventListener("click", () => refreshData("Market refreshed."));
+$("refreshCustom").addEventListener("click", () => refreshData("Custom item market refreshed."));
+$("customSellBtn").addEventListener("click", createCustomListing);
+$("customSearch").addEventListener("input", renderCustomMarket);
+$("customRankFilter").addEventListener("change", renderCustomMarket);
+$("customSortBy").addEventListener("change", renderCustomMarket);
+$("sellBtn").addEventListener("click", createListing);
+$("search").addEventListener("input", renderMarket);
+$("rankFilter").addEventListener("change", renderMarket);
+$("sortBy").addEventListener("change", renderMarket);
 
-$("loginBtn").addEventListener("click",()=>{
-  if(me)return logout();
-  window.location.assign(API_BASE+"/auth/discord?return="+encodeURIComponent("/bastions/my-bastion/"));
-});
-load();
+window.buyListing = buyListing;
+window.cancelListing = cancelListing;
+window.buyCustomListing = buyCustomListing;
+window.cancelCustomListing = cancelCustomListing;
+
+loadAll();
 </script>
 </body>
 </html>
