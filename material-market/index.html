@@ -367,6 +367,12 @@ footer {
       <section class="panel" style="margin-top:1rem">
         <h2>My Inventory</h2>
         <div class="rule"></div>
+        <select id="inventorySort" style="margin-bottom:.75rem">
+          <option value="rankHigh">Rank: High to Low</option>
+          <option value="rankLow">Rank: Low to High</option>
+          <option value="name">Name: A to Z</option>
+          <option value="qtyHigh">Quantity: High to Low</option>
+        </select>
         <div id="inventory" class="card-list">
           <div class="empty">Login to view your crafting materials.</div>
         </div>
@@ -393,7 +399,7 @@ footer {
   Before publishing for all players, replace API_BASE with your public HTTPS
   Black Banner API address, e.g. https://api.yourdomain.com
 */
-const API_BASE = "https://api.blackbannercompany.com";
+const API_BASE = "http://127.0.0.1:8787";
 
 let me = null;
 let inventory = [];
@@ -481,10 +487,29 @@ function renderInventory() {
   holder.innerHTML = "";
   select.innerHTML = '<option value="">Choose a material...</option>';
 
-  if (!inventory.length) {
+  const rankOrder = { S: 6, A: 5, B: 4, C: 3, D: 2, E: 1, "": 0 };
+  const sortMode = $("inventorySort")?.value || "rankHigh";
+
+  const sortedInventory = [...inventory].sort((a, b) => {
+    const fa = friendlyItemKey(a.itemKey);
+    const fb = friendlyItemKey(b.itemKey);
+
+    if (sortMode === "rankHigh") {
+      return (rankOrder[fb.rank] - rankOrder[fa.rank]) || fa.name.localeCompare(fb.name);
+    }
+    if (sortMode === "rankLow") {
+      return (rankOrder[fa.rank] - rankOrder[fb.rank]) || fa.name.localeCompare(fb.name);
+    }
+    if (sortMode === "qtyHigh") {
+      return (Number(b.qty) - Number(a.qty)) || fa.name.localeCompare(fb.name);
+    }
+    return fa.name.localeCompare(fb.name);
+  });
+
+  if (!sortedInventory.length) {
     holder.innerHTML = '<div class="empty">No crafting materials found.</div>';
   } else {
-    for (const row of inventory) {
+    for (const row of sortedInventory) {
       const f = friendlyItemKey(row.itemKey);
       const line = document.createElement("div");
       line.className = "inventory-row";
@@ -667,6 +692,7 @@ $("sellBtn").addEventListener("click", createListing);
 $("search").addEventListener("input", renderMarket);
 $("rankFilter").addEventListener("change", renderMarket);
 $("sortBy").addEventListener("change", renderMarket);
+$("inventorySort").addEventListener("change", renderInventory);
 
 window.buyListing = buyListing;
 window.cancelListing = cancelListing;
