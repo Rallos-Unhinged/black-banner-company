@@ -5,50 +5,35 @@
 <title>Black Banner Company — Character</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
-:root{--bg:#050403;--panel:#0d0b08;--panel2:#151008;--edge:#4c3a16;--edge2:#8a6418;--gold:#d2a62d;--gold2:#f0cf6b;--txt:#e9dfc7;--muted:#9f9277;--cyan:#d6b354;--green:#70c85c;--red:#c65d4c}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#1b1308 0,#080604 36%,#030201 100%);color:var(--txt);font:17px/1.4 'Crimson Pro',serif}
-.shell{width:min(1500px,calc(100% - 24px));margin:auto;padding:12px 0 40px}.bar,.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.bar{justify-content:space-between;border-bottom:1px solid #5a4317;padding:7px 0 12px}.nav{display:flex;gap:7px;flex-wrap:wrap}
-button,.btn{font:700 12px 'Cinzel',serif;letter-spacing:.05em;text-transform:uppercase;color:#e6c45a;background:linear-gradient(#211607,#0c0803);border:1px solid #80611f;padding:8px 12px;cursor:pointer;text-decoration:none}
-button:hover,.btn:hover{border-color:#e0b94c;color:#ffe49a}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:18px 8px 12px;border-bottom:1px solid #5a4317}.hero h1{font:900 clamp(28px,4vw,54px) 'Cinzel';margin:0;color:#e0b239}.subtitle{color:var(--muted)}
+:root{--bg:#030609;--panel:#081017;--panel2:#0b151d;--edge:#35505c;--edge2:#84631b;--gold:#d3a62b;--gold2:#f0c858;--txt:#e8e6dd;--muted:#8fa1a8;--cyan:#49c8e8;--green:#59c77b;--red:#d76e6e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#10202b 0,#05090d 38%,#020405 100%);color:var(--txt);font:17px/1.4 'Crimson Pro',serif}
+.shell{width:min(1500px,calc(100% - 24px));margin:auto;padding:12px 0 40px}.bar,.tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.bar{justify-content:space-between;border-bottom:1px solid #263842;padding:7px 0 12px}.nav{display:flex;gap:7px;flex-wrap:wrap}
+button,.btn{font:700 12px 'Cinzel',serif;letter-spacing:.05em;text-transform:uppercase;color:#e6c45a;background:linear-gradient(#14202a,#080d12);border:1px solid #566a70;padding:8px 12px;cursor:pointer;text-decoration:none}
+button:hover,.btn:hover{border-color:#c39a2e;color:#ffe49a}.hero{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:18px 8px 12px;border-bottom:1px solid #30434c}.hero h1{font:900 clamp(28px,4vw,54px) 'Cinzel';margin:0;color:#e0b239}.subtitle{color:var(--muted)}
 .status{font:700 13px 'Cinzel';color:#68db87}.status:before{content:"●";margin-right:7px}.tabs{padding:10px 0}
-.side-tools{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
-.side-tools button{font-size:11px;padding:7px 10px}
-.inventory-panel{display:none;border:1px solid #5f4518;background:#0d0a06;padding:10px;margin-bottom:10px}
-.inventory-panel.active{display:block}
-.inventory-toolbar{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:7px;margin-bottom:8px}
-.inventory-toolbar input,.inventory-toolbar select{width:100%;background:#090704;border:1px solid #70521d;color:#eee;padding:8px}
-.item-browser-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-.inv-card{position:relative;border:1px solid #5b4318;background:linear-gradient(#120d07,#090604);padding:8px;min-height:86px}
-.inv-card.has-image{padding-left:86px}
-.inv-card img{position:absolute;left:8px;top:8px;width:68px;height:68px;object-fit:contain;border:1px solid #6b501c;background:#030201;padding:2px}
-.inv-card .name{font:700 13px 'Cinzel';color:#e0bd55}
-.inv-card .meta{font-size:12px;color:#a99b7f;margin-top:3px}
-.inv-card .qty{font:600 11px Fira Mono;color:#f0cf6b}
-@media(max-width:900px){.item-browser-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.inventory-toolbar{grid-template-columns:1fr}}
-@media(max-width:600px){.item-browser-grid{grid-template-columns:1fr}}
-.viewer{display:grid;grid-template-columns:minmax(180px,1fr) minmax(280px,2fr) auto;gap:7px;align-items:end;border:1px solid #5d4518;background:#0d0a06;padding:9px;margin:10px 0}
-.viewer input,.viewer select{width:100%;background:#090704;border:1px solid #72551d;color:#eee;padding:8px}
+.viewer{display:grid;grid-template-columns:minmax(180px,1fr) minmax(280px,2fr) auto;gap:7px;align-items:end;border:1px solid #334b55;background:#071017;padding:9px;margin:10px 0}
+.viewer input,.viewer select{width:100%;background:#050a0e;border:1px solid #405963;color:#eee;padding:8px}
 .readonly-note{font:700 12px Cinzel;color:#d6b44a;text-transform:uppercase;letter-spacing:.05em}
 body.readonly .owner-only{display:none!important}
 body.readonly .equip input,body.readonly .equip select,body.readonly #characterName,body.readonly #level,body.readonly #classSummary,body.readonly #ddbUrl,body.readonly .stat input{pointer-events:none;opacity:.82}
-.tab{border-color:#5a4317;color:#9bb0b8}.tab.active{color:#f0c85d;border-color:#b38c28;background:#1a1207}
+.tab{border-color:#324853;color:#9bb0b8}.tab.active{color:#f0c85d;border-color:#b38c28;background:#16150f}
 .notice{padding:10px 14px;margin:8px 0;border:1px solid #4c3b16;background:#151109;color:#d8c48c}.notice.good{border-color:#2f6b42;color:#8ee1a8}.notice.bad{border-color:#754040;color:#e79a9a}.hidden{display:none!important}
-.sheet{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(440px,1.55fr) minmax(280px,.95fr);gap:12px;align-items:start}.panel{background:linear-gradient(180deg,#0c141a,#070b0f);border:1px solid #5f4518;box-shadow:inset 0 0 0 1px #21170a;padding:10px;min-width:0}
-.panel h2,.panel h3{font:700 14px 'Cinzel';letter-spacing:.12em;color:#d8b347;text-transform:uppercase;margin:0 0 8px;border-bottom:1px solid #4a3512;padding-bottom:6px}.character-card{text-align:center;padding:8px;border:1px solid #8c6b22;background:#090b0d}
-.portrait{position:relative;min-height:650px;background:linear-gradient(#100c07,#060402);border:1px solid #8a6418;box-shadow:inset 0 0 0 2px #2a1e0c,0 0 0 1px #3a2a10;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.portrait img{width:100%;height:100%;min-height:650px;object-fit:cover;display:block}.portrait-placeholder{color:#667982;font:700 16px 'Cinzel';text-align:center;padding:30px}.portrait-actions{display:flex;gap:6px;margin-top:7px}.portrait-actions>*{flex:1}.portrait input{display:none}
-.equip-grid{display:grid;grid-template-columns:1fr;gap:8px}.equip{border:1px solid #5b4318;background:#0d0a06;min-height:74px;padding:7px;position:relative}
-.equip.has-image{padding-left:72px;min-height:90px}.equip-img{position:absolute;left:7px;top:24px;width:56px;height:56px;object-fit:contain;border:1px solid #6b501c;background:#03080b;padding:2px}
-.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.skill-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #3f3013;padding:4px 2px}.skill-row b{color:#d7af42}.skill-bonus{font:600 13px Fira Mono;color:#aee0ed}.equip .slot{font:700 12px 'Cinzel';letter-spacing:.08em;color:#d8b347;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #3f3013;background:transparent;color:#f3ead3;font:600 17px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.equip-drop{margin-top:5px;border:1px dashed #6b501c;padding:4px;text-align:center;font-size:10px;color:#78929d;cursor:pointer}.equip-drop.drag{border-color:#c9a12f;color:#e0c168}.equip.has-image{padding-left:100px;min-height:116px}.equip-img{position:absolute;left:7px;top:24px;width:84px;height:84px;object-fit:contain;background:#03080b;border:1px solid #6b501c;padding:2px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#d8b658}.equip select{background:#0d0a06;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
-.ddb-picker{margin-top:6px}.ddb-picker select{max-width:none;width:100%;background:#061016;border:1px solid #70521d;color:#dce8ec;padding:5px;font-size:12px}
-.inventory-browser{margin-top:10px;border:1px solid #5f4518;background:#0d0a06;padding:9px}.inventory-browser .browser-row{display:grid;grid-template-columns:1fr 180px 120px;gap:7px;align-items:end}.inventory-browser select{width:100%;background:#090704;border:1px solid #70521d;color:#eee;padding:8px}
-.badge{display:inline-block;padding:2px 6px;border:1px solid #45606b;margin-left:5px;font:500 10px Fira Mono;color:#efc967}.badge.eq{border-color:#7a6422;color:#e8c75a}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.stat{border:1px solid #5f4518;background:linear-gradient(#120d07,#090604);text-align:center;padding:9px}.stat b{display:block;font:700 11px 'Cinzel';color:#d2a62d}.stat .score{font:700 24px 'Fira Mono';color:#fff}.stat input{width:55px;background:#03080b;border:0;color:#fff;text-align:center;font:700 20px 'Fira Mono'}
-.field{margin:7px 0}.field label{display:block;color:#90a1a9;font:700 11px 'Cinzel';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}.field input,.field select{width:100%;background:#090704;border:1px solid #5d4518;color:#eee;padding:8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.summary{border:1px solid #5d4518;padding:9px;background:#0d0a06;margin-bottom:8px}.summary strong{color:#e5ba44}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #574116;background:#0d0a06;padding:7px}.tool .name{min-height:37px;color:#ddd}.tool select{width:100%;background:#090704;color:#eee;border:1px solid #72551d;padding:6px}
-.feature-list{display:grid;gap:6px}.toggle{display:flex;gap:8px;align-items:center;border:1px solid #334a54;background:#0d0a06;padding:8px}.toggle input{accent-color:#c9a12f}
+.sheet{display:grid;grid-template-columns:1fr 1.65fr 1fr;gap:10px}.panel{background:linear-gradient(180deg,#0c141a,#070b0f);border:1px solid #384f59;box-shadow:inset 0 0 0 1px #101d25;padding:10px;min-width:0}
+.panel h2,.panel h3{font:700 14px 'Cinzel';letter-spacing:.12em;color:#cda12d;text-transform:uppercase;margin:0 0 8px}.character-card{text-align:center;padding:8px;border:1px solid #8c6b22;background:#090b0d}
+.portrait{position:relative;min-height:560px;background:linear-gradient(#0d151b,#05080b);border:1px solid #5a6870;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.portrait img{width:100%;height:100%;min-height:560px;object-fit:cover;display:block}.portrait-placeholder{color:#667982;font:700 16px 'Cinzel';text-align:center;padding:30px}.portrait-actions{display:flex;gap:6px;margin-top:7px}.portrait-actions>*{flex:1}.portrait input{display:none}
+.equip-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.equip{border:1px solid #334852;background:#071017;min-height:74px;padding:7px;position:relative}
+.equip.has-image{padding-left:72px;min-height:90px}.equip-img{position:absolute;left:7px;top:24px;width:56px;height:56px;object-fit:contain;border:1px solid #36515e;background:#03080b;padding:2px}
+.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.skill-row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #243941;padding:4px 2px}.skill-row b{color:#d7af42}.skill-bonus{font:600 13px Fira Mono;color:#aee0ed}.equip .slot{font:700 10px 'Cinzel';letter-spacing:.1em;color:#7f98a2;text-transform:uppercase}.equip input{width:100%;border:0;border-bottom:1px solid #243941;background:transparent;color:#eee;font:600 16px 'Crimson Pro';padding:5px 1px;outline:none}.equip .meta{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px}.equip-drop{margin-top:5px;border:1px dashed #385664;padding:4px;text-align:center;font-size:10px;color:#78929d;cursor:pointer}.equip-drop.drag{border-color:#c9a12f;color:#e0c168}.equip.has-image{padding-left:74px;min-height:94px}.equip-img{position:absolute;left:7px;top:24px;width:58px;height:58px;object-fit:contain;background:#03080b;border:1px solid #36515e;padding:2px}.rarity{font:500 11px 'Fira Mono';color:#e5c157}.attune{font:700 10px 'Cinzel';color:#b98cff}.syncsrc{font:500 9px 'Fira Mono';color:#6ebed0}.equip select{background:#071017;border:1px solid #324852;color:#ddd;font-size:12px;max-width:90px}
+.ddb-picker{margin-top:6px}.ddb-picker select{max-width:none;width:100%;background:#061016;border:1px solid #42616d;color:#dce8ec;padding:5px;font-size:12px}
+.inventory-browser{margin-top:10px;border:1px solid #38505b;background:#071017;padding:9px}.inventory-browser .browser-row{display:grid;grid-template-columns:1fr 180px 120px;gap:7px;align-items:end}.inventory-browser select{width:100%;background:#050a0e;border:1px solid #405a65;color:#eee;padding:8px}
+.badge{display:inline-block;padding:2px 6px;border:1px solid #45606b;margin-left:5px;font:500 10px Fira Mono;color:#8fd7e5}.badge.eq{border-color:#7a6422;color:#e8c75a}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.stat{border:1px solid #314752;background:#071017;text-align:center;padding:8px}.stat b{display:block;font:700 11px 'Cinzel';color:#8198a1}.stat .score{font:700 24px 'Fira Mono';color:#fff}.stat input{width:55px;background:#03080b;border:0;color:#fff;text-align:center;font:700 20px 'Fira Mono'}
+.field{margin:7px 0}.field label{display:block;color:#90a1a9;font:700 11px 'Cinzel';text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}.field input,.field select{width:100%;background:#050a0e;border:1px solid #334b55;color:#eee;padding:8px}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.summary{border:1px solid #334b55;padding:9px;background:#071017;margin-bottom:8px}.summary strong{color:#e5ba44}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #314752;background:#071017;padding:7px}.tool .name{min-height:37px;color:#ddd}.tool select{width:100%;background:#050a0e;color:#eee;border:1px solid #405963;padding:6px}
+.feature-list{display:grid;gap:6px}.toggle{display:flex;gap:8px;align-items:center;border:1px solid #334a54;background:#071017;padding:8px}.toggle input{accent-color:#c9a12f}
 .actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{flex:1}.warn{color:#e7c66a;font-size:14px}.small{font-size:13px;color:var(--muted)}.classline{color:#c6d2d7}
-@media(max-width:1100px){.sheet{grid-template-columns:1fr 1.2fr}.right{grid-column:1/-1}.tool-list{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1050px){.sheet{grid-template-columns:1fr 1fr}.right{grid-column:1/-1}.tool-list{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.sheet,.craft,.row{grid-template-columns:1fr}.tool-list,.equip-grid{grid-template-columns:1fr}.portrait,.portrait img{min-height:420px}.bar .nav{width:100%}.btn,button{flex:1}}
 </style>
 </head>
@@ -77,34 +62,11 @@ body.readonly .equip input,body.readonly .equip select,body.readonly #characterN
     <button class="tab active" data-tab="sheet">Character Sheet</button>
     <button class="tab owner-only" data-tab="crafting">Crafting Registry</button>
   </div>
-  <div class="side-tools owner-only">
-    <button data-invtab="all">All Inventory</button>
-    <button data-invtab="materials">Crafting Mats</button>
-    <button data-invtab="potions">Potions & Consumables</button>
-    <button data-invtab="bags">Bags & Containers</button>
-    <button data-invtab="gear">Other Gear</button>
-  </div>
-
-  <section id="inventoryPanel" class="inventory-panel owner-only">
-    <div class="inventory-toolbar">
-      <input id="inventorySearch" placeholder="Search inventory...">
-      <select id="inventoryFilter">
-        <option value="all">All Inventory</option>
-        <option value="materials">Crafting Mats</option>
-        <option value="potions">Potions & Consumables</option>
-        <option value="bags">Bags & Containers</option>
-        <option value="gear">Other Gear</option>
-      </select>
-      <button id="closeInventory">Close</button>
-    </div>
-    <div id="inventoryBrowserGrid" class="item-browser-grid"></div>
-    <div id="inventoryEmpty" class="small">Click Refresh Inventory or Sync D&D Beyond to load your items.</div>
-  </section>
 
   <section id="sheetTab">
     <div class="sheet">
       <div class="panel left">
-        <h2>Armor & Equipment</h2>
+        <h2>Equipped Inventory</h2>
         <div class="inventory-browser owner-only">
           <div class="browser-row">
             <div class="field" style="margin:0"><label>D&D Beyond Inventory</label><select id="ddbInventory"><option value="">Load D&D Beyond inventory…</option></select></div>
@@ -115,15 +77,14 @@ body.readonly .equip input,body.readonly .equip select,body.readonly #characterN
           <div class="actions" style="margin-top:6px"><button id="refreshDdbInventory">Refresh Inventory</button></div>
         </div>
         <div id="equipLeft" class="equip-grid" style="margin-top:8px"></div>
-        <h3 style="margin-top:14px">Weapons, Rings & Extras</h3>
+        <h3 style="margin-top:12px">Weapons & Extras</h3>
         <div id="equipBottom" class="equip-grid"></div>
         <div class="actions owner-only" style="margin-top:9px"><button id="saveGear">Save Loadout</button></div>
       </div>
 
       <div class="panel">
         <div class="character-card">
-          <h2 style="font-size:18px;letter-spacing:.14em">EQUIPMENT LOADOUT</h2>
-          <h2 id="cardName" style="font-size:15px;margin-top:-2px">Character</h2>
+          <h2 id="cardName">Character</h2>
           <div id="portraitDrop" class="portrait">
             <img id="portraitImg" class="hidden" alt="Character portrait">
             <div id="portraitPlaceholder" class="portrait-placeholder">DROP CHARACTER PORTRAIT HERE<br><span class="small">PNG · JPG · WEBP · max 5 MB</span></div>
@@ -331,7 +292,7 @@ $("loginBtn").onclick=async()=>{if($("loginBtn").textContent==="Logout"){await a
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value);$("pb").textContent=`+${pb($("level").value)}`};
 $("int").oninput=()=>{const n=Number($("int").value);if(Number.isFinite(n))$("intMod").value=Math.floor((n-10)/2)};
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Equipment loadout saved.","good")).catch(e=>show(e.message,"bad"));$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
-$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];renderInventoryBrowser();$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s), ${d.sync.inventoryCount||ddbInventory.length} inventory item(s), ${(d.sync.skills||[]).length} skills updated.`;show("D&D Beyond sync complete. Equipped items were auto-filled, and the full D&D Beyond inventory is now available in the dropdowns.","good");await load();renderDdbInventory()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;$("syncNote").textContent="Syncing…";const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];$("syncNote").textContent=`Sync complete: ${d.sync.characterName||"character"}, level ${d.sync.level||"?"}, ${d.sync.equippedItems||0} equipped item(s), ${d.sync.inventoryCount||ddbInventory.length} inventory item(s), ${(d.sync.skills||[]).length} skills updated.`;show("D&D Beyond sync complete. Equipped items were auto-filled, and the full D&D Beyond inventory is now available in the dropdowns.","good");await load();renderDdbInventory()}catch(e){show(e.message,"bad");$("syncNote").textContent=e.message}finally{$("syncBtn").disabled=false}};
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));$("sheetTab").classList.toggle("hidden",b.dataset.tab!=="sheet");$("craftingTab").classList.toggle("hidden",b.dataset.tab!=="crafting")});
 
 async function uploadEquipmentImage(slot,file){
@@ -377,11 +338,6 @@ $("addDdbItem").onclick=()=>{
   show("Item added to the selected equipment slot. Click Save Loadout to keep it.","good");
 };
 
-
-document.querySelectorAll("[data-invtab]").forEach(b=>b.addEventListener("click",()=>openInventoryCategory(b.dataset.invtab)));
-$("inventorySearch").addEventListener("input",renderInventoryBrowser);
-$("inventoryFilter").addEventListener("change",renderInventoryBrowser);
-$("closeInventory").addEventListener("click",()=>$("inventoryPanel").classList.remove("active"));
 $("characterSearch").addEventListener("input",e=>renderCharacterDirectory(e.target.value));
 $("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
 $("characterSelect").addEventListener("change",()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad")));
