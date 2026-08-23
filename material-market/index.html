@@ -206,6 +206,56 @@ input:focus, select:focus, textarea:focus { outline:1px solid var(--gold); }
 select option { background:#100d0a; color:var(--text); }
 
 .table-wrap { overflow-x:auto; }
+
+.market-scroll {
+  max-height: 560px;
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+  border: 1px solid rgba(216,166,59,.12);
+}
+
+.market-scroll table {
+  margin: 0;
+}
+
+.market-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: #100d0a;
+  box-shadow: 0 1px 0 rgba(216,166,59,.45);
+}
+
+.custom-scroll {
+  max-height: 560px;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  padding-right: .25rem;
+}
+
+.market-scroll::-webkit-scrollbar,
+.custom-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.market-scroll::-webkit-scrollbar-track,
+.custom-scroll::-webkit-scrollbar-track {
+  background: #0b0907;
+}
+
+.market-scroll::-webkit-scrollbar-thumb,
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(216,166,59,.48);
+  border: 2px solid #0b0907;
+  border-radius: 8px;
+}
+
+.market-scroll::-webkit-scrollbar-thumb:hover,
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(241,217,148,.72);
+}
 table { width:100%; border-collapse:collapse; min-width:720px; }
 th {
   text-align:left;
@@ -342,7 +392,7 @@ footer {
           </select>
           <button id="refreshMarket">Refresh</button>
         </div>
-        <div id="market" class="table-wrap">
+        <div id="market" class="table-wrap market-scroll">
           <div class="empty">Login with Discord to load the Black Banner market.</div>
         </div>
       </section>
@@ -356,7 +406,7 @@ footer {
           <select id="customSortBy"><option value="newest">Newest</option><option value="priceLow">Price: Low to High</option><option value="priceHigh">Price: High to Low</option><option value="name">Item Name</option></select>
           <button id="refreshCustom">Refresh</button>
         </div>
-        <div id="customMarket" class="card-list"><div class="empty">Login to view custom item listings.</div></div>
+        <div id="customMarket" class="card-list custom-scroll"><div class="empty">Login to view custom item listings.</div></div>
       </section>
     </main>
 
@@ -393,13 +443,13 @@ footer {
       <section class="panel" style="margin-top:1rem">
         <h2>My Purchased Custom Items</h2>
         <div class="rule"></div>
-        <div id="customPurchases" class="card-list"><div class="empty">Login to view purchased custom items.</div></div>
+        <div id="customPurchases" class="card-list custom-scroll"><div class="empty">Login to view purchased custom items.</div></div>
       </section>
 
       <section class="panel" style="margin-top:1rem">
         <h2>My Inventory</h2>
         <div class="rule"></div>
-        <div id="inventory" class="card-list">
+        <div id="inventory" class="card-list custom-scroll">
           <div class="empty">Login to view your crafting materials.</div>
         </div>
       </section>
@@ -407,7 +457,7 @@ footer {
       <section class="panel" style="margin-top:1rem">
         <h2>My Listings</h2>
         <div class="rule"></div>
-        <div id="myListings" class="card-list">
+        <div id="myListings" class="card-list custom-scroll">
           <div class="empty">Login to view your listings.</div>
         </div>
       </section>
@@ -418,14 +468,7 @@ footer {
 </div>
 
 <script>
-/*
-  LOCAL TESTING:
-    http://127.0.0.1:8787
-
-  Before publishing for all players, replace API_BASE with your public HTTPS
-  Black Banner API address, e.g. https://api.yourdomain.com
-  
-*/const API_BASE = "https://api.blackbannercompany.com";
+const API_BASE = "https://api.blackbannercompany.com";
 
 let me = null;
 let inventory = [];
@@ -472,13 +515,17 @@ function showMessage(text, type = "") {
 }
 
 async function api(path, options = {}) {
+  const headers = { ...(options.headers || {}) };
+  if (options.body != null && !headers["Content-Type"]) {
+    headers["Content-Type"] = "application/json";
+  }
+
   const response = await fetch(API_BASE + path, {
+    mode: "cors",
     credentials: "include",
+    cache: "no-store",
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    }
+    headers
   });
 
   const body = await response.json().catch(() => ({}));
@@ -552,7 +599,7 @@ function listingRows(filtered) {
         <td>${f.rank ? `<span class="rank rank-${f.rank}">${f.rank}</span> ` : ""}${escapeHtml(f.name.replace(/^[EDCBAS]-Rank /,""))}</td>
         <td class="qty">${Number(x.quantityRemaining)}</td>
         <td class="gold">${Number(x.priceEach).toLocaleString()}g</td>
-        <td>${own ? "You" : `Member ${escapeHtml(String(x.sellerId).slice(-6))}`}</td>
+        <td>${own ? "You" : escapeHtml(x.sellerName || `Member ${String(x.sellerId).slice(-6)}`)}</td>
         <td><button ${own ? "disabled" : ""} onclick="buyListing(${Number(x.id)}, ${Number(x.quantityRemaining)}, ${Number(x.priceEach)}, '${escapeHtml(x.itemKey)}')">${own ? "Your Listing" : "Buy"}</button></td>
       </tr>`;
     }).join("")}</tbody>
@@ -590,7 +637,7 @@ function customListingCards(rows) {
     const link = x.itemUrl ? `<div style="margin-top:.35rem"><a class="gold" href="${escapeHtml(x.itemUrl)}" target="_blank" rel="noopener noreferrer">View Item Link</a></div>` : "";
     return `<div class="listing-card">
       <strong>${rankBadge}${escapeHtml(x.itemName)}</strong><span class="muted">${rarity}</span><br>
-      <span class="muted">Available:</span> ${Number(x.quantityRemaining)} · <span class="gold">${Number(x.priceEach).toLocaleString()}g each</span> · <span class="muted">Seller:</span> ${own ? "You" : `Member ${escapeHtml(String(x.sellerId).slice(-6))}`}
+      <span class="muted">Available:</span> ${Number(x.quantityRemaining)} · <span class="gold">${Number(x.priceEach).toLocaleString()}g each</span> · <span class="muted">Seller:</span> ${own ? "You" : escapeHtml(x.sellerName || `Member ${String(x.sellerId).slice(-6)}`)}
       ${desc}${link}
       <div class="action-row"><button ${own ? "disabled" : ""} onclick="buyCustomListing(${Number(x.id)},${Number(x.quantityRemaining)},${Number(x.priceEach)},'${escapeHtml(String(x.itemName)).replaceAll("'","&#039;")}')">${own ? "Your Listing" : "Buy"}</button></div>
     </div>`;
@@ -663,9 +710,19 @@ async function loadAll() {
     renderMyListings();
     renderMyCustomListings();
     renderCustomPurchases();
+
+    const params = new URLSearchParams(location.search);
+    if (params.get("login") === "success") {
+      showMessage("Discord login successful.", "good");
+      history.replaceState({}, document.title, location.pathname + location.hash);
+    }
   } catch (err) {
     if (err.message === "LOGIN_REQUIRED") {
       $("loginBtn").textContent = "Login with Discord";
+      const params = new URLSearchParams(location.search);
+      if (params.get("login") === "success") {
+        showMessage("Discord authorized, but the website session was not found. Please click Login with Discord once more.", "bad");
+      }
       return;
     }
     showMessage(err.message, "bad");
@@ -777,7 +834,7 @@ async function logout() {
 
 $("loginBtn").addEventListener("click", () => {
   if (me) return logout();
-  location.href = API_BASE + "/auth/discord";
+  window.location.assign(API_BASE + "/auth/discord");
 });
 $("refreshMarket").addEventListener("click", () => refreshData("Market refreshed."));
 $("refreshCustom").addEventListener("click", () => refreshData("Custom item market refreshed."));
