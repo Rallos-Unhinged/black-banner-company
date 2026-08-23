@@ -5,30 +5,30 @@
 <title>Black Banner Company — Character</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
-:root{--bg:#02070b;--panel:#071017;--panel2:#0a151d;--edge:#1e648b;--edge2:#8a6720;--gold:#d5aa3b;--gold2:#f0cd73;--text:#eee7d7;--muted:#8da4b1;--green:#58c769;--blue:#38b9ef;--purple:#c86cff;--red:#d76e6e}
+:root{--bg:#02070b;--panel:#071017;--panel2:#0a151d;--edge:#1e648b;--edge2:#1e648b;--theme:#2c91c4;--theme-soft:#164a65;--gold:#d5aa3b;--gold2:#f0cd73;--text:#eee7d7;--muted:#8da4b1;--green:#58c769;--blue:#38b9ef;--purple:#c86cff;--red:#d76e6e}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 48% 0,#102536 0,#030b11 42%,#010304 100%);color:var(--text);font:17px/1.35 'Crimson Pro',serif}
-button,.btn{font:700 12px Cinzel;color:#e7c461;background:linear-gradient(#102331,#061019);border:1px solid #236d96;padding:9px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+button,.btn{font:700 12px Cinzel;color:#e7c461;background:linear-gradient(#102331,#061019);border:1px solid var(--theme);padding:9px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
 button:hover,.btn:hover{border-color:#d5aa3b;box-shadow:0 0 10px #1f6f9c66;color:#ffe7a2}.hidden{display:none!important}.owner-only{}
 body.readonly .owner-only{display:none!important}
 .shell{width:min(1600px,100%);margin:auto;min-height:100vh}
-.topbar{height:80px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #31546a;background:linear-gradient(180deg,#07131c,#03080c)}
+.topbar{height:80px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--theme);background:linear-gradient(180deg,#07131c,#03080c)}
 .identity{display:flex;gap:14px;align-items:center}.mini-avatar{width:58px;height:58px;object-fit:cover;border:1px solid #806220;border-radius:5px;background:#0b0b0b}
 .identity h1{font:700 28px Cinzel;margin:0;color:#f3eee2}.identity .sub{color:#b7ac96}.online{color:#50cc68}.top-actions{display:flex;gap:12px}
-.viewer{display:grid;grid-template-columns:220px 1fr auto;gap:8px;padding:8px 14px;border-bottom:1px solid #342810;background:#080a09}.viewer input,.viewer select{width:100%;background:#050606;color:#eee;border:1px solid #5c4519;padding:7px}
-.notice{margin:8px 14px;padding:10px;border:1px solid #76571b;background:#171108}.notice.bad{border-color:#7d3333;color:#ef9c9c}.notice.good{border-color:#2d6d3d;color:#95dfa4}
+.viewer{display:grid;grid-template-columns:220px 1fr auto;gap:8px;padding:8px 14px;border-bottom:1px solid #342810;background:#080a09}.viewer input,.viewer select{width:100%;background:#050606;color:#eee;border:1px solid var(--theme);padding:7px}
+.notice{margin:8px 14px;padding:10px;border:1px solid var(--theme);background:#171108}.notice.bad{border-color:#7d3333;color:#ef9c9c}.notice.good{border-color:#2d6d3d;color:#95dfa4}
 .workspace{display:grid;grid-template-columns:215px minmax(0,1fr);min-height:calc(100vh - 130px)}
-.sidebar{border-right:1px solid #31546a;background:linear-gradient(180deg,#061018,#020608);position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#12344a,#07131c);color:#f4d46f;border-left:4px solid #38b9ef;box-shadow:inset 0 0 16px #17638b33}.side-icon{width:25px;text-align:center;color:#cbb68f}
-.bag-zone{padding:10px;border-top:1px solid #463412}.bag-zone h3{font:700 13px Cinzel;color:#d2ad45;margin:4px 4px 8px}.bag{border:1px solid #493714;background:#0b0c0b;margin-bottom:6px}.bag summary{cursor:pointer;padding:8px 9px;color:#e5c663;font:700 12px Cinzel;list-style:none}.bag summary::-webkit-details-marker{display:none}.bag summary:before{content:"▸";margin-right:7px}.bag[open] summary:before{content:"▾"}.bag-items{padding:0 8px 8px;max-height:220px;overflow:auto}.bag-item{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-top:1px solid #1f1d17;color:#ccc;font-size:13px}.bag-item span:last-child{color:#efcf6f}
+.sidebar{border-right:1px solid var(--theme);background:linear-gradient(180deg,#061018,#020608);position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#12344a,#07131c);color:#f4d46f;border-left:4px solid #38b9ef;box-shadow:inset 0 0 16px #17638b33}.side-icon{width:25px;text-align:center;color:#cbb68f}
+.bag-zone{padding:10px;border-top:1px solid #463412}.bag-zone h3{font:700 13px Cinzel;color:#d2ad45;margin:4px 4px 8px}.bag{border:1px solid var(--theme);background:#0b0c0b;margin-bottom:6px}.bag summary{cursor:pointer;padding:8px 9px;color:#e5c663;font:700 12px Cinzel;list-style:none}.bag summary::-webkit-details-marker{display:none}.bag summary:before{content:"▸";margin-right:7px}.bag[open] summary:before{content:"▾"}.bag-items{padding:0 8px 8px;max-height:220px;overflow:auto}.bag-item{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-top:1px solid #1f1d17;color:#ccc;font-size:13px}.bag-item span:last-child{color:#efcf6f}
 .materials-link{margin-top:8px;width:100%}
 .load-card{position:absolute;bottom:12px;left:10px;right:10px;border:1px solid #5b4518;padding:12px;text-align:center;background:#0a0a08}.load-card h4{font:700 12px Cinzel;color:#ddb848;margin:0 0 6px}.load-card .green{color:#64d078;font-size:18px}.attune-gems{font-size:25px;color:#4ccd67;letter-spacing:4px}
-.main{min-width:0}.equipment-layout{display:grid;grid-template-columns:260px minmax(410px,1fr) 260px 340px;gap:10px;padding:10px}
-.slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:130px;border:1px solid #287aa5;background:linear-gradient(135deg,#081722,#03090e);box-shadow:inset 0 0 0 1px #0d3045,0 0 12px #07131c;padding:10px 10px 8px 118px;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
-.equip.empty{padding-left:12px}.equip-img{position:absolute;left:10px;top:13px;width:94px;height:94px;object-fit:contain;border:1px solid #2b88b8;background:#02080d;padding:3px;box-shadow:inset 0 0 12px #0a496a,0 0 8px #1d709655}.slot-title{font:700 16px Cinzel;color:#e1b64b;margin-bottom:3px}.item-name{font-size:18px}.rarity{font-size:15px}.rarity.Common{color:#ddd}.rarity.Uncommon{color:#48d050}.rarity.Rare{color:#39bafa}.rarity.Very-Rare,.rarity.Legendary{color:#c968ef}.slot-edit{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}.slot-edit select{max-width:100%;background:#050606;color:#ddd;border:1px solid #594317;font-size:11px}.slot-image-btn{font-size:9px;padding:4px 6px}
-.center-stage{border:1px solid #367e9f;background:linear-gradient(#06131c,#02070b);padding:8px;min-width:0;box-shadow:inset 0 0 0 2px #0c2d3e}.stage-title{text-align:center;font:700 22px Cinzel;color:#e5bf57;padding:4px;border-bottom:1px solid #5b4317;margin-bottom:7px}.portrait{height:650px;position:relative;border:1px solid #3e92b9;background:#03090e;box-shadow:inset 0 0 0 3px #0c2736,0 0 18px #0b3d5666;display:flex;align-items:center;justify-content:center;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover}.portrait-placeholder{text-align:center;color:#8b8170;font:700 14px Cinzel}.portrait-upload{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2}
-.bottom-slots{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;padding:0 10px 12px;margin-right:350px}.bottom-slots .equip{padding:10px;min-height:178px;text-align:center}.bottom-slots .equip-img{position:static;width:92px;height:92px;margin:auto;display:block}.bottom-slots .item-name{font-size:16px}.bottom-slots .slot-title{font-size:14px}
-.stats-panel{border:1px solid #315f77;background:linear-gradient(#071119,#03080c);padding:10px;align-self:start}.stats-section{border:1px solid #244e65;background:linear-gradient(#08131b,#04090d);margin-bottom:9px;padding:10px}.stats-section h3{font:700 14px Cinzel;color:#d8b14c;margin:0 0 10px;border-bottom:1px solid #302712;padding-bottom:5px}.general-head{display:grid;grid-template-columns:1fr 92px;gap:10px}.crest{width:88px;height:104px;object-fit:contain;border:1px dashed #76571b;background:#050606;cursor:pointer}.general-lines{font-size:16px}.statline{display:flex;justify-content:space-between;padding:2px 0}.statline .hp{color:#57ce68}.statline .power{color:#4cbcf0}.abilities .statline{font-size:15px}.attack-row,.save-row{display:flex;justify-content:space-between;padding:3px 0}.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}.skill-row{display:flex;justify-content:space-between;border-bottom:1px solid #1e1b13;padding:2px 0;font-size:13px}.skill-bonus{color:#e7c766}
-.character-edit{margin:0 10px 12px;border:1px solid #554017;background:#080907;padding:10px}.edit-grid{display:grid;grid-template-columns:2fr 80px 80px 2fr;gap:7px}.edit-grid input{width:100%;background:#050606;border:1px solid #5c4519;color:#eee;padding:7px}.edit-actions{display:flex;gap:8px;margin-top:8px}
-.tabs{display:flex;gap:8px;padding:8px 10px;border-top:1px solid #362a12}.craft-wrap{padding:10px}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.panel{border:1px solid #564019;background:#080b0b;padding:10px}.panel h2,.panel h3{font:700 14px Cinzel;color:#d4ad42}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #4c3b16;padding:7px}.tool select,.field input,.field select{width:100%;background:#050606;border:1px solid #5c4519;color:#eee;padding:6px}.field{margin:7px 0}.field label{display:block;font:700 11px Cinzel;color:#c1ab7d}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}.feature-list{display:grid;gap:6px}.toggle{border:1px solid #4c3b16;padding:7px}.actions{display:flex;gap:7px}.small{font-size:13px;color:var(--muted)}.warn{color:#e7c66a}
+.main{min-width:0}.equipment-layout{display:grid;grid-template-columns:260px minmax(410px,1fr) 260px 340px;gap:10px;padding:10px;align-items:start}
+.slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:205px;border:1px solid var(--theme);background:linear-gradient(135deg,#081722,#03090e);box-shadow:inset 0 0 0 1px var(--theme-soft),0 0 12px #07131c;padding:10px;text-align:center;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
+.equip.empty{padding-left:12px}.equip-img{position:static;width:128px;height:128px;object-fit:contain;border:1px solid var(--theme);background:#02080d;padding:4px;box-shadow:inset 0 0 12px var(--theme-soft),0 0 8px #1d709655;margin:4px auto 8px;display:block}.slot-title{font:700 15px Cinzel;color:#e1b64b;margin-bottom:6px}.item-name{font-size:18px;margin-top:3px;min-height:24px}.rarity{font-size:15px}.rarity.Common{color:#ddd}.rarity.Uncommon{color:#48d050}.rarity.Rare{color:#39bafa}.rarity.Very-Rare,.rarity.Legendary{color:#c968ef}.slot-edit{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}.slot-edit select{max-width:100%;background:#050606;color:#ddd;border:1px solid var(--theme);font-size:11px}.slot-image-btn{font-size:9px;padding:4px 6px}
+.center-stage{border:1px solid var(--theme);background:linear-gradient(#06131c,#02070b);padding:8px;min-width:0;box-shadow:inset 0 0 0 2px #0c2d3e}.stage-title{text-align:center;font:700 22px Cinzel;color:#e5bf57;padding:4px;border-bottom:1px solid var(--theme);margin-bottom:7px}.portrait{height:520px;position:relative;border:1px solid var(--theme);background:#03090e;box-shadow:inset 0 0 0 3px #0c2736,0 0 18px #0b3d5666;display:flex;align-items:center;justify-content:center;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover}.portrait-placeholder{text-align:center;color:#8b8170;font:700 14px Cinzel}.portrait-upload{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2}
+.bottom-slots{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;padding:0 10px 12px;margin-right:350px;margin-top:-4px}.bottom-slots .equip{padding:10px;min-height:215px;text-align:center}.bottom-slots .equip-img{position:static;width:128px;height:128px;margin:4px auto 8px;display:block}.bottom-slots .item-name{font-size:16px}.bottom-slots .slot-title{font-size:14px}
+.stats-panel{border:1px solid var(--theme);background:linear-gradient(#071119,#03080c);padding:10px;align-self:start}.stats-section{border:1px solid var(--theme);background:linear-gradient(#08131b,#04090d);margin-bottom:9px;padding:10px}.stats-section h3{font:700 14px Cinzel;color:#d8b14c;margin:0 0 10px;border-bottom:1px solid #302712;padding-bottom:5px}.general-head{display:grid;grid-template-columns:1fr 92px;gap:10px}.crest{width:88px;height:104px;object-fit:contain;border:1px dashed var(--theme);background:#050606;cursor:pointer}.general-lines{font-size:16px}.statline{display:flex;justify-content:space-between;padding:2px 0}.statline .hp{color:#57ce68}.statline .power{color:#4cbcf0}.abilities .statline{font-size:15px}.attack-row,.save-row{display:flex;justify-content:space-between;padding:3px 0}.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}.skill-row{display:flex;justify-content:space-between;border-bottom:1px solid #1e1b13;padding:2px 0;font-size:13px}.skill-bonus{color:#e7c766}
+.character-edit{margin:0 10px 12px;border:1px solid var(--theme);background:#080907;padding:10px}.edit-grid{display:grid;grid-template-columns:2fr 80px 80px 2fr;gap:7px}.edit-grid input{width:100%;background:#050606;border:1px solid var(--theme);color:#eee;padding:7px}.edit-actions{display:flex;gap:8px;margin-top:8px}
+.tabs{display:flex;gap:8px;padding:8px 10px;border-top:1px solid #362a12}.craft-wrap{padding:10px}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.panel{border:1px solid var(--theme);background:#080b0b;padding:10px}.panel h2,.panel h3{font:700 14px Cinzel;color:#d4ad42}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #4c3b16;padding:7px}.tool select,.field input,.field select{width:100%;background:#050606;border:1px solid var(--theme);color:#eee;padding:6px}.field{margin:7px 0}.field label{display:block;font:700 11px Cinzel;color:#c1ab7d}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}.feature-list{display:grid;gap:6px}.toggle{border:1px solid #4c3b16;padding:7px}.actions{display:flex;gap:7px}.small{font-size:13px;color:var(--muted)}.warn{color:#e7c66a}
 @media(max-width:1350px){.equipment-layout{grid-template-columns:230px minmax(360px,1fr) 230px 310px}.bottom-slots{margin-right:320px}}
 @media(max-width:1050px){.workspace{grid-template-columns:180px 1fr}.equipment-layout{grid-template-columns:1fr 1.3fr}.slot-right,.stats-panel{grid-column:auto}.stats-panel{grid-column:1/-1}.bottom-slots{margin-right:0;grid-template-columns:repeat(4,1fr)}}
 @media(max-width:720px){.workspace{grid-template-columns:1fr}.sidebar{display:none}.equipment-layout{grid-template-columns:1fr}.bottom-slots{grid-template-columns:repeat(2,1fr)}.viewer{grid-template-columns:1fr}.edit-grid{grid-template-columns:1fr 1fr}.craft{grid-template-columns:1fr}.tool-list{grid-template-columns:1fr}}
@@ -37,11 +37,23 @@ body.readonly .owner-only{display:none!important}
 .equip:before{left:3px;top:3px;border-left:1px solid #d0a43d;border-top:1px solid #d0a43d}
 .equip:after{right:3px;bottom:3px;border-right:1px solid #d0a43d;border-bottom:1px solid #d0a43d}
 .slot-column .equip:has(.equip-img):hover .image-overlay{opacity:1}
-.image-overlay{position:absolute;left:10px;top:13px;width:94px;height:94px;display:flex;align-items:center;justify-content:center;background:#02070bcc;border:1px solid #d5aa3b;color:#ffe49a;font:700 10px Cinzel;text-align:center;opacity:0;transition:.15s;cursor:pointer;z-index:3}
+.image-overlay{position:absolute;left:50%;transform:translateX(-50%);top:39px;width:128px;height:128px;display:flex;align-items:center;justify-content:center;background:#02070bcc;border:1px solid #d5aa3b;color:#ffe49a;font:700 10px Cinzel;text-align:center;opacity:0;transition:.15s;cursor:pointer;z-index:3}
 .equip.empty .image-overlay{opacity:1;border-style:dashed;background:#06131c88;color:#8fcce8}
-.bottom-slots .image-overlay{left:50%;transform:translateX(-50%);top:34px;width:92px;height:92px}
+.bottom-slots .image-overlay{left:50%;transform:translateX(-50%);top:39px;width:128px;height:128px}
 .equip.drag-image{outline:2px solid #f0cd73;box-shadow:0 0 20px #38b9ef88}
 .fantasy-divider{height:1px;background:linear-gradient(90deg,transparent,#2f8dbc,#d5aa3b,#2f8dbc,transparent);margin:6px 0}
+
+
+body.theme-blue{--theme:#2c91c4;--theme-soft:#164a65}
+body.theme-gold{--theme:#c99d35;--theme-soft:#5a4317}
+body.theme-purple{--theme:#9b59b6;--theme-soft:#4c2c59}
+body.theme-green{--theme:#2fa866;--theme-soft:#164d31}
+body.theme-red{--theme:#b64d4d;--theme-soft:#572626}
+body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
+.theme-picker{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.theme-swatch{width:28px;height:28px;border:2px solid #111;cursor:pointer;padding:0;border-radius:3px}
+.theme-swatch[data-theme="blue"]{background:#2c91c4}.theme-swatch[data-theme="gold"]{background:#c99d35}.theme-swatch[data-theme="purple"]{background:#9b59b6}.theme-swatch[data-theme="green"]{background:#2fa866}.theme-swatch[data-theme="red"]{background:#b64d4d}.theme-swatch[data-theme="silver"]{background:#8fa3ad}
+.theme-swatch.active{outline:2px solid #f0cd73}
 
 </style>
 </head>
@@ -64,10 +76,10 @@ body.readonly .owner-only{display:none!important}
   <div class="side-link" data-jump="equipment"><span class="side-icon">⚔</span>Equipment</div>
   <div class="side-link owner-only" data-tablink="crafting"><span class="side-icon">⚒</span>Crafting</div>
   <a class="side-link" href="../bastions/my-bastion/"><span class="side-icon">♜</span>Bastions</a>
-  <div class="side-link"><span class="side-icon">▣</span>Contracts</div>
+  <a class="side-link" href="../contracts/"><span class="side-icon">▣</span>Contracts</a>
   <div class="side-link" data-jump="skills"><span class="side-icon">✥</span>Skills</div>
   <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button></div>
-  <div class="load-card"><h4>Equipment Load</h4><div class="green">Character Inventory</div><div id="loadCount">— items</div><hr style="border-color:#342812"><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
+  <div class="load-card"><h4>Equipment Load</h4><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
 </aside>
 
 <main class="main">
@@ -107,7 +119,31 @@ body.readonly .owner-only{display:none!important}
 <div id="editPanel" class="character-edit owner-only hidden">
   <div class="edit-grid"><input id="characterName" placeholder="Character Name"><input id="level" type="number" min="1" max="20"><input id="rank" readonly><input id="classSummary" placeholder="Class / Build"></div>
   <div class="edit-grid" style="grid-template-columns:repeat(6,1fr);margin-top:7px"><input id="str" placeholder="STR"><input id="dex" placeholder="DEX"><input id="con" placeholder="CON"><input id="int" placeholder="INT"><input id="wis" placeholder="WIS"><input id="cha" placeholder="CHA"></div>
-  <input id="ddbUrl" style="width:100%;margin-top:7px;background:#050606;border:1px solid #5c4519;color:#eee;padding:7px" placeholder="D&D Beyond Character URL">
+  <input id="ddbUrl" style="width:100%;margin-top:7px;background:#050606;border:1px solid var(--theme);color:#eee;padding:7px" placeholder="D&D Beyond Character URL">
+  <div class="stats-section owner-only" style="margin-top:10px">
+    <h3>Manual Stat Overrides</h3>
+    <div class="small">Leave a field blank to use D&D Beyond. A number entered here stays saved and is not overwritten by Sync.</div>
+    <div class="edit-grid" style="grid-template-columns:repeat(4,1fr);margin-top:7px">
+      <input id="ovHpMax" type="number" placeholder="Max HP">
+      <input id="ovHpCurrent" type="number" placeholder="Current HP">
+      <input id="ovAc" type="number" placeholder="Armor Class">
+      <input id="ovInitiative" type="number" placeholder="Initiative">
+      <input id="ovSpeed" type="number" placeholder="Speed">
+      <input id="ovPassive" type="number" placeholder="Passive Perception">
+      <input id="ovSpellDC" type="number" placeholder="Spell Save DC">
+      <input id="ovSpellAttack" type="number" placeholder="Spell Attack">
+    </div>
+    <h3 style="margin-top:10px">Border Color</h3>
+    <div class="small">Only you can see these controls. Other players will see the border color you choose.</div>
+    <div id="themePicker" class="theme-picker">
+      <button type="button" class="theme-swatch" data-theme="blue" title="Blue"></button>
+      <button type="button" class="theme-swatch" data-theme="gold" title="Gold"></button>
+      <button type="button" class="theme-swatch" data-theme="purple" title="Purple"></button>
+      <button type="button" class="theme-swatch" data-theme="green" title="Green"></button>
+      <button type="button" class="theme-swatch" data-theme="red" title="Red"></button>
+      <button type="button" class="theme-swatch" data-theme="silver" title="Silver"></button>
+    </div>
+  </div>
   <div class="edit-actions"><button id="saveCharacter">Save Character</button><button id="saveGear">Save Loadout</button></div>
   <div id="syncNote" class="small" style="margin-top:6px"></div>
 </div>
@@ -234,7 +270,6 @@ function renderBags(){
  const loose=ddbInventory.filter(x=>!x.isContainer && (!x.containerEntityId || !containedIds.has(String(x.containerEntityId))));
  if(loose.length)parts.push(`<details class="bag"><summary>🧭 Carried / Uncontained (${loose.length})</summary><div class="bag-items">${loose.map(x=>`<div class="bag-item"><span>${esc(x.name)}</span><span>×${Number(x.quantity||1)}</span></div>`).join("")}</div></details>`);
  holder.innerHTML=parts.join("")||'<div class="small">No D&D Beyond containers found.</div>';
- $("loadCount").textContent=`${ddbInventory.reduce((s,x)=>s+Number(x.quantity||1),0)} items`;
 }
 function renderMaterialBag(){
  const rows=materialInventory||[];
@@ -246,14 +281,27 @@ async function loadDdbInventory(){
  ddbInventory=d.inventory||[];materialInventory=m.inventory||[];renderDdbPickers();renderBags();
 }
 
+
+function getOverrides(){return (data?.character?.statOverrides && typeof data.character.statOverrides==="object")?data.character.statOverrides:{}}
+function applyTheme(theme){
+  const valid=["blue","gold","purple","green","red","silver"];
+  theme=valid.includes(theme)?theme:"blue";
+  document.body.classList.remove(...valid.map(x=>"theme-"+x));
+  document.body.classList.add("theme-"+theme);
+  document.querySelectorAll(".theme-swatch").forEach(b=>b.classList.toggle("active",b.dataset.theme===theme));
+}
+function displayStat(details,key,overrideKey){
+  const ov=getOverrides();
+  return ov[overrideKey]!==undefined && ov[overrideKey]!==null && ov[overrideKey]!=="" ? Number(ov[overrideKey]) : details?.[key];
+}
 function renderStats(c,details={},skills=[]){
  $("generalLevel").textContent=`Level ${c.character_level||"—"}`;$("generalClass").textContent=c.class_summary||"—";$("generalRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
- const hp=details.hp||{};$("hpLine").textContent=hp.max?`${hp.current} / ${hp.max}${hp.temp?` (+${hp.temp})`:""}`:"—";
- $("acLine").textContent=details.armorClass??"—";$("initLine").textContent=details.initiative!=null?signed(details.initiative):"—";$("speedLine").textContent=details.speed?`${details.speed} ft.`:"—";$("inspLine").textContent=details.inspiration?"◆":"◇";
+ const hp=details.hp||{},ov=getOverrides();const hpMax=(ov.hpMax??hp.max),hpCurrent=(ov.hpCurrent??hp.current);$("hpLine").textContent=hpMax?`${hpCurrent??hpMax} / ${hpMax}${hp.temp?` (+${hp.temp})`:""}`:"—";
+ $("acLine").textContent=(ov.armorClass??details.armorClass)??"—";const iv=(ov.initiative??details.initiative);$("initLine").textContent=iv!=null?signed(iv):"—";const sv=(ov.speed??details.speed);$("speedLine").textContent=sv?`${sv} ft.`:"—";$("inspLine").textContent=details.inspiration?"◆":"◇";
  const abilities=[["STR",c.strength_score,"Strength"],["DEX",c.dexterity_score,"Dexterity"],["CON",c.constitution_score,"Constitution"],["INT",c.intelligence_score,"Intelligence"],["WIS",c.wisdom_score,"Wisdom"],["CHA",c.charisma_score,"Charisma"]];
  $("abilityList").innerHTML=abilities.map(([abbr,score])=>`<div class="statline"><span>${abbr}</span><span>${score??"—"}</span><span>${score!=null?signed(mod(score)):"—"}</span></div>`).join("");
  $("saveList").innerHTML=(details.savingThrows||[]).map(s=>`<div class="save-row"><span>${esc(s.name)}</span><span>${signed(s.bonus)}</span></div>`).join("")||'<div class="small">Sync D&D Beyond to load saves.</div>';
- $("passivePerception").textContent=details.passivePerception??"—";$("spellDC").textContent=details.spell?.saveDC??"—";$("spellAttack").textContent=details.spell?.attack!=null?signed(details.spell.attack):"—";
+ $("passivePerception").textContent=(ov.passivePerception??details.passivePerception)??"—";$("spellDC").textContent=(ov.spellSaveDC??details.spell?.saveDC)??"—";const sa=(ov.spellAttack??details.spell?.attack);$("spellAttack").textContent=sa!=null?signed(sa):"—";
  renderSkills(skills);
 }
 function renderSkills(skills=[]){
@@ -277,11 +325,17 @@ function fill(d){
  if(d.portrait?.hasPortrait){$("portraitImg").src=d.portrait.url;$("portraitImg").classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");$("miniAvatar").src=d.portrait.url;$("miniAvatar").classList.remove("hidden")}
  else{$("portraitImg").classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}
  if(d.crest?.hasCrest){$("crestImg").src=d.crest.url}else{$("crestImg").removeAttribute("src")}
+ const ov=c.statOverrides||{};
+ [["ovHpMax","hpMax"],["ovHpCurrent","hpCurrent"],["ovAc","armorClass"],["ovInitiative","initiative"],["ovSpeed","speed"],["ovPassive","passivePerception"],["ovSpellDC","spellSaveDC"],["ovSpellAttack","spellAttack"]].forEach(([id,k])=>{if($(id))$(id).value=ov[k]??""});
+ applyTheme(c.borderTheme||"blue");
  if(c.dndbeyond_last_sync)$("syncNote").textContent="Last D&D Beyond sync: "+new Date(Number(c.dndbeyond_last_sync)).toLocaleString();
 }
 function characterPayload(){
  const prof=[],exp=[];document.querySelectorAll("[data-tool]").forEach(s=>{if(s.value!=="none")prof.push(s.dataset.tool);if(s.value==="expertise")exp.push(s.dataset.tool)});
- return {characterName:$("characterName").value,characterLevel:Number($("level").value),classSummary:$("classSummary").value,dndBeyondUrl:$("ddbUrl").value,strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,proficientTools:prof,expertTools:exp,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,hasMagicItemAdept:$("magicAdept").checked,magicItemAdeptTool:$("magicAdeptTool").value,intelligenceModifier:Number($("intMod").value||0)}
+ const val=id=>$(id)?.value===""?null:Number($(id)?.value);
+ return {characterName:$("characterName").value,characterLevel:Number($("level").value),classSummary:$("classSummary").value,dndBeyondUrl:$("ddbUrl").value,strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,proficientTools:prof,expertTools:exp,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,hasMagicItemAdept:$("magicAdept").checked,magicItemAdeptTool:$("magicAdeptTool").value,intelligenceModifier:Number($("intMod").value||0),
+ statOverrides:{hpMax:val("ovHpMax"),hpCurrent:val("ovHpCurrent"),armorClass:val("ovAc"),initiative:val("ovInitiative"),speed:val("ovSpeed"),passivePerception:val("ovPassive"),spellSaveDC:val("ovSpellDC"),spellAttack:val("ovSpellAttack")},
+ borderTheme:(document.querySelector(".theme-swatch.active")?.dataset.theme||data?.character?.borderTheme||"blue")};
 }
 async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});await api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})});show("Character saved.","good");await load()}
 
@@ -303,6 +357,8 @@ function setReadOnly(v,name=""){currentViewingOwn=!v;document.body.classList.tog
 async function visitCharacter(id){const d=id?await api("/api/character/view?owner="+encodeURIComponent(id)):await api("/api/character/profile");setReadOnly(!!id,d.owner?.globalName||"");fill(d)}
 async function load(){try{const s=await api("/api/session");$("online").classList.remove("hidden");await loadCharacterDirectory();const owner=new URLSearchParams(location.search).get("owner");if(owner){$("characterSelect").value=owner;await visitCharacter(owner)}else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}}catch(e){show("Character page could not load: "+e.message,"bad")}}
 
+
+document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{if(!currentViewingOwn)return;applyTheme(b.dataset.theme)});
 $("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
 $("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
