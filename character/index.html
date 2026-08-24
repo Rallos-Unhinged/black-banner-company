@@ -691,8 +691,13 @@ async function uploadEquipmentImage(slot,file){
      img=document.createElement("img");
      img.className="equip-img";
      img.alt="";
-     const overlay=el.querySelector(".image-overlay");
-     el.insertBefore(img,overlay||el.firstChild);
+     const stage=el.querySelector(".equip-image-stage");
+     const overlay=stage?.querySelector(".image-overlay");
+     if(stage){
+       stage.insertBefore(img,overlay||stage.firstChild);
+     }else{
+       el.prepend(img);
+     }
    }
    img.src=url;
    el.classList.remove("empty");
