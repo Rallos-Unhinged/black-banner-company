@@ -88,11 +88,13 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .craft-result strong{color:var(--gold2)}
 @media(max-width:760px){.craft-grid{grid-template-columns:1fr}}
 
-.bastion-title-wrap{display:flex;justify-content:center;align-items:center;gap:.65rem;flex-wrap:wrap}
-.bastion-title-wrap .btn{width:auto;padding:.45rem .7rem;font-size:.62rem}
-.bastion-name-editor{margin:.75rem auto 0;display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;max-width:560px}
-.bastion-name-editor input{flex:1;min-width:220px;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:700 1rem 'Cinzel',serif;text-align:center}
-@media(max-width:760px){.bastion-name-editor{display:grid;grid-template-columns:1fr}.bastion-title-wrap .btn{width:100%}}
+
+.bastion-name-bar{margin:1rem 0;border:1px solid var(--border);background:linear-gradient(90deg,#11100c,#19150c,#11100c);padding:1rem;text-align:center}
+.bastion-name-title{font:700 clamp(1.25rem,3vw,2rem) 'Cinzel',serif;color:var(--gold2);letter-spacing:.04em}
+.bastion-name-sub{color:var(--muted);font-size:.85rem;margin-top:.25rem}
+.bastion-name-editor{display:grid;grid-template-columns:1fr auto;gap:.5rem;margin-top:.65rem}
+.bastion-name-editor input{width:100%;background:#080706;color:#eee;border:1px solid #6f5418;padding:.65rem}
+@media(max-width:600px){.bastion-name-editor{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -109,15 +111,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 
   <header class="hero">
     <div class="eyebrow">Black Banner Company · Personal Stronghold</div>
-    <div class="bastion-title-wrap">
-      <h1 id="bastionTitle">My Bastion</h1>
-      <button id="editBastionNameBtn" class="btn hidden" type="button">Edit Name</button>
-    </div>
-    <div id="bastionNameEditor" class="bastion-name-editor hidden">
-      <input id="bastionNameInput" type="text" maxlength="50" placeholder="Enter your Bastion name…">
-      <button id="saveBastionNameBtn" class="primary" type="button">Save Name</button>
-      <button id="cancelBastionNameBtn" type="button">Cancel</button>
-    </div>
+    <h1>My Bastion</h1>
     <p class="subtitle">A read-only view of your Bastion records from the Black Banner system.</p>
   </header>
 
@@ -142,6 +136,11 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
     <div id="bannerEmpty" class="banner-empty">No Bastion banner has been added yet.</div>
   </section>
 
+  <section class="bastion-name-bar">
+    <div id="bastionDisplayName" class="bastion-name-title">My Bastion</div>
+    <div id="bastionDisplayOwner" class="bastion-name-sub">Black Banner Company Stronghold</div>
+  </section>
+
   <section id="ownerTools" class="owner-tools hidden">
     <h2>Manage My Bastion</h2>
     <div class="rule"></div>
@@ -150,6 +149,16 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <span class="manage-pill">Owner-only controls</span>
     </div>
     <div class="owner-grid">
+      <div class="owner-card">
+        <h3>Bastion Name</h3>
+        <label for="bastionNameInput">Your Bastion Name</label>
+        <div class="bastion-name-editor">
+          <input id="bastionNameInput" maxlength="80" placeholder="Example: Raven's Rest">
+          <button id="saveBastionNameBtn" class="primary" type="button">Save Name</button>
+        </div>
+        <div class="muted" style="margin-top:.45rem">Saved per player and shown to anyone who visits your Bastion page.</div>
+      </div>
+
       <div class="owner-card">
         <h3>Build & Upgrade</h3>
         <label for="purchaseOption">Available Purchase</label>
@@ -600,59 +609,41 @@ async function sendChat(){
 }
 
 
-function displayBastionName(name){
-  const clean=String(name||"").trim();
-  $("bastionTitle").textContent=clean||"My Bastion";
-}
-
-function openBastionNameEditor(){
-  if(!currentViewingOwn)return;
-  $("bastionNameInput").value=(me?.bastionName||"");
-  $("bastionNameEditor").classList.remove("hidden");
-  $("editBastionNameBtn").classList.add("hidden");
-  $("bastionNameInput").focus();
-  $("bastionNameInput").select();
-}
-
-function closeBastionNameEditor(){
-  $("bastionNameEditor").classList.add("hidden");
-  $("editBastionNameBtn").classList.toggle("hidden",!currentViewingOwn);
-}
-
 async function saveBastionName(){
   if(!currentViewingOwn)return;
-  const bastionName=$("bastionNameInput").value.trim();
-  if(!bastionName){message("Enter a Bastion name first.","bad");return;}
-  if(bastionName.length>50){message("Bastion names are limited to 50 characters.","bad");return;}
-
-  $("saveBastionNameBtn").disabled=true;
+  const btn=$("saveBastionNameBtn");
+  const name=$("bastionNameInput").value.trim();
+  btn.disabled=true;
   try{
-    const data=await api("/api/bastion/name",{method:"POST",body:JSON.stringify({bastionName})});
-    if(me)me.bastionName=data.bastionName;
-    displayBastionName(data.bastionName);
-    closeBastionNameEditor();
-    message("Bastion name saved.","good");
+    const result=await api("/api/bastion/name",{
+      method:"POST",
+      body:JSON.stringify({name})
+    });
+    if(me)me.bastionName=result.name||null;
+    $("bastionDisplayName").textContent=result.name||"My Bastion";
+    message(result.name?`Bastion name saved as "${result.name}".`:"Bastion name cleared.","good");
   }catch(err){
-    message(err.message,"bad");
+    message(err.message||"Could not save Bastion name.","bad");
   }finally{
-    $("saveBastionNameBtn").disabled=false;
+    btn.disabled=false;
   }
 }
 
 function render(data){
   me=data;
   currentViewingOwn=!!data.viewingOwn;
-  displayBastionName(data.bastionName);
-  $("editBastionNameBtn").classList.toggle("hidden",!currentViewingOwn);
-  $("bastionNameEditor").classList.add("hidden");
   $("ownerTools").classList.toggle("hidden",!currentViewingOwn);
   $("craftingPanel").classList.toggle("hidden",!currentViewingOwn);
   renderBanner(data.bannerUrl||null);
   startChat(data.owner.id, data.owner.globalName||data.owner.username||"Banner Member");
   $("account").classList.remove("hidden");
   $("dashboard").classList.remove("hidden");
-  $("accountName").textContent=data.owner.globalName||data.owner.username||"Banner Member";
+  const ownerDisplay=data.owner.globalName||data.owner.username||"Banner Member";
+  $("accountName").textContent=ownerDisplay;
   $("accountMeta").textContent=data.viewingOwn ? "Your Bastion" : "Visiting Bastion · Read Only";
+  $("bastionDisplayName").textContent=data.bastionName||(data.viewingOwn?"My Bastion":`${ownerDisplay}'s Bastion`);
+  $("bastionDisplayOwner").textContent=data.viewingOwn?`${ownerDisplay} · Owner`:`Owned by ${ownerDisplay}`;
+  if(data.viewingOwn && $("bastionNameInput")) $("bastionNameInput").value=data.bastionName||"";
   const av=avatarUrl(data.owner); if(av){$("avatar").src=av;$("avatar").style.display="block";}else{$("avatar").style.display="none";}
   $("status").textContent=data.status;
   $("facilityCount").textContent=data.summary.facilities;
@@ -744,6 +735,7 @@ $("craftRank").addEventListener("change",()=>{updateCraftPreview();updateCraftAu
 $("craftQty").addEventListener("input",updateCraftPreview);
 $("craftBtn").addEventListener("click",doBastionCraft);
 
+$("saveBastionNameBtn").addEventListener("click",saveBastionName);
 $("purchaseOption").addEventListener("change",updatePurchasePreview);
 $("purchaseDiscount").addEventListener("change",updatePurchasePreview);
 $("purchaseBtn").addEventListener("click",buySelected);
@@ -768,14 +760,6 @@ $("chatInput").addEventListener("keydown",(event)=>{
     event.preventDefault();
     sendChat();
   }
-});
-
-$("editBastionNameBtn").addEventListener("click",openBastionNameEditor);
-$("saveBastionNameBtn").addEventListener("click",saveBastionName);
-$("cancelBastionNameBtn").addEventListener("click",closeBastionNameEditor);
-$("bastionNameInput").addEventListener("keydown",(event)=>{
-  if(event.key==="Enter"){event.preventDefault();saveBastionName();}
-  if(event.key==="Escape"){event.preventDefault();closeBastionNameEditor();}
 });
 
 $("loginBtn").addEventListener("click",()=>{
