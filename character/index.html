@@ -326,8 +326,61 @@ function updateAttune(){const n=document.querySelectorAll(".attuned:checked").le
 
 function inventoryLabel(x){return `${x.name}${Number(x.quantity||1)>1?` ×${x.quantity}`:""}${x.equipped?" · Equipped":""}`}
 function renderDdbPickers(){
- const opts='<option value="">Choose from D&D Beyond…</option>'+ddbInventory.map((x,i)=>`<option value="${i}">${esc(inventoryLabel(x))}</option>`).join("");
+ const opts='<option value="">Choose from D&D Beyond…</option><option value="__remove__">— Remove Item From Slot —</option>'+
+   ddbInventory.map((x,i)=>`<option value="${i}">${esc(inventoryLabel(x))}</option>`).join("");
  document.querySelectorAll(".slotDdbPicker").forEach(s=>s.innerHTML=opts);
+}
+async function clearEquipmentSlot(slot){
+ const el=document.querySelector(`.equip[data-slot="${slot}"]`);
+ if(!el)return;
+
+ // Remove any custom image saved specifically for this website slot.
+ try{
+   if(data?.equipmentImages?.[slot]){
+     const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{
+       method:"DELETE",credentials:"include"
+     });
+     if(!r.ok){
+       const b=await r.json().catch(()=>({}));
+       throw new Error(b.error||`Could not remove custom image (${r.status}).`);
+     }
+     delete data.equipmentImages[slot];
+   }
+ }catch(err){
+   throw err;
+ }
+
+ el.querySelector(".item-name").textContent="Empty";
+ const rarity=el.querySelector(".rarity");
+ if(rarity){rarity.textContent="";rarity.className="rarity";}
+ const cb=el.querySelector(".attuned");
+ if(cb)cb.checked=false;
+
+ el.dataset.ddbImageUrl="";
+ el.dataset.ddbItemId="";
+ el.dataset.itemUrl="";
+ el.dataset.source="manual";
+
+ const img=el.querySelector(".equip-img");
+ if(img)img.remove();
+
+ const overlay=el.querySelector(".image-overlay");
+ if(overlay)overlay.innerHTML="ADD<br>IMAGE";
+
+ const removeImg=el.querySelector("[data-remove-image-slot]");
+ if(removeImg)removeImg.remove();
+
+ el.classList.add("empty");
+ el.classList.remove("image-broken");
+
+ // Persist the now-empty equipment layout immediately.
+ const result=await api("/api/character/equipment",{
+   method:"POST",
+   body:JSON.stringify({equipment:gearPayload()})
+ });
+ if(data)data.equipment=result.equipment||result||[];
+ updateAttune();
+ show(`${slotLabels[slot]} cleared from the character sheet.`,"good");
 }
 function applyInventoryItemToSlot(item,slot){
  const el=document.querySelector(`.equip[data-slot="${slot}"]`);if(!el||!item)return;
@@ -355,7 +408,19 @@ function applyInventoryItemToSlot(item,slot){
  updateAttune();
 }
 function bindEquipmentControls(){
- document.querySelectorAll(".slotDdbPicker").forEach(s=>s.onchange=()=>{if(s.value!==""){applyInventoryItemToSlot(ddbInventory[Number(s.value)],s.dataset.slotPicker);s.value=""}});
+ document.querySelectorAll(".slotDdbPicker").forEach(s=>s.onchange=async()=>{
+   try{
+     if(s.value==="__remove__"){
+       await clearEquipmentSlot(s.dataset.slotPicker);
+     }else if(s.value!==""){
+       applyInventoryItemToSlot(ddbInventory[Number(s.value)],s.dataset.slotPicker);
+     }
+   }catch(err){
+     show(err.message||"Could not update equipment slot.","bad");
+   }finally{
+     s.value="";
+   }
+ });
  document.querySelectorAll("[data-image-slot]").forEach(b=>b.onclick=e=>{e.stopPropagation();chooseEquipmentImage(b.dataset.imageSlot)});
  document.querySelectorAll("[data-remove-image-slot]").forEach(b=>b.onclick=async e=>{
    e.stopPropagation();
