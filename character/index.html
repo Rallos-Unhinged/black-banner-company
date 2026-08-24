@@ -137,7 +137,7 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
       <input id="ovSpellDC" type="number" placeholder="Spell Save DC">
       <input id="ovSpellAttack" type="number" placeholder="Spell Attack">
     </div>
-    <h3 style="margin-top:10px">Border Color</h3>
+    <div style="margin-top:10px"><button type="button" id="clearStatOverrides">CLEAR ALL STAT OVERRIDES</button></div>\n<h3 style="margin-top:10px">Border Color</h3>
     <div class="small">Only you can see these controls. Other players will see the border color you choose.</div>
     <div id="themePicker" class="theme-picker">
       <button type="button" class="theme-swatch" data-theme="blue" title="Blue"></button>
@@ -436,6 +436,12 @@ async function load(){try{const s=await api("/api/session");$("online").classLis
 
 
 document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{if(!currentViewingOwn)return;applyTheme(b.dataset.theme)});
+$("clearStatOverrides").onclick=async()=>{
+ if(!currentViewingOwn)return;
+ ["ovHpMax","ovHpCurrent","ovAc","ovInitiative","ovSpeed","ovPassive","ovSpellDC","ovSpellAttack"].forEach(id=>{if($(id))$(id).value=""});
+ try{await saveAll();show("Manual stat overrides cleared. D&D Beyond values are now displayed.","good")}
+ catch(err){show(err.message||"Could not clear stat overrides.","bad")}
+};
 $("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete. Final abilities, HP, AC, initiative, speed, saves, skills, and portrait were refreshed.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
 $("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
