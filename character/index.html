@@ -122,12 +122,22 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 .give-review{border:1px solid #5a461d;background:#111009;padding:10px;color:#e6cf8a;margin-top:10px}.give-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
 @media(max-width:620px){.give-grid{grid-template-columns:1fr}.give-grid .full{grid-column:1}}
 
+
+.center-gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.center-gallery-slot{position:relative;height:250px;border:1px solid var(--theme);background:#03090e;box-shadow:inset 0 0 0 2px #0c2736,0 0 14px #0b3d5666;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.center-gallery-slot img{width:100%;height:100%;object-fit:cover;display:block}
+.center-gallery-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#8fcce8;font:700 12px Cinzel;border:1px dashed #7d641a;background:#06131c;cursor:pointer;padding:20px}
+.center-gallery-tools{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:6px;justify-content:center;z-index:3}
+.center-gallery-tools button{font-size:9px;padding:5px 7px}
+.center-gallery-slot.has-image .center-gallery-placeholder{display:none}
+@media(max-width:720px){.center-gallery{grid-template-columns:1fr}.center-gallery-slot{height:220px}}
+
 </style>
 </head>
 <body><div class="shell">
 <div class="topbar">
   <div class="identity"><img id="miniAvatar" class="mini-avatar hidden"><div><h1 id="topName">My Character</h1><div class="sub"><span id="topClass"></span> · <span id="topRank"></span> <span id="online" class="online hidden">● Online</span></div></div></div>
-  <div class="top-actions owner-only"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="saveSheetBtn">💾 Save Character Sheet</button><button id="editToggle">✎ Edit Character</button></div>
+  <div class="top-actions"><a class="btn" href="../">⌂ Home</a><span class="owner-only" style="display:flex;gap:12px"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="saveSheetBtn">💾 Save Character Sheet</button><button id="editToggle">✎ Edit Character</button></span></div>
 </div>
 <div id="message" class="notice hidden"></div>
 <div class="viewer">
@@ -161,6 +171,24 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
       <button id="uploadBtn" class="portrait-upload owner-only">📷 Change Portrait</button>
       <input id="portraitFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
+    <div class="center-gallery">
+      <div id="centerGallery2" class="center-gallery-slot">
+        <img id="centerGallery2Img" class="hidden" alt="Character gallery image 2">
+        <div id="centerGallery2Placeholder" class="center-gallery-placeholder owner-only">ADD IMAGE</div>
+        <div class="center-gallery-tools owner-only">
+          <button type="button" data-gallery-upload="center_2">Add / Change</button>
+          <button type="button" data-gallery-remove="center_2">Remove</button>
+        </div>
+      </div>
+      <div id="centerGallery3" class="center-gallery-slot">
+        <img id="centerGallery3Img" class="hidden" alt="Character gallery image 3">
+        <div id="centerGallery3Placeholder" class="center-gallery-placeholder owner-only">ADD IMAGE</div>
+        <div class="center-gallery-tools owner-only">
+          <button type="button" data-gallery-upload="center_3">Add / Change</button>
+          <button type="button" data-gallery-remove="center_3">Remove</button>
+        </div>
+      </div>
+    </div>
   </div>
   <div id="equipRight" class="slot-column"></div>
   <aside class="stats-panel">
@@ -176,16 +204,10 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
       <div class="general-images">
         <div class="general-image-box">
           <img id="crestImg" class="crest owner-clickable" alt="Character crest" title="Click to upload/change image 1">
-          <div class="general-image-label owner-only">IMAGE 1</div>
-        </div>
-        <div class="general-image-box">
-          <img id="badgeImg" class="crest owner-clickable" alt="Character secondary image" title="Click to upload/change image 2">
-          <div id="badgePlaceholder" class="general-image-placeholder owner-only">ADD<br>IMAGE</div>
-          <div class="general-image-label owner-only">IMAGE 2</div>
+          <div class="general-image-label owner-only">IMAGE</div>
         </div>
       </div></div>
       <input id="crestFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
-      <input id="badgeFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
     <div class="stats-section abilities"><h3>⚄ Ability Scores</h3><div id="abilityList"></div></div>
     <div class="stats-section"><h3>⚙ Saving Throws</h3><div id="saveList"></div></div>
@@ -560,13 +582,65 @@ function renderTools(crafting){
  ["temp1","temp2","magicAdeptTool"].forEach(id=>$(id).innerHTML=opts);$("temp1").value=p.temp_tool||"";$("temp2").value=p.temp_tool_2||"";$("magicAdeptTool").value=p.magic_item_adept_tool||"";
  $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;$("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;$("magicAdept").checked=!!p.has_magic_item_adept;$("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
 }
+
+function renderCenterGallery(images={}){
+  const slots=[["center_2","centerGallery2","centerGallery2Img","centerGallery2Placeholder"],["center_3","centerGallery3","centerGallery3Img","centerGallery3Placeholder"]];
+  for(const [key,boxId,imgId,phId] of slots){
+    const box=$(boxId),img=$(imgId),ph=$(phId),url=images?.[key]?.url||"";
+    if(url){
+      img.src=url+(url.includes("?")?"&":"?")+"_="+Date.now();
+      img.classList.remove("hidden");
+      box.classList.add("has-image");
+      if(ph)ph.classList.add("hidden");
+    }else{
+      img.removeAttribute("src");
+      img.classList.add("hidden");
+      box.classList.remove("has-image");
+      if(ph)ph.classList.remove("hidden");
+    }
+  }
+}
+async function uploadCenterGallery(slot,file){
+  if(!file)return;
+  if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Image must be PNG, JPG, or WebP.");
+  if(file.size>5*1024*1024)throw new Error("Image must be 5 MB or smaller.");
+  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot),{
+    method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file
+  });
+  const b=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(b.error||"Gallery image upload failed.");
+  show("Character image updated.","good");
+  await load();
+}
+async function removeCenterGallery(slot){
+  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot),{
+    method:"DELETE",credentials:"include"
+  });
+  const b=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(b.error||"Could not remove image.");
+  show("Character image removed.","good");
+  await load();
+}
+function chooseCenterGalleryImage(slot){
+  if(!currentViewingOwn)return;
+  const input=document.createElement("input");
+  input.type="file";input.accept="image/png,image/jpeg,image/webp";input.hidden=true;
+  document.body.appendChild(input);
+  input.onchange=async()=>{
+    try{const f=input.files?.[0];if(f)await uploadCenterGallery(slot,f)}
+    catch(err){show(err.message||"Image upload failed.","bad")}
+    finally{input.remove()}
+  };
+  input.click();
+}
+
 function fill(d){
  data=d;toolChoices=d.toolChoices||[];const c=d.character||{};
  $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";
  [["str","strength_score"],["dex","dexterity_score"],["con","constitution_score"],["int","intelligence_score"],["wis","wisdom_score"],["cha","charisma_score"]].forEach(([id,k])=>$(id).value=c[k]??"");
  $("topName").textContent=c.character_name||"My Character";$("topClass").textContent=c.class_summary||"";$("topRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
  if(d.ddbInventory?.length)ddbInventory=d.ddbInventory;
- renderEquipment(d.equipment||[]);renderStats(c,d.ddbDetails||{},d.skills||[]);renderTools(d.crafting||{});
+ renderEquipment(d.equipment||[]);renderStats(c,d.ddbDetails||{},d.skills||[]);renderTools(d.crafting||{});renderCenterGallery(d.galleryImages||{});
  if(d.ddbInventory?.length){renderDdbPickers();renderBags()}
  const ddbPortrait=d.ddbDetails?.portraitUrl||null, customPortrait=d.portrait?.hasPortrait?d.portrait.url:null, portraitSrc=customPortrait||ddbPortrait;
  if(portraitSrc){
@@ -576,15 +650,6 @@ function fill(d){
    img.src=portraitSrc;mini.src=portraitSrc;img.classList.remove("hidden");mini.classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");
  }else{$("portraitImg").classList.add("hidden");$("miniAvatar").classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}
  if(d.crest?.hasCrest){$("crestImg").src=d.crest.url}else{$("crestImg").removeAttribute("src")}
- if(d.badge?.hasBadge){
-   $("badgeImg").src=d.badge.url;
-   $("badgeImg").classList.remove("hidden");
-   $("badgePlaceholder").classList.add("hidden");
- }else{
-   $("badgeImg").removeAttribute("src");
-   $("badgeImg").classList.add("hidden");
-   $("badgePlaceholder").classList.remove("hidden");
- }
  const ov=c.statOverrides||{};
  [["ovHpMax","hpMax"],["ovHpCurrent","hpCurrent"],["ovAc","armorClass"],["ovInitiative","initiative"],["ovSpeed","speed"],["ovPassive","passivePerception"],["ovSpellDC","spellSaveDC"],["ovSpellAttack","spellAttack"]].forEach(([id,k])=>{if($(id))$(id).value=ov[k]??""});
  applyTheme(c.borderTheme||"blue");
@@ -655,18 +720,6 @@ async function uploadPortrait(file){
  await load();
 }
 async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
-async function uploadBadge(file){
- if(!file)return;
- if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Second image must be PNG, JPG, or WebP.");
- if(file.size>5*1024*1024)throw new Error("Second image must be 5 MB or smaller.");
- const r=await fetch(API_BASE+"/api/character/badge",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
- const b=await r.json().catch(()=>({}));
- if(!r.ok)throw new Error(b.error||"Second image upload failed.");
- $("badgeImg").src=b.url+(String(b.url||"").includes("?")?"&":"?")+"v="+Date.now();
- $("badgeImg").classList.remove("hidden");
- $("badgePlaceholder").classList.add("hidden");
- show("Second character image updated.","good");
-}
 
 
 
@@ -742,14 +795,7 @@ $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("save
 $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
-$("crestImg").onclick=()=>{if(currentViewingOwn)$("crestFile").click()};
-$("badgeImg").onclick=()=>{if(currentViewingOwn)$("badgeFile").click()};
-$("badgePlaceholder").onclick=()=>{if(currentViewingOwn)$("badgeFile").click()};
-$("badgeFile").onchange=async()=>{
- try{const f=$("badgeFile").files?.[0];if(f)await uploadBadge(f)}
- catch(err){show(err.message||"Second image upload failed.","bad")}
- finally{$("badgeFile").value=""}
-};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
+$("crestImg").onclick=()=>{if(currentViewingOwn)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("refreshInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
 $("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
@@ -766,6 +812,11 @@ $("giveClose").onclick=closeGiveMaterials;
 $("giveReviewBtn").onclick=()=>{try{reviewMaterialGift()}catch(e){show(e.message,"bad")}};
 $("giveConfirmBtn").onclick=()=>confirmMaterialGift().catch(e=>show(e.message||"Material gift failed.","bad"));
 $("giveMaterialsModal").onclick=e=>{if(e.target===$("giveMaterialsModal"))closeGiveMaterials()};
+
+document.querySelectorAll("[data-gallery-upload]").forEach(b=>b.onclick=()=>chooseCenterGalleryImage(b.dataset.galleryUpload));
+document.querySelectorAll("[data-gallery-remove]").forEach(b=>b.onclick=()=>removeCenterGallery(b.dataset.galleryRemove).catch(e=>show(e.message,"bad")));
+$("centerGallery2Placeholder").onclick=()=>chooseCenterGalleryImage("center_2");
+$("centerGallery3Placeholder").onclick=()=>chooseCenterGalleryImage("center_3");
 load();
 </script>
 </body></html>
