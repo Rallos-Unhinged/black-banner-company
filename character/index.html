@@ -254,8 +254,14 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 
 function rarityClass(r){return String(r||"").replace(/\s+/g,"-")}
 function equipCard(slot,row={}){
- const customImageUrl=row.customImageUrl||"", ddbImageUrl=row.imageUrl||"", imageUrl=customImageUrl||ddbImageUrl, hasCustomImage=!!customImageUrl, name=row.itemName||"", rarity=row.rarity||"";
- return `<div class="equip ${imageUrl?"":"empty"}" data-slot="${slot}" data-image-url="${esc(ddbImageUrl)}">
+ const customImageUrl=row.customImageUrl||"", ddbImageUrl=row.ddbImageUrl||row.imageUrl||"", imageUrl=customImageUrl||ddbImageUrl;
+ const hasCustomImage=!!customImageUrl, name=row.itemName||"", rarity=row.rarity||"";
+ return `<div class="equip ${imageUrl?"":"empty"}"
+   data-slot="${slot}"
+   data-ddb-image-url="${esc(ddbImageUrl)}"
+   data-ddb-item-id="${esc(row.ddbItemId||"")}"
+   data-item-url="${esc(row.itemUrl||"")}"
+   data-source="${esc(row.source||"manual")}">
    <div class="slot-title">${slotLabels[slot]}</div>
    <div class="item-name">${esc(name||"Empty")}</div>
    <div class="rarity ${rarityClass(rarity)}">${esc(rarity||"")}</div>
@@ -272,15 +278,50 @@ function equipCard(slot,row={}){
    </div>
  </div>`;
 }
+function isCustomApiImageUrl(url){
+ return /\/api\/character\/equipment-image(?:\?|$)/i.test(String(url||""));
+}
+function ddbFallbackForRow(row){
+ if(!row)return null;
+ const id=String(row.ddbItemId||"");
+ return ddbInventory.find(x=>
+   (id && (String(x.inventoryId||"")===id || String(x.definitionId||"")===id)) ||
+   (!id && String(x.name||"").trim().toLowerCase()===String(row.itemName||"").trim().toLowerCase())
+ ) || ddbInventory.find(x=>String(x.name||"").trim().toLowerCase()===String(row.itemName||"").trim().toLowerCase()) || null;
+}
 function renderEquipment(rows=[]){
  const map=new Map(rows.map(x=>[x.slotKey,x])), imgs=(data&&data.equipmentImages)||{};
- const decorate=s=>({...((map.get(s)||{})),customImageUrl:imgs[s]?.url||null});
+ const decorate=s=>{
+   const row={...(map.get(s)||{})};
+   const fallback=ddbFallbackForRow(row);
+   let ddbImageUrl=row.imageUrl||"";
+   // V12.5 could accidentally save a custom API URL into image_url.
+   // Treat that as contamination, never as the D&D Beyond fallback.
+   if(isCustomApiImageUrl(ddbImageUrl))ddbImageUrl="";
+   if(!ddbImageUrl && fallback?.imageUrl)ddbImageUrl=fallback.imageUrl;
+   if(!row.ddbItemId && fallback?.inventoryId)row.ddbItemId=fallback.inventoryId;
+   return {...row,ddbImageUrl,customImageUrl:imgs[s]?.url||null};
+ };
  $("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,decorate(s))).join("");
  $("equipRight").innerHTML=rightSlots.map(s=>equipCard(s,decorate(s))).join("");
  $("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,decorate(s))).join("");
  bindEquipmentControls();updateAttune();renderDdbPickers();
 }
-function gearPayload(){return [...document.querySelectorAll(".equip")].map(el=>{const slot=el.dataset.slot;const existing=(data?.equipment||[]).find(x=>x.slotKey===slot)||{};return {slotKey:slot,itemName:el.querySelector(".item-name")?.textContent==="Empty"?"":el.querySelector(".item-name")?.textContent||"",rarity:el.querySelector(".rarity")?.textContent||"",attuned:!!el.querySelector(".attuned")?.checked,source:existing.source||"manual",imageUrl:el.dataset.imageUrl||null}})}
+function gearPayload(){
+ return [...document.querySelectorAll(".equip")].map(el=>{
+   const slot=el.dataset.slot;
+   return {
+     slotKey:slot,
+     itemName:el.querySelector(".item-name")?.textContent==="Empty"?"":el.querySelector(".item-name")?.textContent||"",
+     rarity:el.querySelector(".rarity")?.textContent||"",
+     attuned:!!el.querySelector(".attuned")?.checked,
+     source:el.dataset.source||"manual",
+     ddbItemId:el.dataset.ddbItemId||null,
+     itemUrl:el.dataset.itemUrl||null,
+     imageUrl:el.dataset.ddbImageUrl||null
+   };
+ });
+}
 function updateAttune(){const n=document.querySelectorAll(".attuned:checked").length;$("attuneText").textContent=`${n} / 3`}
 
 function inventoryLabel(x){return `${x.name}${Number(x.quantity||1)>1?` ×${x.quantity}`:""}${x.equipped?" · Equipped":""}`}
@@ -291,10 +332,25 @@ function renderDdbPickers(){
 function applyInventoryItemToSlot(item,slot){
  const el=document.querySelector(`.equip[data-slot="${slot}"]`);if(!el||!item)return;
  el.querySelector(".item-name").textContent=item.name||"Empty";
- const r=el.querySelector(".rarity");r.textContent=item.rarity||"";r.className=`rarity ${rarityClass(item.rarity)}`;
- el.dataset.imageUrl=item.imageUrl||"";
+ const rarityEl=el.querySelector(".rarity");rarityEl.textContent=item.rarity||"";rarityEl.className=`rarity ${rarityClass(item.rarity)}`;
+
+ el.dataset.ddbImageUrl=item.imageUrl||"";
+ el.dataset.ddbItemId=item.inventoryId||item.definitionId||"";
+ el.dataset.itemUrl=item.itemUrl||"";
+ el.dataset.source="dndbeyond";
+
+ const customUrl=data?.equipmentImages?.[slot]?.url||"";
+ const displayUrl=customUrl||item.imageUrl||"";
  let img=el.querySelector(".equip-img");
- if(item.imageUrl){if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.prepend(img)}img.src=item.imageUrl;el.classList.remove("empty")}else if(!img){el.classList.add("empty")}
+ if(displayUrl){
+   if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.querySelector(".equip-image-stage")?.prepend(img)}
+   img.style.display="block";img.src=displayUrl;el.classList.remove("empty","image-broken");
+ }else{
+   if(img)img.remove();
+   el.classList.add("empty");
+ }
+ const overlay=el.querySelector(".image-overlay");
+ if(overlay)overlay.innerHTML=displayUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE";
  const cb=el.querySelector(".attuned");if(cb)cb.checked=!!item.attuned;
  updateAttune();
 }
@@ -396,8 +452,9 @@ function fill(d){
  $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";
  [["str","strength_score"],["dex","dexterity_score"],["con","constitution_score"],["int","intelligence_score"],["wis","wisdom_score"],["cha","charisma_score"]].forEach(([id,k])=>$(id).value=c[k]??"");
  $("topName").textContent=c.character_name||"My Character";$("topClass").textContent=c.class_summary||"";$("topRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
+ if(d.ddbInventory?.length)ddbInventory=d.ddbInventory;
  renderEquipment(d.equipment||[]);renderStats(c,d.ddbDetails||{},d.skills||[]);renderTools(d.crafting||{});
- if(d.ddbInventory?.length){ddbInventory=d.ddbInventory;renderDdbPickers();renderBags()}
+ if(d.ddbInventory?.length){renderDdbPickers();renderBags()}
  const ddbPortrait=d.ddbDetails?.portraitUrl||null, customPortrait=d.portrait?.hasPortrait?d.portrait.url:null, portraitSrc=customPortrait||ddbPortrait;
  if(portraitSrc){
    const img=$("portraitImg"),mini=$("miniAvatar");
@@ -442,7 +499,6 @@ async function uploadEquipmentImage(slot,file){
 
  const el=document.querySelector(`.equip[data-slot="${slot}"]`);
  if(el){
-   el.dataset.imageUrl=url;
    let img=el.querySelector(".equip-img");
    if(!img){
      img=document.createElement("img");
