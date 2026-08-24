@@ -105,6 +105,14 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
   margin-top:2px;
 }
 
+
+.general-images{display:flex;gap:7px;align-items:flex-start;justify-content:flex-end;flex:0 0 auto}
+.general-image-box{position:relative;width:82px;text-align:center}
+.general-image-box .crest{width:78px;height:78px;object-fit:cover;display:block;border:1px solid var(--theme);background:#061018}
+.general-image-label{font:700 8px Cinzel;color:#d8b14c;margin-top:3px}
+.general-image-placeholder{position:absolute;left:0;top:0;width:78px;height:78px;border:1px dashed var(--theme);display:flex;align-items:center;justify-content:center;color:#6cbde7;font:700 10px Cinzel;cursor:pointer;background:#061018}
+.general-head{align-items:flex-start}
+
 </style>
 </head>
 <body><div class="shell">
@@ -155,8 +163,20 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
         <div class="statline"><span>Initiative</span><span id="initLine">—</span></div>
         <div class="statline"><span>Speed</span><span id="speedLine">—</span></div>
         <div class="statline"><span>Inspiration</span><span id="inspLine">◇</span></div>
-      </div><img id="crestImg" class="crest owner-clickable" alt="Character crest" title="Click to upload a custom crest"></div>
+      </div>
+      <div class="general-images">
+        <div class="general-image-box">
+          <img id="crestImg" class="crest owner-clickable" alt="Character crest" title="Click to upload/change image 1">
+          <div class="general-image-label owner-only">IMAGE 1</div>
+        </div>
+        <div class="general-image-box">
+          <img id="badgeImg" class="crest owner-clickable" alt="Character secondary image" title="Click to upload/change image 2">
+          <div id="badgePlaceholder" class="general-image-placeholder owner-only">ADD<br>IMAGE</div>
+          <div class="general-image-label owner-only">IMAGE 2</div>
+        </div>
+      </div></div>
       <input id="crestFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
+      <input id="badgeFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
     <div class="stats-section abilities"><h3>⚄ Ability Scores</h3><div id="abilityList"></div></div>
     <div class="stats-section"><h3>⚙ Saving Throws</h3><div id="saveList"></div></div>
@@ -528,6 +548,15 @@ function fill(d){
    img.src=portraitSrc;mini.src=portraitSrc;img.classList.remove("hidden");mini.classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");
  }else{$("portraitImg").classList.add("hidden");$("miniAvatar").classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}
  if(d.crest?.hasCrest){$("crestImg").src=d.crest.url}else{$("crestImg").removeAttribute("src")}
+ if(d.badge?.hasBadge){
+   $("badgeImg").src=d.badge.url;
+   $("badgeImg").classList.remove("hidden");
+   $("badgePlaceholder").classList.add("hidden");
+ }else{
+   $("badgeImg").removeAttribute("src");
+   $("badgeImg").classList.add("hidden");
+   $("badgePlaceholder").classList.remove("hidden");
+ }
  const ov=c.statOverrides||{};
  [["ovHpMax","hpMax"],["ovHpCurrent","hpCurrent"],["ovAc","armorClass"],["ovInitiative","initiative"],["ovSpeed","speed"],["ovPassive","passivePerception"],["ovSpellDC","spellSaveDC"],["ovSpellAttack","spellAttack"]].forEach(([id,k])=>{if($(id))$(id).value=ov[k]??""});
  applyTheme(c.borderTheme||"blue");
@@ -598,6 +627,19 @@ async function uploadPortrait(file){
  await load();
 }
 async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
+async function uploadBadge(file){
+ if(!file)return;
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Second image must be PNG, JPG, or WebP.");
+ if(file.size>5*1024*1024)throw new Error("Second image must be 5 MB or smaller.");
+ const r=await fetch(API_BASE+"/api/character/badge",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||"Second image upload failed.");
+ $("badgeImg").src=b.url+(String(b.url||"").includes("?")?"&":"?")+"v="+Date.now();
+ $("badgeImg").classList.remove("hidden");
+ $("badgePlaceholder").classList.add("hidden");
+ show("Second character image updated.","good");
+}
+
 
 async function loadCharacterDirectory(){const d=await api("/api/characters");characterDirectory=d.characters||[];renderDirectory("")}
 function renderDirectory(q=""){q=q.toLowerCase();$("characterSelect").innerHTML='<option value="">My Character</option>'+characterDirectory.filter(c=>!c.isMine&&(!q||`${c.playerName} ${c.characterName}`.toLowerCase().includes(q))).map(c=>`<option value="${c.userId}">${esc(c.playerName)} — ${esc(c.characterName)}</option>`).join("")}
@@ -606,7 +648,14 @@ async function visitCharacter(id){const d=id?await api("/api/character/view?owne
 async function load(){try{const s=await api("/api/session");$("online").classList.remove("hidden");await loadCharacterDirectory();const owner=new URLSearchParams(location.search).get("owner");if(owner){$("characterSelect").value=owner;await visitCharacter(owner)}else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}}catch(e){show("Character page could not load: "+e.message,"bad")}}
 
 
-document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{if(!currentViewingOwn)return;applyTheme(b.dataset.theme)});
+document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{
+ if(!currentViewingOwn)return;
+ applyTheme(b.dataset.theme);
+ if(data?.character){
+   data.character.borderTheme=b.dataset.theme;
+   data.character.border_theme=b.dataset.theme;
+ }
+});
 $("clearStatOverrides").onclick=async()=>{
  if(!currentViewingOwn)return;
  ["ovHpMax","ovHpCurrent","ovAc","ovInitiative","ovSpeed","ovPassive","ovSpellDC","ovSpellAttack"].forEach(id=>{if($(id))$(id).value=""});
@@ -628,7 +677,14 @@ $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("save
 $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
-$("crestImg").onclick=()=>{if(currentViewingOwn)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
+$("crestImg").onclick=()=>{if(currentViewingOwn)$("crestFile").click()};
+$("badgeImg").onclick=()=>{if(currentViewingOwn)$("badgeFile").click()};
+$("badgePlaceholder").onclick=()=>{if(currentViewingOwn)$("badgeFile").click()};
+$("badgeFile").onchange=async()=>{
+ try{const f=$("badgeFile").files?.[0];if(f)await uploadBadge(f)}
+ catch(err){show(err.message||"Second image upload failed.","bad")}
+ finally{$("badgeFile").value=""}
+};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("refreshInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
 $("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
