@@ -59,12 +59,58 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 .remove-image-btn{margin-top:5px;font:700 10px Cinzel;padding:4px 7px;border:1px solid var(--theme);background:#07131c;color:#e9d397;cursor:pointer}
 .remove-image-btn:hover{border-color:#d76e6e;color:#ffaaaa}
 
+
+.equip-image-stage{
+  position:relative;
+  width:100%;
+  min-height:144px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:6px 0 8px;
+}
+.equip-image-stage .equip-img{
+  position:static !important;
+  width:128px;
+  height:128px;
+  object-fit:contain;
+  margin:0 auto;
+  display:block;
+  z-index:1;
+}
+.equip-image-stage .image-overlay{
+  top:50% !important;
+  left:50% !important;
+  transform:translate(-50%,-50%) !important;
+  width:128px;
+  height:128px;
+}
+.slot-edit{
+  position:relative;
+  z-index:5;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  margin-top:2px;
+}
+.slot-edit select{
+  width:100%;
+  position:relative;
+  z-index:6;
+}
+.remove-image-btn{
+  position:relative;
+  z-index:6;
+  width:100%;
+  margin-top:2px;
+}
+
 </style>
 </head>
 <body><div class="shell">
 <div class="topbar">
   <div class="identity"><img id="miniAvatar" class="mini-avatar hidden"><div><h1 id="topName">My Character</h1><div class="sub"><span id="topClass"></span> · <span id="topRank"></span> <span id="online" class="online hidden">● Online</span></div></div></div>
-  <div class="top-actions owner-only"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="editToggle">✎ Edit Character</button></div>
+  <div class="top-actions owner-only"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="saveSheetBtn">💾 Save Character Sheet</button><button id="editToggle">✎ Edit Character</button></div>
 </div>
 <div id="message" class="notice hidden"></div>
 <div class="viewer">
@@ -208,17 +254,21 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 
 function rarityClass(r){return String(r||"").replace(/\s+/g,"-")}
 function equipCard(slot,row={}){
- const imageUrl=row.customImageUrl||row.imageUrl||"", hasCustomImage=!!row.customImageUrl, name=row.itemName||"", rarity=row.rarity||"";
- return `<div class="equip ${imageUrl?"":"empty"}" data-slot="${slot}" data-image-url="${esc(imageUrl)}">
-   ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="" onerror="this.style.display=\'none\';this.closest(\'.equip\').classList.add(\'image-broken\')">`:""}
-   <div class="image-overlay owner-only" data-image-slot="${slot}">${imageUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE"}</div>
-   ${hasCustomImage?`<button type="button" class="remove-image-btn owner-only" data-remove-image-slot="${slot}">REMOVE CUSTOM IMAGE</button>`:""}
+ const customImageUrl=row.customImageUrl||"", ddbImageUrl=row.imageUrl||"", imageUrl=customImageUrl||ddbImageUrl, hasCustomImage=!!customImageUrl, name=row.itemName||"", rarity=row.rarity||"";
+ return `<div class="equip ${imageUrl?"":"empty"}" data-slot="${slot}" data-image-url="${esc(ddbImageUrl)}">
    <div class="slot-title">${slotLabels[slot]}</div>
    <div class="item-name">${esc(name||"Empty")}</div>
    <div class="rarity ${rarityClass(rarity)}">${esc(rarity||"")}</div>
+
+   <div class="equip-image-stage">
+     ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="" onerror="this.style.display='none';this.closest('.equip').classList.add('image-broken')">`:""}
+     <div class="image-overlay owner-only" data-image-slot="${slot}">${imageUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE"}</div>
+   </div>
+
    <div class="slot-edit owner-only">
      <select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond…</option></select>
      <label style="font-size:10px;color:#cba9ff"><input class="attuned" type="checkbox" ${row.attuned?"checked":""}> Attuned</label>
+     ${hasCustomImage?`<button type="button" class="remove-image-btn" data-remove-image-slot="${slot}">REMOVE CUSTOM IMAGE</button>`:""}
    </div>
  </div>`;
 }
@@ -441,6 +491,15 @@ $("clearStatOverrides").onclick=async()=>{
  ["ovHpMax","ovHpCurrent","ovAc","ovInitiative","ovSpeed","ovPassive","ovSpellDC","ovSpellAttack"].forEach(id=>{if($(id))$(id).value=""});
  try{await saveAll();show("Manual stat overrides cleared. D&D Beyond values are now displayed.","good")}
  catch(err){show(err.message||"Could not clear stat overrides.","bad")}
+};
+$("saveSheetBtn").onclick=async()=>{
+ if(!currentViewingOwn)return;
+ try{
+   await saveAll();
+   show("Character sheet saved.","good");
+ }catch(err){
+   show(err.message||"Could not save character sheet.","bad");
+ }
 };
 $("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete. Final abilities, HP, AC, initiative, speed, saves, skills, and portrait were refreshed.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
 $("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
