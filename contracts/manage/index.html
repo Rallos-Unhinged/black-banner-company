@@ -11,6 +11,15 @@ header{border-bottom:1px solid #243d4e;background:#05090deb}.top{max-width:1350p
 main{max-width:1350px;margin:auto;padding:22px}.locked{max-width:650px;margin:80px auto;border:1px solid #7d3939;background:#251010;padding:25px;text-align:center}.locked h1{color:#e48a8a}
 h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.toolbar{display:flex;gap:8px;margin-bottom:12px}.list{display:grid;gap:10px}.card{border:1px solid var(--line);background:#09141c;padding:13px;display:grid;grid-template-columns:1fr auto;gap:12px}.card h3{margin:0;color:#e8f3f9}.meta{color:#8ecceb;font-size:13px;line-height:1.6}.desc{color:#b0bcc3;font-size:13px;margin-top:6px;white-space:pre-wrap}.counts{color:#e3c96f;text-align:right;white-space:nowrap}.formbox{border:1px solid var(--line);background:#08131b;padding:14px;margin-bottom:16px}.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.formgrid .wide{grid-column:span 2}.formgrid .full{grid-column:1/-1}.formbox label{display:block;color:#d7ba68;font-size:12px;margin-bottom:3px}.formbox input,.formbox select,.formbox textarea{width:100%;background:#050b10;color:#edf5f8;border:1px solid #28506a;padding:9px;font:inherit}.formbox textarea{min-height:100px;resize:vertical}.success{border:1px solid #326b48;background:#0d2417;color:#9fe1b5;padding:10px;margin-bottom:12px}.hidden{display:none!important}.error{border:1px solid #773535;background:#210d0d;color:#f0aaaa;padding:10px;margin-bottom:12px}
 @media(max-width:850px){.formgrid{grid-template-columns:1fr 1fr}.formgrid .wide{grid-column:span 2}}@media(max-width:700px){.card{grid-template-columns:1fr}.counts{text-align:left}.formgrid{grid-template-columns:1fr}.formgrid .wide,.formgrid .full{grid-column:1}}
+
+.reward-modal{position:fixed;inset:0;background:#000c;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px}
+.reward-box{width:min(920px,97vw);max-height:92vh;overflow:auto;border:1px solid var(--line);background:#071019;padding:16px;box-shadow:0 0 42px #000}
+.reward-box h2{color:var(--gold);margin:0 0 6px}.reward-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.reward-grid .full{grid-column:1/-1}
+.reward-box label{display:block;color:#d8bd70;font-size:12px;margin-bottom:4px}.reward-box input,.reward-box select,.reward-box textarea{width:100%;background:#04090d;color:#eef;border:1px solid #28506a;padding:8px}
+.reward-box textarea{min-height:90px}.roster{display:grid;gap:6px;margin:10px 0}.roster-row{display:grid;grid-template-columns:minmax(180px,1fr) 150px;gap:8px;border:1px solid #1c3d52;background:#091923;padding:8px}.signup-status{color:#8ecceb;font-size:12px}.reward-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+.reward-state{display:inline-block;margin-top:8px;padding:4px 7px;border:1px solid #4a5d68;font-size:12px;color:#b8cbd5}.reward-state.done{border-color:#39704b;color:#9fe1b5}.reward-state.failed{border-color:#773535;color:#f0aaaa}
+@media(max-width:700px){.reward-grid{grid-template-columns:1fr}.reward-grid .full{grid-column:1}.roster-row{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -35,6 +44,23 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <div id="list" class="list"></div>
 </div>
 </main>
+
+<div id="rewardModal" class="reward-modal hidden">
+  <div class="reward-box">
+    <h2 id="rewardTitle">Finalize Contract</h2>
+    <div class="sub">Full DM role only. Rewards are queued through the existing Economy Bot Party Rewards bridge.</div>
+    <div id="rewardRoster" class="roster"></div>
+    <div class="reward-grid">
+      <div><label>Main PP</label><input id="rewardMainPP" type="number" min="0" max="10" value="0"></div>
+      <div><label>Alt PP</label><input id="rewardAltPP" type="number" min="0" max="10" value="0"></div>
+      <div><label>Gold for Participants</label><input id="rewardGold" type="number" min="0" value="0"></div>
+      <div class="full"><label>Harvested Material Rewards (optional)</label><textarea id="rewardMaterials" placeholder="One material per line, for example:&#10;C-Rank Fire Giant Bones x3&#10;D-Rank Corpse Flower x2"></textarea><div class="sub" style="margin:4px 0 0">Materials are distributed with Main-character priority, then Alt, then Gold Only, matching the Contract Bot finalize flow.</div></div>
+    </div>
+    <div id="rewardReview" class="success hidden" style="margin-top:10px"></div>
+    <div class="reward-actions"><button id="rewardCancel" class="btn">Cancel</button><button id="rewardReviewBtn" class="btn">Review Rewards</button><button id="rewardSubmitBtn" class="btn hidden">Apply Rewards & Complete Contract</button></div>
+  </div>
+</div>
+
 <script>
 const API_BASE="https://api.blackbannercompany.com";
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -49,20 +75,80 @@ function zonedWallTimeToMillis(dateStr,timeStr,timeZone="America/Chicago"){
  return guess;
 }
 function message(id,text){const el=document.getElementById(id);el.textContent=text;el.classList.toggle("hidden",!text)}
+let canFinalize=false,currentFinalize=null;
+
+function rewardStateHtml(c){
+ if(!c.rewardStatus)return "";
+ const cls=c.rewardStatus==="done"?"done":c.rewardStatus==="failed"?"failed":"";
+ return `<div class="reward-state ${cls}">Rewards: ${esc(c.rewardStatus)}${c.rewardError?` — ${esc(c.rewardError)}`:""}</div>`;
+}
 async function load(){
- try{const access=await api("/api/contracts/access");if(!access.canManage){document.getElementById("locked").classList.remove("hidden");return}document.getElementById("manager").classList.remove("hidden");
- const from=Date.now()-90*86400000,to=Date.now()+365*86400000,d=await api(`/api/contracts/manage?from=${from}&to=${to}`),rows=[...new Map((d.contracts||[]).map(c=>[c.id,c])).values()];
- document.getElementById("list").innerHTML=rows.length?rows.map(c=>`<div class="card"><div><h3>#${c.id} — ${esc(c.name)}</h3><div class="meta">${esc(c.rank)}-Rank · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)} · ${c.durationHours} hr<br>Status: ${esc(c.status)} · Publish: ${esc(c.publishStatus||"—")} · Host ID: ${esc(c.creatorId)}</div>${c.publishError?`<div class="error" style="margin-top:8px">${esc(c.publishError)}</div><button class="btn retry" data-id="${c.id}">Retry Discord Publish</button>`:""}${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="btn" style="display:inline-block;margin-top:9px" target="_blank" href="${esc(c.discordUrl)}">Open Discord Contract</a>`:""}</div><div class="counts">Accepted ${c.accepted}/${c.maxPlayers}<br>Waiting ${c.waiting}<br>Tentative ${c.tentative}</div></div>`).join(""):'<div class="card">No contracts found.</div>';
- document.querySelectorAll(".retry").forEach(b=>b.onclick=async()=>{try{await api("/api/contracts/retry-publish",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:Number(b.dataset.id)})});message("success","Publish retry queued.");setTimeout(load,1500)}catch(e){message("error",e.message)}});
- }catch(e){if(e.status===403){document.getElementById("locked").classList.remove("hidden");document.getElementById("manager").classList.add("hidden");return}message("error",e.message);document.getElementById("manager").classList.remove("hidden")}}
+ try{
+   const access=await api("/api/contracts/access");
+   if(!access.canManage){document.getElementById("locked").classList.remove("hidden");return}
+   canFinalize=!!access.canFinalize;
+   document.getElementById("manager").classList.remove("hidden");
+   const from=Date.now()-90*86400000,to=Date.now()+365*86400000,d=await api(`/api/contracts/manage?from=${from}&to=${to}`),rows=[...new Map((d.contracts||[]).map(c=>[c.id,c])).values()];
+   document.getElementById("list").innerHTML=rows.length?rows.map(c=>{
+     const rewardBusy=["pending","processing","done","failed"].includes(c.rewardStatus);
+     const finalizeButton=canFinalize&&c.status==="active"&&!rewardBusy?`<button class="btn finalize" data-id="${c.id}" style="margin-top:9px">🏁 Finalize & Process Rewards</button>`:"";
+     return `<div class="card"><div><h3>#${c.id} — ${esc(c.name)}</h3><div class="meta">${esc(c.rank)}-Rank · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)} · ${c.durationHours} hr<br>Status: ${esc(c.status)} · Publish: ${esc(c.publishStatus||"—")} · Host ID: ${esc(c.creatorId)}</div>${rewardStateHtml(c)}${c.publishError?`<div class="error" style="margin-top:8px">${esc(c.publishError)}</div><button class="btn retry" data-id="${c.id}">Retry Discord Publish</button>`:""}${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="btn" style="display:inline-block;margin-top:9px" target="_blank" href="${esc(c.discordUrl)}">Open Discord Contract</a>`:""} ${finalizeButton}</div><div class="counts">Accepted ${c.accepted}/${c.maxPlayers}<br>Waiting ${c.waiting}<br>Tentative ${c.tentative}</div></div>`;
+   }).join(""):'<div class="card">No contracts found.</div>';
+   document.querySelectorAll(".retry").forEach(b=>b.onclick=async()=>{try{await api("/api/contracts/retry-publish",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:Number(b.dataset.id)})});message("success","Publish retry queued.");setTimeout(load,1500)}catch(e){message("error",e.message)}});
+   document.querySelectorAll(".finalize").forEach(b=>b.onclick=()=>openFinalize(Number(b.dataset.id)).catch(e=>message("error",e.message)));
+ }catch(e){
+   if(e.status===403){document.getElementById("locked").classList.remove("hidden");document.getElementById("manager").classList.add("hidden");return}
+   message("error",e.message);document.getElementById("manager").classList.remove("hidden")
+ }
+}
 async function createContract(){
  const btn=document.getElementById("createContract");btn.disabled=true;message("error","");message("success","");
  try{
    let imageUrl=null,file=document.getElementById("cImage").files?.[0];if(file){const u=await api("/api/contracts/image",{method:"POST",headers:{"Content-Type":file.type},body:file});imageUrl=u.url}
    const payload={name:document.getElementById("cName").value,rank:document.getElementById("cRank").value,maxPlayers:Number(document.getElementById("cMax").value),description:document.getElementById("cDescription").value,rewards:document.getElementById("cRewards").value,startAt:zonedWallTimeToMillis(document.getElementById("cDate").value,document.getElementById("cTime").value),durationHours:Number(document.getElementById("cDuration").value),imageUrl};
    const r=await api("/api/contracts/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});message("success",`Contract #${r.contract.id} created. Discord publishing is queued.`);document.getElementById("cName").value="";document.getElementById("cDescription").value="";document.getElementById("cRewards").value="";document.getElementById("cImage").value="";setTimeout(load,1800);
- }catch(e){message("error",e.message)}finally{btn.disabled=false}}
-document.getElementById("refresh").onclick=load;document.getElementById("createContract").onclick=createContract;load();
+ }catch(e){message("error",e.message)}finally{btn.disabled=false}
+}
+async function openFinalize(id){
+ if(!canFinalize)throw new Error("Only full DMs can process rewards.");
+ const d=await api(`/api/contracts/finalize?id=${id}`);currentFinalize=d;
+ if(d.contract.status!=="active")throw new Error("This contract is no longer active.");
+ if(d.rewardJob)throw new Error(`Reward job is already ${d.rewardJob.status}.`);
+ document.getElementById("rewardTitle").textContent=`Finalize #${d.contract.id} — ${d.contract.name}`;
+ document.getElementById("rewardRoster").innerHTML=d.roster.length?d.roster.map((p,i)=>`<div class="roster-row"><div><b>${esc(p.playerName)}</b>${p.characterName?` — ${esc(p.characterName)}`:""}<div class="signup-status">${esc(p.status)}</div></div><select class="rewardClass" data-user="${esc(p.userId)}"><option value="">Not Participating</option><option value="main" ${p.status==="accepted"?"selected":""}>Main Character</option><option value="alt">Alt Character</option><option value="gold">Gold Only</option></select></div>`).join(""):'<div class="error">No Accepted, Tentative, or Waiting List players are available.</div>';
+ document.getElementById("rewardMainPP").value="0";document.getElementById("rewardAltPP").value="0";document.getElementById("rewardGold").value="0";document.getElementById("rewardMaterials").value="";
+ document.getElementById("rewardReview").classList.add("hidden");document.getElementById("rewardSubmitBtn").classList.add("hidden");document.getElementById("rewardReviewBtn").classList.remove("hidden");
+ document.getElementById("rewardModal").classList.remove("hidden");
+}
+function closeFinalize(){document.getElementById("rewardModal").classList.add("hidden");currentFinalize=null}
+function collectFinalize(){
+ if(!currentFinalize)throw new Error("No contract is open.");
+ const mainIds=[],altIds=[],goldOnlyIds=[];
+ document.querySelectorAll(".rewardClass").forEach(s=>{if(s.value==="main")mainIds.push(s.dataset.user);else if(s.value==="alt")altIds.push(s.dataset.user);else if(s.value==="gold")goldOnlyIds.push(s.dataset.user)});
+ if(!mainIds.length&&!altIds.length&&!goldOnlyIds.length)throw new Error("Select at least one participant.");
+ return {id:currentFinalize.contract.id,mainIds,altIds,goldOnlyIds,mainPP:Number(document.getElementById("rewardMainPP").value||0),altPP:Number(document.getElementById("rewardAltPP").value||0),gold:Number(document.getElementById("rewardGold").value||0),materialsText:document.getElementById("rewardMaterials").value};
+}
+function reviewFinalize(){
+ const p=collectFinalize(),all=currentFinalize.roster;
+ const names=ids=>ids.map(id=>esc(all.find(x=>x.userId===id)?.playerName||id)).join(", ")||"None";
+ document.getElementById("rewardReview").innerHTML=`<b>Review before applying:</b><br>Main (${p.mainIds.length}): ${names(p.mainIds)} — ${p.mainPP} PP each<br>Alt (${p.altIds.length}): ${names(p.altIds)} — ${p.altPP} Alt PP each<br>Gold Only (${p.goldOnlyIds.length}): ${names(p.goldOnlyIds)}<br>Gold: ${p.gold.toLocaleString()} each${p.materialsText.trim()?`<br>Harvested materials will also be distributed.`:""}<br><br>Submitting queues the normal Party Rewards bridge. On success it refreshes Work Hours to 40, grants eligible Bastion Turns, advances construction, handles progression, and marks the contract completed.`;
+ document.getElementById("rewardReview").classList.remove("hidden");document.getElementById("rewardSubmitBtn").classList.remove("hidden");document.getElementById("rewardReviewBtn").classList.add("hidden");
+}
+async function submitFinalize(){
+ const btn=document.getElementById("rewardSubmitBtn");btn.disabled=true;
+ try{
+   const p=collectFinalize();
+   const r=await api("/api/contracts/finalize",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});
+   closeFinalize();message("success",`Contract #${r.contractId} rewards queued. The Economy Bot will process them and complete the contract.`);setTimeout(load,1800);
+ }catch(e){message("error",e.message)}finally{btn.disabled=false}
+}
+document.getElementById("refresh").onclick=load;
+document.getElementById("createContract").onclick=createContract;
+document.getElementById("rewardCancel").onclick=closeFinalize;
+document.getElementById("rewardReviewBtn").onclick=()=>{try{reviewFinalize()}catch(e){message("error",e.message)}};
+document.getElementById("rewardSubmitBtn").onclick=submitFinalize;
+document.getElementById("rewardModal").onclick=e=>{if(e.target===document.getElementById("rewardModal"))closeFinalize()};
+load();
 </script>
 </body>
 </html>
