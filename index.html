@@ -169,6 +169,43 @@ h1 {
   z-index: 2;
 }
 
+.nav-groups {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.nav-group {
+  padding: 1rem;
+  border: 1px solid rgba(216, 166, 59, 0.24);
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.nav-group-label {
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  font-size: 0.72rem;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.nav-group .buttons {
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.nav-group .btn {
+  width: 100%;
+  min-width: 0;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -320,7 +357,8 @@ footer {
 
 @media (max-width: 860px) {
   .grid,
-  .tools {
+  .tools,
+  .nav-groups {
     grid-template-columns: 1fr;
   }
 
@@ -392,36 +430,31 @@ footer {
           Bastion, and leave your mark beneath the Banner.
         </p>
 
-        <div class="buttons">
-          <a
-            class="btn primary"
-            href="https://discord.gg/blackbannercompany"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Join Our Discord
-          </a>
+        <div class="nav-groups">
+          <div class="nav-group">
+            <div class="nav-group-label">Community</div>
+            <div class="buttons">
+              <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank" rel="noopener noreferrer">Join Our Discord</a>
+              <a class="btn" href="player-guide/">Player Guide</a>
+            </div>
+          </div>
 
-          <a class="btn" href="player-guide/">
-            Player Guide
-          </a>
+          <div class="nav-group">
+            <div class="nav-group-label">Play</div>
+            <div class="buttons">
+              <a class="btn primary" href="character/">Character Sheet</a>
+              <a class="btn primary" href="contracts/">Contract Calendar</a>
+            </div>
+          </div>
 
-          <a class="btn" href="crafting-guide/">
-            Crafting Guide
-          </a>
-
-          <a class="btn" href="character/">
-            Character
-          </a>
-
-          <a class="btn" href="material-market/">
-            Market
-          </a>
-
-
-          <a class="btn" href="bastions/">
-            Bastions of the Black
-          </a>
+          <div class="nav-group">
+            <div class="nav-group-label">Company Systems</div>
+            <div class="buttons">
+              <a class="btn" href="crafting-guide/">Crafting Guide</a>
+              <a class="btn" href="material-market/">Material Market</a>
+              <a class="btn" href="bastions/">Bastions of the Black</a>
+            </div>
+          </div>
         </div>
 
         <div class="site-account">
@@ -626,6 +659,10 @@ footer {
 
           <a class="btn" href="character/">
             Character
+          </a>
+
+          <a class="btn" href="contracts/">
+            Contract Calendar
           </a>
 
           <a class="btn" href="material-market/">
