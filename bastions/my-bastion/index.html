@@ -88,6 +88,12 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .craft-result strong{color:var(--gold2)}
 @media(max-width:760px){.craft-grid{grid-template-columns:1fr}}
 
+.bastion-title-wrap{display:flex;justify-content:center;align-items:center;gap:.65rem;flex-wrap:wrap}
+.bastion-title-wrap .btn{width:auto;padding:.45rem .7rem;font-size:.62rem}
+.bastion-name-editor{margin:.75rem auto 0;display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap;max-width:560px}
+.bastion-name-editor input{flex:1;min-width:220px;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:700 1rem 'Cinzel',serif;text-align:center}
+@media(max-width:760px){.bastion-name-editor{display:grid;grid-template-columns:1fr}.bastion-title-wrap .btn{width:100%}}
+
 </style>
 </head>
 <body>
@@ -103,7 +109,15 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 
   <header class="hero">
     <div class="eyebrow">Black Banner Company · Personal Stronghold</div>
-    <h1>My Bastion</h1>
+    <div class="bastion-title-wrap">
+      <h1 id="bastionTitle">My Bastion</h1>
+      <button id="editBastionNameBtn" class="btn hidden" type="button">Edit Name</button>
+    </div>
+    <div id="bastionNameEditor" class="bastion-name-editor hidden">
+      <input id="bastionNameInput" type="text" maxlength="50" placeholder="Enter your Bastion name…">
+      <button id="saveBastionNameBtn" class="primary" type="button">Save Name</button>
+      <button id="cancelBastionNameBtn" type="button">Cancel</button>
+    </div>
     <p class="subtitle">A read-only view of your Bastion records from the Black Banner system.</p>
   </header>
 
@@ -585,9 +599,52 @@ async function sendChat(){
   finally{$("chatSend").disabled=false;}
 }
 
+
+function displayBastionName(name){
+  const clean=String(name||"").trim();
+  $("bastionTitle").textContent=clean||"My Bastion";
+}
+
+function openBastionNameEditor(){
+  if(!currentViewingOwn)return;
+  $("bastionNameInput").value=(me?.bastionName||"");
+  $("bastionNameEditor").classList.remove("hidden");
+  $("editBastionNameBtn").classList.add("hidden");
+  $("bastionNameInput").focus();
+  $("bastionNameInput").select();
+}
+
+function closeBastionNameEditor(){
+  $("bastionNameEditor").classList.add("hidden");
+  $("editBastionNameBtn").classList.toggle("hidden",!currentViewingOwn);
+}
+
+async function saveBastionName(){
+  if(!currentViewingOwn)return;
+  const bastionName=$("bastionNameInput").value.trim();
+  if(!bastionName){message("Enter a Bastion name first.","bad");return;}
+  if(bastionName.length>50){message("Bastion names are limited to 50 characters.","bad");return;}
+
+  $("saveBastionNameBtn").disabled=true;
+  try{
+    const data=await api("/api/bastion/name",{method:"POST",body:JSON.stringify({bastionName})});
+    if(me)me.bastionName=data.bastionName;
+    displayBastionName(data.bastionName);
+    closeBastionNameEditor();
+    message("Bastion name saved.","good");
+  }catch(err){
+    message(err.message,"bad");
+  }finally{
+    $("saveBastionNameBtn").disabled=false;
+  }
+}
+
 function render(data){
   me=data;
   currentViewingOwn=!!data.viewingOwn;
+  displayBastionName(data.bastionName);
+  $("editBastionNameBtn").classList.toggle("hidden",!currentViewingOwn);
+  $("bastionNameEditor").classList.add("hidden");
   $("ownerTools").classList.toggle("hidden",!currentViewingOwn);
   $("craftingPanel").classList.toggle("hidden",!currentViewingOwn);
   renderBanner(data.bannerUrl||null);
@@ -711,6 +768,14 @@ $("chatInput").addEventListener("keydown",(event)=>{
     event.preventDefault();
     sendChat();
   }
+});
+
+$("editBastionNameBtn").addEventListener("click",openBastionNameEditor);
+$("saveBastionNameBtn").addEventListener("click",saveBastionName);
+$("cancelBastionNameBtn").addEventListener("click",closeBastionNameEditor);
+$("bastionNameInput").addEventListener("keydown",(event)=>{
+  if(event.key==="Enter"){event.preventDefault();saveBastionName();}
+  if(event.key==="Escape"){event.preventDefault();closeBastionNameEditor();}
 });
 
 $("loginBtn").addEventListener("click",()=>{
