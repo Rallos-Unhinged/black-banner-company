@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Black Banner DM Contract Manager</title>
+<style>
+:root{--bg:#05090d;--panel:#09131b;--line:#24506e;--blue:#56b8eb;--gold:#dab85d;--text:#e8eef2;--muted:#9ba9b2}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#112a3b,#05090d 48%);color:var(--text);font-family:Georgia,serif;min-height:100vh}
+header{border-bottom:1px solid #243d4e;background:#05090deb}.top{max-width:1350px;margin:auto;padding:14px 20px;display:flex;align-items:center;gap:12px}.brand{font-size:24px;letter-spacing:3px;color:#fff}.brand b{color:var(--gold)}.top a{margin-left:auto}
+.btn{border:1px solid var(--line);background:#0a151e;color:#e3f2fa;padding:8px 12px;text-decoration:none;cursor:pointer}.btn:hover{border-color:var(--blue)}
+main{max-width:1350px;margin:auto;padding:22px}.locked{max-width:650px;margin:80px auto;border:1px solid #7d3939;background:#251010;padding:25px;text-align:center}.locked h1{color:#e48a8a}
+h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.toolbar{display:flex;gap:8px;margin-bottom:12px}.list{display:grid;gap:10px}.card{border:1px solid var(--line);background:#09141c;padding:13px;display:grid;grid-template-columns:1fr auto;gap:12px}.card h3{margin:0;color:#e8f3f9}.meta{color:#8ecceb;font-size:13px;line-height:1.6}.desc{color:#b0bcc3;font-size:13px;margin-top:6px;white-space:pre-wrap}.counts{color:#e3c96f;text-align:right;white-space:nowrap}.formbox{border:1px solid var(--line);background:#08131b;padding:14px;margin-bottom:16px}.formgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.formgrid .wide{grid-column:span 2}.formgrid .full{grid-column:1/-1}.formbox label{display:block;color:#d7ba68;font-size:12px;margin-bottom:3px}.formbox input,.formbox select,.formbox textarea{width:100%;background:#050b10;color:#edf5f8;border:1px solid #28506a;padding:9px;font:inherit}.formbox textarea{min-height:100px;resize:vertical}.success{border:1px solid #326b48;background:#0d2417;color:#9fe1b5;padding:10px;margin-bottom:12px}.hidden{display:none!important}.error{border:1px solid #773535;background:#210d0d;color:#f0aaaa;padding:10px;margin-bottom:12px}
+@media(max-width:850px){.formgrid{grid-template-columns:1fr 1fr}.formgrid .wide{grid-column:span 2}}@media(max-width:700px){.card{grid-template-columns:1fr}.counts{text-align:left}.formgrid{grid-template-columns:1fr}.formgrid .wide,.formgrid .full{grid-column:1}}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="brand">BLACK <b>BANNER</b> DM CONTRACTS</div><a class="btn" href="../">Public Calendar</a></div></header>
+<main>
+<div id="locked" class="locked hidden"><h1>DM Access Required</h1><p>This page is restricted to members with the Black Banner DM or Trial DM Discord role.</p><a class="btn" href="../">Return to Contract Calendar</a></div>
+<div id="manager" class="hidden">
+<h1>DM Contract Manager</h1><div class="sub">Private contract dashboard for DMs and Trial DMs.</div>
+<div id="error" class="error hidden"></div><div id="success" class="success hidden"></div>
+<div class="formbox"><h2 style="margin:0 0 10px;color:var(--gold)">Create Contract</h2><div class="formgrid">
+<div class="wide"><label>Contract Name</label><input id="cName" maxlength="100"></div>
+<div><label>Rank</label><select id="cRank"><option>F</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
+<div><label>Maximum Players</label><input id="cMax" type="number" min="1" max="50" value="6"></div>
+<div><label>Date</label><input id="cDate" type="date"></div><div><label>Time (Central)</label><input id="cTime" type="time"></div>
+<div><label>Duration</label><select id="cDuration"><option value="2">2 hours</option><option value="3">3 hours</option><option value="4" selected>4 hours</option><option value="5">5 hours</option><option value="6">6 hours</option><option value="7">7 hours</option><option value="8">8 hours</option></select></div>
+<div><label>Optional Contract Image</label><input id="cImage" type="file" accept="image/png,image/jpeg,image/webp"></div>
+<div class="full"><label>Description</label><textarea id="cDescription" maxlength="1000"></textarea></div>
+<div class="full"><label>Expected Rewards (display only, optional)</label><input id="cRewards" maxlength="300" placeholder="Example: 2 PP + 500 Gold"></div>
+<div class="full"><button id="createContract" class="btn" type="button">Create & Post Contract</button> <span style="color:var(--muted);font-size:12px">Discord post normally appears within a few seconds.</span></div>
+</div></div>
+<div class="toolbar"><button id="refresh" class="btn">Refresh Contracts</button></div>
+<div id="list" class="list"></div>
+</div>
+</main>
+<script>
+const API_BASE="https://api.blackbannercompany.com";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function fmtDate(ms){return new Intl.DateTimeFormat("en-US",{month:"2-digit",day:"2-digit",year:"numeric"}).format(new Date(ms)).replaceAll("/","-")}
+function fmtTime(ms){return new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",hour12:true,timeZone:"America/Chicago"}).format(new Date(ms))}
+async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",...opts,headers:{...(opts.headers||{})}});const b=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(b.error||`Request failed (${r.status})`);e.status=r.status;throw e}return b}
+function zonedWallTimeToMillis(dateStr,timeStr,timeZone="America/Chicago"){
+ const [y,m,d]=dateStr.split("-").map(Number),[hh,mm]=timeStr.split(":").map(Number);if(!y||!m||!d||!Number.isFinite(hh)||!Number.isFinite(mm))throw new Error("Choose a valid date and time.");
+ const desired=Date.UTC(y,m-1,d,hh,mm);let guess=desired;
+ const fmt=new Intl.DateTimeFormat("en-US",{timeZone,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
+ for(let i=0;i<4;i++){const p=Object.fromEntries(fmt.formatToParts(new Date(guess)).filter(x=>x.type!=="literal").map(x=>[x.type,x.value]));const represented=Date.UTC(Number(p.year),Number(p.month)-1,Number(p.day),Number(p.hour),Number(p.minute));guess+=desired-represented;}
+ return guess;
+}
+function message(id,text){const el=document.getElementById(id);el.textContent=text;el.classList.toggle("hidden",!text)}
+async function load(){
+ try{const access=await api("/api/contracts/access");if(!access.canManage){document.getElementById("locked").classList.remove("hidden");return}document.getElementById("manager").classList.remove("hidden");
+ const from=Date.now()-90*86400000,to=Date.now()+365*86400000,d=await api(`/api/contracts/manage?from=${from}&to=${to}`),rows=[...new Map((d.contracts||[]).map(c=>[c.id,c])).values()];
+ document.getElementById("list").innerHTML=rows.length?rows.map(c=>`<div class="card"><div><h3>#${c.id} — ${esc(c.name)}</h3><div class="meta">${esc(c.rank)}-Rank · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)} · ${c.durationHours} hr<br>Status: ${esc(c.status)} · Publish: ${esc(c.publishStatus||"—")} · Host ID: ${esc(c.creatorId)}</div>${c.publishError?`<div class="error" style="margin-top:8px">${esc(c.publishError)}</div><button class="btn retry" data-id="${c.id}">Retry Discord Publish</button>`:""}${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="btn" style="display:inline-block;margin-top:9px" target="_blank" href="${esc(c.discordUrl)}">Open Discord Contract</a>`:""}</div><div class="counts">Accepted ${c.accepted}/${c.maxPlayers}<br>Waiting ${c.waiting}<br>Tentative ${c.tentative}</div></div>`).join(""):'<div class="card">No contracts found.</div>';
+ document.querySelectorAll(".retry").forEach(b=>b.onclick=async()=>{try{await api("/api/contracts/retry-publish",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:Number(b.dataset.id)})});message("success","Publish retry queued.");setTimeout(load,1500)}catch(e){message("error",e.message)}});
+ }catch(e){if(e.status===403){document.getElementById("locked").classList.remove("hidden");document.getElementById("manager").classList.add("hidden");return}message("error",e.message);document.getElementById("manager").classList.remove("hidden")}}
+async function createContract(){
+ const btn=document.getElementById("createContract");btn.disabled=true;message("error","");message("success","");
+ try{
+   let imageUrl=null,file=document.getElementById("cImage").files?.[0];if(file){const u=await api("/api/contracts/image",{method:"POST",headers:{"Content-Type":file.type},body:file});imageUrl=u.url}
+   const payload={name:document.getElementById("cName").value,rank:document.getElementById("cRank").value,maxPlayers:Number(document.getElementById("cMax").value),description:document.getElementById("cDescription").value,rewards:document.getElementById("cRewards").value,startAt:zonedWallTimeToMillis(document.getElementById("cDate").value,document.getElementById("cTime").value),durationHours:Number(document.getElementById("cDuration").value),imageUrl};
+   const r=await api("/api/contracts/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});message("success",`Contract #${r.contract.id} created. Discord publishing is queued.`);document.getElementById("cName").value="";document.getElementById("cDescription").value="";document.getElementById("cRewards").value="";document.getElementById("cImage").value="";setTimeout(load,1800);
+ }catch(e){message("error",e.message)}finally{btn.disabled=false}}
+document.getElementById("refresh").onclick=load;document.getElementById("createContract").onclick=createContract;load();
+</script>
+</body>
+</html>
