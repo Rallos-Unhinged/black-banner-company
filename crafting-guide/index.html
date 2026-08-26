@@ -2422,7 +2422,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <strong>Crafting Jewellery</strong>
   Jewellers do more than cut gems. They can craft rings, amulets, necklaces, pins, brooches, earrings, circlets, and other fine decorative pieces. Each piece needs a metal base and may be set with one or more cut gemstones. The base is usually melted gold or silver, with a minimum base value of 10g unless the recipe says otherwise.
   <br/><br/>
-  For custom jewellery, start at <b>DC 8</b>, then increase the DC based on the gemstones added: <b>+1</b> per five 10g gems, <b>+1</b> per 50–100g gem, <b>+5</b> per 500–1,000g gem, and <b>+8</b> per 5,000g+ gem. Custom jewellery takes hours equal to half the final DC, rounded up. Modifying an existing piece uses the same formula and also starts at DC 8.
+  For custom jewellery, start at <b>DC 8</b>, then increase the DC based on the gemstones added: <b>+1</b> per five 10g gems, <b>+1</b> per 15–100g gem, <b>+3</b> per 101–500g gem, <b>+5</b> per 501–1,000g gem, <b>+6</b> per 1,001–4,999g gem, and <b>+8</b> per 5,000g+ gem. Custom jewellery takes hours equal to half the final DC, rounded up. Modifying an existing piece uses the same formula and also starts at DC 8.
   <br/><br/>
   Enhancement jewellery, such as rings or necklaces that improve a stat or save, follows the listed recipe table. You must have the proper cut gemstone before crafting the finished jewellery.
 </div>
@@ -2431,11 +2431,12 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <thead><tr><th>Recipe</th><th>Materials</th><th>Time</th><th>DC</th></tr></thead>
 <tbody>
 <tr><td>Magnifying Glass</td><td>Uncut lens</td><td>2 hrs</td><td>12</td></tr>
-<tr><td>Cut Gem (10g value)</td><td>Uncut gemstone</td><td>1 hr</td><td>10</td></tr>
-<tr><td>Cut Gem (50–100g)</td><td>Uncut gemstone, Workshop</td><td>4 hrs</td><td>14</td></tr>
-<tr><td>Cut Gem (500–1,000g)</td><td>Uncut gemstone, Workshop</td><td>8 hrs</td><td>18</td></tr>
-<tr><td>Cut Gem (5,000g)</td><td>Uncut gemstone, Workshop</td><td>32 hrs</td><td>22</td></tr>
-<tr><td>Cut Gem (custom cut)</td><td>Uncut gemstone, ?</td><td>Ask DM</td><td>Ask DM</td></tr>
+<tr><td>Cut Gem (10g value)</td><td>Raw gemstone materials worth 50% of finished value</td><td>1 hr</td><td>10</td></tr>
+<tr><td>Cut Gem (15–100g)</td><td>Raw gemstone materials worth 50% of finished value, Workshop</td><td>4 hrs</td><td>14</td></tr>
+<tr><td>Cut Gem (101–500g)</td><td>Raw gemstone materials worth 50% of finished value, Workshop</td><td>6 hrs</td><td>16</td></tr>
+<tr><td>Cut Gem (501–1,000g)</td><td>Raw gemstone materials worth 50% of finished value, Workshop</td><td>8 hrs</td><td>18</td></tr>
+<tr><td>Cut Gem (1,001–4,999g)</td><td>Raw gemstone materials worth 50% of finished value, Workshop</td><td>16 hrs</td><td>20</td></tr>
+<tr><td>Cut Gem (5,000g+)</td><td>Raw gemstone materials worth 50% of finished value, Workshop</td><td>32 hrs</td><td>22</td></tr>
 <tr><td>Ring of Minor Enhancement (+1 stat)</td><td>1× Cut Gem (1,000g) + 100g silver</td><td>8 hrs</td><td>16</td></tr>
 <tr><td>Ring of Major Enhancement (+2 stat)</td><td>1× Cut Gem (5,000g) + 100g silver</td><td>8 hrs</td><td>20</td></tr>
 <tr><td>Necklace of Minor Enhancement (+1 save)</td><td>1× Cut Gem (1,000g) + 100g silver</td><td>8 hrs</td><td>16</td></tr>
@@ -2443,6 +2444,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 </tbody>
 </table>
 </div>
+<div class="callout info"><strong>Priced Gemstones &amp; Spell Components</strong> Choose the bracket using the gemstone’s <b>finished required value</b>. Raw gemstone materials cost <b>50% of that finished value</b>. Example: a 300g diamond for <i>Revivify</i> uses the 101–500g bracket, costs 150g in raw gemstone materials, takes 6 hours, and uses DC 16.</div>
 <h3 class="sub-title">Enhancement Gem Assignments</h3>
 <div class="table-wrap">
 <table>
@@ -3119,7 +3121,7 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="card common">
 <div class="card-name">Potion of Healing</div>
 <div class="card-meta"><span class="badge common">Common</span><span class="badge">DC 8</span></div>
-<div class="card-ing"><strong>Ingredients:</strong> Blue Herb ×1</div>
+<div class="card-ing"><strong>Ingredients:</strong> Kreen Paste, Ellond Scrub, or Blue Herb ×1+</div>
 <div class="card-effect"><strong>Effect:</strong> Restore 2d4 + 2 Hit Points.</div>
 <div class="card-stats">
 <div class="stat-block"><span>Crafting Time</span><span class="val">2 hrs</span></div>
@@ -3160,7 +3162,7 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="card uncommon">
 <div class="card-name">Potion of Greater Healing</div>
 <div class="card-meta"><span class="badge uncommon">Uncommon</span><span class="badge">DC 10</span></div>
-<div class="card-ing"><strong>Ingredients:</strong> Kreen Paste ×1, Ellond Scrub ×1, Blue Herb ×1</div>
+<div class="card-ing"><strong>Ingredients:</strong> Kreen Paste ×1 + any combination of Kreen Paste, Ellond Scrub, or Blue Herb</div>
 <div class="card-effect"><strong>Effect:</strong> Restore 4d4 + 4 Hit Points, or double the crafter’s proficiency modifier, whichever is higher.</div>
 <div class="card-stats">
 <div class="stat-block"><span>Crafting Time</span><span class="val">4 hrs</span></div>
@@ -3182,7 +3184,7 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="card rare">
 <div class="card-name">Potion of Superior Healing</div>
 <div class="card-meta"><span class="badge rare">Rare</span><span class="badge">DC 15</span></div>
-<div class="card-ing"><strong>Ingredients:</strong> Spineflower Berries ×4, Kreen Paste ×2</div>
+<div class="card-ing"><strong>Ingredients:</strong> Spineflower Berries ×4 + any healing herbs</div>
 <div class="card-effect"><strong>Effect:</strong> Restore 8d4 + 8 Hit Points, or twice the crafter’s proficiency modifier, whichever is higher.</div>
 <div class="card-stats">
 <div class="stat-block"><span>Crafting Time</span><span class="val">8 hrs</span></div>
@@ -3213,7 +3215,7 @@ The Prime Material, usually the main component, defines the item. The Base Mater
 <div class="card veryrare">
 <div class="card-name">Potion of Supreme Healing</div>
 <div class="card-meta"><span class="badge veryrare">Very Rare</span><span class="badge">DC 20</span></div>
-<div class="card-ing"><strong>Ingredients:</strong> Viping Vitalis ×4, Spineflower Berries ×2</div>
+<div class="card-ing"><strong>Ingredients:</strong> Viping Vitalis ×4 + any healing herbs</div>
 <div class="card-effect"><strong>Effect:</strong> Restore 10d4 + 20 Hit Points, or four times the crafter’s proficiency modifier, whichever is higher.</div>
 <div class="card-stats">
 <div class="stat-block"><span>Crafting Time</span><span class="val">16 hrs</span></div>
@@ -4092,7 +4094,7 @@ Crafted traps are intended to reward preparation, teamwork, and battlefield plan
 <strong>v24 Profession Content Restoration</strong>
 Restored expanded Woodcarver content and preserved profession content passes for Glassblower, Cooking, Leatherworker, Mason, Painter, Potter, Smith, and Weaver.
 </div>
-<h2 class="sec-title">Changelog <span class="tag">Advanced</span></h2><h3 class="sub-title">v3.8 (8/22/26)</h3><p><strong>Herbalism Healing Recipe Update (8/26/26):</strong> Healing potions now use fixed herb recipes. Removed “any healing herb” and choice-pool wording from Potion of Healing, Greater Healing, Superior Healing, and Supreme Healing so the Crafting Guide matches the automated crafting system.</p><p>Added current Discord bot documentation for guided crafting, personal crafting-material inventory, material transfers and marketplace, Harvester commands, crafting profile registration, Workshop/Laboratory/Library registration, automatic inventory validation/consumption, and facility benefits.</p>
+<h2 class="sec-title">Changelog <span class="tag">Advanced</span></h2><h3 class="sub-title">v3.8 (8/22/26)</h3><p>Added current Discord bot documentation for guided crafting, personal crafting-material inventory, material transfers and marketplace, Harvester commands, crafting profile registration, Workshop/Laboratory/Library registration, automatic inventory validation/consumption, and facility benefits.</p>
 <div class="callout info">
 <strong>Version History</strong>
 This section records major updates, rulings, balance changes, and additions made to the Black Banner Company Crafting Guide.
