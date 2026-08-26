@@ -75,13 +75,6 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .purchase-preview{margin:.7rem 0;padding:.65rem;border-left:3px solid var(--gold);background:#100d08}
 .owner-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
 .owner-actions button{flex:1}
-.mini-action{padding:.38rem .55rem;font-size:.62rem;white-space:nowrap;width:auto!important}
-.personnel-actions{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
-.turn-roll-box{padding:.7rem 0;border-bottom:1px solid #30260e}
-.turn-roll-head{display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.turn-result{margin-top:.65rem;padding:.75rem;border:1px solid #4b390f;background:#0d0b07;white-space:pre-wrap;line-height:1.45}
-.turn-result strong{color:#e0c35f}
-
 @media(max-width:760px){.owner-grid{grid-template-columns:1fr}}
 
 
@@ -103,6 +96,23 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .bastion-name-editor{display:grid;grid-template-columns:1fr auto;gap:.5rem;margin-top:.65rem}
 .bastion-name-editor input{width:100%;background:#080706;color:#eee;border:1px solid #6f5418;padding:.65rem}
 @media(max-width:600px){.bastion-name-editor{grid-template-columns:1fr}}
+
+
+.room-personnel{margin-top:12px;padding-top:10px;border-top:1px solid #243542}
+.slot-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.slot-grid{display:grid;gap:6px;margin-top:6px}
+.slot{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:7px 9px;border:1px solid #233746;border-radius:8px;background:#071018}
+.slot.empty{opacity:.78}
+.room-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.room-btn{border:1px solid #35607b;background:#0b1a24;color:#e9edf1;border-radius:8px;padding:7px 10px;cursor:pointer;font:inherit}
+.room-btn:hover{filter:brightness(1.15)}
+.room-btn.good{border-color:#3d7c5c}
+.room-btn.warn{border-color:#8b6b37}
+.room-btn:disabled{opacity:.45;cursor:not-allowed}
+.personnel-modal-backdrop{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000}
+.personnel-modal{width:min(560px,96vw);max-height:85vh;overflow:auto;background:#09131b;border:1px solid #31536b;border-radius:14px;padding:18px;box-shadow:0 20px 60px #000}
+.personnel-modal h3{margin:0 0 12px}.personnel-modal select{width:100%;margin:8px 0 12px}
+.modal-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 
 </style>
 </head>
@@ -251,8 +261,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
         <div id="craftWeaponWrap" class="craft-field craft-special hidden"><label for="craftWeapon">Ranged Weapon</label><select id="craftWeapon"></select></div>
         <div id="craftPrimeWrap" class="craft-field craft-special hidden"><label for="craftPrime">Prime Material</label><select id="craftPrime"></select><small>Prime material determines the damage conversion/effect.</small></div>
         <div id="craftBaseWrap" class="craft-field craft-special hidden"><label for="craftBase">Base Wood</label><select id="craftBase"></select><small>Darkwood, Deadwood, or Summitwood.</small></div>
-        <div id="craftIngredientTypeWrap" class="craft-field craft-special hidden"><label for="craftIngredientType">Cooking Ingredient Type</label><select id="craftIngredientType"><option value="">Choose Meat or Herbs…</option><option value="meat">Meat</option><option value="herb">Herbs</option></select><small>Choose the ingredient category first.</small></div>
-        <div id="craftIngredientWrap" class="craft-field craft-special hidden"><label for="craftIngredient">Specific Cooking Ingredient</label><select id="craftIngredient"></select><small>If you choose Herbs, you pick the exact herb from your inventory. Only that selected ingredient is consumed.</small></div>
+        <div id="craftIngredientWrap" class="craft-field craft-special hidden"><label for="craftIngredient">Meat or Herb to Use</label><select id="craftIngredient"></select><small>Only the ingredient you choose will be consumed.</small></div>
         <div id="craftWoodWrap" class="craft-field craft-special hidden"><label for="craftWood">Furnishing Wood</label><select id="craftWood"></select><small>Choose the exact exotic wood from your inventory.</small></div>
         <div id="craftScrollInkWrap" class="craft-field craft-special hidden"><label for="craftScrollInk">Scroll Herb / Blood Ink</label><select id="craftScrollInk"></select><small>Select the exact ink ingredient so a different herb is not burned.</small></div>
         <div class="craft-field"><label for="craftQty">Quantity / Attempts</label><input id="craftQty" type="number" min="1" max="20" value="1"></div>
@@ -488,23 +497,10 @@ async function removeBanner(){
 let craftRecipes=[];
 let craftMeta={workHours:0,adroitCrafter:false};
 let craftSpecial={kind:null};
-const specialWrapIds=["craftProjectileWrap","craftWeaponWrap","craftPrimeWrap","craftBaseWrap","craftIngredientTypeWrap","craftIngredientWrap","craftWoodWrap","craftScrollInkWrap"];
-let cookingIngredientOptions={meat:[],herbs:[]};
+const specialWrapIds=["craftProjectileWrap","craftWeaponWrap","craftPrimeWrap","craftBaseWrap","craftIngredientWrap","craftWoodWrap","craftScrollInkWrap"];
 function hideCraftSpecial(){specialWrapIds.forEach(id=>$(id).classList.add("hidden"));craftSpecial={kind:null};}
 function optionHtml(rows,placeholder="Choose…"){return `<option value="">${esc(placeholder)}</option>`+(rows||[]).map(r=>`<option value="${esc(r.itemKey??r.value)}">${esc(r.label||r.display)}${r.qty!=null?` ×${Number(r.qty)}`:""}${r.damageType&&r.damageType!=="Prime material's associated damage type"?` · ${esc(r.damageType)}`:""}</option>`).join("");}
-async function loadCraftSpecial(){hideCraftSpecial();const r=selectedCraftRecipe(),p=$("craftProfession").value;if(!r||!p)return;try{const data=await api("/api/bastion/crafting/material-options?profession="+encodeURIComponent(p)+"&recipe="+encodeURIComponent(r.name)+"&rank="+encodeURIComponent($("craftRank").value||""));craftSpecial=data||{};if(data.kind==="wood_projectile"){$("craftProjectileWrap").classList.remove("hidden");$("craftPrimeWrap").classList.remove("hidden");$("craftBaseWrap").classList.remove("hidden");$("craftProjectile").innerHTML=optionHtml(data.projectileTypes,"Choose projectile type…");$("craftPrime").innerHTML=optionHtml(data.prime,"Choose Prime Material…");$("craftBase").innerHTML=optionHtml(data.base,"Choose Base Wood…");}if(data.kind==="wood_weapon"){$("craftWeaponWrap").classList.remove("hidden");$("craftPrimeWrap").classList.remove("hidden");$("craftBaseWrap").classList.remove("hidden");$("craftWeapon").innerHTML=optionHtml(data.weaponTypes,"Choose ranged weapon…");$("craftPrime").innerHTML=optionHtml(data.prime,"Choose Prime Material…");$("craftBase").innerHTML=optionHtml(data.base,"Choose Base Wood…");}if(data.kind==="carpenter_furnishing"){$("craftWoodWrap").classList.remove("hidden");$("craftWood").innerHTML=optionHtml(data.woods,"Choose exact exotic wood…");}if(data.kind==="cooking_treat"){
-  cookingIngredientOptions={meat:data.meat||[],herbs:data.herbs||[]};
-  $("craftIngredientTypeWrap").classList.remove("hidden");
-  $("craftIngredientType").value="";
-  $("craftIngredient").innerHTML=optionHtml([],"Choose Meat or Herbs first…");
-}if(data.kind==="calligraphy_scroll"){$("craftScrollInkWrap").classList.remove("hidden");$("craftScrollInk").innerHTML=optionHtml((data.scrollInk||[]).map(x=>({...x,label:`${x.display} — ${Number(x.inkValue).toLocaleString()}g ink value`})),"Choose exact herb/blood ink…");}updateCraftPreview();}catch(err){craftSpecial={kind:null};}}
-function updateCookingIngredientChoices(){
-  const type=$("craftIngredientType")?.value||"";
-  const rows=type==="herb"?cookingIngredientOptions.herbs:type==="meat"?cookingIngredientOptions.meat:[];
-  $("craftIngredient").innerHTML=optionHtml(rows,type==="herb"?"Choose the exact Herb…":type==="meat"?"Choose the exact Meat…":"Choose Meat or Herbs first…");
-  $("craftIngredientWrap").classList.toggle("hidden",!type);
-  updateCraftPreview();
-}
+async function loadCraftSpecial(){hideCraftSpecial();const r=selectedCraftRecipe(),p=$("craftProfession").value;if(!r||!p)return;try{const data=await api("/api/bastion/crafting/material-options?profession="+encodeURIComponent(p)+"&recipe="+encodeURIComponent(r.name)+"&rank="+encodeURIComponent($("craftRank").value||""));craftSpecial=data||{};if(data.kind==="wood_projectile"){$("craftProjectileWrap").classList.remove("hidden");$("craftPrimeWrap").classList.remove("hidden");$("craftBaseWrap").classList.remove("hidden");$("craftProjectile").innerHTML=optionHtml(data.projectileTypes,"Choose projectile type…");$("craftPrime").innerHTML=optionHtml(data.prime,"Choose Prime Material…");$("craftBase").innerHTML=optionHtml(data.base,"Choose Base Wood…");}if(data.kind==="wood_weapon"){$("craftWeaponWrap").classList.remove("hidden");$("craftPrimeWrap").classList.remove("hidden");$("craftBaseWrap").classList.remove("hidden");$("craftWeapon").innerHTML=optionHtml(data.weaponTypes,"Choose ranged weapon…");$("craftPrime").innerHTML=optionHtml(data.prime,"Choose Prime Material…");$("craftBase").innerHTML=optionHtml(data.base,"Choose Base Wood…");}if(data.kind==="carpenter_furnishing"){$("craftWoodWrap").classList.remove("hidden");$("craftWood").innerHTML=optionHtml(data.woods,"Choose exact exotic wood…");}if(data.kind==="cooking_treat"){$("craftIngredientWrap").classList.remove("hidden");$("craftIngredient").innerHTML=optionHtml(data.ingredients,"Choose Meat or Herb…");}if(data.kind==="calligraphy_scroll"){$("craftScrollInkWrap").classList.remove("hidden");$("craftScrollInk").innerHTML=optionHtml((data.scrollInk||[]).map(x=>({...x,label:`${x.display} — ${Number(x.inkValue).toLocaleString()}g ink value`})),"Choose exact herb/blood ink…");}updateCraftPreview();}catch(err){craftSpecial={kind:null};}}
 function craftSpecialPayload(){return {projectileType:$("craftProjectile")?.value||null,weaponType:$("craftWeapon")?.value||null,primeItemKey:$("craftPrime")?.value||null,baseItemKey:$("craftBase")?.value||null,ingredientItemKey:$("craftIngredient")?.value||null,woodItemKey:$("craftWood")?.value||null,scrollInkItemKey:$("craftScrollInk")?.value||null};}
 async function loadCrafting(){
   if(!currentViewingOwn)return;
@@ -553,7 +549,7 @@ function updateCraftPreview(){
   const r=selectedCraftRecipe(), qty=Math.max(1,Number($("craftQty").value)||1);
   if(!r){$("craftPreview").textContent=`Work Hours available: ${Number(craftMeta.workHours||0)}${craftMeta.adroitCrafter?" · Adroit Crafter registered":""}\nChoose a recipe to see requirements.`;return;}
   const shownHours=craftMeta.adroitCrafter?Number(r.hours)/2:Number(r.hours);
-  let extra="";if(craftSpecial.kind==="wood_projectile")extra=`\nChoose projectile type + exact Prime Material + exact Base Wood. Rank controls arrow yield.`;if(craftSpecial.kind==="wood_weapon")extra=`\nChoose the bow/crossbow plus exact Prime and Base materials.`;if(craftSpecial.kind==="cooking_treat")extra=`\nChoose Meat or Herbs first. If you choose Herbs, select the exact herb from your inventory. Only that selected ingredient is consumed.`;if(craftSpecial.kind==="carpenter_furnishing")extra=`\nChoose the furnishing rank and exact exotic wood.`;if(craftSpecial.kind==="calligraphy_scroll")extra=`\nChoose the exact herb/blood ink you want used; final scroll Gold settlement still uses the Discord guided crafter.`;
+  let extra="";if(craftSpecial.kind==="wood_projectile")extra=`\nChoose projectile type + exact Prime Material + exact Base Wood. Rank controls arrow yield.`;if(craftSpecial.kind==="wood_weapon")extra=`\nChoose the bow/crossbow plus exact Prime and Base materials.`;if(craftSpecial.kind==="cooking_treat")extra=`\nChoose the exact Meat or Herb you want consumed.`;if(craftSpecial.kind==="carpenter_furnishing")extra=`\nChoose the furnishing rank and exact exotic wood.`;if(craftSpecial.kind==="calligraphy_scroll")extra=`\nChoose the exact herb/blood ink you want used; final scroll Gold settlement still uses the Discord guided crafter.`;
   $("craftPreview").textContent=`${r.name}\nDC: ${r.dc} · Base time: ${r.time||r.hours+" hrs"}${craftMeta.adroitCrafter?` · Adroit time: ${shownHours} hrs`:""}\nMaterials: ${r.materials||"See Crafting Guide."}${r.facility?`\nFacility: ${r.facility}`:""}${extra}\nAttempts: ${qty}`;
 }
 async function doBastionCraft(){
@@ -679,35 +675,124 @@ async function saveBastionName(){
   }
 }
 
-async function renamePersonnel(id,current,typeLabel="Bastion personnel"){if(!currentViewingOwn)return;const name=prompt(`Rename ${typeLabel}:`,current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`${typeLabel} renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
-document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current,b.dataset.type||"Bastion personnel");});
+
+let personnelManagement=null;
+
+function clientHirelingCapacity(f){
+  const size=String(f.size||""), ups=new Set(f.upgrades||[]);
+  const basic={
+    "Dining Room":{Cramped:0,Roomy:1,Vast:3},"Kitchen":{Cramped:0,Roomy:1,Vast:3},
+    "Parlor":{Cramped:0,Roomy:1,Vast:3},"Shop":{Cramped:0,Roomy:2,Vast:3},
+    "Storage":{Cramped:1,Roomy:3,Vast:3}
+  };
+  if(basic[f.facility])return Number(basic[f.facility][size]||0);
+  if(f.facility==="Harvestarium")return size==="Cramped"?1:3;
+  if(f.facility==="Workshop")return ups.has("Mastercraft Workshop")?2:1;
+  if(f.facility==="Laboratory")return ups.has("Chemistry Station")?2:1;
+  return Number({"Armory":2,"Library":1,"Sanctuary":1,"Stables":3,"Graveyard":1,"Naval Bastion Fittings":1,"Gaming Hall":3,"Sacristy":1,"Siege Workshop":5,"Teleportation Circle":5,"Theatre":30,"Training Area":8,"Museum":1,"Archive":1,"Meditation Chamber":0,"Menagerie":2,"Observatory":1,"Pub":1,"Reliquary":1,"Demiplane":1,"Sanctum":4,"War Room":2,"Guildhall":0}[f.facility]||0);
+}
+function clientDefenderCapacity(f){
+  if(String(f.facility||"").toLowerCase()!=="barracks")return 0;
+  return Number(({D:{Cramped:4,Roomy:6,Vast:8},C:{Cramped:8,Roomy:12,Vast:16},B:{Cramped:12,Roomy:18,Vast:24},A:{Cramped:16,Roomy:24,Vast:32},S:{Cramped:20,Roomy:30,Vast:40}})[String(f.rank||"").toUpperCase()]?.[String(f.size||"")]||0);
+}
+function closePersonnelModal(){document.querySelector(".personnel-modal-backdrop")?.remove();}
+function showPersonnelModal(title,body){
+  closePersonnelModal();
+  const wrap=document.createElement("div");wrap.className="personnel-modal-backdrop";
+  wrap.innerHTML=`<div class="personnel-modal"><h3>${esc(title)}</h3>${body}<div class="modal-actions"><button class="room-btn" type="button" data-modal-close>Close</button></div></div>`;
+  document.body.appendChild(wrap);
+  wrap.addEventListener("click",e=>{if(e.target===wrap||e.target.closest?.("[data-modal-close]"))closePersonnelModal();});
+  return wrap;
+}
+async function loadPersonnelManagement(){
+  if(!currentViewingOwn)return null;
+  try{personnelManagement=await api("/api/bastion/personnel/manage");return personnelManagement;}
+  catch(err){message("Personnel management unavailable: "+err.message,"bad");return null;}
+}
+async function openHirelingManager(facility){
+  const data=await loadPersonnelManagement();if(!data)return;
+  const room=(data.facilities||[]).find(x=>x.facility===facility);
+  if(!room)return message("That room is not available.","bad");
+  const candidates=[];
+  for(const r of data.facilities||[])for(const h of r.hirelings||[])if(r.facility!==facility)candidates.push({...h,from:r.facility});
+  for(const h of data.unassignedHirelings||[])candidates.push({...h,from:"Unassigned"});
+  const quote=room.hirelingQuote;
+  const quoteHtml=quote?.ready
+    ? `<div class="card"><strong>Buy New Hireling</strong><div class="muted">CHA ${quote.charismaModifier>=0?"+":""}${quote.charismaModifier}: ${quote.charismaDiscount}% · Disguise Kit: ${quote.disguiseKit==="expertise"?"Expertise":quote.disguiseKit==="proficient"?"Proficient":"None"} (${quote.disguiseDiscount}%)</div><div><strong>${Number(quote.cost).toLocaleString()} GP</strong> after ${quote.discount}% total discount</div><button class="room-btn good" type="button" data-buy-hireling="${esc(facility)}">Buy & Place Here</button></div>`
+    : `<div class="card"><strong>Buy New Hireling</strong><div class="muted">${esc(quote?.error||data.hirelingCheck?.error||"No purchase quote available.")}</div></div>`;
+  const moveHtml=candidates.length
+    ? `<label>Move Existing Hireling</label><select id="moveHirelingSelect">${candidates.map(h=>`<option value="${Number(h.id)}">${esc(h.name||`Unnamed Hireling #${h.id}`)} — ${esc(h.from)}</option>`).join("")}</select><button class="room-btn" type="button" data-move-hireling="${esc(facility)}">Move Selected Here</button>`
+    : `<div class="muted">No other hirelings are available to move.</div>`;
+  const modal=showPersonnelModal(`Hirelings — ${facility}`,`<div class="muted">Room capacity: ${room.hirelings.length}/${room.hirelingCapacity}</div>${moveHtml}<br>${quoteHtml}`);
+  modal.addEventListener("click",async e=>{
+    const move=e.target.closest?.("[data-move-hireling]");
+    const buy=e.target.closest?.("[data-buy-hireling]");
+    if(move){
+      const id=Number(modal.querySelector("#moveHirelingSelect")?.value);if(!id)return;
+      try{await api("/api/bastion/hirelings/move",{method:"POST",body:JSON.stringify({id,facility})});closePersonnelModal();message("Hireling moved.","good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+    }
+    if(buy){
+      if(!confirm(`Buy and place a new hireling in ${facility}?`))return;
+      try{const r=await api("/api/bastion/hirelings/buy",{method:"POST",body:JSON.stringify({facility})});closePersonnelModal();message(`Hireling purchased for ${Number(r.cost).toLocaleString()} GP.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+    }
+  });
+}
+async function unassignHireling(id){
+  if(!confirm("Move this hireling to Unassigned?"))return;
+  try{await api("/api/bastion/hirelings/unassign",{method:"POST",body:JSON.stringify({id:Number(id)})});message("Hireling unassigned.","good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+}
+async function openDefenderManager(facility){
+  const data=await loadPersonnelManagement();if(!data)return;
+  const room=(data.facilities||[]).find(x=>x.facility===facility);
+  if(!room)return message("Barracks not found.","bad");
+  const open=Math.max(0,Number(room.defenderCapacity||0)-(room.defenders||[]).length);
+  const max=Math.min(4,open);
+  const qtyOptions=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1} Defender${i?"s":""}</option>`).join("");
+  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${(room.defenders||[]).length}/${room.defenderCapacity} · Open slots: ${open}</div>${open?`<label>Recruit Order</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">The current Barracks rule gives no separate GP price for Defenders, so recruitment does not charge Gold.</div>`:`<strong>🔒 Barracks is full.</strong>`}`);
+  modal.addEventListener("click",async e=>{
+    const recruit=e.target.closest?.("[data-recruit-defenders]");
+    const add=e.target.closest?.("[data-add-defender]");
+    const quantity=add?1:Number(modal.querySelector("#defenderQty")?.value||1);
+    if(!recruit&&!add)return;
+    if(!confirm(`Recruit ${quantity} Defender${quantity===1?"":"s"}?`))return;
+    try{await api("/api/bastion/defenders/recruit",{method:"POST",body:JSON.stringify({facility,quantity})});closePersonnelModal();message(`${quantity} Defender${quantity===1?"":"s"} recruited.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+  });
+}
+function facilityPersonnelHtml(f,data){
+  if(!currentViewingOwn)return "";
+  const hirelings=(data.personnel||[]).filter(p=>p.personnelType==="hireling"&&p.facility===f.facility);
+  const hcap=clientHirelingCapacity(f);
+  const defenders=(data.personnel||[]).filter(p=>p.personnelType==="defender"&&p.facility===f.facility);
+  const dcap=clientDefenderCapacity(f);
+  const parts=[];
+  if(hcap>0){
+    const slots=Array.from({length:hcap},(_,i)=>{
+      const h=hirelings[i];
+      return `<div class="slot ${h?"":"empty"}"><span>${h?`👤 ${esc(h.name||`Unnamed Hireling #${h.id}`)}`:`Empty Hireling Slot ${i+1}`}</span>${h?`<span><button class="mini-btn rename-person" data-id="${Number(h.id)}" data-current="${esc(h.name||"")}" type="button">Rename</button> <button class="mini-btn unassign-hireling" data-id="${Number(h.id)}" type="button">Unassign</button></span>`:""}</div>`;
+    }).join("");
+    parts.push(`<div class="room-personnel"><div class="slot-head"><strong>Hirelings ${hirelings.length}/${hcap}</strong>${hirelings.length<hcap?`<button class="room-btn manage-hirelings" data-facility="${esc(f.facility)}" type="button">Place / Buy Hireling</button>`:"<span>🔒 Full</span>"}</div><div class="slot-grid">${slots}</div></div>`);
+  }
+  if(dcap>0){
+    const visible=defenders.map((d,i)=>`<div class="slot"><span>🛡️ ${esc(d.name||`Unnamed Defender #${d.id}`)}</span><button class="mini-btn rename-person" data-id="${Number(d.id)}" data-current="${esc(d.name||"")}" type="button">Rename</button></div>`).join("");
+    parts.push(`<div class="room-personnel"><div class="slot-head"><strong>Defenders ${defenders.length}/${dcap}</strong>${defenders.length<dcap?`<button class="room-btn manage-defenders" data-facility="${esc(f.facility)}" type="button">Recruit / Add Defender</button>`:"<span>🔒 Full</span>"}</div><div class="slot-grid">${visible||`<div class="slot empty">No Defenders assigned</div>`}</div><div class="muted">${dcap-defenders.length} open Defender slot${dcap-defenders.length===1?"":"s"}</div></div>`);
+  }
+  return parts.join("");
+}
+document.addEventListener("click",e=>{
+  const h=e.target.closest?.(".manage-hirelings");if(h){openHirelingManager(h.dataset.facility);return;}
+  const d=e.target.closest?.(".manage-defenders");if(d){openDefenderManager(d.dataset.facility);return;}
+  const u=e.target.closest?.(".unassign-hireling");if(u){unassignHireling(u.dataset.id);return;}
+});
+
+
+async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender or Hireling:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
+document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current);});
 let furnishingData={available:[],installed:[]};
 async function loadFurnishings(){if(!currentViewingOwn)return;try{furnishingData=await api("/api/bastion/furnishings");const facilities=[...new Set((furnishingData.available||[]).map(x=>x.facility))].sort();$("furnishingFacility").innerHTML='<option value="">Choose facility…</option>'+facilities.map(x=>`<option>${esc(x)}</option>`).join("");updateFurnishingChoices();renderInstalledFurnishings();}catch(err){$("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;}}
 function updateFurnishingChoices(){const f=$("furnishingFacility").value,rows=(furnishingData.available||[]).filter(x=>x.facility===f);$("furnishingItem").innerHTML='<option value="">Choose furnishing…</option>'+rows.map(x=>`<option value="${esc(x.name)}">${esc(x.name)} · ${esc(x.minimumRank)}+</option>`).join("");updateFurnishingPreview();}
 function updateFurnishingPreview(){const f=$("furnishingFacility").value,n=$("furnishingItem").value,r=$("furnishingRank").value,x=(furnishingData.available||[]).find(y=>y.facility===f&&y.name===n);$("furnishingPreview").textContent=x?`${r}-Rank ${x.name}\nRecommended Wood: ${x.recommendedWood||"Any allowed exotic wood"}\nBuff: ${x.bonus}`:"Choose a facility and furnishing.";}
 function renderInstalledFurnishings(){const rows=furnishingData.installed||[];$("furnishingInstalled").innerHTML=rows.length?'<strong>Installed:</strong><br>'+rows.map(x=>`${esc(x.facility)} — ${esc(x.rank||"")}-Rank ${esc(x.name)}`).join('<br>'):"No Carpenter furnishing buffs installed.";}
 async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await loadFurnishings();}catch(err){message(err.message,"bad");}}
-
-
-async function rollBastionTurn(){
-  if(!currentViewingOwn)return;
-  const btn=$("rollBastionTurnBtn");
-  if(btn)btn.disabled=true;
-  try{
-    const result=await api("/api/bastion/turn/roll",{method:"POST",body:"{}"});
-    message(`Bastion Turn rolled: ${result.eventName}.`,"good");
-    await reloadOwnBastion();
-    const box=$("bastionTurnResult");
-    if(box){
-      box.classList.remove("hidden");
-      box.innerHTML=`<strong>🎲 d100: ${Number(result.roll)} — ${esc(result.eventName)}</strong><br><br>${esc(result.resultText).replaceAll("\\n","<br>")}`;
-    }
-  }catch(err){
-    message(err.message||"Could not roll Bastion Turn.","bad");
-  }finally{
-    if(btn)btn.disabled=false;
-  }
-}
 
 function render(data){
   me=data;
@@ -743,6 +828,7 @@ function render(data){
       <div class="badges"><span class="badge">${esc(f.facilityType||"Facility")}</span>${f.rank?`<span class="badge">Rank ${esc(f.rank)}</span>`:""}${f.size?`<span class="badge">${esc(f.size)}</span>`:""}</div>
       ${(f.upgrades||[]).length?`<div class="muted">Upgrades: ${f.upgrades.map(esc).join(", ")}</div>`:""}
       ${extras.length?`<div class="muted">${extras.join(" · ")}</div>`:""}
+      ${facilityPersonnelHtml(f,data)}
     </div>`;
   }).join(""):empty("No completed Bastion facilities are registered.");
 
@@ -751,10 +837,10 @@ function render(data){
   $("orders").innerHTML=data.orders.length?data.orders.map(o=>`<div class="row"><strong>${esc(o.facility)}</strong><span>${esc(pretty(o.order))}</span></div>`).join(""):empty("No active facility orders.");
 
   const hirelings=data.personnel.filter(p=>p.personnelType==="hireling");
-  $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span class="person-actions">Hireling${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" data-type="Hireling" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No hirelings registered.");
+  $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span class="person-actions">Hireling${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No hirelings registered.");
 
   const others=data.personnel.filter(p=>p.personnelType!=="hireling");
-  $("personnel").innerHTML=others.length?others.map((p,i)=>{const typeLabel=pretty(p.personnelType);return `<div class="row"><span><strong>${esc(p.name||`${typeLabel} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(typeLabel)}${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" data-type="${esc(typeLabel)}" type="button">Rename</button>`:""}</span></div>`;}).join(""):empty("No defenders, ronin, knights, or monsters registered.");
+  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(pretty(p.personnelType))}${currentViewingOwn&&p.personnelType==="defender"?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No defenders, ronin, knights, or monsters registered.");
 
   if(data.combined?.members?.length){
     $("combined").innerHTML=data.combined.members.map(m=>`<div class="row"><span>${String(m.userId)===String(data.owner.id)?"You":esc(m.displayName||`Member ${String(m.userId).slice(-6)}`)}</span><span>${String(m.userId)===String(data.combined.createdBy)?"Founder":"Resident"}</span></div>`).join("");
@@ -765,12 +851,12 @@ function render(data){
   const turn=data.turn;
   const effect=data.effects;
   $("turnDetails").innerHTML=[
-    `<div class="turn-roll-box"><div class="turn-roll-head"><span><strong>Individual Bastion Turn</strong><br><span class="muted">${turn?.pending?"A turn is ready to be rolled.":"No Individual Bastion Turn is currently pending."}</span></span>${currentViewingOwn&&turn?.pending?`<button id="rollBastionTurnBtn" class="primary mini-action" type="button" onclick="rollBastionTurn()">🎲 Roll Bastion Turn</button>`:""}</div><div id="bastionTurnResult" class="turn-result hidden"></div></div>`,
-    `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}${turn?.lastRoll?` · d100 ${Number(turn.lastRoll)}`:""}</span></div>`,
+    `<div class="row"><span>Individual Bastion Turn</span><strong>${turn?.pending?"Pending":"None Pending"}</strong></div>`,
+    `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}</span></div>`,
     `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
   ].join("");
 
-  if(currentViewingOwn){ loadManagement(); loadCrafting(); loadFurnishings(); }
+  if(currentViewingOwn){ loadManagement(); loadCrafting(); loadFurnishings(); loadPersonnelManagement(); }
 
   const params=new URLSearchParams(location.search);
   if(params.get("login")==="success"){
@@ -813,8 +899,6 @@ $("craftProfession").addEventListener("change",loadCraftRecipes);
 $("craftRecipe").addEventListener("change",()=>{updateCraftPreview();updateCraftAutoBonus();loadCraftSpecial();});
 $("craftRank").addEventListener("change",()=>{updateCraftPreview();updateCraftAutoBonus();loadCraftSpecial();});
 $("craftQty").addEventListener("input",updateCraftPreview);
-$("craftIngredientType")?.addEventListener("change",updateCookingIngredientChoices);
-$("craftIngredient")?.addEventListener("change",updateCraftPreview);
 $("craftBtn").addEventListener("click",doBastionCraft);
 
 $("saveBastionNameBtn").addEventListener("click",saveBastionName);
@@ -852,7 +936,6 @@ $("loginBtn").addEventListener("click",()=>{
   if(me)return logout();
   window.location.assign(API_BASE+"/auth/discord?return="+encodeURIComponent("/bastions/my-bastion/"));
 });
-window.rollBastionTurn=rollBastionTurn;
 load();
 </script>
 </body>
