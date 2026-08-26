@@ -75,6 +75,13 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .purchase-preview{margin:.7rem 0;padding:.65rem;border-left:3px solid var(--gold);background:#100d08}
 .owner-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
 .owner-actions button{flex:1}
+.mini-action{padding:.38rem .55rem;font-size:.62rem;white-space:nowrap;width:auto!important}
+.personnel-actions{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.turn-roll-box{padding:.7rem 0;border-bottom:1px solid #30260e}
+.turn-roll-head{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.turn-result{margin-top:.65rem;padding:.75rem;border:1px solid #4b390f;background:#0d0b07;white-space:pre-wrap;line-height:1.45}
+.turn-result strong{color:#e0c35f}
+
 @media(max-width:760px){.owner-grid{grid-template-columns:1fr}}
 
 
@@ -672,14 +679,35 @@ async function saveBastionName(){
   }
 }
 
-async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender or Hireling:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
-document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current);});
+async function renamePersonnel(id,current,typeLabel="Bastion personnel"){if(!currentViewingOwn)return;const name=prompt(`Rename ${typeLabel}:`,current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`${typeLabel} renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
+document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current,b.dataset.type||"Bastion personnel");});
 let furnishingData={available:[],installed:[]};
 async function loadFurnishings(){if(!currentViewingOwn)return;try{furnishingData=await api("/api/bastion/furnishings");const facilities=[...new Set((furnishingData.available||[]).map(x=>x.facility))].sort();$("furnishingFacility").innerHTML='<option value="">Choose facility…</option>'+facilities.map(x=>`<option>${esc(x)}</option>`).join("");updateFurnishingChoices();renderInstalledFurnishings();}catch(err){$("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;}}
 function updateFurnishingChoices(){const f=$("furnishingFacility").value,rows=(furnishingData.available||[]).filter(x=>x.facility===f);$("furnishingItem").innerHTML='<option value="">Choose furnishing…</option>'+rows.map(x=>`<option value="${esc(x.name)}">${esc(x.name)} · ${esc(x.minimumRank)}+</option>`).join("");updateFurnishingPreview();}
 function updateFurnishingPreview(){const f=$("furnishingFacility").value,n=$("furnishingItem").value,r=$("furnishingRank").value,x=(furnishingData.available||[]).find(y=>y.facility===f&&y.name===n);$("furnishingPreview").textContent=x?`${r}-Rank ${x.name}\nRecommended Wood: ${x.recommendedWood||"Any allowed exotic wood"}\nBuff: ${x.bonus}`:"Choose a facility and furnishing.";}
 function renderInstalledFurnishings(){const rows=furnishingData.installed||[];$("furnishingInstalled").innerHTML=rows.length?'<strong>Installed:</strong><br>'+rows.map(x=>`${esc(x.facility)} — ${esc(x.rank||"")}-Rank ${esc(x.name)}`).join('<br>'):"No Carpenter furnishing buffs installed.";}
 async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await loadFurnishings();}catch(err){message(err.message,"bad");}}
+
+
+async function rollBastionTurn(){
+  if(!currentViewingOwn)return;
+  const btn=$("rollBastionTurnBtn");
+  if(btn)btn.disabled=true;
+  try{
+    const result=await api("/api/bastion/turn/roll",{method:"POST",body:"{}"});
+    message(`Bastion Turn rolled: ${result.eventName}.`,"good");
+    await reloadOwnBastion();
+    const box=$("bastionTurnResult");
+    if(box){
+      box.classList.remove("hidden");
+      box.innerHTML=`<strong>🎲 d100: ${Number(result.roll)} — ${esc(result.eventName)}</strong><br><br>${esc(result.resultText).replaceAll("\\n","<br>")}`;
+    }
+  }catch(err){
+    message(err.message||"Could not roll Bastion Turn.","bad");
+  }finally{
+    if(btn)btn.disabled=false;
+  }
+}
 
 function render(data){
   me=data;
@@ -723,10 +751,10 @@ function render(data){
   $("orders").innerHTML=data.orders.length?data.orders.map(o=>`<div class="row"><strong>${esc(o.facility)}</strong><span>${esc(pretty(o.order))}</span></div>`).join(""):empty("No active facility orders.");
 
   const hirelings=data.personnel.filter(p=>p.personnelType==="hireling");
-  $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span class="person-actions">Hireling${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No hirelings registered.");
+  $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span class="person-actions">Hireling${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" data-type="Hireling" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No hirelings registered.");
 
   const others=data.personnel.filter(p=>p.personnelType!=="hireling");
-  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(pretty(p.personnelType))}${currentViewingOwn&&p.personnelType==="defender"?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No defenders, ronin, knights, or monsters registered.");
+  $("personnel").innerHTML=others.length?others.map((p,i)=>{const typeLabel=pretty(p.personnelType);return `<div class="row"><span><strong>${esc(p.name||`${typeLabel} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(typeLabel)}${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" data-type="${esc(typeLabel)}" type="button">Rename</button>`:""}</span></div>`;}).join(""):empty("No defenders, ronin, knights, or monsters registered.");
 
   if(data.combined?.members?.length){
     $("combined").innerHTML=data.combined.members.map(m=>`<div class="row"><span>${String(m.userId)===String(data.owner.id)?"You":esc(m.displayName||`Member ${String(m.userId).slice(-6)}`)}</span><span>${String(m.userId)===String(data.combined.createdBy)?"Founder":"Resident"}</span></div>`).join("");
@@ -737,8 +765,8 @@ function render(data){
   const turn=data.turn;
   const effect=data.effects;
   $("turnDetails").innerHTML=[
-    `<div class="row"><span>Individual Bastion Turn</span><strong>${turn?.pending?"Pending":"None Pending"}</strong></div>`,
-    `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}</span></div>`,
+    `<div class="turn-roll-box"><div class="turn-roll-head"><span><strong>Individual Bastion Turn</strong><br><span class="muted">${turn?.pending?"A turn is ready to be rolled.":"No Individual Bastion Turn is currently pending."}</span></span>${currentViewingOwn&&turn?.pending?`<button id="rollBastionTurnBtn" class="primary mini-action" type="button" onclick="rollBastionTurn()">🎲 Roll Bastion Turn</button>`:""}</div><div id="bastionTurnResult" class="turn-result hidden"></div></div>`,
+    `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}${turn?.lastRoll?` · d100 ${Number(turn.lastRoll)}`:""}</span></div>`,
     `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
   ].join("");
 
@@ -824,6 +852,7 @@ $("loginBtn").addEventListener("click",()=>{
   if(me)return logout();
   window.location.assign(API_BASE+"/auth/discord?return="+encodeURIComponent("/bastions/my-bastion/"));
 });
+window.rollBastionTurn=rollBastionTurn;
 load();
 </script>
 </body>
