@@ -453,8 +453,10 @@ footer {
         </div>
 
         <div id="buyOrderCraftingWrap" class="hidden">
+          <h3>Profession</h3>
+          <select id="buyOrderProfession"><option value="">Choose a profession...</option></select>
           <h3>Crafting Guide Item</h3>
-          <select id="buyOrderCrafting"><option value="">Loading Crafting Guide...</option></select>
+          <select id="buyOrderCrafting" disabled><option value="">Choose a profession first...</option></select>
         </div>
 
         <div id="buyOrderCustomWrap" class="hidden">
@@ -703,14 +705,46 @@ function updateBuyOrderType(){
   $("buyOrderMaterialWrap").classList.toggle("hidden",type!=="material");
   $("buyOrderCraftingWrap").classList.toggle("hidden",type!=="crafting");
   $("buyOrderCustomWrap").classList.toggle("hidden",type!=="custom");
+  if(type==="crafting") updateBuyOrderCraftingItems();
   updateBuyOrderPreview();
 }
 
 function fillBuyOrderCatalog(){
   $("buyOrderMaterial").innerHTML='<option value="">Choose a material...</option>'+
     (buyOrderCatalog.materials||[]).map(x=>`<option value="${escapeHtml(x.itemKey)}">${escapeHtml(x.name)}</option>`).join("");
-  $("buyOrderCrafting").innerHTML='<option value="">Choose a Crafting Guide item...</option>'+
-    (buyOrderCatalog.craftingItems||[]).map(x=>`<option value="${escapeHtml(x.name)}">${escapeHtml(x.name)}${x.profession?` — ${escapeHtml(x.profession)}`:""}${x.rarity?` · ${escapeHtml(x.rarity)}`:""}</option>`).join("");
+
+  const professions=[...new Map(
+    (buyOrderCatalog.craftingItems||[])
+      .filter(x=>x.professionId||x.profession)
+      .map(x=>[String(x.professionId||x.profession),{
+        id:String(x.professionId||x.profession),
+        name:String(x.profession||x.professionId||"Unknown")
+      }])
+  ).values()].sort((a,b)=>a.name.localeCompare(b.name));
+
+  $("buyOrderProfession").innerHTML='<option value="">Choose a profession...</option>'+
+    professions.map(p=>`<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join("");
+
+  $("buyOrderCrafting").disabled=true;
+  $("buyOrderCrafting").innerHTML='<option value="">Choose a profession first...</option>';
+}
+
+function updateBuyOrderCraftingItems(){
+  const professionId=$("buyOrderProfession").value;
+  const itemSelect=$("buyOrderCrafting");
+  if(!professionId){
+    itemSelect.disabled=true;
+    itemSelect.innerHTML='<option value="">Choose a profession first...</option>';
+    return;
+  }
+
+  const rows=(buyOrderCatalog.craftingItems||[])
+    .filter(x=>String(x.professionId||x.profession)===String(professionId))
+    .sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+
+  itemSelect.disabled=false;
+  itemSelect.innerHTML='<option value="">Choose an item...</option>'+
+    rows.map(x=>`<option value="${escapeHtml(x.name)}">${escapeHtml(x.name)}${x.rarity?` · ${escapeHtml(x.rarity)}`:""}${x.rank?` · Rank ${escapeHtml(x.rank)}`:""}</option>`).join("");
 }
 
 function updateBuyOrderPreview(){
@@ -967,6 +1001,7 @@ $("buyOrderSearch").addEventListener("input", renderBuyOrders);
 $("buyOrderTypeFilter").addEventListener("change", renderBuyOrders);
 $("buyOrderSort").addEventListener("change", renderBuyOrders);
 $("buyOrderType").addEventListener("change", updateBuyOrderType);
+$("buyOrderProfession").addEventListener("change", updateBuyOrderCraftingItems);
 $("buyOrderQty").addEventListener("input", updateBuyOrderPreview);
 $("buyOrderPrice").addEventListener("input", updateBuyOrderPreview);
 $("createBuyOrderBtn").addEventListener("click", createBuyOrder);
