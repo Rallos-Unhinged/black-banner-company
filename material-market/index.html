@@ -302,6 +302,13 @@ footer {
   background:#100d0a;
 }
 
+
+.buy-order-card{border:1px solid #4a3810;background:#17140d;padding:.85rem;margin:.55rem 0}
+.buy-order-card strong{color:var(--gold2)}
+.buy-order-meta{display:flex;gap:.65rem;flex-wrap:wrap;margin:.35rem 0;color:var(--muted)}
+.buy-order-type{display:inline-block;border:1px solid #6d5215;padding:.08rem .4rem;font:.62rem 'Fira Mono',monospace;text-transform:uppercase;color:#d8b85d}
+.buy-order-form select,.buy-order-form input,.buy-order-form textarea{width:100%}
+.buy-order-form .hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -373,6 +380,29 @@ footer {
         </div>
         <div id="customMarket" class="card-list"><div class="empty">Login to view custom item listings.</div></div>
       </section>
+
+      <section class="panel" style="margin-top:1rem">
+        <h2>Buy Orders</h2>
+        <div class="rule"></div>
+        <p class="muted">Players can post what they want to buy. Gold is escrowed when the order is created, so sellers are paid immediately when they fill it.</p>
+        <div class="controls">
+          <input id="buyOrderSearch" placeholder="Search Buy Orders...">
+          <select id="buyOrderTypeFilter">
+            <option value="">All Types</option>
+            <option value="material">Materials</option>
+            <option value="crafting">Crafting Guide Items</option>
+            <option value="custom">Custom Requests</option>
+          </select>
+          <select id="buyOrderSort">
+            <option value="newest">Newest</option>
+            <option value="priceHigh">Highest Offer</option>
+            <option value="priceLow">Lowest Offer</option>
+            <option value="name">Item Name</option>
+          </select>
+          <button id="refreshBuyOrders">Refresh</button>
+        </div>
+        <div id="buyOrders" class="card-list"><div class="empty">Login to view Buy Orders.</div></div>
+      </section>
     </main>
 
     <aside>
@@ -405,6 +435,49 @@ footer {
         <button id="customSellBtn" class="primary" style="margin-top:.8rem;width:100%" disabled>Create Custom Listing</button>
       </section>
 
+      <section class="panel buy-order-form" style="margin-top:1rem">
+        <h2>Create Buy Order</h2>
+        <div class="rule"></div>
+        <p class="muted">The full order value is reserved from your Gold when you post it. Unspent escrow is returned if you cancel the order.</p>
+
+        <h3>Request Type</h3>
+        <select id="buyOrderType">
+          <option value="material">Material</option>
+          <option value="crafting">Crafting Guide Item</option>
+          <option value="custom">Custom Request</option>
+        </select>
+
+        <div id="buyOrderMaterialWrap">
+          <h3>Material</h3>
+          <select id="buyOrderMaterial"><option value="">Loading materials...</option></select>
+        </div>
+
+        <div id="buyOrderCraftingWrap" class="hidden">
+          <h3>Crafting Guide Item</h3>
+          <select id="buyOrderCrafting"><option value="">Loading Crafting Guide...</option></select>
+        </div>
+
+        <div id="buyOrderCustomWrap" class="hidden">
+          <h3>Requested Item Name</h3>
+          <input id="buyOrderCustomName" maxlength="120" placeholder="What do you want to buy?">
+          <h3>Item Rank</h3>
+          <select id="buyOrderRank"><option value="">Unranked</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select>
+          <h3>Rarity</h3>
+          <select id="buyOrderRarity"><option value="">Not specified</option><option>Common</option><option>Uncommon</option><option>Rare</option><option>Very Rare</option><option>Legendary</option><option>Artifact</option><option>Other</option></select>
+          <h3>Description / Requirements</h3>
+          <textarea id="buyOrderDescription" rows="4" maxlength="1500" placeholder="Describe exactly what you are looking for."></textarea>
+          <h3>Reference Link (Optional)</h3>
+          <input id="buyOrderUrl" maxlength="500" placeholder="https://...">
+        </div>
+
+        <h3>Quantity Wanted</h3>
+        <input id="buyOrderQty" type="number" min="1" max="99" value="1">
+        <h3>Offer Per Item</h3>
+        <input id="buyOrderPrice" type="number" min="1" value="100">
+        <div id="buyOrderPreview" class="muted" style="margin-top:.55rem">Escrow: 100 GP</div>
+        <button id="createBuyOrderBtn" class="primary" style="margin-top:.8rem;width:100%" disabled>Create Buy Order</button>
+      </section>
+
       <section class="panel" style="margin-top:1rem">
         <h2>My Purchased Custom Items</h2>
         <div class="rule"></div>
@@ -433,6 +506,8 @@ let inventory = [];
 let listings = [];
 let customListings = [];
 let customPurchases = [];
+let buyOrders = [];
+let buyOrderCatalog = {materials:[],craftingItems:[]};
 
 const $ = (id) => document.getElementById(id);
 
@@ -539,6 +614,7 @@ function renderInventory() {
   select.disabled = false;
   $("sellBtn").disabled = false;
   $("customSellBtn").disabled = false;
+  $("createBuyOrderBtn").disabled = false;
 }
 
 function listingRows(filtered) {
@@ -621,25 +697,143 @@ function renderCustomPurchases() {
   holder.innerHTML = customPurchases.map(x => `<div class="listing-card"><strong>${x.itemRank ? `<span class="rank rank-${escapeHtml(x.itemRank)}">${escapeHtml(x.itemRank)}</span> ` : ""}${escapeHtml(x.itemName)}</strong>${x.rarity ? ` <span class="muted">· ${escapeHtml(x.rarity)}</span>` : ""}<br><span class="muted">Quantity:</span> ${Number(x.quantity)} · <span class="gold">${Number(x.totalGold).toLocaleString()}g paid</span>${x.description ? `<div class="muted" style="margin-top:.35rem;white-space:pre-wrap">${escapeHtml(x.description)}</div>` : ""}${x.itemUrl ? `<div style="margin-top:.35rem"><a class="gold" href="${escapeHtml(x.itemUrl)}" target="_blank" rel="noopener noreferrer">View Item Link</a></div>` : ""}</div>`).join("");
 }
 
+
+function updateBuyOrderType(){
+  const type=$("buyOrderType").value;
+  $("buyOrderMaterialWrap").classList.toggle("hidden",type!=="material");
+  $("buyOrderCraftingWrap").classList.toggle("hidden",type!=="crafting");
+  $("buyOrderCustomWrap").classList.toggle("hidden",type!=="custom");
+  updateBuyOrderPreview();
+}
+
+function fillBuyOrderCatalog(){
+  $("buyOrderMaterial").innerHTML='<option value="">Choose a material...</option>'+
+    (buyOrderCatalog.materials||[]).map(x=>`<option value="${escapeHtml(x.itemKey)}">${escapeHtml(x.name)}</option>`).join("");
+  $("buyOrderCrafting").innerHTML='<option value="">Choose a Crafting Guide item...</option>'+
+    (buyOrderCatalog.craftingItems||[]).map(x=>`<option value="${escapeHtml(x.name)}">${escapeHtml(x.name)}${x.profession?` — ${escapeHtml(x.profession)}`:""}${x.rarity?` · ${escapeHtml(x.rarity)}`:""}</option>`).join("");
+}
+
+function updateBuyOrderPreview(){
+  const qty=Math.max(1,Number($("buyOrderQty").value)||1);
+  const price=Math.max(1,Number($("buyOrderPrice").value)||1);
+  $("buyOrderPreview").textContent=`Escrow required: ${(qty*price).toLocaleString()} GP`;
+}
+
+function buyOrderCards(rows){
+  if(!rows.length)return '<div class="empty">No active Buy Orders match your filters.</div>';
+  return rows.map(o=>{
+    const own=me&&String(o.buyerId)===String(me.user.id);
+    const typeLabel=o.itemType==="material"?"Material":o.itemType==="crafting"?"Crafting Guide Item":"Custom Request";
+    const desc=o.description?`<div class="muted" style="margin-top:.4rem;white-space:pre-wrap">${escapeHtml(o.description)}</div>`:"";
+    const link=o.itemUrl?`<div style="margin-top:.35rem"><a class="gold" href="${escapeHtml(o.itemUrl)}" target="_blank" rel="noopener noreferrer">Reference Link</a></div>`:"";
+    return `<div class="buy-order-card">
+      <div><span class="buy-order-type">${typeLabel}</span> ${o.itemRank?`<span class="rank rank-${escapeHtml(o.itemRank)}">${escapeHtml(o.itemRank)}</span> `:""}<strong>${escapeHtml(o.itemName)}</strong>${o.rarity?` <span class="muted">· ${escapeHtml(o.rarity)}</span>`:""}</div>
+      <div class="buy-order-meta">
+        <span>Wanted: <b>${Number(o.quantityRemaining)}</b> / ${Number(o.quantityTotal)}</span>
+        <span class="gold">${Number(o.priceEach).toLocaleString()}g each</span>
+        <span>Buyer: ${own?"You":escapeHtml(o.buyerName||`Member ${String(o.buyerId).slice(-6)}`)}</span>
+        <span>Escrow: ${Number(o.escrowRemaining).toLocaleString()}g</span>
+      </div>
+      ${desc}${link}
+      <div class="action-row">
+        ${own
+          ? `<button class="danger" onclick="cancelBuyOrder(${Number(o.id)})">Cancel & Refund</button>`
+          : `<button onclick="fulfillBuyOrder(${Number(o.id)},${Number(o.quantityRemaining)},${Number(o.priceEach)},'${escapeHtml(String(o.itemName)).replaceAll("'","&#039;")}','${escapeHtml(o.itemType)}')">Sell to Buyer</button>`}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderBuyOrders(){
+  const q=$("buyOrderSearch").value.trim().toLowerCase();
+  const type=$("buyOrderTypeFilter").value;
+  const sort=$("buyOrderSort").value;
+  let rows=buyOrders.filter(o=>(!q||`${o.itemName} ${o.description||""} ${o.rarity||""}`.toLowerCase().includes(q))&&(!type||o.itemType===type));
+  rows.sort((a,b)=>sort==="priceHigh"?b.priceEach-a.priceEach:sort==="priceLow"?a.priceEach-b.priceEach:sort==="name"?a.itemName.localeCompare(b.itemName):b.createdAt-a.createdAt);
+  $("buyOrders").innerHTML=buyOrderCards(rows);
+}
+
+async function createBuyOrder(){
+  const type=$("buyOrderType").value;
+  const payload={
+    itemType:type,
+    quantity:Number($("buyOrderQty").value),
+    priceEach:Number($("buyOrderPrice").value)
+  };
+  if(type==="material"){
+    payload.itemKey=$("buyOrderMaterial").value;
+    if(!payload.itemKey)return showMessage("Choose a material for the Buy Order.","bad");
+  }else if(type==="crafting"){
+    payload.itemName=$("buyOrderCrafting").value;
+    if(!payload.itemName)return showMessage("Choose an item from the Crafting Guide.","bad");
+  }else{
+    payload.itemName=$("buyOrderCustomName").value.trim();
+    payload.itemRank=$("buyOrderRank").value;
+    payload.rarity=$("buyOrderRarity").value;
+    payload.description=$("buyOrderDescription").value.trim();
+    payload.itemUrl=$("buyOrderUrl").value.trim();
+    if(!payload.itemName)return showMessage("Enter the custom item you want to buy.","bad");
+  }
+  if(!Number.isInteger(payload.quantity)||payload.quantity<1||payload.quantity>99)return showMessage("Quantity must be 1 to 99.","bad");
+  if(!Number.isInteger(payload.priceEach)||payload.priceEach<1)return showMessage("Offer per item must be at least 1g.","bad");
+  const total=payload.quantity*payload.priceEach;
+  if(!confirm(`Create this Buy Order and reserve ${total.toLocaleString()} GP in escrow?`))return;
+  try{
+    await api("/api/buy-orders",{method:"POST",body:JSON.stringify(payload)});
+    $("buyOrderCustomName").value="";$("buyOrderDescription").value="";$("buyOrderUrl").value="";
+    await refreshData(`Buy Order created. ${total.toLocaleString()} GP reserved in escrow.`);
+  }catch(err){showMessage(err.message,"bad");}
+}
+
+async function fulfillBuyOrder(id,maxQty,priceEach,itemName,itemType){
+  const raw=prompt(`Sell to Buy Order: ${itemName}\nWanted: ${maxQty}\nBuyer pays: ${priceEach}g each\n\nHow many do you want to sell?`,"1");
+  if(raw===null)return;
+  const quantity=Number(raw);
+  if(!Number.isInteger(quantity)||quantity<1||quantity>maxQty)return showMessage(`Enter a quantity from 1 to ${maxQty}.`,"bad");
+  const total=quantity*priceEach;
+  const note=itemType==="material"?"The material will move automatically from your Black Banner inventory to the buyer.":"This item is tracked like a Custom Item sale; confirm only if you are actually transferring the item to the buyer.";
+  if(!confirm(`Sell ${quantity} × ${itemName} for ${total.toLocaleString()}g?\n\n${note}`))return;
+  try{
+    await api(`/api/buy-orders/${id}/fulfill`,{method:"POST",body:JSON.stringify({quantity})});
+    await refreshData(`Buy Order filled: sold ${quantity} × ${itemName} for ${total.toLocaleString()}g.`);
+  }catch(err){showMessage(err.message,"bad");}
+}
+
+async function cancelBuyOrder(id){
+  if(!confirm("Cancel this Buy Order? All remaining escrow Gold will be refunded."))return;
+  try{
+    const r=await api(`/api/buy-orders/${id}`,{method:"DELETE"});
+    await refreshData(`Buy Order cancelled. ${Number(r.refund||0).toLocaleString()}g refunded.`);
+  }catch(err){showMessage(err.message,"bad");}
+}
+
 async function loadAll() {
   try {
-    const [meData, invData, marketData, customData, purchasesData] = await Promise.all([
+    const [meData, invData, marketData, customData, purchasesData, buyOrdersData, buyCatalogData] = await Promise.all([
       api("/api/me"),
       api("/api/inventory"),
       api("/api/market"),
       api("/api/custom-market"),
-      api("/api/custom-market/purchases")
+      api("/api/custom-market/purchases"),
+      api("/api/buy-orders"),
+      api("/api/buy-orders/catalog")
     ]);
     me = meData;
     inventory = invData.inventory || [];
     listings = marketData.listings || [];
     customListings = customData.listings || [];
     customPurchases = purchasesData.purchases || [];
+    buyOrders = buyOrdersData.orders || [];
+    buyOrderCatalog = buyCatalogData || {materials:[],craftingItems:[]};
     renderAccount();
     renderInventory();
     renderMarket();
     renderCustomMarket();
     renderCustomPurchases();
+    fillBuyOrderCatalog();
+    renderBuyOrders();
+    updateBuyOrderType();
+    updateBuyOrderPreview();
 
     const params = new URLSearchParams(location.search);
     if (params.get("login") === "success") {
@@ -768,6 +962,14 @@ $("loginBtn").addEventListener("click", () => {
 });
 $("refreshMarket").addEventListener("click", () => refreshData("Market refreshed."));
 $("refreshCustom").addEventListener("click", () => refreshData("Custom item market refreshed."));
+$("refreshBuyOrders").addEventListener("click", () => refreshData("Buy Orders refreshed."));
+$("buyOrderSearch").addEventListener("input", renderBuyOrders);
+$("buyOrderTypeFilter").addEventListener("change", renderBuyOrders);
+$("buyOrderSort").addEventListener("change", renderBuyOrders);
+$("buyOrderType").addEventListener("change", updateBuyOrderType);
+$("buyOrderQty").addEventListener("input", updateBuyOrderPreview);
+$("buyOrderPrice").addEventListener("input", updateBuyOrderPreview);
+$("createBuyOrderBtn").addEventListener("click", createBuyOrder);
 $("customSellBtn").addEventListener("click", createCustomListing);
 $("customSearch").addEventListener("input", renderCustomMarket);
 $("customRankFilter").addEventListener("change", renderCustomMarket);
@@ -781,6 +983,8 @@ window.buyListing = buyListing;
 window.cancelListing = cancelListing;
 window.buyCustomListing = buyCustomListing;
 window.cancelCustomListing = cancelCustomListing;
+window.fulfillBuyOrder = fulfillBuyOrder;
+window.cancelBuyOrder = cancelBuyOrder;
 
 loadAll();
 </script>
