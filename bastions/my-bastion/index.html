@@ -709,6 +709,81 @@ async function loadPersonnelManagement(){
   try{personnelManagement=await api("/api/bastion/personnel/manage");return personnelManagement;}
   catch(err){message("Personnel management unavailable: "+err.message,"bad");return null;}
 }
+
+function workshopToolLabel(key){
+  const rows=personnelManagement?.workshopChoices||[];
+  return rows.find(x=>x.toolKey===key)?.toolName || key || "Not Selected";
+}
+async function saveWorkshopSpecialization(slot,toolKey){
+  if(!toolKey)return;
+  try{
+    const r=await api("/api/bastion/workshop/specialization",{
+      method:"POST",
+      body:JSON.stringify({slot:Number(slot),toolKey})
+    });
+    message(`Workshop specialization ${slot} set to ${r.toolName}.`,"good");
+    await reloadOwnBastion();
+  }catch(err){message(err.message,"bad");}
+}
+async function openWorkshopSpecializationManager(){
+  const data=await loadPersonnelManagement();if(!data)return;
+  const room=(data.facilities||[]).find(x=>x.facility==="Workshop");
+  if(!room)return message("You do not have a completed Workshop.","bad");
+
+  const choices=data.workshopChoices||[];
+  if(!choices.length){
+    return message("Register at least one tool or kit proficiency before choosing a Workshop specialization.","bad");
+  }
+
+  const options=(selected,exclude)=>choices
+    .filter(x=>x.toolKey!==exclude)
+    .map(x=>`<option value="${esc(x.toolKey)}" ${x.toolKey===selected?"selected":""}>${esc(x.toolName)}${x.expertise?" — Expertise":""}</option>`)
+    .join("");
+
+  const slot1=`
+    <div class="card">
+      <strong>Specialization 1</strong>
+      <div class="muted">Available on every Workshop.</div>
+      <select id="workshopSpec1">${options(room.workshopTool1,room.workshopTool2)}</select>
+      <button class="room-btn good" type="button" data-save-workshop-spec="1">Save Specialization 1</button>
+    </div>`;
+
+  let slot2="";
+  if(room.mastercraftWorkshop && room.secondWorkshopSlotUnlocked){
+    slot2=`
+      <div class="card">
+        <strong>Specialization 2</strong>
+        <div class="muted">Unlocked by Mastercraft Workshop while two hirelings are present.</div>
+        <select id="workshopSpec2">${options(room.workshopTool2,room.workshopTool1)}</select>
+        <button class="room-btn good" type="button" data-save-workshop-spec="2">Save Specialization 2</button>
+      </div>`;
+  }else if(room.mastercraftWorkshop){
+    slot2=`
+      <div class="card">
+        <strong>Specialization 2 🔒</strong>
+        <div class="muted">Mastercraft is installed, but two hirelings must be present before the second specialization can be chosen.</div>
+      </div>`;
+  }else{
+    slot2=`
+      <div class="card">
+        <strong>Specialization 2 🔒</strong>
+        <div class="muted">Upgrade this Workshop to Mastercraft and staff it with two hirelings to unlock the second specialization.</div>
+      </div>`;
+  }
+
+  const modal=showPersonnelModal("Workshop Specializations",slot1+slot2);
+  modal.addEventListener("click",async e=>{
+    const btn=e.target.closest?.("[data-save-workshop-spec]");
+    if(!btn)return;
+    const slot=Number(btn.dataset.saveWorkshopSpec);
+    const select=modal.querySelector(slot===1?"#workshopSpec1":"#workshopSpec2");
+    if(!select?.value)return;
+    await saveWorkshopSpecialization(slot,select.value);
+    closePersonnelModal();
+  });
+}
+
+
 async function openHirelingManager(facility){
   const data=await loadPersonnelManagement();if(!data)return;
   const room=(data.facilities||[]).find(x=>x.facility===facility);
@@ -765,6 +840,23 @@ function facilityPersonnelHtml(f,data){
   const defenders=(data.personnel||[]).filter(p=>p.personnelType==="defender"&&p.facility===f.facility);
   const dcap=clientDefenderCapacity(f);
   const parts=[];
+  if(f.facility==="Workshop"){
+    const mgmt=(personnelManagement?.facilities||[]).find(x=>x.facility==="Workshop");
+    const tool1=mgmt?.workshopTool1||f.workshopTool1||null;
+    const tool2=mgmt?.workshopTool2||f.workshopTool2||null;
+    const upgrades=new Set(f.upgrades||[]);
+    const isMaster=upgrades.has("Mastercraft Workshop");
+    const secondUnlocked=!!(isMaster && hirelings.length>=2);
+    parts.push(`<div class="room-personnel">
+      <div class="slot-head"><strong>Workshop Specializations</strong><button class="room-btn workshop-specializations" type="button">Choose / Change</button></div>
+      <div class="slot-grid">
+        <div class="slot ${tool1?"":"empty"}"><span>Specialization 1: ${esc(workshopToolLabel(tool1))}</span></div>
+        <div class="slot ${tool2?"":"empty"}"><span>Specialization 2: ${secondUnlocked?esc(workshopToolLabel(tool2)):"🔒 Locked"}</span></div>
+      </div>
+      ${!tool1?`<div class="muted">⚠️ Choose your first Workshop specialization before using Workshop Assist.</div>`:""}
+    </div>`);
+  }
+
   if(hcap>0){
     const slots=Array.from({length:hcap},(_,i)=>{
       const h=hirelings[i];
@@ -779,6 +871,7 @@ function facilityPersonnelHtml(f,data){
   return parts.join("");
 }
 document.addEventListener("click",e=>{
+  const w=e.target.closest?.(".workshop-specializations");if(w){openWorkshopSpecializationManager();return;}
   const h=e.target.closest?.(".manage-hirelings");if(h){openHirelingManager(h.dataset.facility);return;}
   const d=e.target.closest?.(".manage-defenders");if(d){openDefenderManager(d.dataset.facility);return;}
   const u=e.target.closest?.(".unassign-hireling");if(u){unassignHireling(u.dataset.id);return;}
