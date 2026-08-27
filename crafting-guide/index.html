@@ -1499,18 +1499,49 @@ The crafting system relies on saved character, tool, and facility records. If yo
 <thead><tr><th>Material</th><th>Element</th><th>Source</th></tr></thead>
 <tbody>
 <tr><td><strong>Abominable Skin</strong></td><td>Psychic</td><td>Aberrations and unnatural beings</td></tr>
-<tr><td><strong>Bones</strong></td><td>Piercing/Bludgeoning (or dragon's element)</td><td>Any boned creature</td></tr>
+<tr><td><strong>Bones</strong></td><td>Piercing/Bludgeoning</td><td>Any boned creature; dragon bones are tracked by color below</td></tr>
 <tr><td><strong>Chitin</strong></td><td>Physical</td><td>Giant crabs, insects, remorhaz</td></tr>
 <tr><td><strong>Demon Leather</strong></td><td>Fire</td><td>Infernal Planes creatures</td></tr>
 <tr><td><strong>Ellond Hide</strong></td><td>Fire</td><td>Desert/steppe creatures</td></tr>
 <tr><td><strong>Monster Feathers</strong></td><td>Physical</td><td>Hippogriffs, rocs, giant eagles</td></tr>
-<tr><td><strong>Monster Scales</strong></td><td>Physical (or dragon's element)</td><td>Scaly creatures, dragons</td></tr>
+<tr><td><strong>Monster Scales</strong></td><td>Physical</td><td>Scaly non-dragon creatures; dragon scales are tracked by color below</td></tr>
 <tr><td><strong>Spirit Pelt</strong></td><td>Force</td><td>Outlands, Ethereal, Astral beasts</td></tr>
 <tr><td><strong>Thick Hide</strong></td><td>Cold</td><td>Thick-furred creatures</td></tr>
 <tr><td><strong>Venom Glands</strong></td><td>Poison</td><td>Venomous creatures</td></tr>
 </tbody>
 </table>
 </div>
+
+<h3 class="sub-title">Dragon Materials — Colors &amp; Elements</h3>
+<div class="callout info">
+<strong>Dragon Color Matters</strong>
+Dragon Scales and Dragon Bones retain the elemental nature of the dragon they were harvested from.
+The inventory keeps the dragon's color for flavor and trading. Whenever a recipe refers to a dragon's
+<strong>element</strong>, use the damage type associated with that dragon's breath weapon. Dragon Scales
+or Dragon Bones may be combined in one craft only when every piece shares the same element.
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Dragon Color</th><th>Element / Breath Damage</th><th>Compatible Same-Element Colors</th></tr></thead>
+<tbody>
+<tr><td><strong>Black</strong></td><td>Acid</td><td>Black, Copper</td></tr>
+<tr><td><strong>Blue</strong></td><td>Lightning</td><td>Blue, Bronze</td></tr>
+<tr><td><strong>Green</strong></td><td>Poison</td><td>Green</td></tr>
+<tr><td><strong>Red</strong></td><td>Fire</td><td>Red, Brass, Gold</td></tr>
+<tr><td><strong>White</strong></td><td>Cold</td><td>White, Silver</td></tr>
+<tr><td><strong>Brass</strong></td><td>Fire</td><td>Brass, Red, Gold</td></tr>
+<tr><td><strong>Bronze</strong></td><td>Lightning</td><td>Bronze, Blue</td></tr>
+<tr><td><strong>Copper</strong></td><td>Acid</td><td>Copper, Black</td></tr>
+<tr><td><strong>Gold</strong></td><td>Fire</td><td>Gold, Red, Brass</td></tr>
+<tr><td><strong>Silver</strong></td><td>Cold</td><td>Silver, White</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>Inventory Naming:</strong> Dragon materials keep both rank and color, such as
+<strong>B-Rank Green Dragon Scale</strong> or <strong>A-Rank Gold Dragon Bones</strong>.
+An elemental recipe such as <strong>Fire Dragon Bone</strong> can use Red, Brass, or Gold Dragon Bones
+of the required rank because all three are Fire.</p>
+
 </div>
 <!-- EXOTIC METALS -->
 <div class="guide-section" id="metals">
@@ -3039,7 +3070,7 @@ The Prime Material, usually the main component, defines the item. The Base Mater
   </div>
 <div class="callout">
 <strong>Dragon Bone Ranged Weapons</strong>
-    Carved from the remains of mighty dragons and reinforced with sinew that refuses to decay, Dragonbone ranged weapons carry the lingering fury of ancient flame. Projectiles loosed from a Dragonbone ranged weapon ignite mid-flight. On impact, the strike flares with draconic fire, dealing +X extra Fire damage on hit.
+    Carved from the remains of mighty dragons and reinforced with sinew that refuses to decay, Dragonbone ranged weapons retain the elemental nature of the dragon they came from. Projectiles loosed from the weapon flare with that draconic energy on impact, dealing +X extra damage of the dragon's associated breath-weapon type.
   </div>
 <div class="callout">
 <strong>Obsidian Ranged Weapons</strong>
