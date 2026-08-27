@@ -323,6 +323,8 @@ const rightSlots=["cloak","arms","waist","legs","feet"];
 const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
 let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],characterDirectory=[];
 let currentViewingOwn=true,currentCanEdit=true,currentOwnerId=null,sessionUserId=null,sessionIsAdmin=false;
+const PUBLIC_FEATURED_OWNER_ID="297176750990032906";
+let publicVisitorMode=false;
 function managedOwnerQuery(){return currentOwnerId&&String(currentOwnerId)!==String(sessionUserId)?"&owner="+encodeURIComponent(currentOwnerId):""}
 function managedOwnerBody(obj={}){return currentOwnerId&&String(currentOwnerId)!==String(sessionUserId)?{...obj,ownerId:String(currentOwnerId)}:obj}
 
@@ -779,17 +781,41 @@ async function confirmMaterialGift(){
 }
 
 async function loadCharacterDirectory(){const d=await api("/api/characters");characterDirectory=d.characters||[];renderDirectory("")}
-function renderDirectory(q=""){q=q.toLowerCase();$("characterSelect").innerHTML='<option value="">My Character</option>'+characterDirectory.filter(c=>!c.isMine&&(!q||`${c.playerName} ${c.characterName}`.toLowerCase().includes(q))).map(c=>`<option value="${c.userId}">${esc(c.playerName)} — ${esc(c.characterName)}</option>`).join("")}
+function renderDirectory(q=""){q=q.toLowerCase();const first=publicVisitorMode?'<option value="">Featured Character</option>':'<option value="">My Character</option>';$("characterSelect").innerHTML=first+characterDirectory.filter(c=>!c.isMine&&(!q||`${c.playerName} ${c.characterName}`.toLowerCase().includes(q))).map(c=>`<option value="${c.userId}">${esc(c.playerName)} — ${esc(c.characterName)}</option>`).join("")}
 function setAccess(d,requestedId=""){
  currentOwnerId=String(requestedId||d.owner?.id||sessionUserId||"");
- currentViewingOwn=String(currentOwnerId)===String(sessionUserId);
- currentCanEdit=currentViewingOwn || (!!sessionIsAdmin && !!d.adminCanEdit);
+ currentViewingOwn=!!sessionUserId && String(currentOwnerId)===String(sessionUserId);
+ currentCanEdit=!publicVisitorMode && (currentViewingOwn || (!!sessionIsAdmin && !!d.adminCanEdit));
  document.body.classList.toggle("readonly",!currentCanEdit);
  if(!currentCanEdit)$("editPanel").classList.add("hidden");
  if($("giveMaterialsBtn"))$("giveMaterialsBtn").classList.toggle("hidden",!currentViewingOwn); if($("adminEditNotice"))$("adminEditNotice").classList.toggle("hidden",!(currentCanEdit&&!currentViewingOwn));
 }
-async function visitCharacter(id){const stamp=Date.now();const d=id?await api("/api/character/view?owner="+encodeURIComponent(id)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setAccess(d,id||sessionUserId);fill(d)}
-async function load(){try{const s=await api("/api/session");sessionUserId=String(s.user.id);sessionIsAdmin=!!s.isAdmin;$("adminPageBtn")?.classList.toggle("hidden",!sessionIsAdmin);$("online").classList.remove("hidden");await loadCharacterDirectory();const owner=new URLSearchParams(location.search).get("owner");if(owner){$("characterSelect").value=owner;await visitCharacter(owner)}else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}}catch(e){show("Character page could not load: "+e.message,"bad")}}
+async function visitCharacter(id){const stamp=Date.now();const target=id||(publicVisitorMode?PUBLIC_FEATURED_OWNER_ID:"");const d=target?await api("/api/character/view?owner="+encodeURIComponent(target)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setAccess(d,target||sessionUserId);fill(d)}
+async function load(){
+  const requestedOwner=new URLSearchParams(location.search).get("owner");
+  try{
+    const s=await api("/api/session");
+    publicVisitorMode=false;
+    sessionUserId=String(s.user.id);
+    sessionIsAdmin=!!s.isAdmin;
+    $("adminPageBtn")?.classList.toggle("hidden",!sessionIsAdmin);
+    $("online").classList.remove("hidden");
+    await loadCharacterDirectory();
+    if(requestedOwner){$("characterSelect").value=requestedOwner;await visitCharacter(requestedOwner)}
+    else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}
+  }catch(e){
+    if(e.message!=="LOGIN_REQUIRED" && e.message!=="not_authenticated"){
+      show("Character page could not load: "+e.message,"bad"); return;
+    }
+    publicVisitorMode=true; sessionUserId=""; sessionIsAdmin=false;
+    $("adminPageBtn")?.classList.add("hidden"); $("online")?.classList.add("hidden");
+    await loadCharacterDirectory().catch(()=>{});
+    const owner=requestedOwner || PUBLIC_FEATURED_OWNER_ID;
+    if($("characterSelect"))$("characterSelect").value=owner;
+    try{await visitCharacter(owner);show("Public showcase · Read-only character sheet. Login with Discord for member features.","")}
+    catch(err){show("Public character sheet could not load: "+err.message,"bad")}
+  }
+}
 
 
 document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{
