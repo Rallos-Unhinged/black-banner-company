@@ -307,6 +307,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
         <button id="rollBastionTurnBtn" class="primary" type="button">🎲 Roll Bastion Turn</button>
       </div>
       <div id="bastionTurnResult" class="craft-result hidden"></div>
+      <div id="bastionEventActions" class="owner-card hidden" style="margin-top:.75rem"></div>
     </section>
 
     <section class="panel full chat-panel">
@@ -895,6 +896,49 @@ function renderInstalledFurnishings(){const rows=furnishingData.installed||[];$(
 async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await loadFurnishings();}catch(err){message(err.message,"bad");}}
 
 
+
+function rewardButtons(){return `<div class="owner-actions"><button type="button" data-bastion-action="reward" data-table="herbs">Herbs</button><button type="button" data-bastion-action="reward" data-table="woods">Woods</button><button type="button" data-bastion-action="reward" data-table="metals">Metals</button><button type="button" data-bastion-action="reward" data-table="stones">Stones</button><button type="button" data-bastion-action="reward" data-table="leathers">Leathers</button><button type="button" data-bastion-action="reward" data-table="textiles">Textiles</button><button type="button" data-bastion-action="reward" data-table="meat">Beast Meat ×5</button><button type="button" data-bastion-action="reward" data-table="blood">Beast Blood ×5</button></div>`;}
+function renderPendingBastionEvent(e){
+  const box=$("bastionEventActions");if(!currentViewingOwn||!e){box.classList.add("hidden");box.innerHTML="";return;}
+  const d=e.data||{};let controls="";
+  if(d.rewardEarned){controls=`<div class="muted">🎁 Reward earned — choose a Reward Table:</div>${rewardButtons()}`;}
+  else switch(e.eventName){
+    case "Nothing Happens":case "Treasure": controls=`<button type="button" data-bastion-action="ack">Resolve Event</button>`;break;
+    case "Surprise Attack!": controls=`<div class="owner-actions"><button type="button" data-bastion-action="attack">⚔️ Resolve Attack</button>${me?.effects?.friendlyMonster?`<button type="button" data-bastion-action="friendly">🐉 Use Friendly Monster</button>`:""}${(me?.facilities||[]).some(f=>f.facility==="Humble Exterior")?`<button type="button" data-bastion-action="humble">🏚️ Humble Exterior</button>`:""}</div>`;break;
+    case "Animal Rescue": controls=d.animalSaved?`<div class="owner-actions"><button type="button" data-bastion-action="handling">Animal Handling DC 18</button><button type="button" data-bastion-action="animal_temp">Keep Until Next Attack</button></div>`:`<div class="owner-actions"><button type="button" data-bastion-action="medicine">Medicine DC 15</button><button type="button" data-bastion-action="healing">Use Healing Spell</button></div>`;break;
+    case "Sellswords": controls=`<div class="owner-actions"><button type="button" data-bastion-action="barracks">Add to Barracks</button><button type="button" data-bastion-action="hirelings">Take 2 as Hirelings</button><button type="button" data-bastion-action="decline">Turn Away</button></div>`;break;
+    case "Request for Aid": controls=`<button type="button" data-bastion-action="aid">Resolve Request for Aid</button>`;break;
+    case "Merchant Caravan": controls=`<div class="owner-actions"><button type="button" data-bastion-action="merchant">Buy Half-Price Item</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
+    case "Duel to the Death": controls=`<button type="button" data-bastion-action="duel">Resolve Duel</button>`;break;
+    case "Tragic Accident": controls=`<div class="owner-actions"><button type="button" data-bastion-action="pay">Pay 200 GP & Repair</button><button type="button" data-bastion-action="wait">Wait Until Next Turn</button></div>`;break;
+    case "Plague": controls=`<div class="owner-actions"><button type="button" data-bastion-action="medicine">Medicine DC 15</button><button type="button" data-bastion-action="elixir">Use Elixir of Health</button></div>`;break;
+    case "Bounty Opportunity": controls=`<button type="button" data-bastion-action="ack">Resolve — No Reward</button>`;break;
+    case "Criminal Hireling": controls=`<div class="owner-actions"><button type="button" data-bastion-action="pay">Pay ${Number(d.bribe||0).toLocaleString()} GP Bribe</button><button type="button" data-bastion-action="arrest">Allow Arrest</button></div>`;break;
+    case "Vermin Infestation": controls=d.verminFailed?`<button type="button" data-bastion-action="peasants">Pay 50 GP for Peasants</button>`:`<div class="owner-actions"><button type="button" data-bastion-action="vermin">Send 10 Defenders</button><button type="button" data-bastion-action="pay">Pay ${Number(d.cost||0).toLocaleString()} GP</button></div>`;break;
+    case "Wandering Professionals": controls=`<div class="owner-actions"><button type="button" data-bastion-action="accept">Accept Free Hireling</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
+    case "Guest": controls=d.guestType==="mercenary"?`<div class="owner-actions"><button type="button" data-bastion-action="accept">Accept Mercenary Defender</button><button type="button" data-bastion-action="ack">Acknowledge</button></div>`:`<button type="button" data-bastion-action="ack">Acknowledge Guest</button>`;break;
+    case "Ronin": controls=`<div class="owner-actions"><button type="button" data-bastion-action="hire">${d.free?"Accept Free Ronin":"Hire Ronin — 250 GP"}</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
+    case "Extraordinary Opportunity": controls=d.matched?`<div class="owner-actions"><button type="button" data-bastion-action="reroll">Roll Another Bastion Event</button><button type="button" data-bastion-action="art">Take 250 GP Art Object</button></div>`:`<button type="button" data-bastion-action="ack">Resolve Event</button>`;break;
+    default: controls=`<button type="button" data-bastion-action="ack">Resolve Event</button>`;
+  }
+  box.innerHTML=`<h3 style="color:var(--gold2);margin-bottom:.45rem">Interact with ${esc(e.eventName)}</h3><div class="muted" style="white-space:pre-wrap;margin-bottom:.65rem">${esc(e.resultText||"")}</div>${controls}`;box.classList.remove("hidden");
+}
+async function resolveBastionEvent(action,extra={}){
+  try{const r=await api("/api/bastion/event/resolve",{method:"POST",body:JSON.stringify({action,...extra})});if(r.resolutionText)message(r.resolutionText,r.resolved?"good":"");const data=await api("/api/bastion/me");render(data);if(r.resolutionText){const box=$("bastionTurnResult");box.className="craft-result success";box.textContent=r.resolutionText;box.classList.remove("hidden");}}
+  catch(err){message(err.message,"bad");}
+}
+document.addEventListener("click",async e=>{
+  const b=e.target.closest?.("[data-bastion-action]");if(!b)return;const a=b.dataset.bastionAction;let x={};
+  if(a==="reward")x.table=b.dataset.table;
+  if(a==="attack"){x.normal=Number(prompt("Normal / Undead Defenders to send (1d6 each):","0"));x.beasts=Number(prompt("Beast / Monster Defenders to send (2d6 each):","0"));x.knights=Number(prompt("Knights / Ronin to send (1d12 each):","0"));x.siegeBonus=Number(prompt("Siege / other flat bonus:","0"));}
+  if(a==="aid")x.participants=Number(prompt(`How many Defenders/Hirelings will you send? Max ${Number(me?.pendingEvent?.data?.maxParticipants||0)}:`,"1"));
+  if(a==="merchant"){x.itemName=prompt("DM-approved Player's Handbook item name:","");if(x.itemName===null)return;x.normalPrice=Number(prompt("Normal item price in GP:","0"));}
+  if(a==="duel"){x.die=Number(prompt("Champion combat die sides (6, 8, 12, etc.):","6"));x.death=Number(prompt("Death threshold (normal Defender = 3):","3"));}
+  if(a==="vermin")x.beasts=Number(prompt("How many of the 10 are Beast / Monster Defenders?","0"));
+  if(["pay","arrest","decline","wait","friendly","humble","healing","elixir","accept","hire","art","reroll","ack","medicine","handling","animal_temp","barracks","hirelings","peasants"].includes(a)&&!confirm(`Resolve this Bastion event using: ${b.textContent.trim()}?`))return;
+  await resolveBastionEvent(a,x);
+});
+
 async function rollBastionTurn(){
   if(!currentViewingOwn)return;
   const btn=$("rollBastionTurnBtn");
@@ -977,6 +1021,7 @@ function render(data){
     `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}</span></div>`,
     `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
   ].join("");
+  renderPendingBastionEvent(data.pendingEvent||null);
 
   if(currentViewingOwn){ loadManagement(); loadCrafting(); loadFurnishings(); loadPersonnelManagement(); }
 
