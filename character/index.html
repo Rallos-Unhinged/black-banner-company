@@ -812,7 +812,7 @@ async function load(){
     await loadCharacterDirectory().catch(()=>{});
     const owner=requestedOwner || PUBLIC_FEATURED_OWNER_ID;
     if($("characterSelect"))$("characterSelect").value=owner;
-    try{await visitCharacter(owner);show("Public showcase · Read-only character sheet. Login with Discord for member features.","")}
+    try{await visitCharacter(owner);$("message")?.classList.add("hidden")}
     catch(err){show("Public character sheet could not load: "+err.message,"bad")}
   }
 }
