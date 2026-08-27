@@ -239,7 +239,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <div class="stat"><span>Status</span><strong id="status">—</strong></div>
       <div class="stat"><span>Facilities</span><strong id="facilityCount">0</strong></div>
       <div class="stat"><span>Personnel</span><strong id="personnelCount">0</strong></div>
-      <div class="stat"><span>Bastion Turn</span><strong id="turnStatus">—</strong></div><div class="stat"><span>Construction</span><strong id="constructionStatus">NONE</strong></div>
+      <div class="stat"><span>Bastion Turn</span><strong id="turnStatus">—</strong></div>
     </div>
   </section>
 
@@ -305,12 +305,9 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <div id="turnDetails" class="list"></div>
       <div id="bastionTurnActions" class="owner-actions hidden">
         <button id="rollBastionTurnBtn" class="primary" type="button">🎲 Roll Bastion Turn</button>
-        <span id="harvestTurnControls" class="hidden">
-          <select id="harvestTurnSpec"></select>
-          <button id="harvestBastionTurnBtn" class="secondary" type="button">🌿 Harvest Harvestarium Instead</button>
-        </span>
       </div>
-      <div id="bastionTurnResult" class="craft-result hidden"></div><div id="pendingBastionEvent" class="craft-result hidden" style="margin-top:.75rem"></div>
+      <div id="bastionTurnResult" class="craft-result hidden"></div>
+      <div id="bastionEventActions" class="owner-card hidden" style="margin-top:.75rem"></div>
     </section>
 
     <section class="panel full chat-panel">
@@ -889,7 +886,7 @@ document.addEventListener("click",e=>{
 });
 
 
-async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender, Hireling, Knight, Ronin, or Monster:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
+async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender or Hireling:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
 document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current);});
 let furnishingData={available:[],installed:[]};
 async function loadFurnishings(){if(!currentViewingOwn)return;try{furnishingData=await api("/api/bastion/furnishings");const facilities=[...new Set((furnishingData.available||[]).map(x=>x.facility))].sort();$("furnishingFacility").innerHTML='<option value="">Choose facility…</option>'+facilities.map(x=>`<option>${esc(x)}</option>`).join("");updateFurnishingChoices();renderInstalledFurnishings();}catch(err){$("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;}}
@@ -900,46 +897,47 @@ async function installFurnishing(){const facility=$("furnishingFacility").value,
 
 
 
-async function harvestBastionTurn(){
-  if(!currentViewingOwn||!me?.turn?.pending)return;
-  const specialization=$("harvestTurnSpec")?.value||"";
-  if(!confirm(`Use this Bastion Turn to harvest your Harvestarium (${specialization}) instead of rolling an event?`))return;
-  try{
-    const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
-    const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>");
-    $("bastionTurnResult").className="craft-result success";
-    $("bastionTurnResult").innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4 ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
-    const data=await api("/api/bastion/me");render(data);$("bastionTurnResult").classList.remove("hidden");
-  }catch(err){message(err.message,"bad");}
+function rewardButtons(){return `<div class="owner-actions"><button type="button" data-bastion-action="reward" data-table="herbs">Herbs</button><button type="button" data-bastion-action="reward" data-table="woods">Woods</button><button type="button" data-bastion-action="reward" data-table="metals">Metals</button><button type="button" data-bastion-action="reward" data-table="stones">Stones</button><button type="button" data-bastion-action="reward" data-table="leathers">Leathers</button><button type="button" data-bastion-action="reward" data-table="textiles">Textiles</button><button type="button" data-bastion-action="reward" data-table="meat">Beast Meat ×5</button><button type="button" data-bastion-action="reward" data-table="blood">Beast Blood ×5</button></div>`;}
+function renderPendingBastionEvent(e){
+  const box=$("bastionEventActions");if(!currentViewingOwn||!e){box.classList.add("hidden");box.innerHTML="";return;}
+  const d=e.data||{};let controls="";
+  if(d.rewardEarned){controls=`<div class="muted">🎁 Reward earned — choose a Reward Table:</div>${rewardButtons()}`;}
+  else switch(e.eventName){
+    case "Nothing Happens":case "Treasure": controls=`<button type="button" data-bastion-action="ack">Resolve Event</button>`;break;
+    case "Surprise Attack!": controls=`<div class="owner-actions"><button type="button" data-bastion-action="attack">⚔️ Resolve Attack</button>${me?.effects?.friendlyMonster?`<button type="button" data-bastion-action="friendly">🐉 Use Friendly Monster</button>`:""}${(me?.facilities||[]).some(f=>f.facility==="Humble Exterior")?`<button type="button" data-bastion-action="humble">🏚️ Humble Exterior</button>`:""}</div>`;break;
+    case "Animal Rescue": controls=d.animalSaved?`<div class="owner-actions"><button type="button" data-bastion-action="handling">Animal Handling DC 18</button><button type="button" data-bastion-action="animal_temp">Keep Until Next Attack</button></div>`:`<div class="owner-actions"><button type="button" data-bastion-action="medicine">Medicine DC 15</button><button type="button" data-bastion-action="healing">Use Healing Spell</button></div>`;break;
+    case "Sellswords": controls=`<div class="owner-actions"><button type="button" data-bastion-action="barracks">Add to Barracks</button><button type="button" data-bastion-action="hirelings">Take 2 as Hirelings</button><button type="button" data-bastion-action="decline">Turn Away</button></div>`;break;
+    case "Request for Aid": controls=`<button type="button" data-bastion-action="aid">Resolve Request for Aid</button>`;break;
+    case "Merchant Caravan": controls=`<div class="owner-actions"><button type="button" data-bastion-action="merchant">Buy Half-Price Item</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
+    case "Duel to the Death": controls=`<button type="button" data-bastion-action="duel">Resolve Duel</button>`;break;
+    case "Tragic Accident": controls=`<div class="owner-actions"><button type="button" data-bastion-action="pay">Pay 200 GP & Repair</button><button type="button" data-bastion-action="wait">Wait Until Next Turn</button></div>`;break;
+    case "Plague": controls=`<div class="owner-actions"><button type="button" data-bastion-action="medicine">Medicine DC 15</button><button type="button" data-bastion-action="elixir">Use Elixir of Health</button></div>`;break;
+    case "Bounty Opportunity": controls=`<button type="button" data-bastion-action="ack">Resolve — No Reward</button>`;break;
+    case "Criminal Hireling": controls=`<div class="owner-actions"><button type="button" data-bastion-action="pay">Pay ${Number(d.bribe||0).toLocaleString()} GP Bribe</button><button type="button" data-bastion-action="arrest">Allow Arrest</button></div>`;break;
+    case "Vermin Infestation": controls=d.verminFailed?`<button type="button" data-bastion-action="peasants">Pay 50 GP for Peasants</button>`:`<div class="owner-actions"><button type="button" data-bastion-action="vermin">Send 10 Defenders</button><button type="button" data-bastion-action="pay">Pay ${Number(d.cost||0).toLocaleString()} GP</button></div>`;break;
+    case "Wandering Professionals": controls=`<div class="owner-actions"><button type="button" data-bastion-action="accept">Accept Free Hireling</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
+    case "Guest": controls=d.guestType==="mercenary"?`<div class="owner-actions"><button type="button" data-bastion-action="accept">Accept Mercenary Defender</button><button type="button" data-bastion-action="ack">Acknowledge</button></div>`:`<button type="button" data-bastion-action="ack">Acknowledge Guest</button>`;break;
+    case "Ronin": controls=`<div class="owner-actions"><button type="button" data-bastion-action="hire">${d.free?"Accept Free Ronin":"Hire Ronin — 250 GP"}</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
+    case "Extraordinary Opportunity": controls=d.matched?`<div class="owner-actions"><button type="button" data-bastion-action="reroll">Roll Another Bastion Event</button><button type="button" data-bastion-action="art">Take 250 GP Art Object</button></div>`:`<button type="button" data-bastion-action="ack">Resolve Event</button>`;break;
+    default: controls=`<button type="button" data-bastion-action="ack">Resolve Event</button>`;
+  }
+  box.innerHTML=`<h3 style="color:var(--gold2);margin-bottom:.45rem">Interact with ${esc(e.eventName)}</h3><div class="muted" style="white-space:pre-wrap;margin-bottom:.65rem">${esc(e.resultText||"")}</div>${controls}`;box.classList.remove("hidden");
 }
-function eventActionButtons(e){
-  if(!e)return "";
-  const n=e.eventName, b=(a,t)=>`<button type="button" class="room-btn resolve-event" data-action="${a}">${t}</button>`;
-  if(n==="Animal Rescue")return b("medicine","Medicine DC 15")+b("healing","Use Healing Spell")+b("handling","Animal Handling DC 18")+b("animal_temp","Keep Until Next Attack");
-  if(n==="Sellswords")return b("barracks","Add to Barracks")+b("hirelings","Take 2 Hirelings")+b("decline","Decline");
-  if(n==="Request for Aid")return `<input id="eventParticipants" type="number" min="1" placeholder="Participants">`+b("aid","Resolve Aid");
-  if(n==="Merchant Caravan")return `<input id="eventItem" placeholder="DM-approved item"><input id="eventPrice" type="number" min="1" placeholder="Normal GP price">`+b("merchant","Buy at Half Price")+b("decline","Decline");
-  if(n==="Duel to the Death")return `<input id="eventDie" type="number" min="2" value="20" placeholder="Combat die"><input id="eventDeath" type="number" min="0" value="0" placeholder="Death threshold">`+b("duel","Resolve Duel");
-  if(n==="Tragic Accident")return b("pay","Pay 200 GP")+b("wait","Wait Until Next Turn");
-  if(n==="Plague")return b("medicine","Medicine DC 15")+b("elixir","Use Elixir of Health");
-  if(n==="Surprise Attack!")return `<input id="eventNormal" type="number" min="0" value="0" placeholder="Defenders"><input id="eventBeasts" type="number" min="0" value="0" placeholder="Monsters"><input id="eventKnights" type="number" min="0" value="0" placeholder="Knights/Ronin"><input id="eventSiege" type="number" min="0" value="0" placeholder="Siege bonus">`+b("attack","Resolve Attack")+b("friendly","Use Friendly Monster")+b("humble","Use Humble Exterior");
-  return b("ack","Resolve / Acknowledge");
+async function resolveBastionEvent(action,extra={}){
+  try{const r=await api("/api/bastion/event/resolve",{method:"POST",body:JSON.stringify({action,...extra})});if(r.resolutionText)message(r.resolutionText,r.resolved?"good":"");const data=await api("/api/bastion/me");render(data);if(r.resolutionText){const box=$("bastionTurnResult");box.className="craft-result success";box.textContent=r.resolutionText;box.classList.remove("hidden");}}
+  catch(err){message(err.message,"bad");}
 }
-function renderPendingEvent(e){
-  const box=$("pendingBastionEvent"); if(!box)return;
-  if(!currentViewingOwn||!e){box.classList.add("hidden");box.innerHTML="";return;}
-  box.classList.remove("hidden");
-  box.innerHTML=`<strong>⚠️ Pending Bastion Event — ${esc(e.eventName)}</strong><div style="white-space:pre-wrap;margin:.5rem 0">${esc(e.resultText||"")}</div><div class="button-row">${eventActionButtons(e)}</div>`;
-}
-async function resolveWebsiteEvent(action){
-  const body={action};
-  if(action==="aid")body.participants=Number($("eventParticipants")?.value||0);
-  if(action==="merchant"){body.itemName=$("eventItem")?.value||"";body.normalPrice=Number($("eventPrice")?.value||0);}
-  if(action==="duel"){body.die=Number($("eventDie")?.value||0);body.death=Number($("eventDeath")?.value||0);}
-  if(action==="attack"){body.normal=Number($("eventNormal")?.value||0);body.beasts=Number($("eventBeasts")?.value||0);body.knights=Number($("eventKnights")?.value||0);body.siegeBonus=Number($("eventSiege")?.value||0);}
-  try{const r=await api("/api/bastion/event/resolve",{method:"POST",body:JSON.stringify(body)});message(r.resolutionText||"Event updated.","good");const data=await api("/api/bastion/me");render(data);}catch(err){message(err.message,"bad");}
-}
-document.addEventListener("click",e=>{const b=e.target.closest?.(".resolve-event");if(b)resolveWebsiteEvent(b.dataset.action);});
+document.addEventListener("click",async e=>{
+  const b=e.target.closest?.("[data-bastion-action]");if(!b)return;const a=b.dataset.bastionAction;let x={};
+  if(a==="reward")x.table=b.dataset.table;
+  if(a==="attack"){x.normal=Number(prompt("Normal / Undead Defenders to send (1d6 each):","0"));x.beasts=Number(prompt("Beast / Monster Defenders to send (2d6 each):","0"));x.knights=Number(prompt("Knights / Ronin to send (1d12 each):","0"));x.siegeBonus=Number(prompt("Siege / other flat bonus:","0"));}
+  if(a==="aid")x.participants=Number(prompt(`How many Defenders/Hirelings will you send? Max ${Number(me?.pendingEvent?.data?.maxParticipants||0)}:`,"1"));
+  if(a==="merchant"){x.itemName=prompt("DM-approved Player's Handbook item name:","");if(x.itemName===null)return;x.normalPrice=Number(prompt("Normal item price in GP:","0"));}
+  if(a==="duel"){x.die=Number(prompt("Champion combat die sides (6, 8, 12, etc.):","6"));x.death=Number(prompt("Death threshold (normal Defender = 3):","3"));}
+  if(a==="vermin")x.beasts=Number(prompt("How many of the 10 are Beast / Monster Defenders?","0"));
+  if(["pay","arrest","decline","wait","friendly","humble","healing","elixir","accept","hire","art","reroll","ack","medicine","handling","animal_temp","barracks","hirelings","peasants"].includes(a)&&!confirm(`Resolve this Bastion event using: ${b.textContent.trim()}?`))return;
+  await resolveBastionEvent(a,x);
+});
 
 async function rollBastionTurn(){
   if(!currentViewingOwn)return;
@@ -979,14 +977,9 @@ function render(data){
   $("status").textContent=data.status;
   $("facilityCount").textContent=data.summary.facilities;
   $("personnelCount").textContent=data.summary.personnel;
-  $("turnStatus").textContent=data.summary.pendingBastionTurn?"Ready":"None"; const topBuild=Array.isArray(data.construction)?data.construction:[]; $("constructionStatus").innerHTML=topBuild.length?topBuild.map(c=>`${esc(c.facility)}<br><span class="muted">${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span>`).join("<br>"):"NONE";
+  $("turnStatus").textContent=data.summary.pendingBastionTurn?"Ready":"None";
   $("bastionTurnActions").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn));
   $("rollBastionTurnBtn").disabled=!data.summary.pendingBastionTurn;
-  const harvestFacility=(data.facilities||[]).find(f=>f.facility==="Harvestarium");
-  const harvestSpecs=harvestFacility?(harvestFacility.specializations||harvestFacility.harvestariumSpecializations||[]):[];
-  $("harvestTurnControls")?.classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn&&harvestFacility&&harvestSpecs.length));
-  if($("harvestTurnSpec"))$("harvestTurnSpec").innerHTML=harvestSpecs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
-  renderPendingEvent(data.pendingEvent||null);
   $("loginBtn").textContent="Logout";
 
   $("facilities").innerHTML=data.facilities.length?data.facilities.map(f=>{
@@ -1028,6 +1021,7 @@ function render(data){
     `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}</span></div>`,
     `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
   ].join("");
+  renderPendingBastionEvent(data.pendingEvent||null);
 
   if(currentViewingOwn){ loadManagement(); loadCrafting(); loadFurnishings(); loadPersonnelManagement(); }
 
@@ -1097,7 +1091,7 @@ for(const ev of ["dragleave","drop"]){
 }
 bannerDrop.addEventListener("drop",e=>uploadBanner(e.dataTransfer?.files?.[0]));
 
-$("rollBastionTurnBtn").addEventListener("click",rollBastionTurn); $("harvestBastionTurnBtn")?.addEventListener("click",harvestBastionTurn);
+$("rollBastionTurnBtn").addEventListener("click",rollBastionTurn);
 $("chatSend").addEventListener("click",sendChat);
 $("chatInput").addEventListener("keydown",(event)=>{
   if(event.key==="Enter" && event.ctrlKey){
