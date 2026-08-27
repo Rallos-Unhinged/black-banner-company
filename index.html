@@ -397,6 +397,14 @@ footer {
   cursor: pointer;
 }
 
+
+/* Admin belongs to the Community navigation stack only. */
+.site-account #siteAdminBtn { display: none !important; }
+.nav-group #siteAdminBtn:not(.hidden) {
+  display: inline-flex !important;
+  width: 100%;
+}
+
 </style>
 </head>
 
@@ -438,6 +446,7 @@ footer {
             <div class="buttons">
               <a class="btn primary" href="https://discord.gg/blackbannercompany" target="_blank" rel="noopener noreferrer">Join Our Discord</a>
               <a class="btn" href="player-guide/">Player Guide</a>
+              <a id="siteAdminBtn" class="btn hidden" href="admin/player-management/">⚙ Admin</a>
                 </div>
           </div>
 
@@ -465,7 +474,6 @@ footer {
           <button id="siteLoginBtn" class="btn" type="button">
             Login with Discord
           </button>
-          <a id="siteAdminBtn" class="btn hidden" href="admin/player-management/">⚙ Admin</a>
         </div>
 
       </div>
