@@ -372,6 +372,8 @@ footer {
   }
 }
 
+.hidden { display: none !important; }
+
 .site-account {
   position: relative;
   z-index: 2;
@@ -462,6 +464,7 @@ footer {
           <button id="siteLoginBtn" class="btn" type="button">
             Login with Discord
           </button>
+          <a id="siteAdminBtn" class="btn hidden" href="admin/player-management/">⚙ Admin</a>
         </div>
 
       </div>
@@ -684,5 +687,36 @@ footer {
 
   </div>
   <script src="./site-login.js"></script>
+  <script>
+  (() => {
+    const ADMIN_IDS = new Set(["297176750990032906","574070241349468180"]);
+    const adminBtn = document.getElementById("siteAdminBtn");
+    if (!adminBtn) return;
+
+    async function refreshAdminButton() {
+      adminBtn.classList.add("hidden");
+      try {
+        const response = await fetch("https://api.blackbannercompany.com/api/me", {
+          credentials: "include",
+          mode: "cors",
+          cache: "no-store"
+        });
+        if (!response.ok) return;
+        const data = await response.json().catch(() => ({}));
+        const id = String(data?.user?.id || "");
+        if (ADMIN_IDS.has(id)) adminBtn.classList.remove("hidden");
+      } catch (_) {}
+    }
+
+    // Check on page load. The existing site-login.js still handles normal login/logout.
+    refreshAdminButton();
+
+    // Re-check when the tab becomes active again after a Discord login redirect.
+    window.addEventListener("focus", refreshAdminButton);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) refreshAdminButton();
+    });
+  })();
+  </script>
 </body>
 </html>
