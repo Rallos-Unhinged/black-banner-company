@@ -240,6 +240,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <div class="stat"><span>Facilities</span><strong id="facilityCount">0</strong></div>
       <div class="stat"><span>Personnel</span><strong id="personnelCount">0</strong></div>
       <div class="stat"><span>Bastion Turn</span><strong id="turnStatus">—</strong></div>
+      <div class="stat"><span>Construction</span><strong id="constructionStatus">NONE</strong></div>
     </div>
   </section>
 
@@ -305,6 +306,10 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <div id="turnDetails" class="list"></div>
       <div id="bastionTurnActions" class="owner-actions hidden">
         <button id="rollBastionTurnBtn" class="primary" type="button">🎲 Roll Bastion Turn</button>
+        <span id="harvestTurnControls" class="hidden">
+          <select id="harvestTurnSpec"></select>
+          <button id="harvestBastionTurnBtn" type="button">🌿 Harvest Harvestarium Instead</button>
+        </span>
       </div>
       <div id="bastionTurnResult" class="craft-result hidden"></div>
       <div id="bastionEventActions" class="owner-card hidden" style="margin-top:.75rem"></div>
@@ -939,6 +944,29 @@ document.addEventListener("click",async e=>{
   await resolveBastionEvent(a,x);
 });
 
+
+async function harvestBastionTurn(){
+  if(!currentViewingOwn)return;
+  if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
+  const specialization=$("harvestTurnSpec")?.value||"";
+  if(!specialization)return message("Choose a Harvestarium specialization first.","bad");
+  if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization} instead of rolling a Bastion event?`))return;
+  const btn=$("harvestBastionTurnBtn");
+  btn.disabled=true;btn.textContent="Harvesting…";
+  try{
+    const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
+    const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>");
+    const box=$("bastionTurnResult");
+    box.className="craft-result success";
+    box.innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
+    message("Bastion Turn used for Harvestarium Order: Harvest.","good");
+    const data=await api("/api/bastion/me");
+    render(data);
+    box.classList.remove("hidden");
+  }catch(err){message(err.message,"bad");}
+  finally{btn.disabled=false;btn.textContent="🌿 Harvest Harvestarium Instead";}
+}
+
 async function rollBastionTurn(){
   if(!currentViewingOwn)return;
   const btn=$("rollBastionTurnBtn");
@@ -978,8 +1006,16 @@ function render(data){
   $("facilityCount").textContent=data.summary.facilities;
   $("personnelCount").textContent=data.summary.personnel;
   $("turnStatus").textContent=data.summary.pendingBastionTurn?"Ready":"None";
+  const topConstruction=Array.isArray(data.construction)?data.construction:[];
+  $("constructionStatus").innerHTML=topConstruction.length
+    ? topConstruction.map(c=>`${esc(c.facility)}<br><span class="muted">${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span>`).join("<br>")
+    : "NONE";
   $("bastionTurnActions").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn));
   $("rollBastionTurnBtn").disabled=!data.summary.pendingBastionTurn;
+  const harvestarium=(data.facilities||[]).find(f=>f.facility==="Harvestarium");
+  const harvestSpecs=harvestarium?(harvestarium.harvestariumSpecializations||harvestarium.specializations||[]):[];
+  $("harvestTurnControls").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn&&harvestarium&&harvestSpecs.length));
+  $("harvestTurnSpec").innerHTML=harvestSpecs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
   $("loginBtn").textContent="Logout";
 
   $("facilities").innerHTML=data.facilities.length?data.facilities.map(f=>{
@@ -1006,7 +1042,7 @@ function render(data){
   $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span class="person-actions">Hireling${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No hirelings registered.");
 
   const others=data.personnel.filter(p=>p.personnelType!=="hireling");
-  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(pretty(p.personnelType))}${currentViewingOwn&&p.personnelType==="defender"?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No defenders, ronin, knights, or monsters registered.");
+  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(pretty(p.personnelType))}${currentViewingOwn&&["defender","knight","ronin","monster"].includes(String(p.personnelType||"").toLowerCase())?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No defenders, ronin, knights, or monsters registered.");
 
   if(data.combined?.members?.length){
     $("combined").innerHTML=data.combined.members.map(m=>`<div class="row"><span>${String(m.userId)===String(data.owner.id)?"You":esc(m.displayName||`Member ${String(m.userId).slice(-6)}`)}</span><span>${String(m.userId)===String(data.combined.createdBy)?"Founder":"Resident"}</span></div>`).join("");
@@ -1092,6 +1128,7 @@ for(const ev of ["dragleave","drop"]){
 bannerDrop.addEventListener("drop",e=>uploadBanner(e.dataTransfer?.files?.[0]));
 
 $("rollBastionTurnBtn").addEventListener("click",rollBastionTurn);
+$("harvestBastionTurnBtn").addEventListener("click",harvestBastionTurn);
 $("chatSend").addEventListener("click",sendChat);
 $("chatInput").addEventListener("keydown",(event)=>{
   if(event.key==="Enter" && event.ctrlKey){
