@@ -341,6 +341,7 @@ const API_BASE = "https://api.blackbannercompany.com";
 const PUBLIC_DEFAULT_BASTION_OWNER_ID = "297176750990032906";
 let publicVisitorMode = false;
 let me = null;
+let currentEditOwnerId = null;
 
 const $ = (id) => document.getElementById(id);
 const esc = (v) => String(v ?? "")
@@ -351,6 +352,11 @@ function message(text,type=""){
   const el=$("message"); el.textContent=text; el.className=`notice ${type}`.trim(); el.classList.remove("hidden");
 }
 async function api(path,options={}){
+  // When an admin is viewing another player, carry that owner through every
+  // My Bastion API request so the server can authorize the edit explicitly.
+  if(currentEditOwnerId && path.startsWith("/api/bastion/") && !/[?&]owner=/.test(path)){
+    path += (path.includes("?")?"&":"?")+"owner="+encodeURIComponent(currentEditOwnerId);
+  }
   const headers={...(options.headers||{})};
   if(options.body!=null&&!headers["Content-Type"]) headers["Content-Type"]="application/json";
   const r=await fetch(API_BASE+path,{mode:"cors",credentials:"include",cache:"no-store",...options,headers});
@@ -397,7 +403,7 @@ async function visitSelected(){
   try{
     const data=await api("/api/bastion/view?owner="+encodeURIComponent(owner));
     render(data);
-    $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
+    $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion${data.canEdit?" · Admin Editing Enabled":" · Read Only"}`;
     history.replaceState({},document.title,location.pathname+"?owner="+encodeURIComponent(owner));
     window.scrollTo({top:0,behavior:"smooth"});
   }catch(err){message(err.message,"bad");}
@@ -475,7 +481,9 @@ async function buySelected(){
 }
 
 async function reloadOwnBastion(){
-  const data=await api("/api/bastion/me");
+  const data=currentEditOwnerId
+    ? await api("/api/bastion/view?owner="+encodeURIComponent(currentEditOwnerId))
+    : await api("/api/bastion/me");
   render(data);
   await loadManagement();
 }
@@ -486,7 +494,8 @@ async function uploadBanner(file){
   if(file.size>5*1024*1024){message("Banner image must be 5 MB or smaller.","bad");return;}
   message("Uploading Bastion banner…");
   try{
-    const r=await fetch(API_BASE+"/api/bastion/banner",{
+    const bannerPath="/api/bastion/banner"+(currentEditOwnerId?"?owner="+encodeURIComponent(currentEditOwnerId):"");
+    const r=await fetch(API_BASE+bannerPath,{
       method:"POST",credentials:"include",mode:"cors",headers:{"Content-Type":file.type},body:file
     });
     const body=await r.json().catch(()=>({}));
@@ -931,7 +940,7 @@ function renderPendingBastionEvent(e){
   box.innerHTML=`<h3 style="color:var(--gold2);margin-bottom:.45rem">Interact with ${esc(e.eventName)}</h3><div class="muted" style="white-space:pre-wrap;margin-bottom:.65rem">${esc(e.resultText||"")}</div>${controls}`;box.classList.remove("hidden");
 }
 async function resolveBastionEvent(action,extra={}){
-  try{const r=await api("/api/bastion/event/resolve",{method:"POST",body:JSON.stringify({action,...extra})});if(r.resolutionText)message(r.resolutionText,r.resolved?"good":"");const data=await api("/api/bastion/me");render(data);if(r.resolutionText){const box=$("bastionTurnResult");box.className="craft-result success";box.textContent=r.resolutionText;box.classList.remove("hidden");}}
+  try{const r=await api("/api/bastion/event/resolve",{method:"POST",body:JSON.stringify({action,...extra})});if(r.resolutionText)message(r.resolutionText,r.resolved?"good":"");await reloadOwnBastion();if(r.resolutionText){const box=$("bastionTurnResult");box.className="craft-result success";box.textContent=r.resolutionText;box.classList.remove("hidden");}}
   catch(err){message(err.message,"bad");}
 }
 document.addEventListener("click",async e=>{
@@ -962,8 +971,7 @@ async function harvestBastionTurn(){
     box.className="craft-result success";
     box.innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
     message("Bastion Turn used for Harvestarium Order: Harvest.","good");
-    const data=await api("/api/bastion/me");
-    render(data);
+    await reloadOwnBastion();
     box.classList.remove("hidden");
   }catch(err){message(err.message,"bad");}
   finally{btn.disabled=false;btn.textContent="🌿 Harvest Harvestarium Instead";}
@@ -981,8 +989,7 @@ async function rollBastionTurn(){
     box.className="craft-result success";
     box.innerHTML=`<strong>🎲 ${esc(r.eventName)}</strong><br><span class="muted">d100: ${Number(r.roll)} · Rank ${esc(r.rank)} · ${esc(r.sourceType)} Turn</span><div style="white-space:pre-wrap;margin-top:.65rem">${esc(r.resultText)}</div>`;
     message(`Bastion Turn rolled: ${r.eventName}.`,"good");
-    const data=await api("/api/bastion/me");
-    render(data);
+    await reloadOwnBastion();
     box.classList.remove("hidden");
   }catch(err){message(err.message,"bad");}
   finally{btn.disabled=false;btn.textContent="🎲 Roll Bastion Turn";}
@@ -990,7 +997,8 @@ async function rollBastionTurn(){
 
 function render(data){
   me=data;
-  currentViewingOwn=!!data.viewingOwn;
+  currentEditOwnerId=String(data.owner?.id||"")||null;
+  currentViewingOwn=!!data.canEdit;
   $("ownerTools").classList.toggle("hidden",!currentViewingOwn);
   $("craftingPanel").classList.toggle("hidden",!currentViewingOwn);
   renderBanner(data.bannerUrl||null);
@@ -1011,10 +1019,10 @@ function render(data){
   $("dashboard").classList.remove("hidden");
   const ownerDisplay=data.owner.globalName||data.owner.username||"Banner Member";
   $("accountName").textContent=ownerDisplay;
-  $("accountMeta").textContent=data.viewingOwn ? "Your Bastion" : "Visiting Bastion · Read Only";
+  $("accountMeta").textContent=data.viewingOwn ? "Your Bastion" : (data.canEdit ? "Visiting Bastion · Admin Editing Enabled" : "Visiting Bastion · Read Only");
   $("bastionDisplayName").textContent=data.bastionName||(data.viewingOwn?"My Bastion":`${ownerDisplay}'s Bastion`);
   $("bastionDisplayOwner").textContent=data.viewingOwn?`${ownerDisplay} · Owner`:`Owned by ${ownerDisplay}`;
-  if(data.viewingOwn && $("bastionNameInput")) $("bastionNameInput").value=data.bastionName||"";
+  if(data.canEdit && $("bastionNameInput")) $("bastionNameInput").value=data.bastionName||"";
   const av=avatarUrl(data.owner); if(av){$("avatar").src=av;$("avatar").style.display="block";}else{$("avatar").style.display="none";}
   $("status").textContent=data.status;
   $("facilityCount").textContent=data.summary.facilities;
@@ -1094,7 +1102,7 @@ async function load(){
       : await api("/api/bastion/me");
     render(data);
     if(requestedOwner){
-      $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
+      $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion${data.canEdit?" · Admin Editing Enabled":" · Read Only"}`;
     }
   }
   catch(err){
