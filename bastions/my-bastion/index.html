@@ -1,1149 +1,874 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Black Banner Company — My Bastion</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Black Banner Company — Character</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
-:root{
-  --bg:#080706;--panel:#11100c;--panel2:#17140d;--gold:#c8960a;--gold2:#e4bb4c;
-  --text:#e7dcc2;--muted:#b5a47c;--border:#4a3810;--good:#7fb07f;--bad:#c87878;
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
+:root{--bg:#02070b;--panel:#071017;--panel2:#0a151d;--edge:#1e648b;--edge2:#1e648b;--theme:#2c91c4;--theme-soft:#164a65;--gold:#d5aa3b;--gold2:#f0cd73;--text:#eee7d7;--muted:#8da4b1;--green:#58c769;--blue:#38b9ef;--purple:#c86cff;--red:#d76e6e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 48% 0,#102536 0,#030b11 42%,#010304 100%);color:var(--text);font:17px/1.35 'Crimson Pro',serif}
+button,.btn{font:700 12px Cinzel;color:#e7c461;background:linear-gradient(#102331,#061019);border:1px solid var(--theme);padding:9px 14px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+button:hover,.btn:hover{border-color:#d5aa3b;box-shadow:0 0 10px #1f6f9c66;color:#ffe7a2}.hidden{display:none!important}.owner-only{}
+body.readonly .owner-only{display:none!important}
+.shell{width:min(1600px,100%);margin:auto;min-height:100vh}
+.topbar{height:80px;display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--theme);background:linear-gradient(180deg,#07131c,#03080c)}
+.identity{display:flex;gap:14px;align-items:center}.mini-avatar{width:58px;height:58px;object-fit:cover;border:1px solid #806220;border-radius:5px;background:#0b0b0b}
+.identity h1{font:700 28px Cinzel;margin:0;color:#f3eee2}.identity .sub{color:#b7ac96}.online{color:#50cc68}.top-actions{display:flex;gap:12px}
+.viewer{display:grid;grid-template-columns:220px 1fr auto;gap:8px;padding:8px 14px;border-bottom:1px solid #342810;background:#080a09}.viewer input,.viewer select{width:100%;background:#050606;color:#eee;border:1px solid var(--theme);padding:7px}
+.notice{margin:8px 14px;padding:10px;border:1px solid var(--theme);background:#171108}.notice.bad{border-color:#7d3333;color:#ef9c9c}.notice.good{border-color:#2d6d3d;color:#95dfa4}
+.workspace{display:grid;grid-template-columns:215px minmax(0,1fr);min-height:calc(100vh - 130px)}
+.sidebar{border-right:1px solid var(--theme);background:linear-gradient(180deg,#061018,#020608);position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#12344a,#07131c);color:#f4d46f;border-left:4px solid #38b9ef;box-shadow:inset 0 0 16px #17638b33}.side-icon{width:25px;text-align:center;color:#cbb68f}
+.bag-zone{padding:10px;border-top:1px solid #463412}.bag-zone h3{font:700 13px Cinzel;color:#d2ad45;margin:4px 4px 8px}.bag{border:1px solid var(--theme);background:#0b0c0b;margin-bottom:6px}.bag summary{cursor:pointer;padding:8px 9px;color:#e5c663;font:700 12px Cinzel;list-style:none}.bag summary::-webkit-details-marker{display:none}.bag summary:before{content:"▸";margin-right:7px}.bag[open] summary:before{content:"▾"}.bag-items{padding:0 8px 8px;max-height:220px;overflow:auto}.bag-item{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-top:1px solid #1f1d17;color:#ccc;font-size:13px}.bag-item span:last-child{color:#efcf6f}
+.materials-link{margin-top:8px;width:100%}
+.load-card{position:absolute;bottom:12px;left:10px;right:10px;border:1px solid #5b4518;padding:12px;text-align:center;background:#0a0a08}.load-card h4{font:700 12px Cinzel;color:#ddb848;margin:0 0 6px}.load-card .green{color:#64d078;font-size:18px}.attune-gems{font-size:25px;color:#4ccd67;letter-spacing:4px}
+.main{min-width:0}.equipment-layout{display:grid;grid-template-columns:260px minmax(410px,1fr) 260px 340px;gap:10px;padding:10px;align-items:start}
+.slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:205px;border:1px solid var(--theme);background:linear-gradient(135deg,#081722,#03090e);box-shadow:inset 0 0 0 1px var(--theme-soft),0 0 12px #07131c;padding:10px;text-align:center;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
+.equip.empty{padding-left:12px}.equip-img{position:static;width:128px;height:128px;object-fit:contain;border:1px solid var(--theme);background:#02080d;padding:4px;box-shadow:inset 0 0 12px var(--theme-soft),0 0 8px #1d709655;margin:4px auto 8px;display:block}.slot-title{font:700 15px Cinzel;color:#e1b64b;margin-bottom:6px}.item-name{font-size:18px;margin-top:3px;min-height:24px}.rarity{font-size:15px}.rarity.Common{color:#ddd}.rarity.Uncommon{color:#48d050}.rarity.Rare{color:#39bafa}.rarity.Very-Rare,.rarity.Legendary{color:#c968ef}.slot-edit{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}.slot-edit select{max-width:100%;background:#050606;color:#ddd;border:1px solid var(--theme);font-size:11px}.slot-image-btn{font-size:9px;padding:4px 6px}
+.center-stage{border:1px solid var(--theme);background:linear-gradient(#06131c,#02070b);padding:8px;min-width:0;box-shadow:inset 0 0 0 2px #0c2d3e;align-self:stretch;display:flex;flex-direction:column}
+.backstory-panel{flex:1;min-height:360px;margin-top:10px;border:1px solid var(--theme);background:linear-gradient(180deg,#07131c,#02070b);box-shadow:inset 0 0 0 2px var(--theme-soft);display:flex;flex-direction:column;padding:10px}
+.backstory-title{text-align:center;font:700 17px Cinzel;color:#e5bf57;padding:2px 0 8px;border-bottom:1px solid #4a3a18;margin-bottom:8px}
+.backstory-text{flex:1;width:100%;min-height:300px;resize:none;overflow-y:auto;background:#02070b;color:#eee7d7;border:1px solid var(--theme);padding:12px;font:17px/1.45 'Crimson Pro',serif;box-shadow:inset 0 0 14px #0008}
+.backstory-text:focus{outline:none;border-color:#d5aa3b;box-shadow:inset 0 0 14px #0008,0 0 10px #d5aa3b33}
+body.readonly .backstory-text{border-color:var(--theme-soft);cursor:default}.stage-title{text-align:center;font:700 22px Cinzel;color:#e5bf57;padding:4px;border-bottom:1px solid var(--theme);margin-bottom:7px}.portrait{height:520px;position:relative;border:1px solid var(--theme);background:#03090e;box-shadow:inset 0 0 0 3px #0c2736,0 0 18px #0b3d5666;display:flex;align-items:center;justify-content:center;overflow:hidden}.portrait img{width:100%;height:100%;object-fit:cover}.portrait-placeholder{text-align:center;color:#8b8170;font:700 14px Cinzel}.portrait-upload{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:2}
+.bottom-slots{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;padding:0 10px 12px;margin-right:350px;margin-top:-4px}.bottom-slots .equip{padding:10px;min-height:215px;text-align:center}.bottom-slots .equip-img{position:static;width:128px;height:128px;margin:4px auto 8px;display:block}.bottom-slots .item-name{font-size:16px}.bottom-slots .slot-title{font-size:14px}
+.stats-panel{border:1px solid var(--theme);background:linear-gradient(#071119,#03080c);padding:10px;align-self:start}.stats-section{border:1px solid var(--theme);background:linear-gradient(#08131b,#04090d);margin-bottom:9px;padding:10px}.stats-section h3{font:700 14px Cinzel;color:#d8b14c;margin:0 0 10px;border-bottom:1px solid #302712;padding-bottom:5px}.general-head{display:grid;grid-template-columns:1fr 92px;gap:10px}.crest{width:88px;height:104px;object-fit:contain;border:1px dashed var(--theme);background:#050606;cursor:pointer}.general-lines{font-size:16px}.statline{display:flex;justify-content:space-between;padding:2px 0}.statline .hp{color:#57ce68}.statline .power{color:#4cbcf0}.abilities .statline{font-size:15px}.attack-row,.save-row{display:flex;justify-content:space-between;padding:3px 0}.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px}.skill-row{display:flex;justify-content:space-between;border-bottom:1px solid #1e1b13;padding:2px 0;font-size:13px}.skill-bonus{color:#e7c766}
+.character-edit{margin:0 10px 12px;border:1px solid var(--theme);background:#080907;padding:10px}.edit-grid{display:grid;grid-template-columns:2fr 80px 80px 2fr;gap:7px}.edit-grid input{width:100%;background:#050606;border:1px solid var(--theme);color:#eee;padding:7px}.edit-actions{display:flex;gap:8px;margin-top:8px}
+.tabs{display:flex;gap:8px;padding:8px 10px;border-top:1px solid #362a12}.craft-wrap{padding:10px}.craft{display:grid;grid-template-columns:1.3fr .7fr;gap:10px}.panel{border:1px solid var(--theme);background:#080b0b;padding:10px}.panel h2,.panel h3{font:700 14px Cinzel;color:#d4ad42}.tool-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.tool{border:1px solid #4c3b16;padding:7px}.tool select,.field input,.field select{width:100%;background:#050606;border:1px solid var(--theme);color:#eee;padding:6px}.field{margin:7px 0}.field label{display:block;font:700 11px Cinzel;color:#c1ab7d}.row{display:grid;grid-template-columns:1fr 1fr;gap:7px}.feature-list{display:grid;gap:6px}.toggle{border:1px solid #4c3b16;padding:7px}.actions{display:flex;gap:7px}.small{font-size:13px;color:var(--muted)}.warn{color:#e7c66a}
+@media(max-width:1350px){.equipment-layout{grid-template-columns:230px minmax(360px,1fr) 230px 310px}.bottom-slots{margin-right:320px}}
+@media(max-width:1050px){.workspace{grid-template-columns:180px 1fr}.equipment-layout{grid-template-columns:1fr 1.3fr}.slot-right,.stats-panel{grid-column:auto}.stats-panel{grid-column:1/-1}.bottom-slots{margin-right:0;grid-template-columns:repeat(4,1fr)}}
+@media(max-width:720px){.backstory-panel{min-height:420px}.workspace{grid-template-columns:1fr}.sidebar{display:none}.equipment-layout{grid-template-columns:1fr}.bottom-slots{grid-template-columns:repeat(2,1fr)}.viewer{grid-template-columns:1fr}.edit-grid{grid-template-columns:1fr 1fr}.craft{grid-template-columns:1fr}.tool-list{grid-template-columns:1fr}}
+
+.equip:before,.equip:after{content:"";position:absolute;width:13px;height:13px;border-color:#d0a43d;pointer-events:none}
+.equip:before{left:3px;top:3px;border-left:1px solid #d0a43d;border-top:1px solid #d0a43d}
+.equip:after{right:3px;bottom:3px;border-right:1px solid #d0a43d;border-bottom:1px solid #d0a43d}
+.slot-column .equip:has(.equip-img):hover .image-overlay{opacity:1}
+.image-overlay{position:absolute;left:50%;transform:translateX(-50%);top:39px;width:128px;height:128px;display:flex;align-items:center;justify-content:center;background:#02070bcc;border:1px solid #d5aa3b;color:#ffe49a;font:700 10px Cinzel;text-align:center;opacity:0;transition:.15s;cursor:pointer;z-index:3}
+.equip.empty .image-overlay,.equip.image-broken .image-overlay{opacity:1;border-style:dashed;background:#06131cdd;color:#8fcce8}
+.bottom-slots .image-overlay{left:50%;transform:translateX(-50%);top:39px;width:128px;height:128px}
+.equip.drag-image{outline:2px solid #f0cd73;box-shadow:0 0 20px #38b9ef88}
+.fantasy-divider{height:1px;background:linear-gradient(90deg,transparent,#2f8dbc,#d5aa3b,#2f8dbc,transparent);margin:6px 0}
+
+
+body.theme-blue{--theme:#2c91c4;--theme-soft:#164a65}
+body.theme-gold{--theme:#c99d35;--theme-soft:#5a4317}
+body.theme-purple{--theme:#9b59b6;--theme-soft:#4c2c59}
+body.theme-green{--theme:#2fa866;--theme-soft:#164d31}
+body.theme-red{--theme:#b64d4d;--theme-soft:#572626}
+body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
+.theme-picker{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.theme-swatch{width:28px;height:28px;border:2px solid #111;cursor:pointer;padding:0;border-radius:3px}
+.theme-swatch[data-theme="blue"]{background:#2c91c4}.theme-swatch[data-theme="gold"]{background:#c99d35}.theme-swatch[data-theme="purple"]{background:#9b59b6}.theme-swatch[data-theme="green"]{background:#2fa866}.theme-swatch[data-theme="red"]{background:#b64d4d}.theme-swatch[data-theme="silver"]{background:#8fa3ad}
+.theme-swatch.active{outline:2px solid #f0cd73}
+
+
+.remove-image-btn{margin-top:5px;font:700 10px Cinzel;padding:4px 7px;border:1px solid var(--theme);background:#07131c;color:#e9d397;cursor:pointer}
+.remove-image-btn:hover{border-color:#d76e6e;color:#ffaaaa}
+
+
+.equip-image-stage{
+  position:relative;
+  width:100%;
+  min-height:144px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:6px 0 8px;
 }
-*{box-sizing:border-box}
-body{margin:0;background:linear-gradient(180deg,#080706,#0b0a08);color:var(--text);font:18px/1.55 'Crimson Pro',Georgia,serif;min-height:100vh}
-.page{width:min(1180px,calc(100% - 2rem));margin:auto;padding-bottom:3rem}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;padding:1rem 0}
-.nav{display:flex;gap:.55rem;flex-wrap:wrap}
-.btn,button{border:1px solid #8c6818;background:linear-gradient(180deg,#171108,#0d0a06);color:#e0c35f;padding:.7rem 1rem;text-decoration:none;font:700 .72rem 'Cinzel',serif;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
-.btn:hover,button:hover{background:#211708;color:#ffe49a}
-button.primary{background:linear-gradient(135deg,#3a160d,#181309)}
-.hero{border:1px solid #6d5215;background:linear-gradient(rgba(5,5,4,.94),rgba(8,7,6,.97));padding:2rem;text-align:center}
-.eyebrow{font:.68rem 'Fira Mono',monospace;letter-spacing:.18em;text-transform:uppercase;color:#9b7925}
-h1,h2,h3{font-family:'Cinzel',serif;margin:0}h1{font-size:clamp(2rem,6vw,4rem);color:#d8a92f}.subtitle{color:#c6baa0;font-style:italic}
-.notice{margin:1rem 0;padding:.85rem 1rem;border-left:4px solid var(--gold);background:#17140d}.notice.good{border-color:var(--good)}.notice.bad{border-color:var(--bad)}.hidden{display:none!important}
-.account{margin-top:1rem;display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;border:1px solid var(--border);background:var(--panel);padding:1rem}
-.avatar{width:58px;height:58px;border-radius:50%;border:1px solid #8c6818;background:#080706;object-fit:cover}
-.account-name{font:700 1rem 'Cinzel',serif;color:var(--gold2)}.muted{color:var(--muted)}
-.stats{display:flex;gap:.55rem;flex-wrap:wrap;justify-content:flex-end}.stat{min-width:105px;text-align:center;border:1px solid var(--border);background:var(--panel2);padding:.5rem}.stat strong{display:block;color:var(--gold2);font-family:'Cinzel',serif}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:1rem}.panel{border:1px solid var(--border);background:var(--panel);padding:1rem;min-width:0}.panel.full{grid-column:1/-1}.panel h2{color:#d4a62e;font-size:1.2rem}.rule{height:1px;background:linear-gradient(90deg,transparent,#6f5418,transparent);margin:.55rem 0 .9rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:.7rem}.card{border:1px solid #4a3810;background:#17140d;padding:.8rem}.card strong{color:var(--gold2)}.badges{display:flex;gap:.35rem;flex-wrap:wrap;margin:.35rem 0}.badge{border:1px solid #554214;background:#1b170e;color:#c7ad65;padding:.08rem .4rem;font:.62rem 'Fira Mono',monospace;text-transform:uppercase}
-.list{display:grid;gap:.5rem}.row{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid #30260e;padding:.5rem 0}.empty{color:var(--muted);padding:.75rem 0;font-style:italic}
-.scroll{max-height:430px;overflow:auto;scrollbar-gutter:stable;padding-right:.2rem}
-footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transform:uppercase;letter-spacing:.1em;padding:2rem 0}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.panel.full{grid-column:auto}.account{grid-template-columns:1fr;text-align:center}.avatar{margin:auto}.stats{justify-content:center}.btn,button{width:100%}.nav{width:100%}}
-
-.visitbar{margin:1rem 0;border:1px solid var(--border);background:var(--panel);padding:1rem}
-.visitbar h2{color:#d4a62e;font-size:1rem;margin-bottom:.6rem}
-.visit-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(220px,1fr) auto;gap:.6rem}
-.visit-controls input,.visit-controls select{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:600 .8rem 'Cinzel',serif}
-.viewing-note{margin-top:.6rem;color:var(--muted)}
-@media(max-width:760px){.visit-controls{grid-template-columns:1fr}}
-
-
-.chat-panel{grid-column:1/-1}
-.chat-head{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap}
-.chat-room-name{color:var(--muted);font-style:italic}
-.chat-log{height:360px;overflow-y:auto;border:1px solid #3c2e0d;background:#0b0906;padding:.8rem;display:flex;flex-direction:column;gap:.65rem;scrollbar-gutter:stable}
-.chat-message{border-left:3px solid #5f4915;background:#151109;padding:.55rem .7rem}
-.chat-message.mine{border-left-color:#c8960a}
-.chat-message-head{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
-.chat-author{font:700 .75rem 'Cinzel',serif;color:var(--gold2)}
-.chat-time{font:.6rem 'Fira Mono',monospace;color:#88754b;white-space:nowrap}
-.chat-text{white-space:pre-wrap;overflow-wrap:anywhere;margin-top:.2rem}
-.chat-compose{display:grid;grid-template-columns:1fr auto;gap:.55rem;margin-top:.6rem}
-.chat-compose textarea{resize:vertical;min-height:70px;max-height:180px;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.7rem;font:17px/1.35 'Crimson Pro',serif}
-.chat-help{margin-top:.4rem;color:var(--muted);font-size:.9rem}
-@media(max-width:760px){.chat-compose{grid-template-columns:1fr}.chat-log{height:300px}}
+.equip-image-stage .equip-img{
+  position:static !important;
+  width:128px;
+  height:128px;
+  object-fit:contain;
+  margin:0 auto;
+  display:block;
+  z-index:1;
+}
+.equip-image-stage .image-overlay{
+  top:50% !important;
+  left:50% !important;
+  transform:translate(-50%,-50%) !important;
+  width:128px;
+  height:128px;
+}
+.slot-edit{
+  position:relative;
+  z-index:5;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  margin-top:2px;
+}
+.slot-edit select{
+  width:100%;
+  position:relative;
+  z-index:6;
+}
+.remove-image-btn{
+  position:relative;
+  z-index:6;
+  width:100%;
+  margin-top:2px;
+}
 
 
-.bastion-banner-wrap{margin:1rem 0;border:1px solid var(--border);background:#0b0906;overflow:hidden}
-.bastion-banner{width:100%;aspect-ratio:16/5;object-fit:cover;display:block;background:linear-gradient(135deg,#171108,#080706)}
-.banner-empty{aspect-ratio:16/5;display:grid;place-items:center;color:#7f6d44;font-style:italic;background:radial-gradient(circle at center,#17130b,#090806)}
-.owner-tools{margin:1rem 0;border:1px solid #7c5d17;background:linear-gradient(180deg,#151107,#0c0a07);padding:1rem}
-.owner-tools h2{color:var(--gold2);font-size:1.15rem}
-.owner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
-.owner-card{border:1px solid #4a3810;background:#17140d;padding:1rem}
-.owner-card h3{color:var(--gold2);font-size:.9rem;margin-bottom:.5rem}
-.owner-card label{display:block;color:var(--muted);margin:.45rem 0 .2rem}
-.owner-card select,.owner-card input{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.65rem;font:16px 'Crimson Pro',serif}
-.dropzone{border:2px dashed #6d5215;background:#0c0a07;padding:1.2rem;text-align:center;cursor:pointer}
-.dropzone.drag{border-color:var(--gold2);background:#181309}
-.dropzone input{display:none}
-.manage-summary{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}
-.manage-pill{border:1px solid #5e4712;padding:.25rem .55rem;background:#100d08;color:var(--gold2)}
-.purchase-preview{margin:.7rem 0;padding:.65rem;border-left:3px solid var(--gold);background:#100d08}
-.owner-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
-.owner-actions button{flex:1}
-@media(max-width:760px){.owner-grid{grid-template-columns:1fr}}
+.general-images{display:flex;gap:7px;align-items:flex-start;justify-content:flex-end;flex:0 0 auto}
+.general-image-box{position:relative;width:82px;text-align:center}
+.general-image-box .crest{width:78px;height:78px;object-fit:cover;display:block;border:1px solid var(--theme);background:#061018}
+.general-image-label{font:700 8px Cinzel;color:#d8b14c;margin-top:3px}
+.general-image-placeholder{position:absolute;left:0;top:0;width:78px;height:78px;border:1px dashed var(--theme);display:flex;align-items:center;justify-content:center;color:#6cbde7;font:700 10px Cinzel;cursor:pointer;background:#061018}
+.general-head{align-items:flex-start}
 
 
-.crafting-panel{grid-column:1/-1}
-.craft-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
-.craft-field label{display:block;color:var(--muted);margin-bottom:.25rem}
-.craft-field select,.craft-field input{width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.65rem;font:16px 'Crimson Pro',serif}
-.craft-preview{margin-top:.75rem;border:1px solid #4a3810;background:#0d0a06;padding:.8rem;white-space:pre-wrap}
-.craft-result{margin-top:.75rem;padding:1rem;border:1px solid #6d5215;background:#151109}
-.craft-result.success{border-color:#5d8b5d}.craft-result.failure{border-color:#9b5151}.craft-result.mixed{border-color:#a67c28}
-.craft-result strong{color:var(--gold2)}
-.craft-special.hidden{display:none!important}.craft-special small{display:block;color:var(--muted);margin-top:.2rem}.mini-btn{padding:.35rem .55rem;font-size:.58rem;width:auto!important}.person-actions{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}.furnishing-status{margin-top:.55rem;color:var(--muted);font-size:.9rem}
-@media(max-width:760px){.craft-grid{grid-template-columns:1fr}}
+.give-modal{position:fixed;inset:0;background:#000b;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px}
+.give-box{width:min(620px,96vw);border:1px solid var(--theme);background:linear-gradient(#0b1821,#03080c);box-shadow:0 0 40px #000;padding:16px}
+.give-box h2{font:700 18px Cinzel;color:#e4bd54;margin:0 0 8px}.give-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.give-grid .full{grid-column:1/-1}.give-box label{display:block;font:700 11px Cinzel;color:#cbb077;margin-bottom:4px}
+.give-box select,.give-box input{width:100%;background:#050606;border:1px solid var(--theme);color:#eee;padding:8px}
+.give-review{border:1px solid #5a461d;background:#111009;padding:10px;color:#e6cf8a;margin-top:10px}.give-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+@media(max-width:620px){.give-grid{grid-template-columns:1fr}.give-grid .full{grid-column:1}}
 
 
-.bastion-name-bar{margin:1rem 0;border:1px solid var(--border);background:linear-gradient(90deg,#11100c,#19150c,#11100c);padding:1rem;text-align:center}
-.bastion-name-title{font:700 clamp(1.25rem,3vw,2rem) 'Cinzel',serif;color:var(--gold2);letter-spacing:.04em}
-.bastion-name-sub{color:var(--muted);font-size:.85rem;margin-top:.25rem}
-.bastion-name-editor{display:grid;grid-template-columns:1fr auto;gap:.5rem;margin-top:.65rem}
-.bastion-name-editor input{width:100%;background:#080706;color:#eee;border:1px solid #6f5418;padding:.65rem}
-@media(max-width:600px){.bastion-name-editor{grid-template-columns:1fr}}
-
-
-.room-personnel{margin-top:12px;padding-top:10px;border-top:1px solid #243542}
-.slot-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
-.slot-grid{display:grid;gap:6px;margin-top:6px}
-.slot{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:7px 9px;border:1px solid #233746;border-radius:8px;background:#071018}
-.slot.empty{opacity:.78}
-.room-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.room-btn{border:1px solid #35607b;background:#0b1a24;color:#e9edf1;border-radius:8px;padding:7px 10px;cursor:pointer;font:inherit}
-.room-btn:hover{filter:brightness(1.15)}
-.room-btn.good{border-color:#3d7c5c}
-.room-btn.warn{border-color:#8b6b37}
-.room-btn:disabled{opacity:.45;cursor:not-allowed}
-.personnel-modal-backdrop{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000}
-.personnel-modal{width:min(560px,96vw);max-height:85vh;overflow:auto;background:#09131b;border:1px solid #31536b;border-radius:14px;padding:18px;box-shadow:0 20px 60px #000}
-.personnel-modal h3{margin:0 0 12px}.personnel-modal select{width:100%;margin:8px 0 12px}
-.modal-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.center-gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.center-gallery-slot{position:relative;height:250px;border:1px solid var(--theme);background:#03090e;box-shadow:inset 0 0 0 2px #0c2736,0 0 14px #0b3d5666;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.center-gallery-slot img{width:100%;height:100%;object-fit:cover;display:block}
+.center-gallery-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:#8fcce8;font:700 12px Cinzel;border:1px dashed #7d641a;background:#06131c;cursor:pointer;padding:20px}
+.center-gallery-tools{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:6px;justify-content:center;z-index:3}
+.center-gallery-tools button{font-size:9px;padding:5px 7px}
+.center-gallery-slot.has-image .center-gallery-placeholder{display:none}
+@media(max-width:720px){.center-gallery{grid-template-columns:1fr}.center-gallery-slot{height:220px}}
 
 </style>
 </head>
-<body>
-<div class="page">
-  <div class="topbar">
-    <div class="nav">
-      <a class="btn" href="../../">Home</a>
-      <a class="btn" href="../">Bastions Guide</a>
-      <a class="btn" href="../../material-market/">Market</a><a id="adminPageBtn" class="btn hidden" href="../../admin/player-management/">⚙ Admin</a>
+<body><div class="shell">
+<div class="topbar">
+  <div class="identity"><img id="miniAvatar" class="mini-avatar hidden"><div><h1 id="topName">My Character</h1><div class="sub"><span id="topClass"></span> · <span id="topRank"></span> <span id="online" class="online hidden">● Online</span></div></div></div>
+  <div class="top-actions"><a class="btn" href="../">Home</a><a id="adminPageBtn" class="btn hidden" href="../admin/player-management/">⚙ Admin</a><span class="owner-only" style="display:flex;gap:12px"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="saveSheetBtn">💾 Save Character Sheet</button><button id="editToggle">✎ Edit Character</button></span></div>
+</div>
+<div id="message" class="notice hidden"></div><div id="adminEditNotice" class="notice hidden">Admin edit mode: changes are being made to another player's character and will be audit logged.</div>
+<div class="viewer">
+  <input id="characterSearch" placeholder="Search player or character…">
+  <select id="characterSelect"><option value="">My Character</option></select>
+  <button id="visitCharacter">View Sheet</button>
+</div>
+
+<div class="workspace">
+<aside class="sidebar">
+  <div class="side-link" data-jump="overview"><span class="side-icon">⌂</span>Overview</div>
+  <div class="side-link active" data-jump="bagZone"><span class="side-icon">🎒</span>Inventory</div>
+  <div class="side-link" data-jump="equipment"><span class="side-icon">⚔</span>Equipment</div>
+  <div class="side-link owner-only" data-tablink="crafting"><span class="side-icon">⚒</span>Crafting</div>
+  <a class="side-link" href="../bastions/my-bastion/"><span class="side-icon">♜</span>Bastions</a>
+  <a class="side-link" href="../contracts/"><span class="side-icon">▣</span>Contracts</a>
+  <div class="side-link" data-jump="skills"><span class="side-icon">✥</span>Skills</div>
+  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button><button id="giveMaterialsBtn" class="materials-link">Give Materials</button></div>
+  <div class="load-card"><h4>Equipment Load</h4><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
+</aside>
+
+<main class="main">
+<section id="sheetTab">
+<div id="equipment" class="equipment-layout">
+  <div id="equipLeft" class="slot-column"></div>
+  <div class="center-stage">
+    <div class="stage-title">↠ EQUIPMENT LOADOUT ↞</div>
+    <div id="portraitDrop" class="portrait">
+      <img id="portraitImg" class="hidden" alt="Character portrait">
+      <div id="portraitPlaceholder" class="portrait-placeholder">DROP CHARACTER PORTRAIT HERE<br><span class="small">PNG · JPG · WEBP · max 5 MB</span></div>
+      <button id="uploadBtn" class="portrait-upload owner-only">📷 Change Portrait</button>
+      <input id="portraitFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
-    <button id="loginBtn" class="primary">Login with Discord</button>
+    <div class="center-gallery">
+      <div id="centerGallery2" class="center-gallery-slot">
+        <img id="centerGallery2Img" class="hidden" alt="Character gallery image 2">
+        <div id="centerGallery2Placeholder" class="center-gallery-placeholder owner-only">ADD IMAGE</div>
+        <div class="center-gallery-tools owner-only">
+          <button type="button" data-gallery-upload="center_2">Add / Change</button>
+          <button type="button" data-gallery-remove="center_2">Remove</button>
+        </div>
+      </div>
+      <div id="centerGallery3" class="center-gallery-slot">
+        <img id="centerGallery3Img" class="hidden" alt="Character gallery image 3">
+        <div id="centerGallery3Placeholder" class="center-gallery-placeholder owner-only">ADD IMAGE</div>
+        <div class="center-gallery-tools owner-only">
+          <button type="button" data-gallery-upload="center_3">Add / Change</button>
+          <button type="button" data-gallery-remove="center_3">Remove</button>
+        </div>
+      </div>
+    </div>
+    <div class="backstory-panel">
+      <div class="backstory-title">BACKSTORY</div>
+      <textarea id="backstory" class="backstory-text" maxlength="20000" placeholder="Write your character's backstory here..."></textarea>
+    </div>
   </div>
-
-  <header class="hero">
-    <div class="eyebrow">Black Banner Company · Personal Stronghold</div>
-    <h1>My Bastion</h1>
-    <p class="subtitle">A read-only view of your Bastion records from the Black Banner system.</p>
-  </header>
-
-  <div id="message" class="notice hidden"></div>
-
-
-  <section class="visitbar">
-    <h2>Visit Another Bastion</h2>
-    <div class="visit-controls">
-      <input id="bastionSearch" type="search" placeholder="Search player name…" autocomplete="off">
-      <select id="bastionSelect" aria-label="Choose a player's Bastion">
-        <option value="">Choose a player…</option>
-      </select>
-      <button id="visitBtn" type="button">Visit Bastion</button>
+  <div id="equipRight" class="slot-column"></div>
+  <aside class="stats-panel">
+    <div id="overview" class="stats-section">
+      <h3>General</h3>
+      <div class="small" style="color:#6cbde7;margin-bottom:7px">Final D&D Beyond values are used when the character service exposes them; otherwise the API resolves permanent character/item modifiers.</div><div class="general-head"><div class="general-lines"><div id="generalLevel">Level —</div><div id="generalClass">—</div><div id="generalRank">—</div><hr style="border-color:#2d2514">
+        <div class="statline"><span>Health</span><span id="hpLine" class="hp">—</span></div>
+        <div class="statline"><span>Armor Class</span><span id="acLine">—</span></div>
+        <div class="statline"><span>Initiative</span><span id="initLine">—</span></div>
+        <div class="statline"><span>Speed</span><span id="speedLine">—</span></div>
+        <div class="statline"><span>Inspiration</span><span id="inspLine">◇</span></div>
+      </div>
+      <div class="general-images">
+        <div class="general-image-box">
+          <img id="crestImg" class="crest owner-clickable" alt="Character crest" title="Click to upload/change image 1">
+          <div class="general-image-label owner-only">IMAGE</div>
+        </div>
+      </div></div>
+      <input id="crestFile" type="file" hidden accept="image/png,image/jpeg,image/webp">
     </div>
-    <div id="viewingNote" class="viewing-note">Choose a player to view their Bastion read-only.</div>
-  </section>
+    <div class="stats-section abilities"><h3>⚄ Ability Scores</h3><div id="abilityList"></div></div>
+    <div class="stats-section"><h3>⚙ Saving Throws</h3><div id="saveList"></div></div>
+    <div class="stats-section"><div class="statline"><span style="color:#d8b14c">Passive Perception</span><span id="passivePerception">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Save DC</span><span id="spellDC">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Attack</span><span id="spellAttack">—</span></div></div>
+    <div id="skills" class="stats-section"><h3>Skills</h3><div id="skillGrid" class="skill-grid"></div></div>
+  </aside>
+</div>
+<div id="equipBottom" class="bottom-slots"></div>
 
-
-  <section id="bannerWrap" class="bastion-banner-wrap">
-    <img id="bastionBanner" class="bastion-banner hidden" alt="Bastion banner">
-    <div id="bannerEmpty" class="banner-empty">No Bastion banner has been added yet.</div>
-  </section>
-
-  <section class="bastion-name-bar">
-    <div id="bastionDisplayName" class="bastion-name-title">My Bastion</div>
-    <div id="bastionDisplayOwner" class="bastion-name-sub">Black Banner Company Stronghold</div>
-  </section>
-
-  <section id="ownerTools" class="owner-tools hidden">
-    <h2>Manage My Bastion</h2>
-    <div class="rule"></div>
-    <div class="manage-summary">
-      <span class="manage-pill">Gold: <strong id="manageGold">0 GP</strong></span>
-      <span class="manage-pill">Owner-only controls</span>
+<div id="editPanel" class="character-edit owner-only hidden">
+  <div class="edit-grid"><input id="characterName" placeholder="Character Name"><input id="level" type="number" min="1" max="20"><input id="rank" readonly><input id="classSummary" placeholder="Class / Build"></div>
+  <div class="edit-grid" style="grid-template-columns:repeat(6,1fr);margin-top:7px"><input id="str" placeholder="STR"><input id="dex" placeholder="DEX"><input id="con" placeholder="CON"><input id="int" placeholder="INT"><input id="wis" placeholder="WIS"><input id="cha" placeholder="CHA"></div>
+  <input id="ddbUrl" style="width:100%;margin-top:7px;background:#050606;border:1px solid var(--theme);color:#eee;padding:7px" placeholder="D&D Beyond Character URL">
+  <div class="stats-section owner-only" style="margin-top:10px">
+    <h3>Manual Stat Overrides</h3>
+    <div class="small">Leave a field blank to use D&D Beyond. A number entered here stays saved and is not overwritten by Sync.</div>
+    <div class="edit-grid" style="grid-template-columns:repeat(4,1fr);margin-top:7px">
+      <input id="ovHpMax" type="number" placeholder="Max HP">
+      <input id="ovHpCurrent" type="number" placeholder="Current HP">
+      <input id="ovAc" type="number" placeholder="Armor Class">
+      <input id="ovInitiative" type="number" placeholder="Initiative">
+      <input id="ovSpeed" type="number" placeholder="Speed">
+      <input id="ovPassive" type="number" placeholder="Passive Perception">
+      <input id="ovSpellDC" type="number" placeholder="Spell Save DC">
+      <input id="ovSpellAttack" type="number" placeholder="Spell Attack">
     </div>
-    <div class="owner-grid">
-      <div class="owner-card">
-        <h3>Bastion Name</h3>
-        <label for="bastionNameInput">Your Bastion Name</label>
-        <div class="bastion-name-editor">
-          <input id="bastionNameInput" maxlength="80" placeholder="Example: Raven's Rest">
-          <button id="saveBastionNameBtn" class="primary" type="button">Save Name</button>
-        </div>
-        <div class="muted" style="margin-top:.45rem">Saved per player and shown to anyone who visits your Bastion page.</div>
+    <div style="margin-top:10px"><button type="button" id="clearStatOverrides">CLEAR ALL STAT OVERRIDES</button></div>\n<h3 style="margin-top:10px">Border Color</h3>
+    <div class="small">Only you can see these controls. Other players will see the border color you choose.</div>
+    <div id="themePicker" class="theme-picker">
+      <button type="button" class="theme-swatch" data-theme="blue" title="Blue"></button>
+      <button type="button" class="theme-swatch" data-theme="gold" title="Gold"></button>
+      <button type="button" class="theme-swatch" data-theme="purple" title="Purple"></button>
+      <button type="button" class="theme-swatch" data-theme="green" title="Green"></button>
+      <button type="button" class="theme-swatch" data-theme="red" title="Red"></button>
+      <button type="button" class="theme-swatch" data-theme="silver" title="Silver"></button>
+    </div>
+  </div>
+  <div class="edit-actions"><button id="saveCharacter">Save Character</button><button id="saveGear">Save Loadout</button></div>
+  <div id="syncNote" class="small" style="margin-top:6px"></div>
+</div>
+<div class="tabs owner-only"><button class="tab" data-tab="sheet">Character Sheet</button><button class="tab" data-tab="crafting">Crafting Registry</button></div>
+</section>
+
+<section id="craftingTab" class="hidden craft-wrap">
+    <div class="craft">
+      <div class="panel">
+        <h2>Profession / Tool Registration</h2>
+        <p class="small">Choose every permanent tool proficiency. Mark up to two permanent tools as Expertise. These are the same database registrations the Discord crafting bot reads.</p>
+        <div id="toolList" class="tool-list"></div>
       </div>
-
-      <div class="owner-card">
-        <h3>Build & Upgrade</h3>
-        <label for="purchaseOption">Available Purchase</label>
-        <select id="purchaseOption"><option value="">Choose an eligible purchase…</option></select>
-
-        <div id="discountWrap">
-          <label for="purchaseDiscount">Construction Discount</label>
-          <select id="purchaseDiscount">
-            <option value="0">No Discount</option>
-            <option value="10">10% — Carpenter/Mason</option>
-            <option value="20">20% — Carpenter/Mason</option>
-          </select>
+      <div class="panel">
+        <h2>Crafting Features</h2>
+        <div class="feature-list">
+          <label class="toggle"><input id="adroit" type="checkbox"> Adroit Crafter</label>
+          <label class="toggle"><input id="flash" type="checkbox"> Flash of Genius</label>
+          <div class="field"><label>Flash of Genius INT Modifier</label><input id="intMod" type="number" min="-5" max="10"></div>
+          <label class="toggle"><input id="built" type="checkbox"> Built for Success</label>
+          <label class="toggle"><input id="homunculus" type="checkbox"> Homunculus Aid</label>
+          <label class="toggle"><input id="magicAdept" type="checkbox"> Magic Item Adept</label>
+          <div class="field"><label>Magic Item Adept Expertise Tool</label><select id="magicAdeptTool"><option value="">None</option></select></div>
         </div>
-
-        <div id="harvestWrap" class="hidden">
-          <label for="harvestSpec">Harvestarium Specialization</label>
-          <select id="harvestSpec"></select>
-        </div>
-
-        <div id="purchasePreview" class="purchase-preview">Choose a purchase to see its price.</div>
-        <div class="owner-actions">
-          <button id="purchaseBtn" class="primary" type="button">Purchase</button>
-        </div>
-      </div>
-
-      <div class="owner-card">
-        <h3>Bastion Banner</h3>
-        <div id="bannerDrop" class="dropzone" tabindex="0">
-          <strong>Drop Bastion Banner Here</strong><br>
-          <span class="muted">or click to choose JPEG, PNG, or WebP · max 5 MB</span>
-          <input id="bannerFile" type="file" accept="image/jpeg,image/png,image/webp">
-        </div>
-        <div class="owner-actions">
-          <button id="removeBannerBtn" type="button">Remove Banner</button>
-        </div>
-      </div>
-
-      <div class="owner-card">
-        <h3>Facility Furnishing Buff</h3>
-        <label for="furnishingFacility">Facility</label>
-        <select id="furnishingFacility"><option value="">Choose facility…</option></select>
-        <label for="furnishingItem">Carpenter Furnishing</label>
-        <select id="furnishingItem"><option value="">Choose furnishing…</option></select>
-        <label for="furnishingRank">Furnishing Rank</label>
-        <select id="furnishingRank"><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select>
-        <div id="furnishingPreview" class="purchase-preview">Choose a facility and furnishing.</div>
-        <div class="owner-actions"><button id="installFurnishingBtn" type="button">Install / Replace Buff</button></div>
-        <div id="furnishingInstalled" class="furnishing-status"></div>
+        <h3 style="margin-top:14px">Temporary Tool Proficiency</h3>
+        <div class="field"><label>Feature</label><select id="tempFeature">
+          <option value="none">None</option>
+          <option value="astral">Astral Knowledge / Trance / Whispers</option>
+          <option value="knowledge">Knowledge of the Ages</option>
+          <option value="manifold">Manifold Tool</option>
+        </select></div>
+        <div class="field"><label>Temporary Tool 1</label><select id="temp1"><option value="">None</option></select></div>
+        <div class="field"><label>Temporary Tool 2</label><select id="temp2"><option value="">None</option></select></div>
+        <p class="warn">Temporary tool proficiency never grants Expertise. Knowledge of the Ages remains limited to crafts taking 10 minutes or less.</p>
+        <div class="actions"><button id="saveCrafting">Save Crafting Registry</button></div>
       </div>
     </div>
   </section>
+</main>
+</div>
+</div>
 
-  <section id="account" class="account hidden">
-    <img id="avatar" class="avatar" alt="Discord avatar">
-    <div>
-      <div id="accountName" class="account-name">—</div>
-      <div id="accountMeta" class="muted">Connected through Discord</div>
+<div id="giveMaterialsModal" class="give-modal hidden owner-only">
+  <div class="give-box">
+    <h2>🎁 Give Crafting Materials</h2>
+    <div class="small">Transfers use your Black Banner crafting-material inventory. D&D Beyond equipment is not changed.</div>
+    <div class="give-grid" style="margin-top:12px">
+      <div class="full"><label>Recipient</label><select id="giveRecipient"><option value="">Choose player…</option></select></div>
+      <div><label>Material</label><select id="giveMaterial"><option value="">Choose material…</option></select></div>
+      <div><label>Quantity</label><input id="giveQuantity" type="number" min="1" value="1"></div>
     </div>
-    <div class="stats">
-      <div class="stat"><span>Status</span><strong id="status">—</strong></div>
-      <div class="stat"><span>Facilities</span><strong id="facilityCount">0</strong></div>
-      <div class="stat"><span>Personnel</span><strong id="personnelCount">0</strong></div>
-      <div class="stat"><span>Bastion Turn</span><strong id="turnStatus">—</strong></div>
-      <div class="stat"><span>Construction</span><strong id="constructionStatus">NONE</strong></div>
+    <div id="giveReview" class="give-review hidden"></div>
+    <div class="give-actions">
+      <button id="giveClose" type="button">Cancel</button>
+      <button id="giveReviewBtn" type="button">Review Transfer</button>
+      <button id="giveConfirmBtn" type="button" class="hidden">Confirm Gift</button>
     </div>
-  </section>
-
-  <main id="dashboard" class="grid hidden">
-    <section class="panel full">
-      <h2>Facilities</h2><div class="rule"></div>
-      <div id="facilities" class="cards scroll"></div>
-    </section>
-
-
-    <section id="craftingPanel" class="panel full crafting-panel hidden">
-      <h2>Crafting</h2><div class="rule"></div>
-      <p class="muted">Craft from your Bastion. The website shows the outcome and what to add to your character inventory. The actual dice rolls are posted in the Discord Crafting Channel.</p>
-      <div class="craft-grid">
-        <div class="craft-field"><label for="craftProfession">Profession</label><select id="craftProfession"><option value="">Choose a profession…</option></select></div>
-        <div class="craft-field"><label for="craftRecipe">Recipe</label><select id="craftRecipe" disabled><option value="">Choose a profession first…</option></select></div>
-        <div id="craftGemValueWrap" class="craft-field craft-special hidden"><label for="craftGemValue">Finished Gem Value (GP)</label><input id="craftGemValue" type="number" min="10" step="1" value="10"><small id="craftGemHelp">Raw gemstone materials cost 50% of the finished gem value.</small></div>
-        <div class="craft-field"><label for="craftRank">Material Rank (for +X / variable-rank recipes)</label><select id="craftRank"><option value="">Use recipe rank / not needed</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
-        <div id="craftProjectileWrap" class="craft-field craft-special hidden"><label for="craftProjectile">Projectile Type</label><select id="craftProjectile"></select></div>
-        <div id="craftWeaponWrap" class="craft-field craft-special hidden"><label for="craftWeapon">Ranged Weapon</label><select id="craftWeapon"></select></div>
-        <div id="craftPrimeWrap" class="craft-field craft-special hidden"><label for="craftPrime">Prime Material</label><select id="craftPrime"></select><small>Prime material determines the damage conversion/effect.</small></div>
-        <div id="craftBaseWrap" class="craft-field craft-special hidden"><label for="craftBase">Base Wood</label><select id="craftBase"></select><small>Darkwood, Deadwood, or Summitwood.</small></div>
-        <div id="craftIngredientWrap" class="craft-field craft-special hidden"><label for="craftIngredient">Meat or Herb to Use</label><select id="craftIngredient"></select><small>Only the ingredient you choose will be consumed.</small></div>
-        <div id="craftWoodWrap" class="craft-field craft-special hidden"><label for="craftWood">Furnishing Wood</label><select id="craftWood"></select><small>Choose the exact exotic wood from your inventory.</small></div>
-        <div id="craftScrollInkWrap" class="craft-field craft-special hidden"><label for="craftScrollInk">Scroll Herb / Blood Ink</label><select id="craftScrollInk"></select><small>Select the exact ink ingredient so a different herb is not burned.</small></div>
-        <div class="craft-field"><label for="craftQty">Quantity / Attempts</label><input id="craftQty" type="number" min="1" max="20" value="1"></div>
-        <div class="craft-field"><label for="craftAdvantage">Additional Advantage</label><select id="craftAdvantage"><option value="none">None</option><option value="aid">Aid from another proficient crafter</option><option value="homunculus">Homunculus Aid</option><option value="workshop">Workshop Order: Assist</option></select></div>
-      </div>
-      <div id="craftAutoBonus" class="craft-preview">Automatic Bastion bonuses will appear here.</div>
-      <div id="craftPreview" class="craft-preview">Choose a profession and recipe.</div>
-      <div class="owner-actions"><button id="craftBtn" class="primary" type="button">Craft</button></div>
-      <div id="craftResult" class="craft-result hidden"></div>
-    </section>
-
-
-    <section class="panel">
-      <h2>Current Construction</h2><div class="rule"></div>
-      <div id="construction" class="list"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Current Orders</h2><div class="rule"></div>
-      <div id="orders" class="list"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Hirelings</h2><div class="rule"></div>
-      <div id="hirelings" class="list scroll"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Defenders & Personnel</h2><div class="rule"></div>
-      <div id="personnel" class="list scroll"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Combined Bastion</h2><div class="rule"></div>
-      <div id="combined" class="list"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Bastion Status</h2><div class="rule"></div>
-      <div id="turnDetails" class="list"></div>
-      <div id="bastionTurnActions" class="owner-actions hidden">
-        <button id="rollBastionTurnBtn" class="primary" type="button">🎲 Roll Bastion Turn</button>
-        <span id="harvestTurnControls" class="hidden">
-          <select id="harvestTurnSpec"></select>
-          <button id="harvestBastionTurnBtn" type="button">🌿 Harvest Harvestarium Instead</button>
-        </span>
-      </div>
-      <div id="bastionTurnResult" class="craft-result hidden"></div>
-      <div id="bastionEventActions" class="owner-card hidden" style="margin-top:.75rem"></div>
-    </section>
-
-    <section class="panel full chat-panel">
-      <div class="chat-head">
-        <h2>Bastion RP Chat</h2>
-        <span id="chatRoomName" class="chat-room-name">Bastion chat</span>
-      </div>
-      <div class="rule"></div>
-      <div id="chatLog" class="chat-log">
-        <div class="empty">Loading Bastion chat…</div>
-      </div>
-      <div class="chat-compose">
-        <textarea id="chatInput" maxlength="1000" placeholder="Speak, act, or roleplay in this Bastion…"></textarea>
-        <button id="chatSend" class="primary" type="button">Send</button>
-      </div>
-      <div class="chat-help">Messages are shared with everyone visiting this Bastion. Press Ctrl+Enter to send.</div>
-    </section>
-
-  </main>
-
-  <footer>Black Banner Company · Bastions of the Black · Read-Only Dashboard</footer>
+  </div>
 </div>
 
 <script>
-const API_BASE = "https://api.blackbannercompany.com";
-let me = null;
+const API_BASE="https://api.blackbannercompany.com";
+const $=id=>document.getElementById(id);
+const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak",chest:"Chest",arms:"Arms",hands:"Hands",waist:"Waist",legs:"Legs",feet:"Feet",main_hand:"Main Hand",off_hand:"Off Hand",ranged:"Ranged",ring_1:"Ring 1",ring_2:"Ring 2",trinket:"Trinket / Other",other:"Other"};
+const leftSlots=["head","mask","neck","chest","hands"];
+const rightSlots=["cloak","arms","waist","legs","feet"];
+const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
+let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],characterDirectory=[];
+let currentViewingOwn=true,currentCanEdit=true,currentOwnerId=null,sessionUserId=null,sessionIsAdmin=false;
+const PUBLIC_FEATURED_OWNER_ID="297176750990032906";
+let publicVisitorMode=false;
+function managedOwnerQuery(){return currentOwnerId&&String(currentOwnerId)!==String(sessionUserId)?"&owner="+encodeURIComponent(currentOwnerId):""}
+function managedOwnerBody(obj={}){return currentOwnerId&&String(currentOwnerId)!==String(sessionUserId)?{...obj,ownerId:String(currentOwnerId)}:obj}
 
-const $ = (id) => document.getElementById(id);
-const esc = (v) => String(v ?? "")
-  .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-  .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{...(opts.body instanceof Blob?{}:{"Content-Type":"application/json"}),...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b}
+function show(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
+function rankFromLevel(n){n=Number(n||0);return n>=18?"S":n>=15?"A":n>=12?"B":n>=9?"C":n>=6?"D":n>=3?"E":"F"}
+function pb(n){n=Number(n||1);return n>=17?6:n>=13?5:n>=9?4:n>=5?3:2}
+function mod(score){return Math.floor((Number(score||10)-10)/2)}
+function signed(n){n=Number(n||0);return `${n>=0?"+":""}${n}`}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
-function message(text,type=""){
-  const el=$("message"); el.textContent=text; el.className=`notice ${type}`.trim(); el.classList.remove("hidden");
+function rarityClass(r){return String(r||"").replace(/\s+/g,"-")}
+function equipCard(slot,row={}){
+ const customImageUrl=row.customImageUrl||"", ddbImageUrl=row.ddbImageUrl||row.imageUrl||"", imageUrl=customImageUrl||ddbImageUrl;
+ const hasCustomImage=!!customImageUrl, name=row.itemName||"", rarity=row.rarity||"";
+ return `<div class="equip ${imageUrl?"":"empty"}"
+   data-slot="${slot}"
+   data-ddb-image-url="${esc(ddbImageUrl)}"
+   data-ddb-item-id="${esc(row.ddbItemId||"")}"
+   data-item-url="${esc(row.itemUrl||"")}"
+   data-source="${esc(row.source||"manual")}">
+   <div class="slot-title">${slotLabels[slot]}</div>
+   <div class="item-name">${esc(name||"Empty")}</div>
+   <div class="rarity ${rarityClass(rarity)}">${esc(rarity||"")}</div>
+
+   <div class="equip-image-stage">
+     ${imageUrl?`<img class="equip-img" src="${esc(imageUrl)}" alt="" onerror="this.style.display='none';this.closest('.equip').classList.add('image-broken')">`:""}
+     <div class="image-overlay owner-only" data-image-slot="${slot}">${imageUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE"}</div>
+   </div>
+
+   <div class="slot-edit owner-only">
+     <select class="slotDdbPicker" data-slot-picker="${slot}"><option value="">Choose from D&D Beyond…</option></select>
+     <label style="font-size:10px;color:#cba9ff"><input class="attuned" type="checkbox" ${row.attuned?"checked":""}> Attuned</label>
+     ${hasCustomImage?`<button type="button" class="remove-image-btn" data-remove-image-slot="${slot}">REMOVE CUSTOM IMAGE</button>`:""}
+   </div>
+ </div>`;
 }
-async function api(path,options={}){
-  const headers={...(options.headers||{})};
-  if(options.body!=null&&!headers["Content-Type"]) headers["Content-Type"]="application/json";
-  const r=await fetch(API_BASE+path,{mode:"cors",credentials:"include",cache:"no-store",...options,headers});
-  const body=await r.json().catch(()=>({}));
-  if(r.status===401) throw new Error("LOGIN_REQUIRED");
-  if(!r.ok) throw new Error(body.error||`Request failed (${r.status})`);
-  return body;
+function isCustomApiImageUrl(url){
+ return /\/api\/character\/equipment-image(?:\?|$)/i.test(String(url||""));
 }
-function avatarUrl(u){return u?.avatar?`https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png?size=128`:"";}
-function pretty(v){return String(v||"").replaceAll("_"," ").replace(/\b\w/g,c=>c.toUpperCase());}
-function empty(text){return `<div class="empty">${esc(text)}</div>`;}
-
-
-let bastionDirectory=[];
-
-function fillBastionSelect(rows){
-  const select=$("bastionSelect");
-  const current=select.value;
-  select.innerHTML='<option value="">Choose a player…</option>'+
-    rows.map(b=>`<option value="${esc(b.ownerId)}">${esc(b.playerName)}${b.isMine?" (You)":""}</option>`).join("");
-  if(rows.some(b=>String(b.ownerId)===String(current))) select.value=current;
+function ddbFallbackForRow(row){
+ if(!row)return null;
+ const id=String(row.ddbItemId||"");
+ return ddbInventory.find(x=>
+   (id && (String(x.inventoryId||"")===id || String(x.definitionId||"")===id)) ||
+   (!id && String(x.name||"").trim().toLowerCase()===String(row.itemName||"").trim().toLowerCase())
+ ) || ddbInventory.find(x=>String(x.name||"").trim().toLowerCase()===String(row.itemName||"").trim().toLowerCase()) || null;
 }
-
-async function loadBastionDirectory(){
-  try{
-    const data=await api("/api/bastions");
-    bastionDirectory=data.bastions||[];
-    fillBastionSelect(bastionDirectory);
-  }catch(err){
-    if(err.message!=="LOGIN_REQUIRED") message(err.message,"bad");
-  }
+function renderEquipment(rows=[]){
+ const map=new Map(rows.map(x=>[x.slotKey,x])), imgs=(data&&data.equipmentImages)||{};
+ const decorate=s=>{
+   const row={...(map.get(s)||{})};
+   const fallback=ddbFallbackForRow(row);
+   let ddbImageUrl=row.imageUrl||"";
+   // V12.5 could accidentally save a custom API URL into image_url.
+   // Treat that as contamination, never as the D&D Beyond fallback.
+   if(isCustomApiImageUrl(ddbImageUrl))ddbImageUrl="";
+   if(!ddbImageUrl && fallback?.imageUrl)ddbImageUrl=fallback.imageUrl;
+   if(!row.ddbItemId && fallback?.inventoryId)row.ddbItemId=fallback.inventoryId;
+   return {...row,ddbImageUrl,customImageUrl:imgs[s]?.url||null};
+ };
+ $("equipLeft").innerHTML=leftSlots.map(s=>equipCard(s,decorate(s))).join("");
+ $("equipRight").innerHTML=rightSlots.map(s=>equipCard(s,decorate(s))).join("");
+ $("equipBottom").innerHTML=bottomSlots.map(s=>equipCard(s,decorate(s))).join("");
+ bindEquipmentControls();updateAttune();renderDdbPickers();
 }
-
-function filterBastions(){
-  const q=$("bastionSearch").value.trim().toLowerCase();
-  fillBastionSelect(!q ? bastionDirectory : bastionDirectory.filter(b=>
-    String(b.playerName||"").toLowerCase().includes(q)
-  ));
+function gearPayload(){
+ return [...document.querySelectorAll(".equip")].map(el=>{
+   const slot=el.dataset.slot;
+   return {
+     slotKey:slot,
+     itemName:el.querySelector(".item-name")?.textContent==="Empty"?"":el.querySelector(".item-name")?.textContent||"",
+     rarity:el.querySelector(".rarity")?.textContent||"",
+     attuned:!!el.querySelector(".attuned")?.checked,
+     source:el.dataset.source||"manual",
+     ddbItemId:el.dataset.ddbItemId||null,
+     itemUrl:el.dataset.itemUrl||null,
+     imageUrl:el.dataset.ddbImageUrl||null
+   };
+ });
 }
+function updateAttune(){const n=document.querySelectorAll(".attuned:checked").length;$("attuneText").textContent=`${n} / 3`}
 
-async function visitSelected(){
-  const owner=$("bastionSelect").value;
-  if(!owner){message("Choose a player first.","bad");return;}
-  try{
-    const data=await api("/api/bastion/view?owner="+encodeURIComponent(owner));
-    render(data);
-    $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
-    history.replaceState({},document.title,location.pathname+"?owner="+encodeURIComponent(owner));
-    window.scrollTo({top:0,behavior:"smooth"});
-  }catch(err){message(err.message,"bad");}
+function inventoryLabel(x){return `${x.name}${Number(x.quantity||1)>1?` ×${x.quantity}`:""}${x.equipped?" · Equipped":""}`}
+function renderDdbPickers(){
+ const opts='<option value="">Choose from D&D Beyond…</option><option value="__remove__">— Remove Item From Slot —</option>'+
+   ddbInventory.map((x,i)=>`<option value="${i}">${esc(inventoryLabel(x))}</option>`).join("");
+ document.querySelectorAll(".slotDdbPicker").forEach(s=>s.innerHTML=opts);
 }
+async function clearEquipmentSlot(slot){
+ const el=document.querySelector(`.equip[data-slot="${slot}"]`);
+ if(!el)return;
 
+ // Remove any custom image saved specifically for this website slot.
+ try{
+   if(data?.equipmentImages?.[slot]){
+     const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
+       method:"DELETE",credentials:"include"
+     });
+     if(!r.ok){
+       const b=await r.json().catch(()=>({}));
+       throw new Error(b.error||`Could not remove custom image (${r.status}).`);
+     }
+     delete data.equipmentImages[slot];
+   }
+ }catch(err){
+   throw err;
+ }
 
+ el.querySelector(".item-name").textContent="Empty";
+ const rarity=el.querySelector(".rarity");
+ if(rarity){rarity.textContent="";rarity.className="rarity";}
+ const cb=el.querySelector(".attuned");
+ if(cb)cb.checked=false;
 
-let manageOptions=[];
-let currentViewingOwn=false;
+ el.dataset.ddbImageUrl="";
+ el.dataset.ddbItemId="";
+ el.dataset.itemUrl="";
+ el.dataset.source="manual";
 
-function renderBanner(url){
-  const img=$("bastionBanner"), emptyEl=$("bannerEmpty");
-  if(url){
-    img.src=url;
-    img.classList.remove("hidden");
-    emptyEl.classList.add("hidden");
-  }else{
-    img.removeAttribute("src");
-    img.classList.add("hidden");
-    emptyEl.classList.remove("hidden");
-  }
+ const img=el.querySelector(".equip-img");
+ if(img)img.remove();
+
+ const overlay=el.querySelector(".image-overlay");
+ if(overlay)overlay.innerHTML="ADD<br>IMAGE";
+
+ const removeImg=el.querySelector("[data-remove-image-slot]");
+ if(removeImg)removeImg.remove();
+
+ el.classList.add("empty");
+ el.classList.remove("image-broken");
+
+ // Persist the now-empty equipment layout immediately.
+ const result=await api("/api/character/equipment",{
+   method:"POST",
+   body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))
+ });
+ if(data)data.equipment=result.equipment||result||[];
+ updateAttune();
+ show(`${slotLabels[slot]} cleared from the character sheet.`,"good");
 }
+function applyInventoryItemToSlot(item,slot){
+ const el=document.querySelector(`.equip[data-slot="${slot}"]`);if(!el||!item)return;
+ el.querySelector(".item-name").textContent=item.name||"Empty";
+ const rarityEl=el.querySelector(".rarity");rarityEl.textContent=item.rarity||"";rarityEl.className=`rarity ${rarityClass(item.rarity)}`;
 
-async function loadManagement(){
-  if(!currentViewingOwn)return;
-  try{
-    const data=await api("/api/bastion/manage/options");
-    manageOptions=data.options||[];
-    $("manageGold").textContent=Number(data.gold||0).toLocaleString()+" GP";
-    const sel=$("purchaseOption");
-    sel.innerHTML='<option value="">Choose an eligible purchase…</option>'+
-      manageOptions.map((o,i)=>`<option value="${i}">${esc(o.label)} — ${Number(o.cost).toLocaleString()} GP${o.turns?` · ${o.turns} turns`:""}</option>`).join("");
-    $("harvestSpec").innerHTML=(data.harvestariumSpecializations||[]).map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
-    updatePurchasePreview();
-  }catch(err){message(err.message,"bad");}
+ el.dataset.ddbImageUrl=item.imageUrl||"";
+ el.dataset.ddbItemId=item.inventoryId||item.definitionId||"";
+ el.dataset.itemUrl=item.itemUrl||"";
+ el.dataset.source="dndbeyond";
+
+ const customUrl=data?.equipmentImages?.[slot]?.url||"";
+ const displayUrl=customUrl||item.imageUrl||"";
+ let img=el.querySelector(".equip-img");
+ if(displayUrl){
+   if(!img){img=document.createElement("img");img.className="equip-img";img.alt="";el.querySelector(".equip-image-stage")?.prepend(img)}
+   img.style.display="block";img.src=displayUrl;el.classList.remove("empty","image-broken");
+ }else{
+   if(img)img.remove();
+   el.classList.add("empty");
+ }
+ const overlay=el.querySelector(".image-overlay");
+ if(overlay)overlay.innerHTML=displayUrl?"CHANGE<br>IMAGE":"ADD<br>IMAGE";
+ const cb=el.querySelector(".attuned");if(cb)cb.checked=!!item.attuned;
+ updateAttune();
 }
-
-function selectedPurchase(){
-  const i=Number($("purchaseOption").value);
-  return Number.isInteger(i)&&i>=0?manageOptions[i]:null;
+function bindEquipmentControls(){
+ document.querySelectorAll(".slotDdbPicker").forEach(s=>s.onchange=async()=>{
+   try{
+     if(s.value==="__remove__"){
+       await clearEquipmentSlot(s.dataset.slotPicker);
+     }else if(s.value!==""){
+       applyInventoryItemToSlot(ddbInventory[Number(s.value)],s.dataset.slotPicker);
+     }
+   }catch(err){
+     show(err.message||"Could not update equipment slot.","bad");
+   }finally{
+     s.value="";
+   }
+ });
+ document.querySelectorAll("[data-image-slot]").forEach(b=>b.onclick=e=>{e.stopPropagation();chooseEquipmentImage(b.dataset.imageSlot)});
+ document.querySelectorAll("[data-remove-image-slot]").forEach(b=>b.onclick=async e=>{
+   e.stopPropagation();
+   try{await removeEquipmentImage(b.dataset.removeImageSlot)}catch(err){show(err.message||"Could not remove custom image.","bad")}
+ });
+ document.querySelectorAll(".equip").forEach(el=>{
+   if(!currentCanEdit)return;
+   el.ondragover=e=>{e.preventDefault();el.classList.add("drag-image")};
+   el.ondragleave=()=>el.classList.remove("drag-image");
+   el.ondrop=e=>{e.preventDefault();el.classList.remove("drag-image");const f=e.dataTransfer?.files?.[0];if(f)uploadEquipmentImage(el.dataset.slot,f).catch(err=>show(err.message,"bad"))};
+ });
 }
-
-function updatePurchasePreview(){
-  const o=selectedPurchase();
-  const preview=$("purchasePreview");
-  if(!o){preview.textContent="Choose a purchase to see its price.";return;}
-  const isSpecial=o.action==="special_upgrade";
-  $("discountWrap").classList.toggle("hidden",isSpecial);
-  $("harvestWrap").classList.toggle("hidden",!o.needsHarvestarium);
-  const discount=isSpecial?0:Number($("purchaseDiscount").value||0);
-  const final=Math.round(Number(o.cost||0)*(1-discount/100));
-  preview.innerHTML=`<strong>${esc(o.label)}</strong><br>${final.toLocaleString()} GP${discount?` after ${discount}% discount`:""}${o.turns?` · ${o.turns} construction turns`:" · immediate"}`;
-}
-
-async function buySelected(){
-  const o=selectedPurchase();
-  if(!o){message("Choose a Bastion purchase first.","bad");return;}
-  const discount=o.action==="special_upgrade"?0:Number($("purchaseDiscount").value||0);
-  const payload={
-    action:o.action,
-    facility:o.facility,
-    specialUpgrade:o.specialUpgrade||null,
-    discount,
-    harvestariumSpecialization:o.needsHarvestarium?$("harvestSpec").value:null
-  };
-  const final=Math.round(Number(o.cost||0)*(1-discount/100));
-  if(!confirm(`Purchase ${o.label} for ${final.toLocaleString()} GP?`))return;
-  $("purchaseBtn").disabled=true;
-  try{
-    const result=await api("/api/bastion/manage/purchase",{method:"POST",body:JSON.stringify(payload)});
-    message(`Purchase complete. ${Number(result.cost).toLocaleString()} GP spent. ${Number(result.remainingGold).toLocaleString()} GP remaining.`,"good");
-    await reloadOwnBastion();
-  }catch(err){message(err.message,"bad");}
-  finally{$("purchaseBtn").disabled=false;}
-}
-
-async function reloadOwnBastion(){
-  const data=await api("/api/bastion/me");
-  render(data);
-  await loadManagement();
-}
-
-async function uploadBanner(file){
-  if(!file)return;
-  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){message("Use a JPEG, PNG, or WebP image.","bad");return;}
-  if(file.size>5*1024*1024){message("Banner image must be 5 MB or smaller.","bad");return;}
-  message("Uploading Bastion banner…");
-  try{
-    const r=await fetch(API_BASE+"/api/bastion/banner",{
-      method:"POST",credentials:"include",mode:"cors",headers:{"Content-Type":file.type},body:file
-    });
-    const body=await r.json().catch(()=>({}));
-    if(!r.ok)throw new Error(body.error||`Upload failed (${r.status})`);
-    renderBanner(body.bannerUrl);
-    message("Bastion banner updated.","good");
-  }catch(err){message(err.message,"bad");}
-}
-
-async function removeBanner(){
-  if(!confirm("Remove your Bastion banner?"))return;
-  try{
-    await api("/api/bastion/banner",{method:"DELETE",body:"{}"});
-    renderBanner(null);
-    message("Bastion banner removed.","good");
-  }catch(err){message(err.message,"bad");}
-}
-
-
-
-let craftRecipes=[];
-let craftMeta={workHours:0,adroitCrafter:false};
-let craftSpecial={kind:null};
-const specialWrapIds=["craftProjectileWrap","craftWeaponWrap","craftPrimeWrap","craftBaseWrap","craftIngredientWrap","craftWoodWrap","craftScrollInkWrap","craftGemValueWrap"];
-function hideCraftSpecial(){specialWrapIds.forEach(id=>$(id).classList.add("hidden"));craftSpecial={kind:null};}
-function optionHtml(rows,placeholder="Choose…"){return `<option value="">${esc(placeholder)}</option>`+(rows||[]).map(r=>`<option value="${esc(r.itemKey??r.value)}">${esc(r.label||r.display)}${r.qty!=null?` ×${Number(r.qty)}`:""}${r.damageType&&r.damageType!=="Prime material's associated damage type"?` · ${esc(r.damageType)}`:""}</option>`).join("");}
-async function loadCraftSpecial(){hideCraftSpecial();const r=selectedCraftRecipe(),p=$("craftProfession").value;if(!r||!p)return;try{const data=await api("/api/bastion/crafting/material-options?profession="+encodeURIComponent(p)+"&recipe="+encodeURIComponent(r.name)+"&rank="+encodeURIComponent($("craftRank").value||""));craftSpecial=data||{};if(data.kind==="wood_projectile"){$("craftProjectileWrap").classList.remove("hidden");$("craftPrimeWrap").classList.remove("hidden");$("craftBaseWrap").classList.remove("hidden");$("craftProjectile").innerHTML=optionHtml(data.projectileTypes,"Choose projectile type…");$("craftPrime").innerHTML=optionHtml(data.prime,"Choose Prime Material…");$("craftBase").innerHTML=optionHtml(data.base,"Choose Base Wood…");}if(data.kind==="wood_weapon"){$("craftWeaponWrap").classList.remove("hidden");$("craftPrimeWrap").classList.remove("hidden");$("craftBaseWrap").classList.remove("hidden");$("craftWeapon").innerHTML=optionHtml(data.weaponTypes,"Choose ranged weapon…");$("craftPrime").innerHTML=optionHtml(data.prime,"Choose Prime Material…");$("craftBase").innerHTML=optionHtml(data.base,"Choose Base Wood…");}if(data.kind==="carpenter_furnishing"){$("craftWoodWrap").classList.remove("hidden");$("craftWood").innerHTML=optionHtml(data.woods,"Choose exact exotic wood…");}if(data.kind==="cooking_treat"){$("craftIngredientWrap").classList.remove("hidden");$("craftIngredient").innerHTML=optionHtml(data.ingredients,"Choose Meat or Herb…");}if(data.kind==="gem_cut"){$("craftGemValueWrap").classList.remove("hidden");const min=Number(data.gemMin||10),max=data.gemMax==null?null:Number(data.gemMax);$("craftGemValue").min=String(min);$("craftGemValue").max=max==null?"":String(max);const cur=Number($("craftGemValue").value);if(!Number.isInteger(cur)||cur<min||(max!==null&&cur>max))$("craftGemValue").value=String(min);$("craftGemHelp").textContent=`Choose a finished value ${min.toLocaleString()}${max===null?"g or higher":`–${max.toLocaleString()}g`}. Raw material cost is 50%.`;} if(data.kind==="calligraphy_scroll"){$("craftScrollInkWrap").classList.remove("hidden");$("craftScrollInk").innerHTML=optionHtml((data.scrollInk||[]).map(x=>({...x,label:`${x.display} — ${Number(x.inkValue).toLocaleString()}g ink value`})),"Choose exact herb/blood ink…");}updateCraftPreview();}catch(err){craftSpecial={kind:null};}}
-function craftSpecialPayload(){return {projectileType:$("craftProjectile")?.value||null,weaponType:$("craftWeapon")?.value||null,primeItemKey:$("craftPrime")?.value||null,baseItemKey:$("craftBase")?.value||null,ingredientItemKey:$("craftIngredient")?.value||null,woodItemKey:$("craftWood")?.value||null,scrollInkItemKey:$("craftScrollInk")?.value||null,gemValue:$("craftGemValue")?.value?Number($("craftGemValue").value):null};}
-async function loadCrafting(){
-  if(!currentViewingOwn)return;
-  try{
-    const data=await api("/api/bastion/crafting/professions");
-    craftMeta=data;
-    $("craftProfession").innerHTML='<option value="">Choose a profession…</option>'+data.professions.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
-    updateCraftPreview();
-  }catch(err){$("craftPreview").textContent="Crafting unavailable: "+err.message;}
-}
-async function loadCraftRecipes(){
-  const id=$("craftProfession").value;
-  craftRecipes=[];
-  if(!id){$("craftRecipe").disabled=true;$("craftRecipe").innerHTML='<option value="">Choose a profession first…</option>';updateCraftPreview();return;}
-  try{
-    const data=await api("/api/bastion/crafting/recipes?profession="+encodeURIComponent(id));
-    craftRecipes=data.recipes||[];
-    $("craftRecipe").disabled=false;
-    $("craftRecipe").innerHTML='<option value="">Choose a recipe…</option>'+craftRecipes.map((r,i)=>`<option value="${i}">${esc(r.name)}${r.rarity?` · ${esc(r.rarity)}`:""}</option>`).join("");
-    updateCraftPreview();
-    updateCraftAutoBonus();
-    await loadCraftSpecial();
-  }catch(err){message(err.message,"bad");}
-}
-function selectedCraftRecipe(){const i=Number($("craftRecipe").value);return Number.isInteger(i)&&i>=0?craftRecipes[i]:null;}
-
-async function updateCraftAutoBonus(){
-  const r=selectedCraftRecipe();
-  const p=$("craftProfession").value;
-  if(!r||!p){$("craftAutoBonus").textContent="Automatic Bastion bonuses will appear here.";return;}
-  try{
-    const rank=$("craftRank").value||"";
-    const data=await api("/api/bastion/crafting/preview?profession="+encodeURIComponent(p)+"&recipe="+encodeURIComponent(r.name)+"&rank="+encodeURIComponent(rank));
-    const lines=[`Registered Tool: ${data.toolStatus||"Unknown"}`];
-    if(data.automaticAdvantage?.some(x=>x.startsWith("Workshop Order: Assist"))) lines.push("Workshop Order: Assist: AVAILABLE — choose it under Additional Advantage to use it.");
-    if(data.automaticAdvantage?.some(x=>x.startsWith("Laboratory Order: Assist"))) lines.push("Laboratory Order: Assist: ACTIVE automatically.");
-    if(!data.automaticAdvantage?.length) lines.push("Bastion Advantage: None");
-    if(data.automaticExpertise?.length) lines.push(`Expertise Bonus: ${data.automaticExpertise.join(" + ")}`);
-    if(data.mastercraft) lines.push("Mastercraft Workshop: 1d4 bonus active");
-    if(data.chemistryStation) lines.push("Chemistry Station: replica roll active on successful qualifying crafts");
-    $("craftAutoBonus").textContent=lines.join("\n");
-  }catch(err){$("craftAutoBonus").textContent="Could not load Bastion bonuses: "+err.message;}
-}
-
-function updateCraftPreview(){
-  const r=selectedCraftRecipe(), qty=Math.max(1,Number($("craftQty").value)||1);
-  if(!r){$("craftPreview").textContent=`Work Hours available: ${Number(craftMeta.workHours||0)}${craftMeta.adroitCrafter?" · Adroit Crafter registered":""}\nChoose a recipe to see requirements.`;return;}
-  const shownHours=craftMeta.adroitCrafter?Number(r.hours)/2:Number(r.hours);
-  let extra="";if(craftSpecial.kind==="wood_projectile")extra=`\nChoose projectile type + exact Prime Material + exact Base Wood. Rank controls arrow yield.`;if(craftSpecial.kind==="wood_weapon")extra=`\nChoose the bow/crossbow plus exact Prime and Base materials.`;if(craftSpecial.kind==="cooking_treat")extra=`\nChoose the exact Meat or Herb you want consumed.`;if(craftSpecial.kind==="carpenter_furnishing")extra=`\nChoose the furnishing rank and exact exotic wood.`;if(craftSpecial.kind==="calligraphy_scroll")extra=`\nChoose the exact herb/blood ink you want used; final scroll Gold settlement still uses the Discord guided crafter.`;if(craftSpecial.kind==="gem_cut"){const gv=Math.max(0,Number($("craftGemValue")?.value)||0),raw=Math.ceil(gv/2);extra=`\nFinished gem: ${gv.toLocaleString()} GP · Raw gemstone materials: ${raw.toLocaleString()} GP (50%)`;}
-  $("craftPreview").textContent=`${r.name}\nDC: ${r.dc} · Base time: ${r.time||r.hours+" hrs"}${craftMeta.adroitCrafter?` · Adroit time: ${shownHours} hrs`:""}\nMaterials: ${r.materials||"See Crafting Guide."}${r.facility?`\nFacility: ${r.facility}`:""}${extra}\nAttempts: ${qty}`;
-}
-async function doBastionCraft(){
-  const r=selectedCraftRecipe(); if(!r){message("Choose a crafting recipe first.","bad");return;}
-  const payload={professionId:$("craftProfession").value,recipeName:r.name,materialRank:$("craftRank").value||null,quantity:Number($("craftQty").value)||1,advantageSource:$("craftAdvantage").value,specialSelection:craftSpecialPayload()};
-  if(!confirm(`Attempt ${payload.quantity} × ${r.name}? Work Hours and applicable materials will be spent according to the crafting result.`))return;
-  $("craftBtn").disabled=true;$("craftResult").className="craft-result";$("craftResult").textContent="Crafting…";$("craftResult").classList.remove("hidden");
-  try{
-    const data=await api("/api/bastion/crafting/craft",{method:"POST",body:JSON.stringify(payload)});
-    craftMeta.workHours=data.workHoursRemaining;
-    const add=data.addToInventory?`ADD TO YOUR CHARACTER INVENTORY: ${data.addToInventory}`:"Do not add anything to your character inventory.";
-    const mat=data.materialsRemoved?.length?`\nMaterials removed: ${data.materialsRemoved.map(x=>`${x.name} ×${x.qty}`).join(", ")}`:"";const gold=data.goldSpent?`\nRaw gemstone Gold spent: ${Number(data.goldSpent).toLocaleString()} GP · Gold remaining: ${Number(data.goldRemaining).toLocaleString()} GP`:"";
-    const title=data.outcome==="success"?"CRAFTING SUCCESS":data.outcome==="failure"?"CRAFTING FAILED":"MIXED CRAFTING RESULTS";
-    const details=`${data.successes} succeeded · ${data.failures} failed\n${add}\nWork Hours used: ${data.workHoursRemoved} · Remaining: ${data.workHoursRemaining}${mat}${gold}\nFull dice rolls posted in the Discord Crafting Channel.`;
-    $("craftResult").className=`craft-result ${data.outcome}`;
-    $("craftResult").innerHTML=`<strong>${title}</strong><br>${esc(details).replaceAll("\n","<br>")}`;
-    message("Crafting attempt complete.",data.failures?"":"good");
-  }catch(err){$("craftResult").className="craft-result failure";$("craftResult").textContent=err.message;message(err.message,"bad");}
-  finally{$("craftBtn").disabled=false;}
+function chooseEquipmentImage(slot){
+ const i=document.createElement("input");
+ i.type="file";
+ i.accept="image/png,image/jpeg,image/webp";
+ i.style.display="none";
+ document.body.appendChild(i);
+ i.onchange=async()=>{
+   try{
+     const file=i.files?.[0];
+     if(file)await uploadEquipmentImage(slot,file);
+   }catch(err){
+     show(err.message||"Equipment image upload failed.","bad");
+   }finally{
+     i.remove();
+   }
+ };
+ i.click();
 }
 
-$("craftGemValue")?.addEventListener("input",updateCraftPreview);
-
-let currentChatOwner=null;
-let chatLastId=0;
-let chatTimer=null;
-let chatViewerId=null;
-
-function chatTime(ts){
-  const d=new Date(Number(ts)||Date.now());
-  return d.toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+function friendlyKey(k){return String(k||"").replace(/_/g," ").replace(/\b([edcbas])\b/gi,m=>m.toUpperCase()+"-Rank").replace(/\b\w/g,m=>m.toUpperCase())}
+function renderBags(){
+ const holder=$("bags");if(!holder)return;
+ const containers=ddbInventory.filter(x=>x.isContainer);
+ const byParent=new Map();
+ for(const item of ddbInventory){const key=item.containerEntityId||"uncontained";if(!byParent.has(key))byParent.set(key,[]);byParent.get(key).push(item)}
+ const parts=[];
+ for(const bag of containers){
+   const items=(byParent.get(String(bag.inventoryId))||[]).filter(x=>String(x.inventoryId)!==String(bag.inventoryId));
+   parts.push(`<details class="bag"><summary>🎒 ${esc(bag.name)} (${items.length})</summary><div class="bag-items">${items.length?items.map(x=>`<div class="bag-item"><span>${esc(x.name)}</span><span>×${Number(x.quantity||1)}</span></div>`).join(""):'<div class="small">Empty</div>'}</div></details>`);
+ }
+ const containedIds=new Set(containers.map(x=>String(x.inventoryId)));
+ const loose=ddbInventory.filter(x=>!x.isContainer && (!x.containerEntityId || !containedIds.has(String(x.containerEntityId))));
+ if(loose.length)parts.push(`<details class="bag"><summary>🧭 Carried / Uncontained (${loose.length})</summary><div class="bag-items">${loose.map(x=>`<div class="bag-item"><span>${esc(x.name)}</span><span>×${Number(x.quantity||1)}</span></div>`).join("")}</div></details>`);
+ holder.innerHTML=parts.join("")||'<div class="small">No D&D Beyond containers found.</div>';
+}
+function renderMaterialBag(){
+ const rows=materialInventory||[];
+ const html=rows.length?rows.map(x=>`<div class="bag-item"><span>${esc(friendlyKey(x.itemKey))}</span><span>×${Number(x.qty||0)}</span></div>`).join(""):'<div class="small">No crafting materials.</div>';
+ $("bags").innerHTML=`<details class="bag" open><summary>⚒ Crafting Materials (${rows.length})</summary><div class="bag-items">${html}</div></details>`;
+}
+async function loadDdbInventory(){
+ const d=await api("/api/character/dndbeyond-inventory?x=1"+managedOwnerQuery());
+ ddbInventory=d.inventory||[];
+ if(currentViewingOwn){const m=await api("/api/inventory");materialInventory=m.inventory||[];}else{materialInventory=[];}
+ renderDdbPickers();renderBags();
 }
 
-function chatMessageHtml(m){
-  const mine=String(m.authorId)===String(chatViewerId);
-  return `<div class="chat-message${mine?" mine":""}" data-chat-id="${Number(m.id)||0}">
-    <div class="chat-message-head">
-      <span class="chat-author">${esc(m.authorName||"Banner Member")}</span>
-      <span class="chat-time">${esc(chatTime(m.createdAt))}</span>
-    </div>
-    <div class="chat-text">${esc(m.message)}</div>
-  </div>`;
+
+function getOverrides(){return (data?.character?.statOverrides && typeof data.character.statOverrides==="object")?data.character.statOverrides:{}}
+function applyTheme(theme){
+  const valid=["blue","gold","purple","green","red","silver"];
+  theme=valid.includes(theme)?theme:"blue";
+  document.body.classList.remove(...valid.map(x=>"theme-"+x));
+  document.body.classList.add("theme-"+theme);
+  document.querySelectorAll(".theme-swatch").forEach(b=>b.classList.toggle("active",b.dataset.theme===theme));
+}
+function displayStat(details,key,overrideKey){
+  const ov=getOverrides();
+  return ov[overrideKey]!==undefined && ov[overrideKey]!==null && ov[overrideKey]!=="" ? Number(ov[overrideKey]) : details?.[key];
+}
+function renderStats(c,details={},skills=[]){
+ $("generalLevel").textContent=`Level ${c.character_level||"—"}`;$("generalClass").textContent=c.class_summary||"—";$("generalRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
+ const hp=details.hp||{},ov=getOverrides();const hpMax=(ov.hpMax??hp.max),hpCurrent=(ov.hpCurrent??hp.current);$("hpLine").textContent=hpMax?`${hpCurrent??hpMax} / ${hpMax}${hp.temp?` (+${hp.temp})`:""}`:"—";
+ $("acLine").textContent=(ov.armorClass??details.armorClass)??"—";const iv=(ov.initiative??details.initiative);$("initLine").textContent=iv!=null?signed(iv):"—";const sv=(ov.speed??details.speed);$("speedLine").textContent=sv?`${sv} ft.`:"—";$("inspLine").textContent=details.inspiration?"◆":"◇";
+ const abilities=[["STR",c.strength_score,"Strength"],["DEX",c.dexterity_score,"Dexterity"],["CON",c.constitution_score,"Constitution"],["INT",c.intelligence_score,"Intelligence"],["WIS",c.wisdom_score,"Wisdom"],["CHA",c.charisma_score,"Charisma"]];
+ $("abilityList").innerHTML=abilities.map(([abbr,score])=>`<div class="statline"><span>${abbr}</span><span>${score??"—"}</span><span>${score!=null?signed(mod(score)):"—"}</span></div>`).join("");
+ $("saveList").innerHTML=(details.savingThrows||[]).map(s=>`<div class="save-row"><span>${esc(s.name)}</span><span>${signed(s.bonus)}</span></div>`).join("")||'<div class="small">Sync D&D Beyond to load saves.</div>';
+ $("passivePerception").textContent=(ov.passivePerception??details.passivePerception)??"—";$("spellDC").textContent=(ov.spellSaveDC??details.spell?.saveDC)??"—";const sa=(ov.spellAttack??details.spell?.attack);$("spellAttack").textContent=sa!=null?signed(sa):"—";
+ renderSkills(skills);
+}
+function renderSkills(skills=[]){
+ const map=new Map((skills||[]).map(s=>[s.name,Number(s.bonus||0)]));const names=["Acrobatics","Animal Handling","Arcana","Athletics","Deception","History","Insight","Intimidation","Investigation","Medicine","Nature","Perception","Performance","Persuasion","Religion","Sleight of Hand","Stealth","Survival"];
+ $("skillGrid").innerHTML=names.map(n=>`<div class="skill-row"><span>${n}</span><span class="skill-bonus">${map.has(n)?signed(map.get(n)):"—"}</span></div>`).join("");
+}
+function renderTools(crafting){
+ const p=crafting?.profile||{},prof=new Set((crafting?.tools||[]).map(x=>x.tool_key)),expert=new Set([p.expert_tool,p.expert_tool_2].filter(Boolean));
+ $("toolList").innerHTML=toolChoices.map(t=>`<div class="tool"><div>${esc(t.name)}</div><select data-tool="${t.toolKey}"><option value="none">Not Registered</option><option value="proficient" ${prof.has(t.toolKey)&&!expert.has(t.toolKey)?"selected":""}>Proficient</option><option value="expertise" ${expert.has(t.toolKey)?"selected":""}>Expertise</option></select></div>`).join("");
+ const opts='<option value="">None</option>'+toolChoices.map(t=>`<option value="${t.toolKey}">${esc(t.name)}</option>`).join("");
+ ["temp1","temp2","magicAdeptTool"].forEach(id=>$(id).innerHTML=opts);$("temp1").value=p.temp_tool||"";$("temp2").value=p.temp_tool_2||"";$("magicAdeptTool").value=p.magic_item_adept_tool||"";
+ $("adroit").checked=!!p.has_adroit_crafter;$("flash").checked=!!p.has_flash_of_genius;$("built").checked=!!p.has_built_for_success;$("homunculus").checked=!!p.has_homunculus;$("magicAdept").checked=!!p.has_magic_item_adept;$("intMod").value=Number(p.intelligence_modifier||0);$("tempFeature").value=p.temp_tool_feature||"none";
 }
 
-function setChatMessages(messages, append=false){
-  const log=$("chatLog");
-  if(!append){
-    log.innerHTML=messages.length ? messages.map(chatMessageHtml).join("") : empty("No one has spoken here yet. Start the RP.");
-  }else if(messages.length){
-    if(log.querySelector(".empty")) log.innerHTML="";
-    log.insertAdjacentHTML("beforeend",messages.map(chatMessageHtml).join(""));
-  }
-  if(messages.length) chatLastId=Math.max(chatLastId,...messages.map(m=>Number(m.id)||0));
-  if(!append || messages.length) log.scrollTop=log.scrollHeight;
-}
-
-async function loadChat(ownerId, reset=true){
-  if(!ownerId)return;
-  if(reset){
-    currentChatOwner=String(ownerId);
-    chatLastId=0;
-    $("chatLog").innerHTML=empty("Loading Bastion chat…");
-  }
-  try{
-    const suffix=reset||!chatLastId ? "" : "&after="+encodeURIComponent(chatLastId);
-    const data=await api("/api/bastion/chat?owner="+encodeURIComponent(ownerId)+suffix);
-    if(String(ownerId)!==String(currentChatOwner))return;
-    chatViewerId=data.viewerId;
-    setChatMessages(data.messages||[],!reset && chatLastId>0);
-  }catch(err){
-    if(err.message!=="LOGIN_REQUIRED") $("chatLog").innerHTML=empty("Chat unavailable: "+err.message);
-  }
-}
-
-function startChat(ownerId, ownerName){
-  currentChatOwner=String(ownerId);
-  $("chatRoomName").textContent=(ownerName||"This")+" Bastion";
-  if(chatTimer){clearInterval(chatTimer);chatTimer=null;}
-  loadChat(currentChatOwner,true);
-  chatTimer=setInterval(()=>{
-    if(currentChatOwner && !document.hidden) loadChat(currentChatOwner,false);
-  },3000);
-}
-
-async function sendChat(){
-  const input=$("chatInput");
-  const text=input.value.trim();
-  if(!text||!currentChatOwner)return;
-  $("chatSend").disabled=true;
-  try{
-    const data=await api("/api/bastion/chat",{
-      method:"POST",
-      body:JSON.stringify({ownerId:currentChatOwner,message:text})
-    });
-    input.value="";
-    chatViewerId=chatViewerId||data.message?.authorId;
-    if(data.message){
-      setChatMessages([data.message],true);
+function renderCenterGallery(images={}){
+  const slots=[["center_2","centerGallery2","centerGallery2Img","centerGallery2Placeholder"],["center_3","centerGallery3","centerGallery3Img","centerGallery3Placeholder"]];
+  for(const [key,boxId,imgId,phId] of slots){
+    const box=$(boxId),img=$(imgId),ph=$(phId),url=images?.[key]?.url||"";
+    if(url){
+      img.src=url+(url.includes("?")?"&":"?")+"_="+Date.now();
+      img.classList.remove("hidden");
+      box.classList.add("has-image");
+      if(ph)ph.classList.add("hidden");
     }else{
-      await loadChat(currentChatOwner,false);
+      img.removeAttribute("src");
+      img.classList.add("hidden");
+      box.classList.remove("has-image");
+      if(ph)ph.classList.remove("hidden");
     }
-    input.focus();
-  }catch(err){message(err.message,"bad");}
-  finally{$("chatSend").disabled=false;}
-}
-
-
-async function saveBastionName(){
-  if(!currentViewingOwn)return;
-  const btn=$("saveBastionNameBtn");
-  const name=$("bastionNameInput").value.trim();
-  btn.disabled=true;
-  try{
-    const result=await api("/api/bastion/name",{
-      method:"POST",
-      body:JSON.stringify({name})
-    });
-    if(me)me.bastionName=result.name||null;
-    $("bastionDisplayName").textContent=result.name||"My Bastion";
-    message(result.name?`Bastion name saved as "${result.name}".`:"Bastion name cleared.","good");
-  }catch(err){
-    message(err.message||"Could not save Bastion name.","bad");
-  }finally{
-    btn.disabled=false;
   }
 }
-
-
-let personnelManagement=null;
-
-function clientHirelingCapacity(f){
-  const size=String(f.size||""), ups=new Set(f.upgrades||[]);
-  const basic={
-    "Dining Room":{Cramped:0,Roomy:1,Vast:3},"Kitchen":{Cramped:0,Roomy:1,Vast:3},
-    "Parlor":{Cramped:0,Roomy:1,Vast:3},"Shop":{Cramped:0,Roomy:2,Vast:3},
-    "Storage":{Cramped:1,Roomy:3,Vast:3}
+async function uploadCenterGallery(slot,file){
+  if(!file)return;
+  if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Image must be PNG, JPG, or WebP.");
+  if(file.size>5*1024*1024)throw new Error("Image must be 5 MB or smaller.");
+  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
+    method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file
+  });
+  const b=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(b.error||"Gallery image upload failed.");
+  show("Character image updated.","good");
+  await load();
+}
+async function removeCenterGallery(slot){
+  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
+    method:"DELETE",credentials:"include"
+  });
+  const b=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(b.error||"Could not remove image.");
+  show("Character image removed.","good");
+  await load();
+}
+function chooseCenterGalleryImage(slot){
+  if(!currentCanEdit)return;
+  const input=document.createElement("input");
+  input.type="file";input.accept="image/png,image/jpeg,image/webp";input.hidden=true;
+  document.body.appendChild(input);
+  input.onchange=async()=>{
+    try{const f=input.files?.[0];if(f)await uploadCenterGallery(slot,f)}
+    catch(err){show(err.message||"Image upload failed.","bad")}
+    finally{input.remove()}
   };
-  if(basic[f.facility])return Number(basic[f.facility][size]||0);
-  if(f.facility==="Harvestarium")return size==="Cramped"?1:3;
-  if(f.facility==="Workshop")return ups.has("Mastercraft Workshop")?2:1;
-  if(f.facility==="Laboratory")return ups.has("Chemistry Station")?2:1;
-  return Number({"Armory":2,"Library":1,"Sanctuary":1,"Stables":3,"Graveyard":1,"Naval Bastion Fittings":1,"Gaming Hall":3,"Sacristy":1,"Siege Workshop":5,"Teleportation Circle":5,"Theatre":30,"Training Area":8,"Museum":1,"Archive":1,"Meditation Chamber":0,"Menagerie":2,"Observatory":1,"Pub":1,"Reliquary":1,"Demiplane":1,"Sanctum":4,"War Room":2,"Guildhall":0}[f.facility]||0);
-}
-function clientDefenderCapacity(f){
-  if(String(f.facility||"").toLowerCase()!=="barracks")return 0;
-  return Number(({D:{Cramped:4,Roomy:6,Vast:8},C:{Cramped:8,Roomy:12,Vast:16},B:{Cramped:12,Roomy:18,Vast:24},A:{Cramped:16,Roomy:24,Vast:32},S:{Cramped:20,Roomy:30,Vast:40}})[String(f.rank||"").toUpperCase()]?.[String(f.size||"")]||0);
-}
-function closePersonnelModal(){document.querySelector(".personnel-modal-backdrop")?.remove();}
-function showPersonnelModal(title,body){
-  closePersonnelModal();
-  const wrap=document.createElement("div");wrap.className="personnel-modal-backdrop";
-  wrap.innerHTML=`<div class="personnel-modal"><h3>${esc(title)}</h3>${body}<div class="modal-actions"><button class="room-btn" type="button" data-modal-close>Close</button></div></div>`;
-  document.body.appendChild(wrap);
-  wrap.addEventListener("click",e=>{if(e.target===wrap||e.target.closest?.("[data-modal-close]"))closePersonnelModal();});
-  return wrap;
-}
-async function loadPersonnelManagement(){
-  if(!currentViewingOwn)return null;
-  try{personnelManagement=await api("/api/bastion/personnel/manage");return personnelManagement;}
-  catch(err){message("Personnel management unavailable: "+err.message,"bad");return null;}
+  input.click();
 }
 
-function workshopToolLabel(key){
-  const rows=personnelManagement?.workshopChoices||[];
-  return rows.find(x=>x.toolKey===key)?.toolName || key || "Not Selected";
+function fill(d){
+ data=d;toolChoices=d.toolChoices||[];const c=d.character||{};
+ $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";$("backstory").value=c.backstory||"";$("backstory").readOnly=!currentCanEdit;
+ [["str","strength_score"],["dex","dexterity_score"],["con","constitution_score"],["int","intelligence_score"],["wis","wisdom_score"],["cha","charisma_score"]].forEach(([id,k])=>$(id).value=c[k]??"");
+ $("topName").textContent=c.character_name||"My Character";$("topClass").textContent=c.class_summary||"";$("topRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
+ if(d.ddbInventory?.length)ddbInventory=d.ddbInventory;
+ renderEquipment(d.equipment||[]);renderStats(c,d.ddbDetails||{},d.skills||[]);renderTools(d.crafting||{});renderCenterGallery(d.galleryImages||{});
+ if(d.ddbInventory?.length){renderDdbPickers();renderBags()}
+ const ddbPortrait=d.ddbDetails?.portraitUrl||null, customPortrait=d.portrait?.hasPortrait?d.portrait.url:null, portraitSrc=customPortrait||ddbPortrait;
+ if(portraitSrc){
+   const img=$("portraitImg"),mini=$("miniAvatar");
+   img.onerror=()=>{if(customPortrait&&ddbPortrait&&img.src!==ddbPortrait){img.src=ddbPortrait;mini.src=ddbPortrait}else{img.classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}};
+   mini.onerror=()=>{if(ddbPortrait&&mini.src!==ddbPortrait)mini.src=ddbPortrait};
+   img.src=portraitSrc;mini.src=portraitSrc;img.classList.remove("hidden");mini.classList.remove("hidden");$("portraitPlaceholder").classList.add("hidden");
+ }else{$("portraitImg").classList.add("hidden");$("miniAvatar").classList.add("hidden");$("portraitPlaceholder").classList.remove("hidden")}
+ if(d.crest?.hasCrest){$("crestImg").src=d.crest.url}else{$("crestImg").removeAttribute("src")}
+ const ov=c.statOverrides||{};
+ [["ovHpMax","hpMax"],["ovHpCurrent","hpCurrent"],["ovAc","armorClass"],["ovInitiative","initiative"],["ovSpeed","speed"],["ovPassive","passivePerception"],["ovSpellDC","spellSaveDC"],["ovSpellAttack","spellAttack"]].forEach(([id,k])=>{if($(id))$(id).value=ov[k]??""});
+ applyTheme(c.borderTheme||"blue");
+ if(c.dndbeyond_last_sync)$("syncNote").textContent="Last D&D Beyond sync: "+new Date(Number(c.dndbeyond_last_sync)).toLocaleString();
 }
-async function saveWorkshopSpecialization(slot,toolKey){
-  if(!toolKey)return;
-  try{
-    const r=await api("/api/bastion/workshop/specialization",{
-      method:"POST",
-      body:JSON.stringify({slot:Number(slot),toolKey})
-    });
-    message(`Workshop specialization ${slot} set to ${r.toolName}.`,"good");
-    await reloadOwnBastion();
-  }catch(err){message(err.message,"bad");}
+function characterPayload(){
+ const prof=[],exp=[];document.querySelectorAll("[data-tool]").forEach(s=>{if(s.value!=="none")prof.push(s.dataset.tool);if(s.value==="expertise")exp.push(s.dataset.tool)});
+ const val=id=>$(id)?.value===""?null:Number($(id)?.value);
+ return {characterName:$("characterName").value,characterLevel:Number($("level").value),classSummary:$("classSummary").value,backstory:$("backstory").value,dndBeyondUrl:$("ddbUrl").value,strengthScore:$("str").value,dexterityScore:$("dex").value,constitutionScore:$("con").value,intelligenceScore:$("int").value,wisdomScore:$("wis").value,charismaScore:$("cha").value,proficientTools:prof,expertTools:exp,tempToolFeature:$("tempFeature").value,tempTools:[$("temp1").value,$("temp2").value].filter(Boolean),hasAdroitCrafter:$("adroit").checked,hasFlashOfGenius:$("flash").checked,hasBuiltForSuccess:$("built").checked,hasHomunculus:$("homunculus").checked,hasMagicItemAdept:$("magicAdept").checked,magicItemAdeptTool:$("magicAdeptTool").value,intelligenceModifier:Number($("intMod").value||0),
+ statOverrides:{hpMax:val("ovHpMax"),hpCurrent:val("ovHpCurrent"),armorClass:val("ovAc"),initiative:val("ovInitiative"),speed:val("ovSpeed"),passivePerception:val("ovPassive"),spellSaveDC:val("ovSpellDC"),spellAttack:val("ovSpellAttack")},
+ borderTheme:(document.querySelector(".theme-swatch.active")?.dataset.theme||data?.character?.borderTheme||"blue")};
 }
-async function openWorkshopSpecializationManager(){
-  const data=await loadPersonnelManagement();if(!data)return;
-  const room=(data.facilities||[]).find(x=>x.facility==="Workshop");
-  if(!room)return message("You do not have a completed Workshop.","bad");
+async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(managedOwnerBody(p))});await api("/api/character/equipment",{method:"POST",body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))});show("Character saved.","good");await load()}
 
-  const choices=data.workshopChoices||[];
-  if(!choices.length){
-    return message("Register at least one tool or kit proficiency before choosing a Workshop specialization.","bad");
-  }
+async function uploadEquipmentImage(slot,file){
+ if(!file)return;
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type))
+   throw new Error("Equipment picture must be PNG, JPG, or WebP.");
+ if(file.size>5*1024*1024)
+   throw new Error("Equipment picture must be 5 MB or smaller.");
 
-  const options=(selected,exclude)=>choices
-    .filter(x=>x.toolKey!==exclude)
-    .map(x=>`<option value="${esc(x.toolKey)}" ${x.toolKey===selected?"selected":""}>${esc(x.toolName)}${x.expertise?" — Expertise":""}</option>`)
-    .join("");
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
+   method:"POST",
+   credentials:"include",
+   headers:{"Content-Type":file.type},
+   body:file
+ });
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||`Equipment image upload failed (${r.status}).`);
 
-  const slot1=`
-    <div class="card">
-      <strong>Specialization 1</strong>
-      <div class="muted">Available on every Workshop.</div>
-      <select id="workshopSpec1">${options(room.workshopTool1,room.workshopTool2)}</select>
-      <button class="room-btn good" type="button" data-save-workshop-spec="1">Save Specialization 1</button>
-    </div>`;
+ if(!data.equipmentImages)data.equipmentImages={};
+ const url=(b.url||"")+(String(b.url||"").includes("?")?"&":"?")+"_="+Date.now();
+ data.equipmentImages[slot]={url};
 
-  let slot2="";
-  if(room.mastercraftWorkshop && room.secondWorkshopSlotUnlocked){
-    slot2=`
-      <div class="card">
-        <strong>Specialization 2</strong>
-        <div class="muted">Unlocked by Mastercraft Workshop while two hirelings are present.</div>
-        <select id="workshopSpec2">${options(room.workshopTool2,room.workshopTool1)}</select>
-        <button class="room-btn good" type="button" data-save-workshop-spec="2">Save Specialization 2</button>
-      </div>`;
-  }else if(room.mastercraftWorkshop){
-    slot2=`
-      <div class="card">
-        <strong>Specialization 2 🔒</strong>
-        <div class="muted">Mastercraft is installed, but two hirelings must be present before the second specialization can be chosen.</div>
-      </div>`;
-  }else{
-    slot2=`
-      <div class="card">
-        <strong>Specialization 2 🔒</strong>
-        <div class="muted">Upgrade this Workshop to Mastercraft and staff it with two hirelings to unlock the second specialization.</div>
-      </div>`;
-  }
-
-  const modal=showPersonnelModal("Workshop Specializations",slot1+slot2);
-  modal.addEventListener("click",async e=>{
-    const btn=e.target.closest?.("[data-save-workshop-spec]");
-    if(!btn)return;
-    const slot=Number(btn.dataset.saveWorkshopSpec);
-    const select=modal.querySelector(slot===1?"#workshopSpec1":"#workshopSpec2");
-    if(!select?.value)return;
-    await saveWorkshopSpecialization(slot,select.value);
-    closePersonnelModal();
-  });
+ const el=document.querySelector(`.equip[data-slot="${slot}"]`);
+ if(el){
+   let img=el.querySelector(".equip-img");
+   if(!img){
+     img=document.createElement("img");
+     img.className="equip-img";
+     img.alt="";
+     const stage=el.querySelector(".equip-image-stage");
+     const overlay=stage?.querySelector(".image-overlay");
+     if(stage){
+       stage.insertBefore(img,overlay||stage.firstChild);
+     }else{
+       el.prepend(img);
+     }
+   }
+   img.src=url;
+   el.classList.remove("empty");
+   const overlay=el.querySelector(".image-overlay");
+   if(overlay)overlay.innerHTML="CHANGE<br>IMAGE";
+ }
+ show(`${slotLabels[slot]} custom image updated.`,"good");
+ await load();
 }
-
-
-async function openHirelingManager(facility){
-  const data=await loadPersonnelManagement();if(!data)return;
-  const room=(data.facilities||[]).find(x=>x.facility===facility);
-  if(!room)return message("That room is not available.","bad");
-  const candidates=[];
-  for(const r of data.facilities||[])for(const h of r.hirelings||[])if(r.facility!==facility)candidates.push({...h,from:r.facility});
-  for(const h of data.unassignedHirelings||[])candidates.push({...h,from:"Unassigned"});
-  const quote=room.hirelingQuote;
-  const quoteHtml=quote?.ready
-    ? `<div class="card"><strong>Buy New Hireling</strong><div class="muted">CHA ${quote.charismaModifier>=0?"+":""}${quote.charismaModifier}: ${quote.charismaDiscount}% · Disguise Kit: ${quote.disguiseKit==="expertise"?"Expertise":quote.disguiseKit==="proficient"?"Proficient":"None"} (${quote.disguiseDiscount}%)</div><div><strong>${Number(quote.cost).toLocaleString()} GP</strong> after ${quote.discount}% total discount</div><button class="room-btn good" type="button" data-buy-hireling="${esc(facility)}">Buy & Place Here</button></div>`
-    : `<div class="card"><strong>Buy New Hireling</strong><div class="muted">${esc(quote?.error||data.hirelingCheck?.error||"No purchase quote available.")}</div></div>`;
-  const moveHtml=candidates.length
-    ? `<label>Move Existing Hireling</label><select id="moveHirelingSelect">${candidates.map(h=>`<option value="${Number(h.id)}">${esc(h.name||`Unnamed Hireling #${h.id}`)} — ${esc(h.from)}</option>`).join("")}</select><button class="room-btn" type="button" data-move-hireling="${esc(facility)}">Move Selected Here</button>`
-    : `<div class="muted">No other hirelings are available to move.</div>`;
-  const modal=showPersonnelModal(`Hirelings — ${facility}`,`<div class="muted">Room capacity: ${room.hirelings.length}/${room.hirelingCapacity}</div>${moveHtml}<br>${quoteHtml}`);
-  modal.addEventListener("click",async e=>{
-    const move=e.target.closest?.("[data-move-hireling]");
-    const buy=e.target.closest?.("[data-buy-hireling]");
-    if(move){
-      const id=Number(modal.querySelector("#moveHirelingSelect")?.value);if(!id)return;
-      try{await api("/api/bastion/hirelings/move",{method:"POST",body:JSON.stringify({id,facility})});closePersonnelModal();message("Hireling moved.","good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
-    }
-    if(buy){
-      if(!confirm(`Buy and place a new hireling in ${facility}?`))return;
-      try{const r=await api("/api/bastion/hirelings/buy",{method:"POST",body:JSON.stringify({facility})});closePersonnelModal();message(`Hireling purchased for ${Number(r.cost).toLocaleString()} GP.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
-    }
-  });
+async function removeEquipmentImage(slot){
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{method:"DELETE",credentials:"include"});
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||`Could not remove image (${r.status}).`);
+ show(`${slotLabels[slot]} custom image removed.`,"good");
+ await load();
 }
-async function unassignHireling(id){
-  if(!confirm("Move this hireling to Unassigned?"))return;
-  try{await api("/api/bastion/hirelings/unassign",{method:"POST",body:JSON.stringify({id:Number(id)})});message("Hireling unassigned.","good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+async function uploadPortrait(file){
+ if(!file)return;
+ if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Portrait must be PNG, JPG, or WebP.");
+ if(file.size>5*1024*1024)throw new Error("Portrait must be 5 MB or smaller.");
+ const r=await fetch(API_BASE+"/api/character/portrait?x=1"+managedOwnerQuery(),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
+ const b=await r.json().catch(()=>({}));
+ if(!r.ok)throw new Error(b.error||`Portrait upload failed (${r.status}).`);
+ show("Custom portrait saved.","good");
+ await load();
 }
-async function openDefenderManager(facility){
-  const data=await loadPersonnelManagement();if(!data)return;
-  const room=(data.facilities||[]).find(x=>x.facility===facility);
-  if(!room)return message("Barracks not found.","bad");
-  const open=Math.max(0,Number(room.defenderCapacity||0)-(room.defenders||[]).length);
-  const max=Math.min(4,open);
-  const qtyOptions=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1} Defender${i?"s":""}</option>`).join("");
-  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${(room.defenders||[]).length}/${room.defenderCapacity} · Open slots: ${open}</div>${open?`<label>Recruit Order</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">The current Barracks rule gives no separate GP price for Defenders, so recruitment does not charge Gold.</div>`:`<strong>🔒 Barracks is full.</strong>`}`);
-  modal.addEventListener("click",async e=>{
-    const recruit=e.target.closest?.("[data-recruit-defenders]");
-    const add=e.target.closest?.("[data-add-defender]");
-    const quantity=add?1:Number(modal.querySelector("#defenderQty")?.value||1);
-    if(!recruit&&!add)return;
-    if(!confirm(`Recruit ${quantity} Defender${quantity===1?"":"s"}?`))return;
-    try{await api("/api/bastion/defenders/recruit",{method:"POST",body:JSON.stringify({facility,quantity})});closePersonnelModal();message(`${quantity} Defender${quantity===1?"":"s"} recruited.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
-  });
-}
-function facilityPersonnelHtml(f,data){
-  if(!currentViewingOwn)return "";
-  const hirelings=(data.personnel||[]).filter(p=>p.personnelType==="hireling"&&p.facility===f.facility);
-  const hcap=clientHirelingCapacity(f);
-  const defenders=(data.personnel||[]).filter(p=>p.personnelType==="defender"&&p.facility===f.facility);
-  const dcap=clientDefenderCapacity(f);
-  const parts=[];
-  if(f.facility==="Workshop"){
-    const mgmt=(personnelManagement?.facilities||[]).find(x=>x.facility==="Workshop");
-    const tool1=mgmt?.workshopTool1||f.workshopTool1||null;
-    const tool2=mgmt?.workshopTool2||f.workshopTool2||null;
-    const upgrades=new Set(f.upgrades||[]);
-    const isMaster=upgrades.has("Mastercraft Workshop");
-    const secondUnlocked=!!(isMaster && hirelings.length>=2);
-    parts.push(`<div class="room-personnel">
-      <div class="slot-head"><strong>Workshop Specializations</strong><button class="room-btn workshop-specializations" type="button">Choose / Change</button></div>
-      <div class="slot-grid">
-        <div class="slot ${tool1?"":"empty"}"><span>Specialization 1: ${esc(workshopToolLabel(tool1))}</span></div>
-        <div class="slot ${tool2?"":"empty"}"><span>Specialization 2: ${secondUnlocked?esc(workshopToolLabel(tool2)):"🔒 Locked"}</span></div>
-      </div>
-      ${!tool1?`<div class="muted">⚠️ Choose your first Workshop specialization before using Workshop Assist.</div>`:""}
-    </div>`);
-  }
-
-  if(hcap>0){
-    const slots=Array.from({length:hcap},(_,i)=>{
-      const h=hirelings[i];
-      return `<div class="slot ${h?"":"empty"}"><span>${h?`👤 ${esc(h.name||`Unnamed Hireling #${h.id}`)}`:`Empty Hireling Slot ${i+1}`}</span>${h?`<span><button class="mini-btn rename-person" data-id="${Number(h.id)}" data-current="${esc(h.name||"")}" type="button">Rename</button> <button class="mini-btn unassign-hireling" data-id="${Number(h.id)}" type="button">Unassign</button></span>`:""}</div>`;
-    }).join("");
-    parts.push(`<div class="room-personnel"><div class="slot-head"><strong>Hirelings ${hirelings.length}/${hcap}</strong>${hirelings.length<hcap?`<button class="room-btn manage-hirelings" data-facility="${esc(f.facility)}" type="button">Place / Buy Hireling</button>`:"<span>🔒 Full</span>"}</div><div class="slot-grid">${slots}</div></div>`);
-  }
-  if(dcap>0){
-    const visible=defenders.map((d,i)=>`<div class="slot"><span>🛡️ ${esc(d.name||`Unnamed Defender #${d.id}`)}</span><button class="mini-btn rename-person" data-id="${Number(d.id)}" data-current="${esc(d.name||"")}" type="button">Rename</button></div>`).join("");
-    parts.push(`<div class="room-personnel"><div class="slot-head"><strong>Defenders ${defenders.length}/${dcap}</strong>${defenders.length<dcap?`<button class="room-btn manage-defenders" data-facility="${esc(f.facility)}" type="button">Recruit / Add Defender</button>`:"<span>🔒 Full</span>"}</div><div class="slot-grid">${visible||`<div class="slot empty">No Defenders assigned</div>`}</div><div class="muted">${dcap-defenders.length} open Defender slot${dcap-defenders.length===1?"":"s"}</div></div>`);
-  }
-  return parts.join("");
-}
-document.addEventListener("click",e=>{
-  const w=e.target.closest?.(".workshop-specializations");if(w){openWorkshopSpecializationManager();return;}
-  const h=e.target.closest?.(".manage-hirelings");if(h){openHirelingManager(h.dataset.facility);return;}
-  const d=e.target.closest?.(".manage-defenders");if(d){openDefenderManager(d.dataset.facility);return;}
-  const u=e.target.closest?.(".unassign-hireling");if(u){unassignHireling(u.dataset.id);return;}
-});
-
-
-async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender or Hireling:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
-document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current);});
-let furnishingData={available:[],installed:[]};
-async function loadFurnishings(){if(!currentViewingOwn)return;try{furnishingData=await api("/api/bastion/furnishings");const facilities=[...new Set((furnishingData.available||[]).map(x=>x.facility))].sort();$("furnishingFacility").innerHTML='<option value="">Choose facility…</option>'+facilities.map(x=>`<option>${esc(x)}</option>`).join("");updateFurnishingChoices();renderInstalledFurnishings();}catch(err){$("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;}}
-function updateFurnishingChoices(){const f=$("furnishingFacility").value,rows=(furnishingData.available||[]).filter(x=>x.facility===f);$("furnishingItem").innerHTML='<option value="">Choose furnishing…</option>'+rows.map(x=>`<option value="${esc(x.name)}">${esc(x.name)} · ${esc(x.minimumRank)}+</option>`).join("");updateFurnishingPreview();}
-function updateFurnishingPreview(){const f=$("furnishingFacility").value,n=$("furnishingItem").value,r=$("furnishingRank").value,x=(furnishingData.available||[]).find(y=>y.facility===f&&y.name===n);$("furnishingPreview").textContent=x?`${r}-Rank ${x.name}\nRecommended Wood: ${x.recommendedWood||"Any allowed exotic wood"}\nBuff: ${x.bonus}`:"Choose a facility and furnishing.";}
-function renderInstalledFurnishings(){const rows=furnishingData.installed||[];$("furnishingInstalled").innerHTML=rows.length?'<strong>Installed:</strong><br>'+rows.map(x=>`${esc(x.facility)} — ${esc(x.rank||"")}-Rank ${esc(x.name)}`).join('<br>'):"No Carpenter furnishing buffs installed.";}
-async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await loadFurnishings();}catch(err){message(err.message,"bad");}}
+async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest?x=1"+managedOwnerQuery(),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
 
 
 
-function rewardButtons(){return `<div class="owner-actions"><button type="button" data-bastion-action="reward" data-table="herbs">Herbs</button><button type="button" data-bastion-action="reward" data-table="woods">Woods</button><button type="button" data-bastion-action="reward" data-table="metals">Metals</button><button type="button" data-bastion-action="reward" data-table="stones">Stones</button><button type="button" data-bastion-action="reward" data-table="leathers">Leathers</button><button type="button" data-bastion-action="reward" data-table="textiles">Textiles</button><button type="button" data-bastion-action="reward" data-table="meat">Beast Meat ×5</button><button type="button" data-bastion-action="reward" data-table="blood">Beast Blood ×5</button></div>`;}
-function renderPendingBastionEvent(e){
-  const box=$("bastionEventActions");if(!currentViewingOwn||!e){box.classList.add("hidden");box.innerHTML="";return;}
-  const d=e.data||{};let controls="";
-  if(d.rewardEarned){controls=`<div class="muted">🎁 Reward earned — choose a Reward Table:</div>${rewardButtons()}`;}
-  else switch(e.eventName){
-    case "Nothing Happens":case "Treasure": controls=`<button type="button" data-bastion-action="ack">Resolve Event</button>`;break;
-    case "Surprise Attack!": controls=`<div class="owner-actions"><button type="button" data-bastion-action="attack">⚔️ Resolve Attack</button>${me?.effects?.friendlyMonster?`<button type="button" data-bastion-action="friendly">🐉 Use Friendly Monster</button>`:""}${(me?.facilities||[]).some(f=>f.facility==="Humble Exterior")?`<button type="button" data-bastion-action="humble">🏚️ Humble Exterior</button>`:""}</div>`;break;
-    case "Animal Rescue": controls=d.animalSaved?`<div class="owner-actions"><button type="button" data-bastion-action="handling">Animal Handling DC 18</button><button type="button" data-bastion-action="animal_temp">Keep Until Next Attack</button></div>`:`<div class="owner-actions"><button type="button" data-bastion-action="medicine">Medicine DC 15</button><button type="button" data-bastion-action="healing">Use Healing Spell</button></div>`;break;
-    case "Sellswords": controls=`<div class="owner-actions"><button type="button" data-bastion-action="barracks">Add to Barracks</button><button type="button" data-bastion-action="hirelings">Take 2 as Hirelings</button><button type="button" data-bastion-action="decline">Turn Away</button></div>`;break;
-    case "Request for Aid": controls=`<button type="button" data-bastion-action="aid">Resolve Request for Aid</button>`;break;
-    case "Merchant Caravan": controls=`<div class="owner-actions"><button type="button" data-bastion-action="merchant">Buy Half-Price Item</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
-    case "Duel to the Death": controls=`<button type="button" data-bastion-action="duel">Resolve Duel</button>`;break;
-    case "Tragic Accident": controls=`<div class="owner-actions"><button type="button" data-bastion-action="pay">Pay 200 GP & Repair</button><button type="button" data-bastion-action="wait">Wait Until Next Turn</button></div>`;break;
-    case "Plague": controls=`<div class="owner-actions"><button type="button" data-bastion-action="medicine">Medicine DC 15</button><button type="button" data-bastion-action="elixir">Use Elixir of Health</button></div>`;break;
-    case "Bounty Opportunity": controls=`<button type="button" data-bastion-action="ack">Resolve — No Reward</button>`;break;
-    case "Criminal Hireling": controls=`<div class="owner-actions"><button type="button" data-bastion-action="pay">Pay ${Number(d.bribe||0).toLocaleString()} GP Bribe</button><button type="button" data-bastion-action="arrest">Allow Arrest</button></div>`;break;
-    case "Vermin Infestation": controls=d.verminFailed?`<button type="button" data-bastion-action="peasants">Pay 50 GP for Peasants</button>`:`<div class="owner-actions"><button type="button" data-bastion-action="vermin">Send 10 Defenders</button><button type="button" data-bastion-action="pay">Pay ${Number(d.cost||0).toLocaleString()} GP</button></div>`;break;
-    case "Wandering Professionals": controls=`<div class="owner-actions"><button type="button" data-bastion-action="accept">Accept Free Hireling</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
-    case "Guest": controls=d.guestType==="mercenary"?`<div class="owner-actions"><button type="button" data-bastion-action="accept">Accept Mercenary Defender</button><button type="button" data-bastion-action="ack">Acknowledge</button></div>`:`<button type="button" data-bastion-action="ack">Acknowledge Guest</button>`;break;
-    case "Ronin": controls=`<div class="owner-actions"><button type="button" data-bastion-action="hire">${d.free?"Accept Free Ronin":"Hire Ronin — 250 GP"}</button><button type="button" data-bastion-action="decline">Decline</button></div>`;break;
-    case "Extraordinary Opportunity": controls=d.matched?`<div class="owner-actions"><button type="button" data-bastion-action="reroll">Roll Another Bastion Event</button><button type="button" data-bastion-action="art">Take 250 GP Art Object</button></div>`:`<button type="button" data-bastion-action="ack">Resolve Event</button>`;break;
-    default: controls=`<button type="button" data-bastion-action="ack">Resolve Event</button>`;
-  }
-  box.innerHTML=`<h3 style="color:var(--gold2);margin-bottom:.45rem">Interact with ${esc(e.eventName)}</h3><div class="muted" style="white-space:pre-wrap;margin-bottom:.65rem">${esc(e.resultText||"")}</div>${controls}`;box.classList.remove("hidden");
-}
-async function resolveBastionEvent(action,extra={}){
-  try{const r=await api("/api/bastion/event/resolve",{method:"POST",body:JSON.stringify({action,...extra})});if(r.resolutionText)message(r.resolutionText,r.resolved?"good":"");const data=await api("/api/bastion/me");render(data);if(r.resolutionText){const box=$("bastionTurnResult");box.className="craft-result success";box.textContent=r.resolutionText;box.classList.remove("hidden");}}
-  catch(err){message(err.message,"bad");}
-}
-document.addEventListener("click",async e=>{
-  const b=e.target.closest?.("[data-bastion-action]");if(!b)return;const a=b.dataset.bastionAction;let x={};
-  if(a==="reward")x.table=b.dataset.table;
-  if(a==="attack"){x.normal=Number(prompt("Normal / Undead Defenders to send (1d6 each):","0"));x.beasts=Number(prompt("Beast / Monster Defenders to send (2d6 each):","0"));x.knights=Number(prompt("Knights / Ronin to send (1d12 each):","0"));x.siegeBonus=Number(prompt("Siege / other flat bonus:","0"));}
-  if(a==="aid")x.participants=Number(prompt(`How many Defenders/Hirelings will you send? Max ${Number(me?.pendingEvent?.data?.maxParticipants||0)}:`,"1"));
-  if(a==="merchant"){x.itemName=prompt("DM-approved Player's Handbook item name:","");if(x.itemName===null)return;x.normalPrice=Number(prompt("Normal item price in GP:","0"));}
-  if(a==="duel"){x.die=Number(prompt("Champion combat die sides (6, 8, 12, etc.):","6"));x.death=Number(prompt("Death threshold (normal Defender = 3):","3"));}
-  if(a==="vermin")x.beasts=Number(prompt("How many of the 10 are Beast / Monster Defenders?","0"));
-  if(["pay","arrest","decline","wait","friendly","humble","healing","elixir","accept","hire","art","reroll","ack","medicine","handling","animal_temp","barracks","hirelings","peasants"].includes(a)&&!confirm(`Resolve this Bastion event using: ${b.textContent.trim()}?`))return;
-  await resolveBastionEvent(a,x);
-});
-
-
-async function harvestBastionTurn(){
+let materialTransferRecipients=[];
+function materialOptionLabel(x){return `${friendlyKey(x.itemKey)} — Owned ${Number(x.qty||0)}`}
+async function openGiveMaterials(){
   if(!currentViewingOwn)return;
-  if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
-  const specialization=$("harvestTurnSpec")?.value||"";
-  if(!specialization)return message("Choose a Harvestarium specialization first.","bad");
-  if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization} instead of rolling a Bastion event?`))return;
-  const btn=$("harvestBastionTurnBtn");
-  btn.disabled=true;btn.textContent="Harvesting…";
+  if(!materialInventory.length)await loadDdbInventory();
+  const r=await api("/api/material-transfer/recipients");
+  materialTransferRecipients=r.recipients||[];
+  $("giveRecipient").innerHTML='<option value="">Choose player…</option>'+materialTransferRecipients.map(x=>`<option value="${esc(x.userId)}">${esc(x.playerName)}${x.characterName?` — ${esc(x.characterName)}`:""}</option>`).join("");
+  $("giveMaterial").innerHTML='<option value="">Choose material…</option>'+materialInventory.filter(x=>Number(x.qty||0)>0).map(x=>`<option value="${esc(x.itemKey)}" data-owned="${Number(x.qty||0)}">${esc(materialOptionLabel(x))}</option>`).join("");
+  $("giveQuantity").value="1";$("giveReview").classList.add("hidden");$("giveConfirmBtn").classList.add("hidden");$("giveReviewBtn").classList.remove("hidden");
+  $("giveMaterialsModal").classList.remove("hidden");
+}
+function closeGiveMaterials(){$("giveMaterialsModal").classList.add("hidden")}
+function reviewMaterialGift(){
+  const targetId=$("giveRecipient").value,itemKey=$("giveMaterial").value,qty=Number($("giveQuantity").value);
+  const recipient=materialTransferRecipients.find(x=>x.userId===targetId);
+  const item=materialInventory.find(x=>x.itemKey===itemKey);
+  if(!recipient)throw new Error("Choose a recipient.");
+  if(!item)throw new Error("Choose a material.");
+  if(!Number.isInteger(qty)||qty<1)throw new Error("Quantity must be at least 1.");
+  if(qty>Number(item.qty||0))throw new Error(`You only own ${Number(item.qty||0)}.`);
+  $("giveReview").innerHTML=`You are about to give <b>${qty}× ${esc(friendlyKey(itemKey))}</b> to <b>${esc(recipient.playerName)}${recipient.characterName?` — ${esc(recipient.characterName)}`:""}</b>.<br><br>This transfer is verified before it commits.`;
+  $("giveReview").classList.remove("hidden");$("giveConfirmBtn").classList.remove("hidden");$("giveReviewBtn").classList.add("hidden");
+}
+async function confirmMaterialGift(){
+  const btn=$("giveConfirmBtn");btn.disabled=true;
   try{
-    const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
-    const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>");
-    const box=$("bastionTurnResult");
-    box.className="craft-result success";
-    box.innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
-    message("Bastion Turn used for Harvestarium Order: Harvest.","good");
-    const data=await api("/api/bastion/me");
-    render(data);
-    box.classList.remove("hidden");
-  }catch(err){message(err.message,"bad");}
-  finally{btn.disabled=false;btn.textContent="🌿 Harvest Harvestarium Instead";}
+    const targetId=$("giveRecipient").value,itemKey=$("giveMaterial").value,quantity=Number($("giveQuantity").value);
+    await api("/api/material-transfer",{method:"POST",body:JSON.stringify({targetId,itemKey,quantity})});
+    closeGiveMaterials();
+    await loadDdbInventory();
+    renderMaterialBag();
+    show(`Gift complete: ${quantity}× ${friendlyKey(itemKey)} transferred safely.`,"good");
+  }finally{btn.disabled=false}
 }
 
-async function rollBastionTurn(){
-  if(!currentViewingOwn)return;
-  const btn=$("rollBastionTurnBtn");
-  if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
-  if(!confirm("Roll and consume your pending Individual Bastion Turn?"))return;
-  btn.disabled=true; btn.textContent="Rolling…";
-  try{
-    const r=await api("/api/bastion/turn/roll",{method:"POST",body:"{}"});
-    const box=$("bastionTurnResult");
-    box.className="craft-result success";
-    box.innerHTML=`<strong>🎲 ${esc(r.eventName)}</strong><br><span class="muted">d100: ${Number(r.roll)} · Rank ${esc(r.rank)} · ${esc(r.sourceType)} Turn</span><div style="white-space:pre-wrap;margin-top:.65rem">${esc(r.resultText)}</div>`;
-    message(`Bastion Turn rolled: ${r.eventName}.`,"good");
-    const data=await api("/api/bastion/me");
-    render(data);
-    box.classList.remove("hidden");
-  }catch(err){message(err.message,"bad");}
-  finally{btn.disabled=false;btn.textContent="🎲 Roll Bastion Turn";}
+async function loadCharacterDirectory(){const d=await api("/api/characters");characterDirectory=d.characters||[];renderDirectory("")}
+function renderDirectory(q=""){q=q.toLowerCase();const first=publicVisitorMode?'<option value="">Featured Character</option>':'<option value="">My Character</option>';$("characterSelect").innerHTML=first+characterDirectory.filter(c=>!c.isMine&&(!q||`${c.playerName} ${c.characterName}`.toLowerCase().includes(q))).map(c=>`<option value="${c.userId}">${esc(c.playerName)} — ${esc(c.characterName)}</option>`).join("")}
+function setAccess(d,requestedId=""){
+ currentOwnerId=String(requestedId||d.owner?.id||sessionUserId||"");
+ currentViewingOwn=!!sessionUserId && String(currentOwnerId)===String(sessionUserId);
+ currentCanEdit=!publicVisitorMode && (currentViewingOwn || (!!sessionIsAdmin && !!d.adminCanEdit));
+ document.body.classList.toggle("readonly",!currentCanEdit);
+ if(!currentCanEdit)$("editPanel").classList.add("hidden");
+ if($("giveMaterialsBtn"))$("giveMaterialsBtn").classList.toggle("hidden",!currentViewingOwn); if($("adminEditNotice"))$("adminEditNotice").classList.toggle("hidden",!(currentCanEdit&&!currentViewingOwn));
 }
-
-function render(data){
-  me=data;
-  currentViewingOwn=!!data.viewingOwn;
-  $("ownerTools").classList.toggle("hidden",!currentViewingOwn);
-  $("craftingPanel").classList.toggle("hidden",!currentViewingOwn);
-  renderBanner(data.bannerUrl||null);
-  startChat(data.owner.id, data.owner.globalName||data.owner.username||"Banner Member");
-  $("account").classList.remove("hidden");
-  $("dashboard").classList.remove("hidden");
-  const ownerDisplay=data.owner.globalName||data.owner.username||"Banner Member";
-  $("accountName").textContent=ownerDisplay;
-  $("accountMeta").textContent=data.viewingOwn ? "Your Bastion" : "Visiting Bastion · Read Only";
-  $("bastionDisplayName").textContent=data.bastionName||(data.viewingOwn?"My Bastion":`${ownerDisplay}'s Bastion`);
-  $("bastionDisplayOwner").textContent=data.viewingOwn?`${ownerDisplay} · Owner`:`Owned by ${ownerDisplay}`;
-  if(data.viewingOwn && $("bastionNameInput")) $("bastionNameInput").value=data.bastionName||"";
-  const av=avatarUrl(data.owner); if(av){$("avatar").src=av;$("avatar").style.display="block";}else{$("avatar").style.display="none";}
-  $("status").textContent=data.status;
-  $("facilityCount").textContent=data.summary.facilities;
-  $("personnelCount").textContent=data.summary.personnel;
-  $("turnStatus").textContent=data.summary.pendingBastionTurn?"Ready":"None";
-  const topConstruction=Array.isArray(data.construction)?data.construction:[];
-  $("constructionStatus").innerHTML=topConstruction.length
-    ? topConstruction.map(c=>`${esc(c.facility)}<br><span class="muted">${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span>`).join("<br>")
-    : "NONE";
-  $("bastionTurnActions").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn));
-  $("rollBastionTurnBtn").disabled=!data.summary.pendingBastionTurn;
-  const harvestarium=(data.facilities||[]).find(f=>f.facility==="Harvestarium");
-  const harvestSpecs=harvestarium?(harvestarium.harvestariumSpecializations||harvestarium.specializations||[]):[];
-  $("harvestTurnControls").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn&&harvestarium&&harvestSpecs.length));
-  $("harvestTurnSpec").innerHTML=harvestSpecs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
-  $("loginBtn").textContent="Logout";
-
-  $("facilities").innerHTML=data.facilities.length?data.facilities.map(f=>{
-    const specs=f.harvestariumSpecializations||[];
-    const extras=[];
-    if(f.workshopTool1) extras.push(`Workshop: ${esc(f.workshopTool1)}${f.workshopTool2?`, ${esc(f.workshopTool2)}`:""}`);
-    if(f.laboratorySpecialization) extras.push(`Lab: ${esc(f.laboratorySpecialization)}`);
-    if(specs.length) extras.push(`Harvestarium: ${specs.map(esc).join(", ")}`);
-    if(f.hasMasterCraftsmansBench) extras.push("Master Craftsman's Bench");
-    return `<div class="card">
-      <strong>${esc(f.facility)}</strong>
-      <div class="badges"><span class="badge">${esc(f.facilityType||"Facility")}</span>${f.rank?`<span class="badge">Rank ${esc(f.rank)}</span>`:""}${f.size?`<span class="badge">${esc(f.size)}</span>`:""}</div>
-      ${(f.upgrades||[]).length?`<div class="muted">Upgrades: ${f.upgrades.map(esc).join(", ")}</div>`:""}
-      ${extras.length?`<div class="muted">${extras.join(" · ")}</div>`:""}
-      ${facilityPersonnelHtml(f,data)}
-    </div>`;
-  }).join(""):empty("No completed Bastion facilities are registered.");
-
-  $("construction").innerHTML=data.construction.length?data.construction.map(c=>`<div class="row"><span><strong>${esc(c.facility)}</strong><br><span class="muted">${esc(pretty(c.projectType))}</span></span><span>${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span></div>`).join(""):empty("No active construction.");
-
-  $("orders").innerHTML=data.orders.length?data.orders.map(o=>`<div class="row"><strong>${esc(o.facility)}</strong><span>${esc(pretty(o.order))}</span></div>`).join(""):empty("No active facility orders.");
-
-  const hirelings=data.personnel.filter(p=>p.personnelType==="hireling");
-  $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span class="person-actions">Hireling${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No hirelings registered.");
-
-  const others=data.personnel.filter(p=>p.personnelType!=="hireling");
-  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(pretty(p.personnelType))}${currentViewingOwn&&["defender","knight","ronin","monster"].includes(String(p.personnelType||"").toLowerCase())?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No defenders, ronin, knights, or monsters registered.");
-
-  if(data.combined?.members?.length){
-    $("combined").innerHTML=data.combined.members.map(m=>`<div class="row"><span>${String(m.userId)===String(data.owner.id)?"You":esc(m.displayName||`Member ${String(m.userId).slice(-6)}`)}</span><span>${String(m.userId)===String(data.combined.createdBy)?"Founder":"Resident"}</span></div>`).join("");
-  }else{
-    $("combined").innerHTML=empty("Not currently part of a Combined Bastion.");
-  }
-
-  const turn=data.turn;
-  const effect=data.effects;
-  $("turnDetails").innerHTML=[
-    `<div class="row"><span>Individual Bastion Turn</span><strong>${turn?.pending?"Pending":"None Pending"}</strong></div>`,
-    `<div class="row"><span>Last Event</span><span>${esc(turn?.lastEvent||"None recorded")}</span></div>`,
-    `<div class="row"><span>Friendly Monster</span><strong>${effect?.friendlyMonster?"Yes":"No"}</strong></div>`
-  ].join("");
-  renderPendingBastionEvent(data.pendingEvent||null);
-
-  if(currentViewingOwn){ loadManagement(); loadCrafting(); loadFurnishings(); loadPersonnelManagement(); }
-
-  const params=new URLSearchParams(location.search);
-  if(params.get("login")==="success"){
-    message("Discord login successful.","good");
-    history.replaceState({},document.title,location.pathname+location.hash);
-  }
-}
+async function visitCharacter(id){const stamp=Date.now();const target=id||(publicVisitorMode?PUBLIC_FEATURED_OWNER_ID:"");const d=target?await api("/api/character/view?owner="+encodeURIComponent(target)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setAccess(d,target||sessionUserId);fill(d)}
 async function load(){
+  const requestedOwner=new URLSearchParams(location.search).get("owner");
   try{
-    const sessionInfo=await api("/api/session");
-    $("adminPageBtn")?.classList.toggle("hidden",!sessionInfo.isAdmin);
-    await loadBastionDirectory();
-    const params=new URLSearchParams(location.search);
-    const owner=params.get("owner");
-    const data=owner
-      ? await api("/api/bastion/view?owner="+encodeURIComponent(owner))
-      : await api("/api/bastion/me");
-    render(data);
-    if(owner) $("viewingNote").textContent=`Viewing ${data.owner.globalName||data.owner.username||"Banner Member"}'s Bastion · Read Only`;
-  }
-  catch(err){
-    if(err.message==="LOGIN_REQUIRED"){
-      $("loginBtn").textContent="Login with Discord";
-      if(new URLSearchParams(location.search).get("login")==="success") message("Discord authorized, but the Bastion session was not found. Click Login with Discord once more.","bad");
-      return;
+    const s=await api("/api/session");
+    publicVisitorMode=false;
+    sessionUserId=String(s.user.id);
+    sessionIsAdmin=!!s.isAdmin;
+    $("adminPageBtn")?.classList.toggle("hidden",!sessionIsAdmin);
+    $("online").classList.remove("hidden");
+    await loadCharacterDirectory();
+    if(requestedOwner){$("characterSelect").value=requestedOwner;await visitCharacter(requestedOwner)}
+    else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}
+  }catch(e){
+    if(e.message!=="LOGIN_REQUIRED" && e.message!=="not_authenticated"){
+      show("Character page could not load: "+e.message,"bad"); return;
     }
-    message(err.message,"bad");
+    publicVisitorMode=true; sessionUserId=""; sessionIsAdmin=false;
+    $("adminPageBtn")?.classList.add("hidden"); $("online")?.classList.add("hidden");
+    await loadCharacterDirectory().catch(()=>{});
+    const owner=requestedOwner || PUBLIC_FEATURED_OWNER_ID;
+    if($("characterSelect"))$("characterSelect").value=owner;
+    try{await visitCharacter(owner);$("message")?.classList.add("hidden")}
+    catch(err){show("Public character sheet could not load: "+err.message,"bad")}
   }
 }
-async function logout(){
-  try{await api("/auth/logout",{method:"POST",body:"{}"});}catch(_){}
-  location.reload();
-}
-$("bastionSearch").addEventListener("input",filterBastions);
-$("visitBtn").addEventListener("click",visitSelected);
-$("bastionSelect").addEventListener("change",()=>{if($("bastionSelect").value) visitSelected();});
 
 
-
-
-$("craftProfession").addEventListener("change",loadCraftRecipes);
-$("craftRecipe").addEventListener("change",()=>{updateCraftPreview();updateCraftAutoBonus();loadCraftSpecial();});
-$("craftRank").addEventListener("change",()=>{updateCraftPreview();updateCraftAutoBonus();loadCraftSpecial();});
-$("craftQty").addEventListener("input",updateCraftPreview);
-$("craftBtn").addEventListener("click",doBastionCraft);
-
-$("saveBastionNameBtn").addEventListener("click",saveBastionName);
-$("purchaseOption").addEventListener("change",updatePurchasePreview);
-$("purchaseDiscount").addEventListener("change",updatePurchasePreview);
-$("purchaseBtn").addEventListener("click",buySelected);
-$("furnishingFacility").addEventListener("change",updateFurnishingChoices);
-$("furnishingItem").addEventListener("change",updateFurnishingPreview);
-$("furnishingRank").addEventListener("change",updateFurnishingPreview);
-$("installFurnishingBtn").addEventListener("click",installFurnishing);
-$("removeBannerBtn").addEventListener("click",removeBanner);
-
-const bannerDrop=$("bannerDrop");
-const bannerFile=$("bannerFile");
-bannerDrop.addEventListener("click",()=>bannerFile.click());
-bannerDrop.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();bannerFile.click();}});
-bannerFile.addEventListener("change",()=>uploadBanner(bannerFile.files?.[0]));
-for(const ev of ["dragenter","dragover"]){
-  bannerDrop.addEventListener(ev,e=>{e.preventDefault();bannerDrop.classList.add("drag");});
-}
-for(const ev of ["dragleave","drop"]){
-  bannerDrop.addEventListener(ev,e=>{e.preventDefault();bannerDrop.classList.remove("drag");});
-}
-bannerDrop.addEventListener("drop",e=>uploadBanner(e.dataTransfer?.files?.[0]));
-
-$("rollBastionTurnBtn").addEventListener("click",rollBastionTurn);
-$("harvestBastionTurnBtn").addEventListener("click",harvestBastionTurn);
-$("chatSend").addEventListener("click",sendChat);
-$("chatInput").addEventListener("keydown",(event)=>{
-  if(event.key==="Enter" && event.ctrlKey){
-    event.preventDefault();
-    sendChat();
-  }
+document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{
+ if(!currentCanEdit)return;
+ applyTheme(b.dataset.theme);
+ if(data?.character){
+   data.character.borderTheme=b.dataset.theme;
+   data.character.border_theme=b.dataset.theme;
+ }
+});
+$("clearStatOverrides").onclick=async()=>{
+ if(!currentCanEdit)return;
+ ["ovHpMax","ovHpCurrent","ovAc","ovInitiative","ovSpeed","ovPassive","ovSpellDC","ovSpellAttack"].forEach(id=>{if($(id))$(id).value=""});
+ try{await saveAll();show("Manual stat overrides cleared. D&D Beyond values are now displayed.","good")}
+ catch(err){show(err.message||"Could not clear stat overrides.","bad")}
+};
+$("saveSheetBtn").onclick=async()=>{
+ if(!currentCanEdit)return;
+ try{
+   await saveAll();
+   show("Character sheet saved.","good");
+ }catch(err){
+   show(err.message||"Could not save character sheet.","bad");
+ }
+};
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify(managedOwnerBody({dndBeyondUrl:$("ddbUrl").value}))});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete. Equipped item ability-score modifiers and the final skill bonuses were refreshed.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
+$("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
+$("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
+$("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
+$("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
+$("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
+$("crestImg").onclick=()=>{if(currentCanEdit)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
+$("refreshInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
+$("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
+$("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
+document.querySelectorAll("[data-tablink='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
+document.querySelectorAll("[data-tab='sheet']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.remove("hidden");$("craftingTab").classList.add("hidden")});
+document.querySelectorAll("[data-tab='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
+document.querySelectorAll("[data-jump]").forEach(x=>x.onclick=()=>{
+ $("craftingTab").classList.add("hidden");$("sheetTab").classList.remove("hidden");
+ requestAnimationFrame(()=>document.getElementById(x.dataset.jump)?.scrollIntoView({behavior:"smooth",block:"start"}));
 });
 
-$("loginBtn").addEventListener("click",()=>{
-  if(me)return logout();
-  window.location.assign(API_BASE+"/auth/discord?return="+encodeURIComponent("/bastions/my-bastion/"));
-});
+$("giveMaterialsBtn").onclick=()=>openGiveMaterials().catch(e=>show(e.message||"Could not open material transfer.","bad"));
+$("giveClose").onclick=closeGiveMaterials;
+$("giveReviewBtn").onclick=()=>{try{reviewMaterialGift()}catch(e){show(e.message,"bad")}};
+$("giveConfirmBtn").onclick=()=>confirmMaterialGift().catch(e=>show(e.message||"Material gift failed.","bad"));
+$("giveMaterialsModal").onclick=e=>{if(e.target===$("giveMaterialsModal"))closeGiveMaterials()};
+
+document.querySelectorAll("[data-gallery-upload]").forEach(b=>b.onclick=()=>chooseCenterGalleryImage(b.dataset.galleryUpload));
+document.querySelectorAll("[data-gallery-remove]").forEach(b=>b.onclick=()=>removeCenterGallery(b.dataset.galleryRemove).catch(e=>show(e.message,"bad")));
+$("centerGallery2Placeholder").onclick=()=>chooseCenterGalleryImage("center_2");
+$("centerGallery3Placeholder").onclick=()=>chooseCenterGalleryImage("center_3");
 load();
 </script>
-</body>
-</html>
+</body></html>
