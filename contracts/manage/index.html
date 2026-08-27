@@ -33,7 +33,7 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <div class="wide"><label>Contract Name</label><input id="cName" maxlength="100"></div>
 <div><label>Rank</label><select id="cRank"><option>F</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
 <div><label>Maximum Players</label><input id="cMax" type="number" min="1" max="50" value="6"></div>
-<div><label>Date</label><input id="cDate" type="date"></div><div><label>Time (Central)</label><input id="cTime" type="time"></div>
+<div><label>Date</label><input id="cDate" type="date"></div><div><label id="timeZoneLabel">Time (Your Local Time)</label><input id="cTime" type="time"></div>
 <div><label>Duration</label><select id="cDuration"><option value="2">2 hours</option><option value="3">3 hours</option><option value="4" selected>4 hours</option><option value="5">5 hours</option><option value="6">6 hours</option><option value="7">7 hours</option><option value="8">8 hours</option></select></div>
 <div><label>Optional Contract Image</label><input id="cImage" type="file" accept="image/png,image/jpeg,image/webp"></div>
 <div class="full"><label>Description</label><textarea id="cDescription" maxlength="1000"></textarea></div>
@@ -64,10 +64,11 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <script>
 const API_BASE="https://api.blackbannercompany.com";
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const USER_TIME_ZONE=Intl.DateTimeFormat().resolvedOptions().timeZone||"America/Chicago";
 function fmtDate(ms){return new Intl.DateTimeFormat("en-US",{month:"2-digit",day:"2-digit",year:"numeric"}).format(new Date(ms)).replaceAll("/","-")}
-function fmtTime(ms){return new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",hour12:true,timeZone:"America/Chicago"}).format(new Date(ms))}
+function fmtTime(ms){return new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:"2-digit",hour12:true,timeZone:USER_TIME_ZONE}).format(new Date(ms))}
 async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",...opts,headers:{...(opts.headers||{})}});const b=await r.json().catch(()=>({}));if(!r.ok){const e=new Error(b.error||`Request failed (${r.status})`);e.status=r.status;throw e}return b}
-function zonedWallTimeToMillis(dateStr,timeStr,timeZone="America/Chicago"){
+function zonedWallTimeToMillis(dateStr,timeStr,timeZone=USER_TIME_ZONE){
  const [y,m,d]=dateStr.split("-").map(Number),[hh,mm]=timeStr.split(":").map(Number);if(!y||!m||!d||!Number.isFinite(hh)||!Number.isFinite(mm))throw new Error("Choose a valid date and time.");
  const desired=Date.UTC(y,m-1,d,hh,mm);let guess=desired;
  const fmt=new Intl.DateTimeFormat("en-US",{timeZone,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hourCycle:"h23"});
@@ -76,6 +77,8 @@ function zonedWallTimeToMillis(dateStr,timeStr,timeZone="America/Chicago"){
 }
 function message(id,text){const el=document.getElementById(id);el.textContent=text;el.classList.toggle("hidden",!text)}
 let canFinalize=false,currentFinalize=null;
+const tzLabel=document.getElementById("timeZoneLabel");
+if(tzLabel)tzLabel.textContent=`Time (Your Local Time — ${USER_TIME_ZONE})`;
 
 function rewardStateHtml(c){
  if(!c.rewardStatus)return "";
@@ -105,7 +108,7 @@ async function createContract(){
  const btn=document.getElementById("createContract");btn.disabled=true;message("error","");message("success","");
  try{
    let imageUrl=null,file=document.getElementById("cImage").files?.[0];if(file){const u=await api("/api/contracts/image",{method:"POST",headers:{"Content-Type":file.type},body:file});imageUrl=u.url}
-   const payload={name:document.getElementById("cName").value,rank:document.getElementById("cRank").value,maxPlayers:Number(document.getElementById("cMax").value),description:document.getElementById("cDescription").value,rewards:document.getElementById("cRewards").value,startAt:zonedWallTimeToMillis(document.getElementById("cDate").value,document.getElementById("cTime").value),durationHours:Number(document.getElementById("cDuration").value),imageUrl};
+   const payload={name:document.getElementById("cName").value,rank:document.getElementById("cRank").value,maxPlayers:Number(document.getElementById("cMax").value),description:document.getElementById("cDescription").value,rewards:document.getElementById("cRewards").value,startAt:zonedWallTimeToMillis(document.getElementById("cDate").value,document.getElementById("cTime").value,USER_TIME_ZONE),timezone:USER_TIME_ZONE,durationHours:Number(document.getElementById("cDuration").value),imageUrl};
    const r=await api("/api/contracts/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});message("success",`Contract #${r.contract.id} created. Discord publishing is queued.`);document.getElementById("cName").value="";document.getElementById("cDescription").value="";document.getElementById("cRewards").value="";document.getElementById("cImage").value="";setTimeout(load,1800);
  }catch(e){message("error",e.message)}finally{btn.disabled=false}
 }
