@@ -142,9 +142,9 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 <body><div class="shell">
 <div class="topbar">
   <div class="identity"><img id="miniAvatar" class="mini-avatar hidden"><div><h1 id="topName">My Character</h1><div class="sub"><span id="topClass"></span> · <span id="topRank"></span> <span id="online" class="online hidden">● Online</span></div></div></div>
-  <div class="top-actions"><a class="btn" href="../">⌂ Home</a><span class="owner-only" style="display:flex;gap:12px"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="saveSheetBtn">💾 Save Character Sheet</button><button id="editToggle">✎ Edit Character</button></span></div>
+  <div class="top-actions"><a class="btn" href="../">⌂ Home</a><a id="adminPageBtn" class="btn hidden" href="../admin/player-management/">⚙ Admin</a><span class="owner-only" style="display:flex;gap:12px"><button id="syncBtn">🔗 Sync from D&D Beyond</button><button id="saveSheetBtn">💾 Save Character Sheet</button><button id="editToggle">✎ Edit Character</button></span></div>
 </div>
-<div id="message" class="notice hidden"></div>
+<div id="message" class="notice hidden"></div><div id="adminEditNotice" class="notice hidden">Admin edit mode: changes are being made to another player's character and will be audit logged.</div>
 <div class="viewer">
   <input id="characterSearch" placeholder="Search player or character…">
   <select id="characterSelect"><option value="">My Character</option></select>
@@ -321,7 +321,10 @@ const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak",chest:"Chest
 const leftSlots=["head","mask","neck","chest","hands"];
 const rightSlots=["cloak","arms","waist","legs","feet"];
 const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
-let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],characterDirectory=[],currentViewingOwn=true;
+let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],characterDirectory=[];
+let currentViewingOwn=true,currentCanEdit=true,currentOwnerId=null,sessionUserId=null,sessionIsAdmin=false;
+function managedOwnerQuery(){return currentOwnerId&&String(currentOwnerId)!==String(sessionUserId)?"&owner="+encodeURIComponent(currentOwnerId):""}
+function managedOwnerBody(obj={}){return currentOwnerId&&String(currentOwnerId)!==String(sessionUserId)?{...obj,ownerId:String(currentOwnerId)}:obj}
 
 async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{...(opts.body instanceof Blob?{}:{"Content-Type":"application/json"}),...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b}
 function show(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
@@ -416,7 +419,7 @@ async function clearEquipmentSlot(slot){
  // Remove any custom image saved specifically for this website slot.
  try{
    if(data?.equipmentImages?.[slot]){
-     const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{
+     const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
        method:"DELETE",credentials:"include"
      });
      if(!r.ok){
@@ -455,7 +458,7 @@ async function clearEquipmentSlot(slot){
  // Persist the now-empty equipment layout immediately.
  const result=await api("/api/character/equipment",{
    method:"POST",
-   body:JSON.stringify({equipment:gearPayload()})
+   body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))
  });
  if(data)data.equipment=result.equipment||result||[];
  updateAttune();
@@ -506,7 +509,7 @@ function bindEquipmentControls(){
    try{await removeEquipmentImage(b.dataset.removeImageSlot)}catch(err){show(err.message||"Could not remove custom image.","bad")}
  });
  document.querySelectorAll(".equip").forEach(el=>{
-   if(!currentViewingOwn)return;
+   if(!currentCanEdit)return;
    el.ondragover=e=>{e.preventDefault();el.classList.add("drag-image")};
    el.ondragleave=()=>el.classList.remove("drag-image");
    el.ondrop=e=>{e.preventDefault();el.classList.remove("drag-image");const f=e.dataTransfer?.files?.[0];if(f)uploadEquipmentImage(el.dataset.slot,f).catch(err=>show(err.message,"bad"))};
@@ -553,8 +556,10 @@ function renderMaterialBag(){
  $("bags").innerHTML=`<details class="bag" open><summary>⚒ Crafting Materials (${rows.length})</summary><div class="bag-items">${html}</div></details>`;
 }
 async function loadDdbInventory(){
- const [d,m]=await Promise.all([api("/api/character/dndbeyond-inventory"),api("/api/inventory")]);
- ddbInventory=d.inventory||[];materialInventory=m.inventory||[];renderDdbPickers();renderBags();
+ const d=await api("/api/character/dndbeyond-inventory?x=1"+managedOwnerQuery());
+ ddbInventory=d.inventory||[];
+ if(currentViewingOwn){const m=await api("/api/inventory");materialInventory=m.inventory||[];}else{materialInventory=[];}
+ renderDdbPickers();renderBags();
 }
 
 
@@ -613,7 +618,7 @@ async function uploadCenterGallery(slot,file){
   if(!file)return;
   if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Image must be PNG, JPG, or WebP.");
   if(file.size>5*1024*1024)throw new Error("Image must be 5 MB or smaller.");
-  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot),{
+  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
     method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file
   });
   const b=await r.json().catch(()=>({}));
@@ -622,7 +627,7 @@ async function uploadCenterGallery(slot,file){
   await load();
 }
 async function removeCenterGallery(slot){
-  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot),{
+  const r=await fetch(API_BASE+"/api/character/gallery-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
     method:"DELETE",credentials:"include"
   });
   const b=await r.json().catch(()=>({}));
@@ -631,7 +636,7 @@ async function removeCenterGallery(slot){
   await load();
 }
 function chooseCenterGalleryImage(slot){
-  if(!currentViewingOwn)return;
+  if(!currentCanEdit)return;
   const input=document.createElement("input");
   input.type="file";input.accept="image/png,image/jpeg,image/webp";input.hidden=true;
   document.body.appendChild(input);
@@ -645,7 +650,7 @@ function chooseCenterGalleryImage(slot){
 
 function fill(d){
  data=d;toolChoices=d.toolChoices||[];const c=d.character||{};
- $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";$("backstory").value=c.backstory||"";$("backstory").readOnly=!currentViewingOwn;
+ $("characterName").value=c.character_name||"";$("level").value=c.character_level||1;$("rank").value=c.character_rank||rankFromLevel(c.character_level);$("classSummary").value=c.class_summary||"";$("ddbUrl").value=c.dndbeyond_url||"";$("backstory").value=c.backstory||"";$("backstory").readOnly=!currentCanEdit;
  [["str","strength_score"],["dex","dexterity_score"],["con","constitution_score"],["int","intelligence_score"],["wis","wisdom_score"],["cha","charisma_score"]].forEach(([id,k])=>$(id).value=c[k]??"");
  $("topName").textContent=c.character_name||"My Character";$("topClass").textContent=c.class_summary||"";$("topRank").textContent=`${c.character_rank||rankFromLevel(c.character_level)}-Rank`;
  if(d.ddbInventory?.length)ddbInventory=d.ddbInventory;
@@ -671,7 +676,7 @@ function characterPayload(){
  statOverrides:{hpMax:val("ovHpMax"),hpCurrent:val("ovHpCurrent"),armorClass:val("ovAc"),initiative:val("ovInitiative"),speed:val("ovSpeed"),passivePerception:val("ovPassive"),spellSaveDC:val("ovSpellDC"),spellAttack:val("ovSpellAttack")},
  borderTheme:(document.querySelector(".theme-swatch.active")?.dataset.theme||data?.character?.borderTheme||"blue")};
 }
-async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(p)});await api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})});show("Character saved.","good");await load()}
+async function saveAll(){const p=characterPayload();if(p.expertTools.length>2)throw new Error("You may register Expertise in a maximum of two tools.");await api("/api/character/profile",{method:"POST",body:JSON.stringify(managedOwnerBody(p))});await api("/api/character/equipment",{method:"POST",body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))});show("Character saved.","good");await load()}
 
 async function uploadEquipmentImage(slot,file){
  if(!file)return;
@@ -680,7 +685,7 @@ async function uploadEquipmentImage(slot,file){
  if(file.size>5*1024*1024)
    throw new Error("Equipment picture must be 5 MB or smaller.");
 
- const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{
    method:"POST",
    credentials:"include",
    headers:{"Content-Type":file.type},
@@ -717,7 +722,7 @@ async function uploadEquipmentImage(slot,file){
  await load();
 }
 async function removeEquipmentImage(slot){
- const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot),{method:"DELETE",credentials:"include"});
+ const r=await fetch(API_BASE+"/api/character/equipment-image?slot="+encodeURIComponent(slot)+managedOwnerQuery(),{method:"DELETE",credentials:"include"});
  const b=await r.json().catch(()=>({}));
  if(!r.ok)throw new Error(b.error||`Could not remove image (${r.status}).`);
  show(`${slotLabels[slot]} custom image removed.`,"good");
@@ -727,13 +732,13 @@ async function uploadPortrait(file){
  if(!file)return;
  if(!["image/png","image/jpeg","image/webp"].includes(file.type))throw new Error("Portrait must be PNG, JPG, or WebP.");
  if(file.size>5*1024*1024)throw new Error("Portrait must be 5 MB or smaller.");
- const r=await fetch(API_BASE+"/api/character/portrait",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
+ const r=await fetch(API_BASE+"/api/character/portrait?x=1"+managedOwnerQuery(),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});
  const b=await r.json().catch(()=>({}));
  if(!r.ok)throw new Error(b.error||`Portrait upload failed (${r.status}).`);
  show("Custom portrait saved.","good");
  await load();
 }
-async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest",{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
+async function uploadCrest(file){if(!file)return;const r=await fetch(API_BASE+"/api/character/crest?x=1"+managedOwnerQuery(),{method:"POST",credentials:"include",headers:{"Content-Type":file.type},body:file});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||"Crest upload failed");$("crestImg").src=b.url;show("Character crest updated.","good")}
 
 
 
@@ -775,13 +780,20 @@ async function confirmMaterialGift(){
 
 async function loadCharacterDirectory(){const d=await api("/api/characters");characterDirectory=d.characters||[];renderDirectory("")}
 function renderDirectory(q=""){q=q.toLowerCase();$("characterSelect").innerHTML='<option value="">My Character</option>'+characterDirectory.filter(c=>!c.isMine&&(!q||`${c.playerName} ${c.characterName}`.toLowerCase().includes(q))).map(c=>`<option value="${c.userId}">${esc(c.playerName)} — ${esc(c.characterName)}</option>`).join("")}
-function setReadOnly(v,name=""){currentViewingOwn=!v;document.body.classList.toggle("readonly",v);if(v)$("editPanel").classList.add("hidden")}
-async function visitCharacter(id){const stamp=Date.now();const d=id?await api("/api/character/view?owner="+encodeURIComponent(id)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setReadOnly(!!id,d.owner?.globalName||"");fill(d)}
-async function load(){try{const s=await api("/api/session");$("online").classList.remove("hidden");await loadCharacterDirectory();const owner=new URLSearchParams(location.search).get("owner");if(owner){$("characterSelect").value=owner;await visitCharacter(owner)}else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}}catch(e){show("Character page could not load: "+e.message,"bad")}}
+function setAccess(d,requestedId=""){
+ currentOwnerId=String(requestedId||d.owner?.id||sessionUserId||"");
+ currentViewingOwn=String(currentOwnerId)===String(sessionUserId);
+ currentCanEdit=currentViewingOwn || (!!sessionIsAdmin && !!d.adminCanEdit);
+ document.body.classList.toggle("readonly",!currentCanEdit);
+ if(!currentCanEdit)$("editPanel").classList.add("hidden");
+ if($("giveMaterialsBtn"))$("giveMaterialsBtn").classList.toggle("hidden",!currentViewingOwn); if($("adminEditNotice"))$("adminEditNotice").classList.toggle("hidden",!(currentCanEdit&&!currentViewingOwn));
+}
+async function visitCharacter(id){const stamp=Date.now();const d=id?await api("/api/character/view?owner="+encodeURIComponent(id)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setAccess(d,id||sessionUserId);fill(d)}
+async function load(){try{const s=await api("/api/session");sessionUserId=String(s.user.id);sessionIsAdmin=!!s.isAdmin;$("adminPageBtn")?.classList.toggle("hidden",!sessionIsAdmin);$("online").classList.remove("hidden");await loadCharacterDirectory();const owner=new URLSearchParams(location.search).get("owner");if(owner){$("characterSelect").value=owner;await visitCharacter(owner)}else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}}catch(e){show("Character page could not load: "+e.message,"bad")}}
 
 
 document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{
- if(!currentViewingOwn)return;
+ if(!currentCanEdit)return;
  applyTheme(b.dataset.theme);
  if(data?.character){
    data.character.borderTheme=b.dataset.theme;
@@ -789,13 +801,13 @@ document.querySelectorAll(".theme-swatch").forEach(b=>b.onclick=()=>{
  }
 });
 $("clearStatOverrides").onclick=async()=>{
- if(!currentViewingOwn)return;
+ if(!currentCanEdit)return;
  ["ovHpMax","ovHpCurrent","ovAc","ovInitiative","ovSpeed","ovPassive","ovSpellDC","ovSpellAttack"].forEach(id=>{if($(id))$(id).value=""});
  try{await saveAll();show("Manual stat overrides cleared. D&D Beyond values are now displayed.","good")}
  catch(err){show(err.message||"Could not clear stat overrides.","bad")}
 };
 $("saveSheetBtn").onclick=async()=>{
- if(!currentViewingOwn)return;
+ if(!currentCanEdit)return;
  try{
    await saveAll();
    show("Character sheet saved.","good");
@@ -803,13 +815,13 @@ $("saveSheetBtn").onclick=async()=>{
    show(err.message||"Could not save character sheet.","bad");
  }
 };
-$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify({dndBeyondUrl:$("ddbUrl").value})});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete. Equipped item ability-score modifiers and the final skill bonuses were refreshed.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
+$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify(managedOwnerBody({dndBeyondUrl:$("ddbUrl").value}))});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete. Equipped item ability-score modifiers and the final skill bonuses were refreshed.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
 $("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
-$("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify({equipment:gearPayload()})}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
+$("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
 $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
-$("crestImg").onclick=()=>{if(currentViewingOwn)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
+$("crestImg").onclick=()=>{if(currentCanEdit)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("refreshInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
 $("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
