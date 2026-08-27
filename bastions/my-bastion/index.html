@@ -239,8 +239,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <div class="stat"><span>Status</span><strong id="status">—</strong></div>
       <div class="stat"><span>Facilities</span><strong id="facilityCount">0</strong></div>
       <div class="stat"><span>Personnel</span><strong id="personnelCount">0</strong></div>
-      <div class="stat"><span>Bastion Turn</span><strong id="turnStatus">—</strong></div>
-      <div class="stat"><span>Construction</span><strong id="constructionStatus">NONE</strong></div>
+      <div class="stat"><span>Bastion Turn</span><strong id="turnStatus">—</strong></div><div class="stat"><span>Construction</span><strong id="constructionStatus">NONE</strong></div>
     </div>
   </section>
 
@@ -306,8 +305,12 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       <div id="turnDetails" class="list"></div>
       <div id="bastionTurnActions" class="owner-actions hidden">
         <button id="rollBastionTurnBtn" class="primary" type="button">🎲 Roll Bastion Turn</button>
+        <span id="harvestTurnControls" class="hidden">
+          <select id="harvestTurnSpec"></select>
+          <button id="harvestBastionTurnBtn" class="secondary" type="button">🌿 Harvest Harvestarium Instead</button>
+        </span>
       </div>
-      <div id="bastionTurnResult" class="craft-result hidden"></div>
+      <div id="bastionTurnResult" class="craft-result hidden"></div><div id="pendingBastionEvent" class="craft-result hidden" style="margin-top:.75rem"></div>
     </section>
 
     <section class="panel full chat-panel">
@@ -886,7 +889,7 @@ document.addEventListener("click",e=>{
 });
 
 
-async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender or Hireling:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
+async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender, Hireling, Knight, Ronin, or Monster:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
 document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current);});
 let furnishingData={available:[],installed:[]};
 async function loadFurnishings(){if(!currentViewingOwn)return;try{furnishingData=await api("/api/bastion/furnishings");const facilities=[...new Set((furnishingData.available||[]).map(x=>x.facility))].sort();$("furnishingFacility").innerHTML='<option value="">Choose facility…</option>'+facilities.map(x=>`<option>${esc(x)}</option>`).join("");updateFurnishingChoices();renderInstalledFurnishings();}catch(err){$("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;}}
@@ -895,6 +898,48 @@ function updateFurnishingPreview(){const f=$("furnishingFacility").value,n=$("fu
 function renderInstalledFurnishings(){const rows=furnishingData.installed||[];$("furnishingInstalled").innerHTML=rows.length?'<strong>Installed:</strong><br>'+rows.map(x=>`${esc(x.facility)} — ${esc(x.rank||"")}-Rank ${esc(x.name)}`).join('<br>'):"No Carpenter furnishing buffs installed.";}
 async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await loadFurnishings();}catch(err){message(err.message,"bad");}}
 
+
+
+async function harvestBastionTurn(){
+  if(!currentViewingOwn||!me?.turn?.pending)return;
+  const specialization=$("harvestTurnSpec")?.value||"";
+  if(!confirm(`Use this Bastion Turn to harvest your Harvestarium (${specialization}) instead of rolling an event?`))return;
+  try{
+    const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
+    const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>");
+    $("bastionTurnResult").className="craft-result success";
+    $("bastionTurnResult").innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4 ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
+    const data=await api("/api/bastion/me");render(data);$("bastionTurnResult").classList.remove("hidden");
+  }catch(err){message(err.message,"bad");}
+}
+function eventActionButtons(e){
+  if(!e)return "";
+  const n=e.eventName, b=(a,t)=>`<button type="button" class="room-btn resolve-event" data-action="${a}">${t}</button>`;
+  if(n==="Animal Rescue")return b("medicine","Medicine DC 15")+b("healing","Use Healing Spell")+b("handling","Animal Handling DC 18")+b("animal_temp","Keep Until Next Attack");
+  if(n==="Sellswords")return b("barracks","Add to Barracks")+b("hirelings","Take 2 Hirelings")+b("decline","Decline");
+  if(n==="Request for Aid")return `<input id="eventParticipants" type="number" min="1" placeholder="Participants">`+b("aid","Resolve Aid");
+  if(n==="Merchant Caravan")return `<input id="eventItem" placeholder="DM-approved item"><input id="eventPrice" type="number" min="1" placeholder="Normal GP price">`+b("merchant","Buy at Half Price")+b("decline","Decline");
+  if(n==="Duel to the Death")return `<input id="eventDie" type="number" min="2" value="20" placeholder="Combat die"><input id="eventDeath" type="number" min="0" value="0" placeholder="Death threshold">`+b("duel","Resolve Duel");
+  if(n==="Tragic Accident")return b("pay","Pay 200 GP")+b("wait","Wait Until Next Turn");
+  if(n==="Plague")return b("medicine","Medicine DC 15")+b("elixir","Use Elixir of Health");
+  if(n==="Surprise Attack!")return `<input id="eventNormal" type="number" min="0" value="0" placeholder="Defenders"><input id="eventBeasts" type="number" min="0" value="0" placeholder="Monsters"><input id="eventKnights" type="number" min="0" value="0" placeholder="Knights/Ronin"><input id="eventSiege" type="number" min="0" value="0" placeholder="Siege bonus">`+b("attack","Resolve Attack")+b("friendly","Use Friendly Monster")+b("humble","Use Humble Exterior");
+  return b("ack","Resolve / Acknowledge");
+}
+function renderPendingEvent(e){
+  const box=$("pendingBastionEvent"); if(!box)return;
+  if(!currentViewingOwn||!e){box.classList.add("hidden");box.innerHTML="";return;}
+  box.classList.remove("hidden");
+  box.innerHTML=`<strong>⚠️ Pending Bastion Event — ${esc(e.eventName)}</strong><div style="white-space:pre-wrap;margin:.5rem 0">${esc(e.resultText||"")}</div><div class="button-row">${eventActionButtons(e)}</div>`;
+}
+async function resolveWebsiteEvent(action){
+  const body={action};
+  if(action==="aid")body.participants=Number($("eventParticipants")?.value||0);
+  if(action==="merchant"){body.itemName=$("eventItem")?.value||"";body.normalPrice=Number($("eventPrice")?.value||0);}
+  if(action==="duel"){body.die=Number($("eventDie")?.value||0);body.death=Number($("eventDeath")?.value||0);}
+  if(action==="attack"){body.normal=Number($("eventNormal")?.value||0);body.beasts=Number($("eventBeasts")?.value||0);body.knights=Number($("eventKnights")?.value||0);body.siegeBonus=Number($("eventSiege")?.value||0);}
+  try{const r=await api("/api/bastion/event/resolve",{method:"POST",body:JSON.stringify(body)});message(r.resolutionText||"Event updated.","good");const data=await api("/api/bastion/me");render(data);}catch(err){message(err.message,"bad");}
+}
+document.addEventListener("click",e=>{const b=e.target.closest?.(".resolve-event");if(b)resolveWebsiteEvent(b.dataset.action);});
 
 async function rollBastionTurn(){
   if(!currentViewingOwn)return;
@@ -934,16 +979,14 @@ function render(data){
   $("status").textContent=data.status;
   $("facilityCount").textContent=data.summary.facilities;
   $("personnelCount").textContent=data.summary.personnel;
-  $("turnStatus").textContent=data.summary.pendingBastionTurn?"Ready":"None";
-
-  const activeConstructionTop = Array.isArray(data.construction) ? data.construction : [];
-  $("constructionStatus").innerHTML = activeConstructionTop.length
-    ? activeConstructionTop.map(c =>
-        `${esc(c.facility)}<br><span class="muted">${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span>`
-      ).join("<br>")
-    : "NONE";
+  $("turnStatus").textContent=data.summary.pendingBastionTurn?"Ready":"None"; const topBuild=Array.isArray(data.construction)?data.construction:[]; $("constructionStatus").innerHTML=topBuild.length?topBuild.map(c=>`${esc(c.facility)}<br><span class="muted">${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span>`).join("<br>"):"NONE";
   $("bastionTurnActions").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn));
   $("rollBastionTurnBtn").disabled=!data.summary.pendingBastionTurn;
+  const harvestFacility=(data.facilities||[]).find(f=>f.facility==="Harvestarium");
+  const harvestSpecs=harvestFacility?(harvestFacility.specializations||harvestFacility.harvestariumSpecializations||[]):[];
+  $("harvestTurnControls")?.classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn&&harvestFacility&&harvestSpecs.length));
+  if($("harvestTurnSpec"))$("harvestTurnSpec").innerHTML=harvestSpecs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
+  renderPendingEvent(data.pendingEvent||null);
   $("loginBtn").textContent="Logout";
 
   $("facilities").innerHTML=data.facilities.length?data.facilities.map(f=>{
@@ -1054,7 +1097,7 @@ for(const ev of ["dragleave","drop"]){
 }
 bannerDrop.addEventListener("drop",e=>uploadBanner(e.dataTransfer?.files?.[0]));
 
-$("rollBastionTurnBtn").addEventListener("click",rollBastionTurn);
+$("rollBastionTurnBtn").addEventListener("click",rollBastionTurn); $("harvestBastionTurnBtn")?.addEventListener("click",harvestBastionTurn);
 $("chatSend").addEventListener("click",sendChat);
 $("chatInput").addEventListener("keydown",(event)=>{
   if(event.key==="Enter" && event.ctrlKey){
