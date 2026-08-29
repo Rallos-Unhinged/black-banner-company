@@ -20,6 +20,19 @@ body.readonly .owner-only{display:none!important}
 .sidebar{border-right:1px solid var(--theme);background:linear-gradient(180deg,#061018,#020608);position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#12344a,#07131c);color:#f4d46f;border-left:4px solid #38b9ef;box-shadow:inset 0 0 16px #17638b33}.side-icon{width:25px;text-align:center;color:#cbb68f}
 .bag-zone{padding:10px;border-top:1px solid #463412}.bag-zone h3{font:700 13px Cinzel;color:#d2ad45;margin:4px 4px 8px}.bag{border:1px solid var(--theme);background:#0b0c0b;margin-bottom:6px}.bag summary{cursor:pointer;padding:8px 9px;color:#e5c663;font:700 12px Cinzel;list-style:none}.bag summary::-webkit-details-marker{display:none}.bag summary:before{content:"▸";margin-right:7px}.bag[open] summary:before{content:"▾"}.bag-items{padding:0 8px 8px;max-height:220px;overflow:auto}.bag-item{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-top:1px solid #1f1d17;color:#ccc;font-size:13px}.bag-item span:last-child{color:#efcf6f}
 .materials-link{margin-top:8px;width:100%}
+.transfer-panel{margin-top:10px;border:1px solid var(--theme);background:#03090e;box-shadow:inset 0 0 10px #0008}
+.transfer-title{font:700 11px Cinzel;color:#d5aa3b;padding:8px;border-bottom:1px solid var(--theme);text-align:center;letter-spacing:.04em}
+.transfer-list{max-height:230px;overflow-y:auto;scrollbar-color:var(--theme) #020608}
+.transfer-entry{padding:8px;border-bottom:1px solid #1d2730;font-size:12px;background:linear-gradient(180deg,#071018,#03090e)}
+.transfer-entry:last-child{border-bottom:0}
+.transfer-person{display:flex;gap:5px;align-items:center;line-height:1.3;color:#d6dce1}
+.transfer-arrow{font-size:15px;font-weight:900;width:16px;text-align:center;text-shadow:0 0 8px currentColor}
+.transfer-arrow.sender{color:var(--red)}
+.transfer-arrow.receiver{color:var(--green)}
+.transfer-label{font:700 9px Cinzel;color:#8796a0;width:30px}
+.transfer-item{color:#e7c461;margin-top:5px;font-weight:700;line-height:1.25}
+.transfer-time{color:var(--muted);font-size:10px;margin-top:3px}
+.transfer-empty{padding:12px 8px;text-align:center;color:var(--muted);font-size:11px}
 .load-card{position:absolute;bottom:12px;left:10px;right:10px;border:1px solid #5b4518;padding:12px;text-align:center;background:#0a0a08}.load-card h4{font:700 12px Cinzel;color:#ddb848;margin:0 0 6px}.load-card .green{color:#64d078;font-size:18px}.attune-gems{font-size:25px;color:#4ccd67;letter-spacing:4px}
 .main{min-width:0}.equipment-layout{display:grid;grid-template-columns:260px minmax(410px,1fr) 260px 340px;gap:10px;padding:10px;align-items:start}
 .slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:205px;border:1px solid var(--theme);background:linear-gradient(135deg,#081722,#03090e);box-shadow:inset 0 0 0 1px var(--theme-soft),0 0 12px #07131c;padding:10px;text-align:center;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
@@ -160,7 +173,7 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
   <a class="side-link" href="../bastions/my-bastion/"><span class="side-icon">♜</span>Bastions</a>
   <a class="side-link" href="../contracts/"><span class="side-icon">▣</span>Contracts</a>
   <div class="side-link" data-jump="skills"><span class="side-icon">✥</span>Skills</div>
-  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button><button id="giveMaterialsBtn" class="materials-link">Give Materials</button></div>
+  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button><button id="giveMaterialsBtn" class="materials-link">Give Materials</button><div id="recentTransfersPanel" class="transfer-panel hidden"><div class="transfer-title">Recent Transfers</div><div id="recentTransfers" class="transfer-list"><div class="transfer-empty">Loading transfers…</div></div></div></div>
   <div class="load-card"><h4>Equipment Load</h4><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
 </aside>
 
@@ -537,6 +550,69 @@ function chooseEquipmentImage(slot){
 }
 
 function friendlyKey(k){return String(k||"").replace(/_/g," ").replace(/\b([edcbas])\b/gi,m=>m.toUpperCase()+"-Rank").replace(/\b\w/g,m=>m.toUpperCase())}
+function transferCounterpartyId(row){
+ const ref=String(row?.sourceRef||"");
+ const web=ref.match(/^webgive:(\d{10,25}):(\d{10,25}):/i);
+ if(web)return Number(row?.quantityDelta||0)<0?web[2]:web[1];
+ const note=String(row?.note||"");
+ const mention=note.match(/<@!?(\d{10,25})>/);
+ return mention?mention[1]:null;
+}
+function transferDisplayName(userId,players){
+ userId=String(userId||"");
+ if(userId===String(sessionUserId||"")){
+   const me=(characterDirectory||[]).find(x=>String(x.userId)===userId);
+   return me?.playerName||me?.characterName||"You";
+ }
+ const p=players.get(userId);
+ return p?.playerName||p?.characterName||"Banner Member";
+}
+function formatTransferTime(value){
+ const d=new Date(Number(value||0));
+ if(!Number.isFinite(d.getTime()))return "";
+ return d.toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+}
+function renderTransferHistory(rows=[],recipients=[]){
+ const holder=$("recentTransfers");if(!holder)return;
+ const players=new Map((recipients||[]).map(x=>[String(x.userId),x]));
+ const transfers=[];
+ for(const row of rows||[]){
+   const source=String(row?.sourceType||"");
+   const note=String(row?.note||"");
+   const looksLikeTransfer=source==="material_give"||/give|transfer/i.test(source)||/(given|received).+<@!?\d{10,25}>/i.test(note);
+   if(!looksLikeTransfer)continue;
+   const qty=Number(row?.quantityDelta||0);if(!qty)continue;
+   const other=transferCounterpartyId(row);if(!other)continue;
+   const me=String(sessionUserId||"");
+   const senderId=qty<0?me:String(other);
+   const receiverId=qty<0?String(other):me;
+   transfers.push({
+     id:row.id,
+     senderName:transferDisplayName(senderId,players),
+     receiverName:transferDisplayName(receiverId,players),
+     itemKey:row.itemKey,
+     quantity:Math.abs(qty),
+     createdAt:row.createdAt
+   });
+ }
+ holder.innerHTML=transfers.length?transfers.slice(0,30).map(t=>`<div class="transfer-entry"><div class="transfer-person"><span class="transfer-arrow sender">←</span><span class="transfer-label">FROM</span><span>${esc(t.senderName)}</span></div><div class="transfer-person"><span class="transfer-arrow receiver">→</span><span class="transfer-label">TO</span><span>${esc(t.receiverName)}</span></div><div class="transfer-item">${esc(friendlyKey(t.itemKey))} ×${Number(t.quantity)}</div><div class="transfer-time">${esc(formatTransferTime(t.createdAt))}</div></div>`).join(""):'<div class="transfer-empty">No recent material transfers.</div>';
+}
+async function loadTransferHistory(){
+ const panel=$("recentTransfersPanel"),holder=$("recentTransfers");
+ if(!currentViewingOwn){panel?.classList.add("hidden");if(holder)holder.innerHTML="";return;}
+ panel?.classList.remove("hidden");
+ if(holder)holder.innerHTML='<div class="transfer-empty">Loading transfers…</div>';
+ try{
+   const [historyData,recipientData]=await Promise.all([
+     api("/api/inventory/history"),
+     api("/api/material-transfer/recipients")
+   ]);
+   renderTransferHistory(historyData.history||[],recipientData.recipients||[]);
+ }catch(err){
+   if(holder)holder.innerHTML=`<div class="transfer-empty">Could not load transfer history.</div>`;
+   throw err;
+ }
+}
 function renderBags(){
  const holder=$("bags");if(!holder)return;
  const containers=ddbInventory.filter(x=>x.isContainer);
@@ -776,6 +852,7 @@ async function confirmMaterialGift(){
     closeGiveMaterials();
     await loadDdbInventory();
     renderMaterialBag();
+    await loadTransferHistory().catch(()=>{});
     show(`Gift complete: ${quantity}× ${friendlyKey(itemKey)} transferred safely.`,"good");
   }finally{btn.disabled=false}
 }
@@ -788,7 +865,10 @@ function setAccess(d,requestedId=""){
  currentCanEdit=!publicVisitorMode && (currentViewingOwn || (!!sessionIsAdmin && !!d.adminCanEdit));
  document.body.classList.toggle("readonly",!currentCanEdit);
  if(!currentCanEdit)$("editPanel").classList.add("hidden");
- if($("giveMaterialsBtn"))$("giveMaterialsBtn").classList.toggle("hidden",!currentViewingOwn); if($("adminEditNotice"))$("adminEditNotice").classList.toggle("hidden",!(currentCanEdit&&!currentViewingOwn));
+ if($("giveMaterialsBtn"))$("giveMaterialsBtn").classList.toggle("hidden",!currentViewingOwn);
+ if($("recentTransfersPanel"))$("recentTransfersPanel").classList.toggle("hidden",!currentViewingOwn);
+ if(currentViewingOwn)loadTransferHistory().catch(()=>{});
+ if($("adminEditNotice"))$("adminEditNotice").classList.toggle("hidden",!(currentCanEdit&&!currentViewingOwn));
 }
 async function visitCharacter(id){const stamp=Date.now();const target=id||(publicVisitorMode?PUBLIC_FEATURED_OWNER_ID:"");const d=target?await api("/api/character/view?owner="+encodeURIComponent(target)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setAccess(d,target||sessionUserId);fill(d)}
 async function load(){
@@ -848,7 +928,7 @@ $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
 $("crestImg").onclick=()=>{if(currentCanEdit)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
-$("refreshInventory").onclick=()=>loadDdbInventory().catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
+$("refreshInventory").onclick=()=>Promise.all([loadDdbInventory(),loadTransferHistory()]).catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
 $("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
 document.querySelectorAll("[data-tablink='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
