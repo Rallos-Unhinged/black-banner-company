@@ -597,8 +597,19 @@ function updateCraftPreview(){
   const r=selectedCraftRecipe(), qty=Math.max(1,Number($("craftQty").value)||1);
   if(!r){$("craftPreview").textContent=`Work Hours available: ${Number(craftMeta.workHours||0)}${craftMeta.adroitCrafter?" · Adroit Crafter registered":""}\nChoose a recipe to see requirements.`;return;}
   const shownHours=craftMeta.adroitCrafter?Number(r.hours)/2:Number(r.hours);
-  let extra="";if(craftSpecial.kind==="wood_projectile")extra=`\nChoose projectile type + exact Prime Material + exact Base Wood. Rank controls arrow yield.`;if(craftSpecial.kind==="wood_weapon")extra=`\nChoose the bow/crossbow plus exact Prime and Base materials.`;if(craftSpecial.kind==="cooking_treat")extra=`\nChoose the exact Meat or Herb you want consumed.`;if(craftSpecial.kind==="carpenter_furnishing")extra=`\nChoose the furnishing rank and exact exotic wood.`;if(craftSpecial.kind==="calligraphy_scroll")extra=`\nChoose the exact herb/blood ink you want used; final scroll Gold settlement still uses the Discord guided crafter.`;if(craftSpecial.kind==="gem_cut"){const gv=Math.max(0,Number($("craftGemValue")?.value)||0),raw=Math.ceil(gv/2);extra=`\nFinished gem: ${gv.toLocaleString()} GP · Raw gemstone materials: ${raw.toLocaleString()} GP (50%)`;}
-  $("craftPreview").textContent=`${r.name}\nDC: ${r.dc} · Base time: ${r.time||r.hours+" hrs"}${craftMeta.adroitCrafter?` · Adroit time: ${shownHours} hrs`:""}\nMaterials: ${r.materials||"See Crafting Guide."}${r.facility?`\nFacility: ${r.facility}`:""}${extra}\nAttempts: ${qty}`;
+  let extra="";if(craftSpecial.kind==="wood_projectile")extra=`\nChoose projectile type + exact Prime Material + exact Base Wood. Rank controls arrow yield.`;if(craftSpecial.kind==="wood_weapon")extra=`\nChoose the bow/crossbow plus exact Prime and Base materials.`;if(craftSpecial.kind==="cooking_treat")extra=`\nChoose the exact Meat or Herb you want consumed.`;if(craftSpecial.kind==="carpenter_furnishing"){
+    const fr=$("craftRank").value||"";
+    const fh={E:4,D:8,C:16,B:24,A:32,S:48}[fr];
+    const fd={E:12,D:14,C:16,B:18,A:20,S:22}[fr];
+    const fu={E:2,D:3,C:4,B:5,A:6,S:8}[fr];
+    extra=fr
+      ? `\nFurnishing Rank: ${fr} · DC ${fd} · ${craftMeta.adroitCrafter?fh/2:fh} Work Hours${craftMeta.adroitCrafter?" (Adroit)":""} · ${fu} units same-rank exotic wood.\nChoose the exact Darkwood, Deadwood, Ironwood, or Summitwood.`
+      : `\nChoose a furnishing rank. E 4h/DC12/2 wood · D 8h/DC14/3 · C 16h/DC16/4 · B 24h/DC18/5 · A 32h/DC20/6 · S 48h/DC22/8.`;
+  }if(craftSpecial.kind==="calligraphy_scroll")extra=`\nChoose the exact herb/blood ink you want used; final scroll Gold settlement still uses the Discord guided crafter.`;if(craftSpecial.kind==="gem_cut"){const gv=Math.max(0,Number($("craftGemValue")?.value)||0),raw=Math.ceil(gv/2);extra=`\nFinished gem: ${gv.toLocaleString()} GP · Raw gemstone materials: ${raw.toLocaleString()} GP (50%)`;}
+  const timeLine=craftSpecial.kind==="carpenter_furnishing"
+    ? `DC / Time: determined by furnishing rank`
+    : `DC: ${r.dc} · Base time: ${r.time||r.hours+" hrs"}${craftMeta.adroitCrafter?` · Adroit time: ${shownHours} hrs`:""}`;
+  $("craftPreview").textContent=`${r.name}\n${timeLine}\nMaterials: ${r.materials||"See Crafting Guide."}${r.facility?`\nFacility: ${r.facility}`:""}${extra}\nAttempts: ${qty}`;
 }
 async function doBastionCraft(){
   const r=selectedCraftRecipe(); if(!r){message("Choose a crafting recipe first.","bad");return;}
@@ -962,7 +973,7 @@ function updateFurnishingPreview(){
   $("furnishingPreview").textContent=x?`${r}-Rank ${x.name}\nRecommended Wood: ${x.recommendedWood||"Any allowed exotic wood"}\nBuff: ${x.bonus}`:"Choose a room and furnishing.";
 }
 function renderInstalledFurnishings(){const rows=furnishingData.installed||[];$("furnishingInstalled").innerHTML=rows.length?'<strong>Installed:</strong><br>'+rows.map(x=>`${esc(x.facility)} — ${esc(x.rank||"")}-Rank ${esc(x.name)}`).join('<br>'):"No Carpenter furnishing buffs installed.";}
-async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await loadFurnishings();}catch(err){message(err.message,"bad");}}
+async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await reloadOwnBastion();await loadFurnishings();}catch(err){message(err.message,"bad");}}
 
 
 
@@ -1100,10 +1111,12 @@ function render(data){
     if(f.laboratorySpecialization) extras.push(`Lab: ${esc(f.laboratorySpecialization)}`);
     if(specs.length) extras.push(`Harvestarium: ${specs.map(esc).join(", ")}`);
     if(f.hasMasterCraftsmansBench) extras.push("Master Craftsman's Bench");
+    const furnishing=f.furnishing||null;
     return `<div class="card">
       <strong>${esc(f.facility)}</strong>
       <div class="badges"><span class="badge">${esc(f.facilityType||"Facility")}</span>${f.rank?`<span class="badge">Rank ${esc(f.rank)}</span>`:""}${f.size?`<span class="badge">${esc(f.size)}</span>`:""}</div>
       ${(f.upgrades||[]).length?`<div class="muted">Upgrades: ${f.upgrades.map(esc).join(", ")}</div>`:""}
+      ${furnishing?`<div class="muted" style="margin-top:.35rem"><strong style="color:var(--gold2)">Furnishing:</strong> ${esc(furnishing.rank||"")}-Rank ${esc(furnishing.name||"")} ${furnishing.bonus?`<br><span style="font-size:.9rem">Buff: ${esc(furnishing.bonus)}</span>`:""}</div>`:""}
       ${extras.length?`<div class="muted">${extras.join(" · ")}</div>`:""}
       ${facilityPersonnelHtml(f,data)}
     </div>`;
