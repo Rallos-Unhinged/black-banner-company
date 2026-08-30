@@ -203,6 +203,12 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
       </div>
 
       <div class="owner-card">
+        <h3>Purchase History</h3>
+        <div class="muted" style="margin-bottom:.55rem">Recent Bastion builds and upgrades.</div>
+        <div id="bastionPurchaseHistory" style="max-height:320px;overflow:auto"><div class="muted">No Bastion purchases recorded yet.</div></div>
+      </div>
+
+      <div class="owner-card">
         <h3>Bastion Banner</h3>
         <div id="bannerDrop" class="dropzone" tabindex="0">
           <strong>Drop Bastion Banner Here</strong><br>
@@ -216,8 +222,9 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 
       <div class="owner-card">
         <h3>Facility Furnishing Buff</h3>
-        <label for="furnishingFacility">Facility</label>
-        <select id="furnishingFacility"><option value="">Choose facility…</option></select>
+        <div class="muted" style="margin-bottom:.5rem">Choose the room where you want to install a Carpenter furnishing. This box is only for furnishing buffs — room and Laboratory upgrades are purchased above under Available Purchase.</div>
+        <label for="furnishingFacility">Room for Furnishing</label>
+        <select id="furnishingFacility" onchange="updateFurnishingChoices()"><option value="">Choose a room…</option></select>
         <label for="furnishingItem">Carpenter Furnishing</label>
         <select id="furnishingItem"><option value="">Choose furnishing…</option></select>
         <label for="furnishingRank">Furnishing Rank</label>
@@ -427,6 +434,18 @@ function renderBanner(url){
   }
 }
 
+function renderBastionPurchaseHistory(rows){
+  const box=$("bastionPurchaseHistory"); if(!box)return;
+  rows=Array.isArray(rows)?rows:[];
+  if(!rows.length){box.innerHTML='<div class="muted">No Bastion purchases recorded yet.</div>';return;}
+  const names={build:"Build",rank_upgrade:"Room Rank Upgrade",size_upgrade:"Room Size Upgrade",special_upgrade:"Facility Upgrade"};
+  box.innerHTML=rows.map(r=>{
+    const detail=r.specialUpgrade||r.targetRank&&`Rank ${r.targetRank}`||r.targetSize||names[r.action]||"Purchase";
+    const when=r.purchasedAt?new Date(Number(r.purchasedAt)).toLocaleString():"Unknown date";
+    return `<div style="padding:.55rem .1rem;border-bottom:1px solid rgba(199,154,58,.22)"><strong>${esc(r.facility||"Bastion")}</strong> — ${esc(names[r.action]||r.action||"Purchase")}<br>${esc(detail)} · <strong>${Number(r.amount||0).toLocaleString()} GP</strong><div class="muted" style="font-size:.82rem">${esc(when)} · Transaction #${Number(r.transactionId||0)}</div></div>`;
+  }).join("");
+}
+
 async function loadManagement(){
   if(!currentViewingOwn)return;
   try{
@@ -434,9 +453,16 @@ async function loadManagement(){
     manageOptions=data.options||[];
     $("manageGold").textContent=Number(data.gold||0).toLocaleString()+" GP";
     const sel=$("purchaseOption");
+    const groups=[
+      ["Build New Facility", manageOptions.map((o,i)=>({o,i})).filter(x=>x.o.action==="build")],
+      ["Room Rank Upgrades", manageOptions.map((o,i)=>({o,i})).filter(x=>x.o.action==="rank_upgrade")],
+      ["Room Size Upgrades", manageOptions.map((o,i)=>({o,i})).filter(x=>x.o.action==="size_upgrade")],
+      ["Facility Upgrades", manageOptions.map((o,i)=>({o,i})).filter(x=>x.o.action==="special_upgrade")]
+    ];
     sel.innerHTML='<option value="">Choose an eligible purchase…</option>'+
-      manageOptions.map((o,i)=>`<option value="${i}">${esc(o.label)} — ${Number(o.cost).toLocaleString()} GP${o.turns?` · ${o.turns} turns`:""}</option>`).join("");
+      groups.filter(g=>g[1].length).map(([name,rows])=>`<optgroup label="${esc(name)}">${rows.map(({o,i})=>`<option value="${i}">${esc(o.label)} — ${Number(o.cost).toLocaleString()} GP${o.turns?` · ${o.turns} turns`:""}</option>`).join("")}</optgroup>`).join("");
     $("harvestSpec").innerHTML=(data.harvestariumSpecializations||[]).map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
+    renderBastionPurchaseHistory(data.purchaseHistory||[]);
     updatePurchasePreview();
   }catch(err){message(err.message,"bad");}
 }
@@ -905,9 +931,36 @@ document.addEventListener("click",e=>{
 async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender or Hireling:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
 document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current);});
 let furnishingData={available:[],installed:[]};
-async function loadFurnishings(){if(!currentViewingOwn)return;try{furnishingData=await api("/api/bastion/furnishings");const facilities=[...new Set((furnishingData.available||[]).map(x=>x.facility))].sort();$("furnishingFacility").innerHTML='<option value="">Choose facility…</option>'+facilities.map(x=>`<option>${esc(x)}</option>`).join("");updateFurnishingChoices();renderInstalledFurnishings();}catch(err){$("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;}}
-function updateFurnishingChoices(){const f=$("furnishingFacility").value,rows=(furnishingData.available||[]).filter(x=>x.facility===f);$("furnishingItem").innerHTML='<option value="">Choose furnishing…</option>'+rows.map(x=>`<option value="${esc(x.name)}">${esc(x.name)} · ${esc(x.minimumRank)}+</option>`).join("");updateFurnishingPreview();}
-function updateFurnishingPreview(){const f=$("furnishingFacility").value,n=$("furnishingItem").value,r=$("furnishingRank").value,x=(furnishingData.available||[]).find(y=>y.facility===f&&y.name===n);$("furnishingPreview").textContent=x?`${r}-Rank ${x.name}\nRecommended Wood: ${x.recommendedWood||"Any allowed exotic wood"}\nBuff: ${x.bonus}`:"Choose a facility and furnishing.";}
+async function loadFurnishings(){
+  if(!currentViewingOwn)return;
+  try{
+    furnishingData=await api("/api/bastion/furnishings");
+    const available=Array.isArray(furnishingData.available)?furnishingData.available:[];
+    const facilities=[...new Set(available.map(x=>String(x.facility||"").trim()).filter(Boolean))].sort();
+    $("furnishingFacility").innerHTML='<option value="">Choose a room…</option>'+
+      facilities.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+    $("furnishingItem").disabled=true;
+    if(!available.length)$("furnishingInstalled").textContent="No furnishing recipes were returned by the server.";
+    updateFurnishingChoices();
+    renderInstalledFurnishings();
+  }catch(err){
+    $("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;
+  }
+}
+function updateFurnishingChoices(){
+  const f=String($("furnishingFacility").value||"").trim().toLowerCase();
+  const rows=(furnishingData.available||[]).filter(x=>String(x.facility||"").trim().toLowerCase()===f);
+  $("furnishingItem").innerHTML='<option value="">Choose furnishing…</option>'+
+    rows.map(x=>`<option value="${esc(x.name)}">${esc(x.name)} · ${esc(x.minimumRank)}+</option>`).join("");
+  $("furnishingItem").disabled=!rows.length;
+  updateFurnishingPreview();
+}
+function updateFurnishingPreview(){
+  const f=String($("furnishingFacility").value||"").trim().toLowerCase();
+  const n=$("furnishingItem").value,r=$("furnishingRank").value;
+  const x=(furnishingData.available||[]).find(y=>String(y.facility||"").trim().toLowerCase()===f&&y.name===n);
+  $("furnishingPreview").textContent=x?`${r}-Rank ${x.name}\nRecommended Wood: ${x.recommendedWood||"Any allowed exotic wood"}\nBuff: ${x.bonus}`:"Choose a room and furnishing.";
+}
 function renderInstalledFurnishings(){const rows=furnishingData.installed||[];$("furnishingInstalled").innerHTML=rows.length?'<strong>Installed:</strong><br>'+rows.map(x=>`${esc(x.facility)} — ${esc(x.rank||"")}-Rank ${esc(x.name)}`).join('<br>'):"No Carpenter furnishing buffs installed.";}
 async function installFurnishing(){const facility=$("furnishingFacility").value,name=$("furnishingItem").value,rank=$("furnishingRank").value;if(!facility||!name)return message("Choose a facility and furnishing.","bad");try{await api("/api/bastion/furnishings",{method:"POST",body:JSON.stringify({facility,name,rank})});message(`${name} installed in ${facility}. It replaces any previous Carpenter furnishing buff in that facility.`,"good");await loadFurnishings();}catch(err){message(err.message,"bad");}}
 
@@ -1148,7 +1201,6 @@ $("saveBastionNameBtn").addEventListener("click",saveBastionName);
 $("purchaseOption").addEventListener("change",updatePurchasePreview);
 $("purchaseDiscount").addEventListener("change",updatePurchasePreview);
 $("purchaseBtn").addEventListener("click",buySelected);
-$("furnishingFacility").addEventListener("change",updateFurnishingChoices);
 $("furnishingItem").addEventListener("change",updateFurnishingPreview);
 $("furnishingRank").addEventListener("change",updateFurnishingPreview);
 $("installFurnishingBtn").addEventListener("click",installFurnishing);
