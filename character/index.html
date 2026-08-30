@@ -965,7 +965,18 @@ $("saveSheetBtn").onclick=async()=>{
    show(err.message||"Could not save character sheet.","bad");
  }
 };
-$("syncBtn").onclick=async()=>{try{$("syncBtn").disabled=true;const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify(managedOwnerBody({dndBeyondUrl:$("ddbUrl").value}))});ddbInventory=d.sync.inventory||[];show("D&D Beyond sync complete. Equipped item ability-score modifiers and the final skill bonuses were refreshed.","good");await load()}catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}};
+$("syncBtn").onclick=async()=>{
+ try{
+  $("syncBtn").disabled=true;
+  const selectedOwner=String(currentOwnerId||sessionUserId||"");
+  const d=await api("/api/character/dndbeyond-sync",{method:"POST",body:JSON.stringify(managedOwnerBody({dndBeyondUrl:$("ddbUrl").value}))});
+  ddbInventory=d.sync.inventory||[];
+  show("D&D Beyond sync complete. The selected character was updated.","good");
+  const viewOwner=selectedOwner && selectedOwner!==String(sessionUserId)?selectedOwner:"";
+  if($("characterSelect")) $("characterSelect").value=viewOwner;
+  await visitCharacter(viewOwner);
+ }catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}
+};
 $("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
 $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
