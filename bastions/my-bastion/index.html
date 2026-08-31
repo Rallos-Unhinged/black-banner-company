@@ -881,10 +881,14 @@ async function openDefenderManager(facility){
   const data=await loadPersonnelManagement();if(!data)return;
   const room=(data.facilities||[]).find(x=>x.facility===facility);
   if(!room)return message("Barracks not found.","bad");
-  const open=Math.max(0,Number(room.defenderCapacity||0)-(room.defenders||[]).length);
+  // The management API may omit defenderCapacity. Fall back to the same
+  // rank/size capacity table used by the Barracks room card.
+  const defenderCapacity=Number(room.defenderCapacity ?? clientDefenderCapacity(room) ?? 0);
+  const defenderCount=(room.defenders||[]).length;
+  const open=Math.max(0,defenderCapacity-defenderCount);
   const max=Math.min(4,open);
   const qtyOptions=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1} Defender${i?"s":""}</option>`).join("");
-  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${(room.defenders||[]).length}/${room.defenderCapacity} · Open slots: ${open}</div>${open?`<label>Recruit Order</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">The current Barracks rule gives no separate GP price for Defenders, so recruitment does not charge Gold.</div>`:`<strong>🔒 Barracks is full.</strong>`}`);
+  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${defenderCount}/${defenderCapacity} · Open slots: ${open}</div>${open?`<label>Recruit Order</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">The current Barracks rule gives no separate GP price for Defenders, so recruitment does not charge Gold.</div>`:`<strong>🔒 Barracks is full.</strong>`}`);
   modal.addEventListener("click",async e=>{
     const recruit=e.target.closest?.("[data-recruit-defenders]");
     const add=e.target.closest?.("[data-add-defender]");
