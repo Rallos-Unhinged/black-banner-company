@@ -881,21 +881,62 @@ async function openDefenderManager(facility){
   const data=await loadPersonnelManagement();if(!data)return;
   const room=(data.facilities||[]).find(x=>x.facility===facility);
   if(!room)return message("Barracks not found.","bad");
-  // The management API may omit defenderCapacity. Fall back to the same
-  // rank/size capacity table used by the Barracks room card.
+
   const defenderCapacity=Number(room.defenderCapacity ?? clientDefenderCapacity(room) ?? 0);
   const defenderCount=(room.defenders||[]).length;
   const open=Math.max(0,defenderCapacity-defenderCount);
   const max=Math.min(4,open);
   const qtyOptions=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1} Defender${i?"s":""}</option>`).join("");
-  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${defenderCount}/${defenderCapacity} · Open slots: ${open}</div>${open?`<label>Recruit Order</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">The current Barracks rule gives no separate GP price for Defenders, so recruitment does not charge Gold.</div>`:`<strong>🔒 Barracks is full.</strong>`}`);
+
+  const order=data.barracksOrder||{};
+  let orderHtml="";
+  if(order.used){
+    orderHtml=`<div class="card" style="margin-top:12px"><strong>Barracks Order — Recruit</strong><div class="muted">✅ Already used for this Bastion Turn.</div></div>`;
+  }else if(order.pendingTurn && open>0){
+    orderHtml=`<div class="card" style="margin-top:12px"><strong>Barracks Order — Recruit</strong><div class="muted">Once per Bastion Turn, automatically recruit up to 4 Defenders without exceeding Barracks capacity.</div><button class="room-btn good" type="button" data-barracks-recruit-order>Use Recruit Order — Up to 4</button></div>`;
+  }else if(!order.pendingTurn){
+    orderHtml=`<div class="card" style="margin-top:12px"><strong>Barracks Order — Recruit</strong><div class="muted">🔒 Requires a pending Bastion Turn.</div></div>`;
+  }
+
+  const manualHtml=open
+    ? `<label>Manual Recruitment</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">Manual Defender recruitment does not charge Gold.</div>`
+    : `<strong>🔒 Barracks is full.</strong>`;
+
+  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${defenderCount}/${defenderCapacity} · Open slots: ${open}</div>${manualHtml}${orderHtml}`);
+
   modal.addEventListener("click",async e=>{
     const recruit=e.target.closest?.("[data-recruit-defenders]");
     const add=e.target.closest?.("[data-add-defender]");
-    const quantity=add?1:Number(modal.querySelector("#defenderQty")?.value||1);
+    const orderBtn=e.target.closest?.("[data-barracks-recruit-order]");
+
+    if(orderBtn){
+      if(!confirm("Use the Barracks Recruit Order for this Bastion Turn? It will recruit up to 4 Defenders."))return;
+      orderBtn.disabled=true;
+      try{
+        const result=await api("/api/bastion/barracks/order/recruit",{method:"POST",body:"{}"});
+        closePersonnelModal();
+        message(`Barracks Recruit Order used: ${Number(result.recruited||0)} Defender${Number(result.recruited||0)===1?"":"s"} recruited.`,"good");
+        await reloadOwnBastion();
+      }catch(err){
+        orderBtn.disabled=false;
+        message(err.message,"bad");
+      }
+      return;
+    }
+
     if(!recruit&&!add)return;
+    const quantity=add?1:Number(modal.querySelector("#defenderQty")?.value||1);
     if(!confirm(`Recruit ${quantity} Defender${quantity===1?"":"s"}?`))return;
-    try{await api("/api/bastion/defenders/recruit",{method:"POST",body:JSON.stringify({facility,quantity})});closePersonnelModal();message(`${quantity} Defender${quantity===1?"":"s"} recruited.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+    const btn=add||recruit;btn.disabled=true;
+    try{
+      const result=await api("/api/bastion/defenders/recruit",{method:"POST",body:JSON.stringify({facility,quantity})});
+      closePersonnelModal();
+      message(`${Number(result.recruited||quantity)} Defender${Number(result.recruited||quantity)===1?"":"s"} recruited.`,"good");
+      await reloadOwnBastion();
+    }catch(err){
+      btn.disabled=false;
+      message(err.message,"bad");
+    }
   });
 }
 function facilityPersonnelHtml(f,data){
