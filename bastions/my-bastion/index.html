@@ -12,48 +12,83 @@
 }
 *{box-sizing:border-box}
 body{margin:0;background:linear-gradient(180deg,#080706,#0b0a08);color:var(--text);font:18px/1.55 'Crimson Pro',Georgia,serif;min-height:100vh}
-.page{width:min(1180px,calc(100% - 2rem));margin:auto;padding-bottom:3rem}
+.page{
+  width:min(1180px,calc(100% - 300px));
+  margin:0 auto 0 280px;
+  padding:1rem 1rem 3rem;
+}
 .topbar{
   position:fixed;
-  top:8px;
-  left:8px;
+  top:0;
+  left:0;
+  bottom:0;
   z-index:1400;
-  display:flex;
-  align-items:center;
-  gap:.45rem;
-  flex-wrap:wrap;
-  width:auto;
-  max-width:calc(100vw - 16px);
-  padding:.45rem;
-  background:rgba(8,7,6,.96);
-  border:1px solid rgba(140,104,24,.9);
-  box-shadow:0 8px 22px rgba(0,0,0,.42);
-  backdrop-filter:blur(8px);
+  width:250px;
+  display:block;
+  padding:1.1rem 1rem;
+  background:#050504;
+  border-right:1px solid #6d5215;
+  box-shadow:8px 0 24px rgba(0,0,0,.38);
+  overflow-y:auto;
+}
+.topbar::before{
+  content:"BASTIONS OF\A THE BLACK";
+  white-space:pre;
+  display:block;
+  color:var(--gold2);
+  font:700 1.05rem/1.25 'Cinzel',serif;
+  letter-spacing:.05em;
+  padding-bottom:.2rem;
+}
+.topbar::after{
+  content:"SITE";
+  display:block;
+  color:#8f6a16;
+  font:.6rem 'Fira Mono',monospace;
+  letter-spacing:.18em;
+  margin:1.25rem 0 .55rem;
+  padding-top:1rem;
+  border-top:1px solid #44320d;
 }
 .topbar .nav{
   display:flex;
-  align-items:center;
-  gap:.4rem;
-  flex-wrap:wrap;
+  flex-direction:column;
+  gap:.15rem;
 }
-.topbar .btn,
-.topbar button{
-  width:auto;
-  white-space:nowrap;
-  padding:.55rem .8rem;
+.topbar .btn{
+  display:block;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#d9ac31;
+  padding:.42rem .15rem;
+  text-align:left;
+  font:700 .68rem 'Cinzel',serif;
+  letter-spacing:.05em;
 }
-@media(max-width:760px){
-  .topbar{
-    top:6px;
-    left:6px;
-    right:6px;
-    max-width:none;
-    overflow-x:auto;
-    flex-wrap:nowrap;
-  }
-  .topbar .nav{
-    flex-wrap:nowrap;
-  }
+.topbar .btn:hover{
+  background:transparent;
+  color:#ffe49a;
+  padding-left:.35rem;
+}
+.topbar #loginBtn{
+  display:block;
+  width:100%;
+  margin-top:1.1rem;
+  padding:.55rem .6rem;
+  text-align:left;
+  border:1px solid #6d5215;
+  background:#0d0a06;
+}
+@media(max-width:860px){
+  .topbar{width:205px;padding:.9rem .75rem}
+  .page{width:calc(100% - 220px);margin-left:205px;padding:.75rem}
+}
+@media(max-width:620px){
+  .topbar{width:170px}
+  .page{width:calc(100% - 170px);margin-left:170px;padding:.5rem}
+  .topbar .btn{font-size:.58rem}
+  .topbar::before{font-size:.82rem}
 }
 
 .btn,button{border:1px solid #8c6818;background:linear-gradient(180deg,#171108,#0d0a06);color:#e0c35f;padding:.7rem 1rem;text-decoration:none;font:700 .72rem 'Cinzel',serif;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
@@ -163,6 +198,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
     <div class="nav">
       <a class="btn" href="../../">Home</a>
       <a class="btn" href="../../character-sheet/">Character Sheet</a>
+      <a class="btn" href="../../player-guide/">Player Guide</a>
       <a class="btn" href="../../crafting-guide/">Crafting Guide</a>
       <a class="btn" href="../">Bastions Guide</a>
       <a class="btn" href="./">My Bastion</a>
