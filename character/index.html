@@ -379,9 +379,17 @@ function managedOwnerBody(obj={}){return currentOwnerId&&String(currentOwnerId)!
 
 const HARVEST_JOBS=[['tavern_entertainer','Tavern Entertainer'],['professional_thief','Professional Thief'],['traveling_preacher','Traveling Preacher'],['street_hustler','Street Hustler'],['mercenary','Mercenary'],['arcane_specialist','Arcane Specialist'],['bounty_hunter','Bounty Hunter'],['wilderness_guide','Wilderness Guide']];
 const HUNT_AREAS=[['greenwood','Greenwood Wilds'],['frostreach','Frostreach Tundra'],['emberfall','Emberfall Badlands'],['duskfen','Duskfen Marsh'],['shatterpeaks','Shatterpeaks Ridge'],['nightveil','Nightveil Thicket'],['stormcoast','Stormcoast Cliffs'],['bonewastes','Bonewaste Expanse'],['crystalgrove','Crystalgrove Hollow']];
-function harvestExtraUi(){const a=$('harvestActivity')?.value,x=$('harvestExtra');if(!x)return;if(a==='foraging')x.innerHTML='<select id="harvestRank"><option value="E">E-Rank Herbs</option><option value="D">D-Rank Herbs</option><option value="C">C-Rank Herbs</option><option value="B">B-Rank Herbs</option><option value="A">A-Rank Herbs</option><option value="S">S-Rank Herbs</option></select>';else if(a==='hunting')x.innerHTML='<select id="harvestArea">'+HUNT_AREAS.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')+'</select><select id="harvestApproach" style="margin-top:6px"><option value="stealth">Stealth</option><option value="melee">Melee</option><option value="caster">Caster</option></select>';else if(a==='oddjobs')x.innerHTML='<select id="harvestJob">'+HARVEST_JOBS.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')+'</select>';else x.innerHTML='';}
+const HUNT_STYLES={
+  stealth:[['stealth:ranged','Stealth (Ranged)'],['stealth:melee','Stealth (Melee)']],
+  melee:[['melee:charge','Charge In'],['melee:caution','Approach with Caution']],
+  caster:[['caster:fire_bolt','Fire Bolt'],['caster:ray_of_frost','Ray of Frost'],['caster:eldritch_blast','Eldritch Blast'],['caster:sorcerous_burst','Sorcerous Burst']]
+};
+function huntStyleOptions(approach){return (HUNT_STYLES[approach]||HUNT_STYLES.stealth).map(([v,n])=>`<option value="${v}">${n}</option>`).join('')}
+function refreshHuntStyle(){const a=$('harvestApproach')?.value||'stealth',s=$('harvestStyle');if(s)s.innerHTML=huntStyleOptions(a)}
+
+function harvestExtraUi(){const a=$('harvestActivity')?.value,x=$('harvestExtra');if(!x)return;if(a==='foraging')x.innerHTML='<select id="harvestRank"><option value="E">E-Rank Herbs</option><option value="D">D-Rank Herbs</option><option value="C">C-Rank Herbs</option><option value="B">B-Rank Herbs</option><option value="A">A-Rank Herbs</option><option value="S">S-Rank Herbs</option></select>';else if(a==='hunting'){x.innerHTML='<select id="harvestArea">'+HUNT_AREAS.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')+'</select><select id="harvestApproach" style="margin-top:6px"><option value="stealth">Stealth</option><option value="melee">Melee</option><option value="caster">Caster</option></select><select id="harvestStyle" style="margin-top:6px">'+huntStyleOptions('stealth')+'</select>';$('harvestApproach')?.addEventListener('change',refreshHuntStyle);}else if(a==='oddjobs')x.innerHTML='<select id="harvestJob">'+HARVEST_JOBS.map(([v,n])=>`<option value="${v}">${n}</option>`).join('')+'</select>';else x.innerHTML='';}
 async function refreshHarvestHours(){try{const m=await api('/api/me');if($('harvestWorkHours'))$('harvestWorkHours').textContent=Number(m?.balance?.workHours||0);}catch(_){}}
-async function runHarvestActivity(){const btn=$('harvestRun'),out=$('harvestResult');if(!btn||!out)return;btn.disabled=true;out.className='harvest-result';out.textContent='Rolling…';try{const body={activity:$('harvestActivity').value,hours:Number($('harvestHours').value)};if(body.activity==='foraging')body.rank=$('harvestRank')?.value;if(body.activity==='hunting'){body.area=$('harvestArea')?.value;body.approach=$('harvestApproach')?.value;}if(body.activity==='oddjobs')body.job=$('harvestJob')?.value;const r=await api('/api/character/work-activity',{method:'POST',body:JSON.stringify(body)});out.className='harvest-result good';out.textContent=r.summary||'Activity complete.';$('harvestWorkHours').textContent=Number(r.workHoursRemaining??0);if(typeof loadMaterials==='function')loadMaterials().catch(()=>{});}catch(e){out.className='harvest-result bad';out.textContent=e.message||String(e);}finally{btn.disabled=false;}}
+async function runHarvestActivity(){const btn=$('harvestRun'),out=$('harvestResult');if(!btn||!out)return;btn.disabled=true;out.className='harvest-result';out.textContent='Rolling…';try{const body={activity:$('harvestActivity').value,hours:Number($('harvestHours').value)};if(body.activity==='foraging')body.rank=$('harvestRank')?.value;if(body.activity==='hunting'){body.area=$('harvestArea')?.value;body.approach=$('harvestApproach')?.value;body.style=$('harvestStyle')?.value;}if(body.activity==='oddjobs')body.job=$('harvestJob')?.value;const r=await api('/api/character/work-activity',{method:'POST',body:JSON.stringify(body)});out.className='harvest-result good';out.textContent=r.summary||'Activity complete.';$('harvestWorkHours').textContent=Number(r.workHoursRemaining??0);if(typeof loadMaterials==='function')loadMaterials().catch(()=>{});}catch(e){out.className='harvest-result bad';out.textContent=e.message||String(e);}finally{btn.disabled=false;}}
 
 async function api(path,opts={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{...(opts.body instanceof Blob?{}:{"Content-Type":"application/json"}),...(opts.headers||{})},...opts});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||`Request failed (${r.status})`);return b}
 function show(t,type=""){const m=$("message");m.textContent=t;m.className="notice "+type;m.classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"})}
@@ -940,35 +948,6 @@ function setAccess(d,requestedId=""){
  if($("adminEditNotice"))$("adminEditNotice").classList.toggle("hidden",!(currentCanEdit&&!currentViewingOwn));
 }
 async function visitCharacter(id){const stamp=Date.now();const target=id||(publicVisitorMode?PUBLIC_FEATURED_OWNER_ID:"");const d=target?await api("/api/character/view?owner="+encodeURIComponent(target)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setAccess(d,target||sessionUserId);fill(d)}
-async function loadPublicCharacterFallback(requestedOwner="",sessionError=null){
-  publicVisitorMode=true;
-  sessionUserId="";
-  sessionIsAdmin=false;
-  $("adminPageBtn")?.classList.add("hidden");
-  $("online")?.classList.add("hidden");
-
-  // The public character view should not depend on the private session check.
-  // If /api/session is unavailable, still try the public endpoints instead of
-  // leaving the character sheet stranded on an empty skeleton.
-  await loadCharacterDirectory().catch(()=>{});
-  const owner=requestedOwner || PUBLIC_FEATURED_OWNER_ID;
-  if($("characterSelect"))$("characterSelect").value=owner;
-
-  try{
-    await visitCharacter(owner);
-    if(sessionError){
-      show("Login/session service is temporarily unavailable. Showing the public character view instead.","");
-    }else{
-      $("message")?.classList.add("hidden");
-    }
-    return true;
-  }catch(err){
-    const detail=err?.message||String(err);
-    show("Character service is temporarily unavailable. The page is loaded, but live character data could not be retrieved: "+detail,"bad");
-    return false;
-  }
-}
-
 async function load(){
   const requestedOwner=new URLSearchParams(location.search).get("owner");
   try{
@@ -982,8 +961,16 @@ async function load(){
     if(requestedOwner){$("characterSelect").value=requestedOwner;await visitCharacter(requestedOwner)}
     else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}
   }catch(e){
-    const authFailure=e.message==="LOGIN_REQUIRED" || e.message==="not_authenticated";
-    await loadPublicCharacterFallback(requestedOwner,authFailure?null:e);
+    if(e.message!=="LOGIN_REQUIRED" && e.message!=="not_authenticated"){
+      show("Character page could not load: "+e.message,"bad"); return;
+    }
+    publicVisitorMode=true; sessionUserId=""; sessionIsAdmin=false;
+    $("adminPageBtn")?.classList.add("hidden"); $("online")?.classList.add("hidden");
+    await loadCharacterDirectory().catch(()=>{});
+    const owner=requestedOwner || PUBLIC_FEATURED_OWNER_ID;
+    if($("characterSelect"))$("characterSelect").value=owner;
+    try{await visitCharacter(owner);$("message")?.classList.add("hidden")}
+    catch(err){show("Public character sheet could not load: "+err.message,"bad")}
   }
 }
 
