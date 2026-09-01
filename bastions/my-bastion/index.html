@@ -936,7 +936,7 @@ async function openHirelingManager(facility){
   for(const h of data.unassignedHirelings||[])candidates.push({...h,from:"Unassigned"});
   const quote=room.hirelingQuote;
   const quoteHtml=quote?.ready
-    ? `<div class="card"><strong>Buy New Hireling</strong><div class="muted">CHA ${quote.charismaModifier>=0?"+":""}${quote.charismaModifier}: ${quote.charismaDiscount}% · Disguise Kit: ${quote.disguiseKit==="expertise"?"Expertise":quote.disguiseKit==="proficient"?"Proficient":"None"} (${quote.disguiseDiscount}%)</div><div><strong>${Number(quote.cost).toLocaleString()} GP</strong> after ${quote.discount}% total discount</div><button class="room-btn good" type="button" data-buy-hireling="${esc(facility)}">Buy & Place Here</button></div>`
+    ? `<div class="card"><strong>Buy New Hireling</strong><div class="muted">CHA ${Number(quote.charismaScore)}: ${quote.charismaDiscount}% · Disguise Kit: ${quote.disguiseKit==="expertise"?"Expertise":quote.disguiseKit==="proficient"?"Proficient":"None"} (${quote.disguiseDiscount}%)${Number(quote.sharedDiscount||0)>0?` · Combined Bastion shared reduction: ${quote.sharedDiscount}%`:""}</div><div><strong>${Number(quote.cost).toLocaleString()} GP</strong> from ${Number(quote.baseCost||0).toLocaleString()} GP · ${quote.discount}% total discount</div><button class="room-btn good" type="button" data-buy-hireling="${esc(facility)}">Buy & Place Here</button></div>`
     : `<div class="card"><strong>Buy New Hireling</strong><div class="muted">${esc(quote?.error||data.hirelingCheck?.error||"No purchase quote available.")}</div></div>`;
   const moveHtml=candidates.length
     ? `<label>Move Existing Hireling</label><select id="moveHirelingSelect">${candidates.map(h=>`<option value="${Number(h.id)}">${esc(h.name||`Unnamed Hireling #${h.id}`)} — ${esc(h.from)}</option>`).join("")}</select><button class="room-btn" type="button" data-move-hireling="${esc(facility)}">Move Selected Here</button>`
@@ -947,7 +947,7 @@ async function openHirelingManager(facility){
     const buy=e.target.closest?.("[data-buy-hireling]");
     if(move){
       const id=Number(modal.querySelector("#moveHirelingSelect")?.value);if(!id)return;
-      try{await api("/api/bastion/hirelings/move",{method:"POST",body:JSON.stringify({id,facility})});closePersonnelModal();message("Hireling moved.","good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+      try{const r=await api("/api/bastion/hirelings/move",{method:"POST",body:JSON.stringify({id,facility})});closePersonnelModal();message(r.cost?`Hireling moved. ${Number(r.cost).toLocaleString()} GP rank-difference cost paid.`:"Hireling moved.","good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
     }
     if(buy){
       if(!confirm(`Buy and place a new hireling in ${facility}?`))return;
