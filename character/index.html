@@ -273,6 +273,39 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 
 <main class="main">
 <section id="sheetTab">
+<div id="editPanel" class="character-edit owner-only hidden">
+  <div class="edit-grid"><input id="characterName" placeholder="Character Name"><input id="level" type="number" min="1" max="20"><input id="rank" readonly><input id="classSummary" placeholder="Class / Build"></div>
+  <div class="edit-grid" style="grid-template-columns:repeat(6,1fr);margin-top:7px"><input id="str" placeholder="STR"><input id="dex" placeholder="DEX"><input id="con" placeholder="CON"><input id="int" placeholder="INT"><input id="wis" placeholder="WIS"><input id="cha" placeholder="CHA"></div>
+  <input id="ddbUrl" style="width:100%;margin-top:7px;background:#050606;border:1px solid var(--theme);color:#eee;padding:7px" placeholder="D&D Beyond Character URL">
+  <div class="stats-section owner-only" style="margin-top:10px">
+    <h3>Manual Stat Overrides</h3>
+    <div class="small">Leave a field blank to use D&D Beyond. A number entered here stays saved and is not overwritten by Sync.</div>
+    <div class="edit-grid" style="grid-template-columns:repeat(4,1fr);margin-top:7px">
+      <input id="ovHpMax" type="number" placeholder="Max HP">
+      <input id="ovHpCurrent" type="number" placeholder="Current HP">
+      <input id="ovAc" type="number" placeholder="Armor Class">
+      <input id="ovInitiative" type="number" placeholder="Initiative">
+      <input id="ovSpeed" type="number" placeholder="Speed">
+      <input id="ovPassive" type="number" placeholder="Passive Perception">
+      <input id="ovSpellDC" type="number" placeholder="Spell Save DC">
+      <input id="ovSpellAttack" type="number" placeholder="Spell Attack">
+    </div>
+    <div style="margin-top:10px"><button type="button" id="clearStatOverrides">CLEAR ALL STAT OVERRIDES</button></div>
+<h3 style="margin-top:10px">Border Color</h3>
+    <div class="small">Only you can see these controls. Other players will see the border color you choose.</div>
+    <div id="themePicker" class="theme-picker">
+      <button type="button" class="theme-swatch" data-theme="blue" title="Blue"></button>
+      <button type="button" class="theme-swatch" data-theme="gold" title="Gold"></button>
+      <button type="button" class="theme-swatch" data-theme="purple" title="Purple"></button>
+      <button type="button" class="theme-swatch" data-theme="green" title="Green"></button>
+      <button type="button" class="theme-swatch" data-theme="red" title="Red"></button>
+      <button type="button" class="theme-swatch" data-theme="silver" title="Silver"></button>
+    </div>
+  </div>
+  <div class="edit-actions"><button id="saveCharacter">Save Character</button><button id="saveGear">Save Loadout</button></div>
+  <div id="syncNote" class="small" style="margin-top:6px"></div>
+</div>
+
 <div id="equipment" class="equipment-layout">
   <div id="equipLeft" class="slot-column"></div>
   <div class="center-stage">
@@ -335,37 +368,7 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 </div>
 <div id="equipBottom" class="bottom-slots"></div>
 
-<div id="editPanel" class="character-edit owner-only hidden">
-  <div class="edit-grid"><input id="characterName" placeholder="Character Name"><input id="level" type="number" min="1" max="20"><input id="rank" readonly><input id="classSummary" placeholder="Class / Build"></div>
-  <div class="edit-grid" style="grid-template-columns:repeat(6,1fr);margin-top:7px"><input id="str" placeholder="STR"><input id="dex" placeholder="DEX"><input id="con" placeholder="CON"><input id="int" placeholder="INT"><input id="wis" placeholder="WIS"><input id="cha" placeholder="CHA"></div>
-  <input id="ddbUrl" style="width:100%;margin-top:7px;background:#050606;border:1px solid var(--theme);color:#eee;padding:7px" placeholder="D&D Beyond Character URL">
-  <div class="stats-section owner-only" style="margin-top:10px">
-    <h3>Manual Stat Overrides</h3>
-    <div class="small">Leave a field blank to use D&D Beyond. A number entered here stays saved and is not overwritten by Sync.</div>
-    <div class="edit-grid" style="grid-template-columns:repeat(4,1fr);margin-top:7px">
-      <input id="ovHpMax" type="number" placeholder="Max HP">
-      <input id="ovHpCurrent" type="number" placeholder="Current HP">
-      <input id="ovAc" type="number" placeholder="Armor Class">
-      <input id="ovInitiative" type="number" placeholder="Initiative">
-      <input id="ovSpeed" type="number" placeholder="Speed">
-      <input id="ovPassive" type="number" placeholder="Passive Perception">
-      <input id="ovSpellDC" type="number" placeholder="Spell Save DC">
-      <input id="ovSpellAttack" type="number" placeholder="Spell Attack">
-    </div>
-    <div style="margin-top:10px"><button type="button" id="clearStatOverrides">CLEAR ALL STAT OVERRIDES</button></div>\n<h3 style="margin-top:10px">Border Color</h3>
-    <div class="small">Only you can see these controls. Other players will see the border color you choose.</div>
-    <div id="themePicker" class="theme-picker">
-      <button type="button" class="theme-swatch" data-theme="blue" title="Blue"></button>
-      <button type="button" class="theme-swatch" data-theme="gold" title="Gold"></button>
-      <button type="button" class="theme-swatch" data-theme="purple" title="Purple"></button>
-      <button type="button" class="theme-swatch" data-theme="green" title="Green"></button>
-      <button type="button" class="theme-swatch" data-theme="red" title="Red"></button>
-      <button type="button" class="theme-swatch" data-theme="silver" title="Silver"></button>
-    </div>
-  </div>
-  <div class="edit-actions"><button id="saveCharacter">Save Character</button><button id="saveGear">Save Loadout</button></div>
-  <div id="syncNote" class="small" style="margin-top:6px"></div>
-</div>
+
 <div class="tabs owner-only"><button class="tab" data-tab="sheet">Character Sheet</button><button class="tab" data-tab="crafting">Crafting Registry</button></div>
 </section>
 
@@ -1148,4 +1151,21 @@ $('harvestActivity')?.addEventListener('change',harvestExtraUi);$('harvestRun')?
   });
 })();
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+  const editBtn=document.getElementById("editToggle");
+  const editPanel=document.getElementById("editPanel");
+  if(editBtn&&editPanel){
+    editBtn.addEventListener("click",()=>{
+      setTimeout(()=>{
+        if(!editPanel.classList.contains("hidden")){
+          editPanel.scrollIntoView({behavior:"smooth",block:"start"});
+        }
+      },0);
+    });
+  }
+});
+</script>
+
 </body></html>
