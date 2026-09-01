@@ -227,6 +227,28 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 
 
 .top-actions>a.btn{display:none!important}
+
+/* === CHARACTER EDIT PANEL — FORCE OPEN AT TOP OF SCREEN === */
+#editPanel:not(.hidden){
+  position:fixed !important;
+  top:14px !important;
+  left:270px !important;
+  right:20px !important;
+  z-index:12000 !important;
+  max-height:calc(100vh - 28px) !important;
+  overflow-y:auto !important;
+  margin:0 !important;
+  box-shadow:0 18px 60px rgba(0,0,0,.78),0 0 0 1px var(--theme) !important;
+}
+@media(max-width:760px){
+  #editPanel:not(.hidden){
+    left:215px !important;
+    right:10px !important;
+    top:10px !important;
+    max-height:calc(100vh - 20px) !important;
+  }
+}
+
 </style>
 </head>
 <body><div class="shell">
@@ -1152,20 +1174,6 @@ $('harvestActivity')?.addEventListener('change',harvestExtraUi);$('harvestRun')?
 })();
 </script>
 
-<script>
-document.addEventListener("DOMContentLoaded",()=>{
-  const editBtn=document.getElementById("editToggle");
-  const editPanel=document.getElementById("editPanel");
-  if(editBtn&&editPanel){
-    editBtn.addEventListener("click",()=>{
-      setTimeout(()=>{
-        if(!editPanel.classList.contains("hidden")){
-          editPanel.scrollIntoView({behavior:"smooth",block:"start"});
-        }
-      },0);
-    });
-  }
-});
-</script>
+
 
 </body></html>
