@@ -17,7 +17,13 @@ body.readonly .owner-only{display:none!important}
 .viewer{display:grid;grid-template-columns:220px 1fr auto;gap:8px;padding:8px 14px;border-bottom:1px solid #342810;background:#080a09}.viewer input,.viewer select{width:100%;background:#050606;color:#eee;border:1px solid var(--theme);padding:7px}
 .notice{margin:8px 14px;padding:10px;border:1px solid var(--theme);background:#171108}.notice.bad{border-color:#7d3333;color:#ef9c9c}.notice.good{border-color:#2d6d3d;color:#95dfa4}
 .workspace{display:grid;grid-template-columns:215px minmax(0,1fr);min-height:calc(100vh - 130px)}
-.sidebar{border-right:1px solid var(--theme);background:linear-gradient(180deg,#061018,#020608);position:relative;padding-bottom:240px}.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#12344a,#07131c);color:#f4d46f;border-left:4px solid #38b9ef;box-shadow:inset 0 0 16px #17638b33}.side-icon{width:25px;text-align:center;color:#cbb68f}
+.sidebar{border-right:1px solid var(--theme);background:linear-gradient(180deg,#061018,#020608);position:sticky;top:0;height:100vh;overflow-y:auto;align-self:start;padding-bottom:240px;scrollbar-color:var(--theme) #020608}
+.site-nav-sticky{position:sticky;top:0;z-index:20;background:#03090e;border-bottom:1px solid #5b4518;box-shadow:0 6px 14px #0009}
+.site-nav-title{padding:10px 18px 5px;font:700 10px Cinzel;color:#8f7138;letter-spacing:.14em;text-transform:uppercase}
+.site-nav-sticky a{display:block;padding:7px 18px;color:#d5aa3b;text-decoration:none;font:700 10px Cinzel;letter-spacing:.06em;text-transform:uppercase;border-left:3px solid transparent}
+.site-nav-sticky a:hover{color:#ffe7a2;background:linear-gradient(90deg,#12344a,#07131c);border-left-color:#38b9ef}
+.site-nav-sticky a.active{color:#ffe7a2;border-left-color:#d5aa3b;background:#07131c}
+.side-link{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #222;color:#d8d0c2;font-size:18px;cursor:pointer}.side-link:hover,.side-link.active{background:linear-gradient(90deg,#12344a,#07131c);color:#f4d46f;border-left:4px solid #38b9ef;box-shadow:inset 0 0 16px #17638b33}.side-icon{width:25px;text-align:center;color:#cbb68f}
 .bag-zone{padding:10px;border-top:1px solid #463412}.bag-zone h3{font:700 13px Cinzel;color:#d2ad45;margin:4px 4px 8px}.bag{border:1px solid var(--theme);background:#0b0c0b;margin-bottom:6px}.bag summary{cursor:pointer;padding:8px 9px;color:#e5c663;font:700 12px Cinzel;list-style:none}.bag summary::-webkit-details-marker{display:none}.bag summary:before{content:"▸";margin-right:7px}.bag[open] summary:before{content:"▾"}.bag-items{padding:0 8px 8px;max-height:220px;overflow:auto}.bag-item{display:flex;justify-content:space-between;gap:8px;padding:4px 2px;border-top:1px solid #1f1d17;color:#ccc;font-size:13px}.bag-item span:last-child{color:#efcf6f}
 .materials-link{margin-top:8px;width:100%}
 .transfer-panel{margin-top:10px;border:1px solid var(--theme);background:#03090e;box-shadow:inset 0 0 10px #0008}
@@ -175,6 +181,14 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 
 <div class="workspace">
 <aside class="sidebar">
+  <nav class="site-nav-sticky" aria-label="Site navigation">
+    <div class="site-nav-title">Site</div>
+    <a href="../">Home</a>
+    <a href="../player-guide/">Player Guide</a>
+    <a href="../crafting-guide/">Crafting Guide</a>
+    <a href="../bastions/">Bastions Guide</a>
+    <a href="../bastions/my-bastion/">My Bastion</a>
+  </nav>
   <div class="side-link" data-jump="overview"><span class="side-icon">⌂</span>Overview</div>
   <div class="side-link active" data-jump="bagZone"><span class="side-icon">🎒</span>Inventory</div>
   <div class="side-link" data-jump="equipment"><span class="side-icon">⚔</span>Equipment</div>
