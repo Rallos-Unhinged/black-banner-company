@@ -940,6 +940,35 @@ function setAccess(d,requestedId=""){
  if($("adminEditNotice"))$("adminEditNotice").classList.toggle("hidden",!(currentCanEdit&&!currentViewingOwn));
 }
 async function visitCharacter(id){const stamp=Date.now();const target=id||(publicVisitorMode?PUBLIC_FEATURED_OWNER_ID:"");const d=target?await api("/api/character/view?owner="+encodeURIComponent(target)+"&_="+stamp):await api("/api/character/profile?_="+stamp);setAccess(d,target||sessionUserId);fill(d)}
+async function loadPublicCharacterFallback(requestedOwner="",sessionError=null){
+  publicVisitorMode=true;
+  sessionUserId="";
+  sessionIsAdmin=false;
+  $("adminPageBtn")?.classList.add("hidden");
+  $("online")?.classList.add("hidden");
+
+  // The public character view should not depend on the private session check.
+  // If /api/session is unavailable, still try the public endpoints instead of
+  // leaving the character sheet stranded on an empty skeleton.
+  await loadCharacterDirectory().catch(()=>{});
+  const owner=requestedOwner || PUBLIC_FEATURED_OWNER_ID;
+  if($("characterSelect"))$("characterSelect").value=owner;
+
+  try{
+    await visitCharacter(owner);
+    if(sessionError){
+      show("Login/session service is temporarily unavailable. Showing the public character view instead.","");
+    }else{
+      $("message")?.classList.add("hidden");
+    }
+    return true;
+  }catch(err){
+    const detail=err?.message||String(err);
+    show("Character service is temporarily unavailable. The page is loaded, but live character data could not be retrieved: "+detail,"bad");
+    return false;
+  }
+}
+
 async function load(){
   const requestedOwner=new URLSearchParams(location.search).get("owner");
   try{
@@ -953,16 +982,8 @@ async function load(){
     if(requestedOwner){$("characterSelect").value=requestedOwner;await visitCharacter(requestedOwner)}
     else{await visitCharacter("");await loadDdbInventory().catch(()=>{})}
   }catch(e){
-    if(e.message!=="LOGIN_REQUIRED" && e.message!=="not_authenticated"){
-      show("Character page could not load: "+e.message,"bad"); return;
-    }
-    publicVisitorMode=true; sessionUserId=""; sessionIsAdmin=false;
-    $("adminPageBtn")?.classList.add("hidden"); $("online")?.classList.add("hidden");
-    await loadCharacterDirectory().catch(()=>{});
-    const owner=requestedOwner || PUBLIC_FEATURED_OWNER_ID;
-    if($("characterSelect"))$("characterSelect").value=owner;
-    try{await visitCharacter(owner);$("message")?.classList.add("hidden")}
-    catch(err){show("Public character sheet could not load: "+err.message,"bad")}
+    const authFailure=e.message==="LOGIN_REQUIRED" || e.message==="not_authenticated";
+    await loadPublicCharacterFallback(requestedOwner,authFailure?null:e);
   }
 }
 
