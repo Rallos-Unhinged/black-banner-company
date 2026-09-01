@@ -1112,16 +1112,51 @@ td {
   }
 }
 
+
+/* ── STICKY SIDEBAR SITE NAVIGATION ── */
+#sidebar{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden !important;
+  padding-bottom:0 !important;
+}
+#sidebar .sidebar-fixed{
+  flex:0 0 auto;
+  background:var(--deep);
+  border-bottom:1px solid rgba(199,154,58,.22);
+  position:relative;
+  z-index:2;
+}
+#sidebar .sidebar-fixed nav{padding:.55rem 0 .7rem}
+#sidebar .sidebar-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  padding:.15rem 0 2rem;
+}
+
 </style>
 </head>
 <body>
 <!-- SIDEBAR -->
 <aside id="sidebar">
+<div class="sidebar-fixed">
 <div class="logo">
 <h2>Black Banner Company<br/>Crafting Guide</h2>
 <p>v3.8 · Bot Automation &amp; 40-Hour Downtime</p>
 </div>
-<nav>
+<nav aria-label="Site navigation">
+<div class="section-head">Site</div>
+<a href="../">Home</a>
+<a href="../player-guide/">Player Guide</a>
+<a href="../crafting-guide/">Crafting Guide</a>
+<a href="../bastions/">Bastions Guide</a>
+<a href="../bastions/my-bastion/">My Bastion</a>
+</nav>
+</div>
+<nav class="sidebar-scroll" aria-label="Crafting guide sections">
 <div class="section-head">Downtime Rules</div>
 <a href="#intro">Using This Guide</a>
 <a href="#training">Downtime Training</a>
