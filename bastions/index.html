@@ -280,14 +280,43 @@ footer{
   scroll-margin-top:18px;
 }
 
+
+/* ── STICKY SIDEBAR SITE NAVIGATION ── */
+#sidebar{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden !important;
+  padding-bottom:0 !important;
+}
+#sidebar .sidebar-fixed{
+  flex:0 0 auto;
+  background:#050504;
+  border-bottom:1px solid rgba(200,150,10,.18);
+  position:relative;
+  z-index:2;
+}
+#sidebar .sidebar-fixed nav{padding:.55rem 0 .7rem}
+#sidebar .sidebar-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+  padding:.15rem 0 2rem;
+}
+
 </style>
 </head>
 <body>
 <aside id="sidebar">
+<div class="sidebar-fixed">
 <div class="logo"><h2>Bastions of<br/>the Black</h2><p>v2.6 · Resident Passive Sharing</p></div>
-<nav>
+<nav aria-label="Site navigation">
 <div class="section-head">Site</div>
 <a href="../">Home</a><a href="../player-guide/">Player Guide</a><a href="../crafting-guide/">Crafting Guide</a><a href="../bastions/">Bastions Guide</a><a href="my-bastion/">My Bastion</a>
+</nav>
+</div>
+<nav class="sidebar-scroll" aria-label="Bastion guide sections">
 <div class="section-head">Core Rules</div>
 <a href="#quick-start">Quick Start</a><a href="#what-is">What is a Bastion?</a><a href="#building">Building &amp; Costs</a><a href="#hirelings">Hirelings</a><a href="#turns">Bastion Turns</a><a href="#combined">Sharing a Bastion</a><a class="sub-link" href="#sharing-labels">Facility Sharing Labels</a><a href="#legacy">Legacy &amp; Transference</a><a href="#defense">Defending</a><a href="#fall">Fall of a Bastion</a>
 <div class="section-head">Events</div>
