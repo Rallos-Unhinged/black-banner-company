@@ -7,8 +7,70 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:wght@400;600;700&family=Fira+Mono:wght@400;500&display=swap');
 :root{--bg:#070706;--panel:#11100c;--panel2:#18150e;--gold:#c8960a;--gold2:#edcb67;--line:#5b4518;--text:#e8dfca;--muted:#aa9b77;--bad:#b85f5f;--good:#6ca16f}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#171308,#050504 50%,#020202);color:var(--text);font:17px/1.4 'Crimson Pro',serif}.page{width:min(1450px,calc(100% - 28px));margin:auto;padding:18px 0 50px}.top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:10px 0 16px}.top h1{font:800 28px Cinzel;color:var(--gold2);margin:0}.nav{display:flex;gap:8px;flex-wrap:wrap}.btn,button{border:1px solid #85651c;background:linear-gradient(#1d170b,#0b0905);color:#e4c65e;padding:9px 12px;font:700 11px Cinzel;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;cursor:pointer}.btn:hover,button:hover{color:#fff0ab;border-color:#d1a42c}.danger{border-color:#8b3939;color:#e69a9a}.good{border-color:#47734b;color:#a6d5a8}.hidden{display:none!important}.notice{margin:12px 0;padding:10px;border-left:4px solid var(--gold);background:#17140d}.notice.bad{border-color:var(--bad)}.notice.good{border-color:var(--good)}.layout{display:grid;grid-template-columns:330px 1fr;gap:14px;margin-top:14px}.panel{border:1px solid var(--line);background:linear-gradient(#12100c,#0b0a08);padding:14px}.panel h2,.panel h3{font-family:Cinzel;color:var(--gold2);margin:.1rem 0 .6rem}.panel h2{font-size:17px}.panel h3{font-size:13px}.muted{color:var(--muted)}input,select,textarea{width:100%;background:#080705;color:var(--text);border:1px solid #67501b;padding:9px;font:15px 'Crimson Pro';margin:4px 0 8px}select[multiple]{min-height:130px}.player-list{display:grid;gap:6px;max-height:70vh;overflow:auto}.player{border:1px solid #3c300f;background:#15120b;padding:9px;cursor:pointer}.player:hover,.player.active{border-color:#c8960a;background:#201807}.player strong{color:#efd478}.chips{display:flex;gap:5px;flex-wrap:wrap}.chip{border:1px solid #4f3d13;padding:2px 6px;font:10px Fira Mono;color:#c9b375}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.full{grid-column:1/-1}.row{display:flex;gap:8px;align-items:center;justify-content:space-between;border-bottom:1px solid #30250b;padding:8px 0}.row .actions{display:flex;gap:5px;flex-wrap:wrap}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}.card{border:1px solid #3e310f;background:#16130c;padding:10px}.card strong{color:#e6c55f}.audit{max-height:300px;overflow:auto;font:12px/1.35 Fira Mono}.audit .entry{padding:7px;border-bottom:1px solid #30250b}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.toolbar>*{width:auto}.checkgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.checkgrid label{border:1px solid #33280c;padding:6px}.checkgrid input{width:auto;margin-right:6px}@media(max-width:900px){.layout{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+
+
+/* === BLACK BANNER STANDARD SITE NAVIGATION === */
+.bbc-site-nav{
+  position:fixed;top:0;left:0;bottom:0;width:250px;z-index:5000;
+  background:#050504;border-right:1px solid #6d5215;
+  padding:18px 16px 28px;overflow-y:auto;color:#d8a63b;
+  box-shadow:8px 0 24px rgba(0,0,0,.34);
+}
+.bbc-site-nav *{box-sizing:border-box}
+.bbc-site-title{
+  color:#e0ad32;font:700 17px/1.28 'Cinzel',Georgia,serif;
+  text-transform:uppercase;letter-spacing:.02em;margin:0 0 8px;
+}
+.bbc-site-links{display:flex;flex-direction:column;gap:0}
+.bbc-site-links a{
+  display:block;color:#d8a63b;text-decoration:none;
+  font:700 12px/1.2 'Cinzel',Georgia,serif;
+  text-transform:uppercase;padding:8px 2px;border:0;background:transparent;
+  letter-spacing:0;
+}
+.bbc-site-links a:hover{color:#ffe28a;padding-left:5px}
+.bbc-site-auth{
+  width:100%;margin-top:16px;padding:9px 10px;text-align:left;
+  border:1px solid #6d5215;background:#0a0906;color:#e0bd58;
+  font:700 12px 'Cinzel',Georgia,serif;text-transform:uppercase;cursor:pointer;
+}
+.bbc-site-auth:hover{border-color:#c8960a;color:#ffe28a;background:#110e08}
+.bbc-site-rule{height:1px;background:#5c4615;margin:20px 0 14px}
+.bbc-site-label{
+  color:#8b6c20;font:10px 'Fira Mono',monospace;
+  letter-spacing:.18em;text-transform:uppercase;
+}
+.bbc-hidden{display:none!important}
+body.bbc-has-nav{padding-left:250px!important}
+@media(max-width:760px){
+  .bbc-site-nav{width:205px;padding:14px 12px}
+  body.bbc-has-nav{padding-left:205px!important}
+  .bbc-site-title{font-size:14px}
+  .bbc-site-links a,.bbc-site-auth{font-size:10px}
+}
+
+
+.top .nav{display:none!important}
 </style>
-</head><body><div class="page">
+</head><body class="bbc-has-nav">
+<aside class="bbc-site-nav" aria-label="Site navigation">
+  <div class="bbc-site-title">BASTIONS OF<br>THE BLACK</div>
+  <nav class="bbc-site-links">
+    <a href="/">Home</a>
+    <a href="/character/">Character Sheet</a>
+    <a href="/player-guide/">Player Guide</a>
+    <a href="/crafting-guide/">Crafting Guide</a>
+    <a href="/bastions/">Bastions Guide</a>
+    <a href="/bastions/my-bastion/">My Bastion</a>
+    <a href="/material-market/">Material Market</a>
+    <a href="/contracts/">Calendar</a>
+    <a id="bbcNavAdmin" class="bbc-hidden" href="/admin/player-management/">Admin</a>
+  </nav>
+  <button id="bbcNavAuth" class="bbc-site-auth" type="button">Logout</button>
+  <div class="bbc-site-rule"></div>
+  <div class="bbc-site-label">Site</div>
+</aside>
+<div class="page">
 <div class="top"><div><div class="muted" style="font:11px Fira Mono;letter-spacing:.14em">PRIVATE · RALLOS + DEREK ONLY</div><h1>Black Banner Player Management</h1></div><div class="nav"><a class="btn" href="../../">Home</a><a class="btn" href="../../character/">Characters</a><a class="btn" href="../../bastions/my-bastion/">Bastions</a></div></div>
 <div id="msg" class="notice hidden"></div><div id="forbidden" class="notice bad hidden">This page is restricted to the two website administrators.</div>
 <div id="app" class="layout hidden">
@@ -50,4 +112,37 @@ async function constructionAction(action,id){if(!confirm(`${action==='complete'?
 async function setTurn(pending){await api('/api/admin/bastion/turn',{method:'POST',body:JSON.stringify({ownerId:selected,pending,note:'Admin Bastion Turn correction'})});msg(pending?'Bastion Turn set ready.':'Pending Bastion Turn cleared.','good');await loadPlayer(selected)}
 async function init(){try{const s=await api('/api/session');if(!s.isAdmin){$("forbidden").classList.remove('hidden');return}const d=await api('/api/admin/players');allPlayers=d.players||[];$("app").classList.remove('hidden');renderPlayers()}catch(e){$("forbidden").classList.remove('hidden');msg(e.message,'bad')}}
 $("search").oninput=renderPlayers;$("facility").onchange=facilityChanged;$("saveFacility").onclick=()=>saveFacility().catch(e=>msg(e.message,'bad'));$("addPerson").onclick=()=>addPerson().catch(e=>msg(e.message,'bad'));$("grantTurn").onclick=()=>setTurn(true).catch(e=>msg(e.message,'bad'));$("clearTurn").onclick=()=>setTurn(false).catch(e=>msg(e.message,'bad'));init();
-</script></body></html>
+</script>
+
+<script>
+(function(){
+  const API="https://api.blackbannercompany.com";
+  const admin=document.getElementById("bbcNavAdmin");
+  const auth=document.getElementById("bbcNavAuth");
+  if(!auth)return;
+  let loggedIn=true;
+  fetch(API+"/api/session",{credentials:"include",cache:"no-store"})
+    .then(async r=>{
+      if(!r.ok)throw new Error("not_logged_in");
+      const s=await r.json().catch(()=>({}));
+      loggedIn=true;
+      auth.textContent="Logout";
+      if(admin)admin.classList.toggle("bbc-hidden",!s.isAdmin);
+    })
+    .catch(()=>{
+      loggedIn=false;
+      auth.textContent="Login";
+      if(admin)admin.classList.add("bbc-hidden");
+    });
+  auth.addEventListener("click",async()=>{
+    if(!loggedIn){
+      const ret=location.pathname+location.search+location.hash;
+      location.assign(API+"/auth/discord?return="+encodeURIComponent(ret));
+      return;
+    }
+    try{await fetch(API+"/auth/logout",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:"{}"});}catch(_){}
+    location.reload();
+  });
+})();
+</script>
+</body></html>
