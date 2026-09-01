@@ -293,10 +293,70 @@ footer {
   .hero { min-height:auto; padding-top:1rem; }
   .btn { width:100%; }
 }
+
+
+/* === BLACK BANNER STANDARD SITE NAVIGATION === */
+.bbc-site-nav{
+  position:fixed;top:0;left:0;bottom:0;width:250px;z-index:5000;
+  background:#050504;border-right:1px solid #6d5215;
+  padding:18px 16px 28px;overflow-y:auto;color:#d8a63b;
+  box-shadow:8px 0 24px rgba(0,0,0,.34);
+}
+.bbc-site-nav *{box-sizing:border-box}
+.bbc-site-title{
+  color:#e0ad32;font:700 17px/1.28 'Cinzel',Georgia,serif;
+  text-transform:uppercase;letter-spacing:.02em;margin:0 0 8px;
+}
+.bbc-site-links{display:flex;flex-direction:column;gap:0}
+.bbc-site-links a{
+  display:block;color:#d8a63b;text-decoration:none;
+  font:700 12px/1.2 'Cinzel',Georgia,serif;
+  text-transform:uppercase;padding:8px 2px;border:0;background:transparent;
+  letter-spacing:0;
+}
+.bbc-site-links a:hover{color:#ffe28a;padding-left:5px}
+.bbc-site-auth{
+  width:100%;margin-top:16px;padding:9px 10px;text-align:left;
+  border:1px solid #6d5215;background:#0a0906;color:#e0bd58;
+  font:700 12px 'Cinzel',Georgia,serif;text-transform:uppercase;cursor:pointer;
+}
+.bbc-site-auth:hover{border-color:#c8960a;color:#ffe28a;background:#110e08}
+.bbc-site-rule{height:1px;background:#5c4615;margin:20px 0 14px}
+.bbc-site-label{
+  color:#8b6c20;font:10px 'Fira Mono',monospace;
+  letter-spacing:.18em;text-transform:uppercase;
+}
+.bbc-hidden{display:none!important}
+body.bbc-has-nav{padding-left:250px!important}
+@media(max-width:760px){
+  .bbc-site-nav{width:205px;padding:14px 12px}
+  body.bbc-has-nav{padding-left:205px!important}
+  .bbc-site-title{font-size:14px}
+  .bbc-site-links a,.bbc-site-auth{font-size:10px}
+}
+
 </style>
 </head>
 
-<body>
+<body class="bbc-has-nav">
+<aside class="bbc-site-nav" aria-label="Site navigation">
+  <div class="bbc-site-title">BASTIONS OF<br>THE BLACK</div>
+  <nav class="bbc-site-links">
+    <a href="/">Home</a>
+    <a href="/character/">Character Sheet</a>
+    <a href="/player-guide/">Player Guide</a>
+    <a href="/crafting-guide/">Crafting Guide</a>
+    <a href="/bastions/">Bastions Guide</a>
+    <a href="/bastions/my-bastion/">My Bastion</a>
+    <a href="/material-market/">Material Market</a>
+    <a href="/contracts/">Calendar</a>
+    <a id="bbcNavAdmin" class="bbc-hidden" href="/admin/player-management/">Admin</a>
+  </nav>
+  <button id="bbcNavAuth" class="bbc-site-auth" type="button">Logout</button>
+  <div class="bbc-site-rule"></div>
+  <div class="bbc-site-label">Site</div>
+</aside>
+
 <div class="page">
   <header class="hero">
     <div class="hero-card">
@@ -622,5 +682,38 @@ footer {
     Black Banner Company · Mercenaries for Coin · Contracts for Glory
   </footer>
 </div>
+
+
+<script>
+(function(){
+  const API="https://api.blackbannercompany.com";
+  const admin=document.getElementById("bbcNavAdmin");
+  const auth=document.getElementById("bbcNavAuth");
+  if(!auth)return;
+  let loggedIn=true;
+  fetch(API+"/api/session",{credentials:"include",cache:"no-store"})
+    .then(async r=>{
+      if(!r.ok)throw new Error("not_logged_in");
+      const s=await r.json().catch(()=>({}));
+      loggedIn=true;
+      auth.textContent="Logout";
+      if(admin)admin.classList.toggle("bbc-hidden",!s.isAdmin);
+    })
+    .catch(()=>{
+      loggedIn=false;
+      auth.textContent="Login";
+      if(admin)admin.classList.add("bbc-hidden");
+    });
+  auth.addEventListener("click",async()=>{
+    if(!loggedIn){
+      const ret=location.pathname+location.search+location.hash;
+      location.assign(API+"/auth/discord?return="+encodeURIComponent(ret));
+      return;
+    }
+    try{await fetch(API+"/auth/logout",{method:"POST",credentials:"include",headers:{"Content-Type":"application/json"},body:"{}"});}catch(_){}
+    location.reload();
+  });
+})();
+</script>
 </body>
 </html>
