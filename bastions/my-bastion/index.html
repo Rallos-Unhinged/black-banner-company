@@ -13,8 +13,22 @@
 *{box-sizing:border-box}
 body{margin:0;background:linear-gradient(180deg,#080706,#0b0a08);color:var(--text);font:18px/1.55 'Crimson Pro',Georgia,serif;min-height:100vh}
 .page{width:min(1180px,calc(100% - 2rem));margin:auto;padding-bottom:3rem}
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;padding:1rem 0}
-.nav{display:flex;gap:.55rem;flex-wrap:wrap}
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:.75rem;
+  flex-wrap:wrap;
+  padding:.75rem 0;
+  position:sticky;
+  top:0;
+  z-index:1200;
+  background:linear-gradient(180deg,rgba(8,7,6,.98),rgba(8,7,6,.94));
+  border-bottom:1px solid rgba(109,82,21,.8);
+  box-shadow:0 8px 18px rgba(0,0,0,.35);
+  backdrop-filter:blur(8px);
+}
+.nav{display:flex;gap:.55rem;flex-wrap:wrap;justify-content:flex-start;align-items:center}
 .btn,button{border:1px solid #8c6818;background:linear-gradient(180deg,#171108,#0d0a06);color:#e0c35f;padding:.7rem 1rem;text-decoration:none;font:700 .72rem 'Cinzel',serif;letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
 .btn:hover,button:hover{background:#211708;color:#ffe49a}
 button.primary{background:linear-gradient(135deg,#3a160d,#181309)}
