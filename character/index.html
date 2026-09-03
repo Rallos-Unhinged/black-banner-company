@@ -249,6 +249,25 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
   }
 }
 
+/* Close button for the Character Edit panel */
+#editPanel .edit-panel-close{
+  position:sticky;
+  top:0;
+  float:right;
+  z-index:12001;
+  margin:0 0 8px 12px;
+  padding:7px 11px;
+  border:1px solid var(--theme);
+  background:#07131c;
+  color:#ffe7a2;
+  font:700 11px Cinzel;
+  cursor:pointer;
+}
+#editPanel .edit-panel-close:hover{
+  border-color:#d5aa3b;
+  box-shadow:0 0 10px #1f6f9c66;
+}
+
 </style>
 </head>
 <body><div class="shell">
@@ -296,6 +315,7 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
 <main class="main">
 <section id="sheetTab">
 <div id="editPanel" class="character-edit owner-only hidden">
+  <button id="editPanelClose" type="button" class="edit-panel-close" aria-label="Close character editor">✕ CLOSE</button>
   <div class="edit-grid"><input id="characterName" placeholder="Character Name"><input id="level" type="number" min="1" max="20"><input id="rank" readonly><input id="classSummary" placeholder="Class / Build"></div>
   <div class="edit-grid" style="grid-template-columns:repeat(6,1fr);margin-top:7px"><input id="str" placeholder="STR"><input id="dex" placeholder="DEX"><input id="con" placeholder="CON"><input id="int" placeholder="INT"><input id="wis" placeholder="WIS"><input id="cha" placeholder="CHA"></div>
   <input id="ddbUrl" style="width:100%;margin-top:7px;background:#050606;border:1px solid var(--theme);color:#eee;padding:7px" placeholder="D&D Beyond Character URL">
@@ -1105,6 +1125,7 @@ $("syncBtn").onclick=async()=>{
  }catch(e){show(e.message,"bad")}finally{$("syncBtn").disabled=false}
 };
 $("editToggle").onclick=()=>$("editPanel").classList.toggle("hidden");
+$("editPanelClose").onclick=()=>$("editPanel").classList.add("hidden");
 $("saveCharacter").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));$("saveGear").onclick=()=>api("/api/character/equipment",{method:"POST",body:JSON.stringify(managedOwnerBody({equipment:gearPayload()}))}).then(()=>show("Loadout saved.","good")).catch(e=>show(e.message,"bad"));
 $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
