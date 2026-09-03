@@ -185,6 +185,8 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .room-btn.good{border-color:#3d7c5c}
 .room-btn.warn{border-color:#8b6b37}
 .room-btn:disabled{opacity:.45;cursor:not-allowed}
+.harvestarium-room-specializations .slot{flex-wrap:wrap}
+.harvestarium-room-specializations .slot select{min-width:150px;max-width:100%;border:1px solid #6d5215;background:#0d0a06;color:var(--text);padding:.45rem;font:16px 'Crimson Pro',serif}
 .personnel-modal-backdrop{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000}
 .personnel-modal{width:min(560px,96vw);max-height:85vh;overflow:auto;background:#09131b;border:1px solid #31536b;border-radius:14px;padding:18px;box-shadow:0 20px 60px #000}
 .personnel-modal h3{margin:0 0 12px}.personnel-modal select{width:100%;margin:8px 0 12px}
@@ -283,6 +285,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
           <button id="purchaseBtn" class="primary" type="button">Purchase</button>
         </div>
       </div>
+
 
       <div class="owner-card">
         <h3>Purchase History</h3>
@@ -1028,6 +1031,21 @@ function facilityPersonnelHtml(f,data){
   const defenders=(data.personnel||[]).filter(p=>p.personnelType==="defender"&&p.facility===f.facility);
   const dcap=clientDefenderCapacity(f);
   const parts=[];
+  if(f.facility==="Harvestarium"){
+    const validSpecs=["Fertile Soil","Quarries","Mines","Hunter's Lodge","Pasturelands","Black Forest"];
+    const savedSpecs=Array.isArray(f.harvestariumSpecializations)?f.harvestariumSpecializations:[];
+    const isVast=String(f.size||"")==="Vast";
+    const optionHtml=(selected,allowBlank=false)=>`${allowBlank?`<option value="">— Choose second specialization —</option>`:""}${validSpecs.map(s=>`<option value="${esc(s)}" ${s===selected?"selected":""}>${esc(s)}</option>`).join("")}`;
+    parts.push(`<div class="room-personnel harvestarium-room-specializations">
+      <div class="slot-head"><strong>Harvestarium Specialization${isVast?"s":""}</strong></div>
+      <div class="slot-grid">
+        <label class="slot"><span>Specialization 1</span><select class="harvest-room-spec" data-slot="1">${optionHtml(savedSpecs[0]||validSpecs[0])}</select></label>
+        ${isVast?`<label class="slot"><span>Specialization 2</span><select class="harvest-room-spec" data-slot="2">${optionHtml(savedSpecs[1]||"",true)}</select></label>`:`<div class="slot empty"><span>Specialization 2: 🔒 Upgrade to Vast to unlock</span></div>`}
+      </div>
+      <div class="room-actions"><button class="room-btn good save-harvestarium-specializations" type="button">Save Specialization${isVast?"s":""}</button></div>
+      ${isVast?`<div class="muted">Vast Harvestariums may use two different specializations.</div>`:`<div class="muted">This Harvestarium can use one specialization.</div>`}
+    </div>`);
+  }
   if(f.facility==="Workshop"){
     const mgmt=(personnelManagement?.facilities||[]).find(x=>x.facility==="Workshop");
     const tool1=mgmt?.workshopTool1||f.workshopTool1||null;
@@ -1058,7 +1076,23 @@ function facilityPersonnelHtml(f,data){
   }
   return parts.join("");
 }
-document.addEventListener("click",e=>{
+document.addEventListener("click",async e=>{
+  const saveHarvest=e.target.closest?.(".save-harvestarium-specializations");
+  if(saveHarvest){
+    const room=saveHarvest.closest(".harvestarium-room-specializations");
+    const specializations=[...room.querySelectorAll(".harvest-room-spec")].map(s=>s.value).filter(Boolean);
+    if(!specializations.length)return message("Choose at least one Harvestarium specialization.","bad");
+    if(new Set(specializations).size!==specializations.length)return message("Choose two different Harvestarium specializations.","bad");
+    saveHarvest.disabled=true;
+    const oldText=saveHarvest.textContent;saveHarvest.textContent="Saving…";
+    try{
+      const r=await api("/api/bastion/harvestarium/specialization",{method:"POST",body:JSON.stringify({specializations})});
+      message(r.message||"Harvestarium specializations saved.","good");
+      await reloadOwnBastion();
+    }catch(err){message(err.message,"bad");}
+    finally{saveHarvest.disabled=false;saveHarvest.textContent=oldText;}
+    return;
+  }
   const w=e.target.closest?.(".workshop-specializations");if(w){openWorkshopSpecializationManager();return;}
   const h=e.target.closest?.(".manage-hirelings");if(h){openHirelingManager(h.dataset.facility);return;}
   const d=e.target.closest?.(".manage-defenders");if(d){openDefenderManager(d.dataset.facility);return;}
@@ -1145,6 +1179,7 @@ document.addEventListener("click",async e=>{
   if(["pay","arrest","decline","wait","friendly","humble","healing","elixir","accept","hire","art","reroll","ack","medicine","handling","animal_temp","barracks","hirelings","peasants"].includes(a)&&!confirm(`Resolve this Bastion event using: ${b.textContent.trim()}?`))return;
   await resolveBastionEvent(a,x);
 });
+
 
 
 async function harvestBastionTurn(){
