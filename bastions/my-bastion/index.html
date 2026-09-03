@@ -1226,8 +1226,13 @@ function render(data){
   $("bastionTurnActions").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn));
   $("rollBastionTurnBtn").disabled=!data.summary.pendingBastionTurn;
   const harvestarium=(data.facilities||[]).find(f=>f.facility==="Harvestarium");
-  const harvestSpecs=harvestarium?(harvestarium.harvestariumSpecializations||harvestarium.specializations||[]):[];
-  $("harvestTurnControls").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn&&harvestarium&&harvestSpecs.length));
+  const defaultHarvestSpecs=["Fertile Soil","Quarries","Mines","Hunter's Lodge","Pasturelands","Black Forest"];
+  const savedHarvestSpecs=harvestarium?(harvestarium.harvestariumSpecializations||harvestarium.specializations||[]):[];
+  // Admin-added legacy Harvestariums can exist without a saved specialization.
+  // The server already permits any valid specialization in that case, so keep
+  // the Harvestarium turn controls visible and offer the full valid list.
+  const harvestSpecs=harvestarium&&savedHarvestSpecs.length?savedHarvestSpecs:(harvestarium?defaultHarvestSpecs:[]);
+  $("harvestTurnControls").classList.toggle("hidden",!(currentViewingOwn&&data.summary.pendingBastionTurn&&harvestarium));
   $("harvestTurnSpec").innerHTML=harvestSpecs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
   $("loginBtn").textContent=publicVisitorMode?"Login with Discord":"Logout";
 
