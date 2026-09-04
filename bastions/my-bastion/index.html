@@ -400,7 +400,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
         <button id="rollBastionTurnBtn" class="primary" type="button">🎲 Roll Bastion Turn</button>
         <span id="harvestTurnControls" class="hidden">
           <select id="harvestTurnSpec"></select>
-          <button id="harvestBastionTurnBtn" type="button" onclick="harvestBastionTurn(event); return false;">🌿 Harvest Harvestarium Instead</button>
+          <button id="harvestBastionTurnBtn" type="button">🌿 Harvest Harvestarium Instead</button>
         </span>
       </div>
       <div id="bastionTurnResult" class="craft-result hidden"></div>
@@ -1046,7 +1046,7 @@ function facilityPersonnelHtml(f,data){
       ${data?.summary?.pendingBastionTurn && savedSpecs.length ? `<div class="slot-grid" style="margin-top:10px">
         <label class="slot"><span>Harvest this turn</span><select class="harvest-room-use-spec">${savedSpecs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("")}</select></label>
       </div>
-      <div class="room-actions"><button class="room-btn good use-harvestarium-turn" type="button" onclick="useHarvestariumTurnFromRoom(this,event); return false;">🌿 Use Bastion Turn — Harvest</button></div>` : (data?.summary?.pendingBastionTurn ? `<div class="muted" style="margin-top:8px">Save a specialization before using the Harvestarium this turn.</div>` : `<div class="muted" style="margin-top:8px">A pending Bastion Turn is required to harvest.</div>`)}
+      <div class="room-actions"><button class="room-btn good use-harvestarium-turn" type="button">🌿 Use Bastion Turn — Harvest</button></div>` : (data?.summary?.pendingBastionTurn ? `<div class="muted" style="margin-top:8px">Save a specialization before using the Harvestarium this turn.</div>` : `<div class="muted" style="margin-top:8px">A pending Bastion Turn is required to harvest.</div>`)}
       ${isVast?`<div class="muted">Vast Harvestariums may use two different specializations.</div>`:`<div class="muted">This Harvestarium can use one specialization.</div>`}
     </div>`);
   }
@@ -1080,9 +1080,8 @@ function facilityPersonnelHtml(f,data){
   }
   return parts.join("");
 }
-async function useHarvestariumTurnFromRoom(button,event){
-  if(event){event.preventDefault();event.stopPropagation();}
-  message("Harvestarium button clicked…");
+async function useHarvestariumTurnFromRoom(button){
+  message("Harvestarium button is working. Preparing harvest…");
   if(!currentViewingOwn)return message("You cannot use this Bastion Turn from the current view.","bad");
   const room=button.closest(".harvestarium-room-specializations");
   const specialization=room?.querySelector(".harvest-room-use-spec")?.value||"";
@@ -1113,6 +1112,29 @@ async function useHarvestariumTurnFromRoom(button,event){
     button.textContent=oldText;
   }
 }
+
+// Harvestarium room buttons are created dynamically every time the Bastion rerenders.
+// Use ONE delegated capture listener on document so the button never needs to be rebound.
+function bindHarvestariumRoomButtons(){
+  // Kept as a no-op for existing render() calls. The delegated listener below is permanent.
+}
+
+document.addEventListener("click", async (ev)=>{
+  const btn=ev.target.closest?.(".use-harvestarium-turn");
+  if(!btn)return;
+  ev.preventDefault();
+  ev.stopPropagation();
+  ev.stopImmediatePropagation();
+  const oldText=btn.textContent;
+  btn.textContent="Opening Harvest…";
+  try{
+    await useHarvestariumTurnFromRoom(btn);
+  }catch(err){
+    message(`Harvestarium failed: ${err?.message||err}`,"bad");
+  }finally{
+    if(document.body.contains(btn) && !btn.disabled) btn.textContent=oldText;
+  }
+}, true);
 
 document.addEventListener("click",async e=>{
   const saveHarvest=e.target.closest?.(".save-harvestarium-specializations");
@@ -1251,9 +1273,7 @@ document.addEventListener("click",async e=>{
 
 
 
-async function harvestBastionTurn(event){
-  if(event){event.preventDefault();event.stopPropagation();}
-  message("Harvestarium button clicked…");
+async function harvestBastionTurn(){
   if(!currentViewingOwn)return;
   if(!me?.summary?.pendingBastionTurn && !me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
   const specialization=$("harvestTurnSpec")?.value||"";
@@ -1359,6 +1379,7 @@ function render(data){
       ${facilityPersonnelHtml(f,data)}
     </div>`;
   }).join(""):empty("No completed Bastion facilities are registered.");
+  bindHarvestariumRoomButtons();
 
   $("construction").innerHTML=data.construction.length?data.construction.map(c=>`<div class="row"><span><strong>${esc(c.facility)}</strong><br><span class="muted">${esc(pretty(c.projectType))}</span></span><span>${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span></div>`).join(""):empty("No active construction.");
 
@@ -1471,6 +1492,7 @@ for(const ev of ["dragleave","drop"]){
 bannerDrop.addEventListener("drop",e=>uploadBanner(e.dataTransfer?.files?.[0]));
 
 $("rollBastionTurnBtn").addEventListener("click",rollBastionTurn);
+$("harvestBastionTurnBtn").addEventListener("click",harvestBastionTurn);
 $("chatSend").addEventListener("click",sendChat);
 $("chatInput").addEventListener("keydown",(event)=>{
   if(event.key==="Enter" && event.ctrlKey){
