@@ -27,7 +27,7 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <main>
 <div id="locked" class="locked hidden"><h1>DM Access Required</h1><p>This page is restricted to members with the Black Banner DM or Trial DM Discord role.</p><a class="btn" href="../">Return to Contract Calendar</a></div>
 <div id="manager" class="hidden">
-<h1>DM Contract Manager</h1><div class="sub">Private contract dashboard for DMs and Trial DMs.</div>
+<h1>DM Contract Manager</h1><div class="sub">Contracts remain here until Party Rewards are submitted. Completed reward entries automatically disappear.</div>
 <div id="error" class="error hidden"></div><div id="success" class="success hidden"></div>
 <div class="formbox"><h2 style="margin:0 0 10px;color:var(--gold)">Create Contract</h2><div class="formgrid">
 <div class="wide"><label>Contract Name</label><input id="cName" maxlength="100"></div>
@@ -91,12 +91,19 @@ async function load(){
    if(!access.canManage){document.getElementById("locked").classList.remove("hidden");return}
    currentUserId=String(access.userId||"");isRewardAdmin=!!access.isAdmin;
    document.getElementById("manager").classList.remove("hidden");
-   const from=Date.now()-90*86400000,to=Date.now()+365*86400000,d=await api(`/api/contracts/manage?from=${from}&to=${to}`),rows=[...new Map((d.contracts||[]).map(c=>[c.id,c])).values()];
+   const from=Date.now()-90*86400000,to=Date.now()+365*86400000,d=await api(`/api/contracts/manage?from=${from}&to=${to}`);
+   // DM Contract Manager is now an action list, not permanent history.
+   // Keep only Contracts that still require DM reward action. Once rewards are
+   // queued/processing/completed, the Contract disappears from this list.
+   // Failed reward jobs remain visible so they can be reviewed.
+   const rows=[...new Map((d.contracts||[]).map(c=>[c.id,c])).values()].filter(c=>
+     c.status==="active" && !["pending","processing","done"].includes(String(c.rewardStatus||""))
+   );
    document.getElementById("list").innerHTML=rows.length?rows.map(c=>{
      const rewardBusy=["pending","processing","done","failed"].includes(c.rewardStatus);
      const canRewardThis=isRewardAdmin||String(c.creatorId)===currentUserId;const finalizeButton=canRewardThis&&c.status==="active"&&!rewardBusy?`<button class="btn finalize" data-id="${c.id}" style="margin-top:9px">🏁 Award Party Rewards</button>`:"";
      return `<div class="card"><div><h3>#${c.id} — ${esc(c.name)}</h3><div class="meta">${esc(c.rank)}-Rank · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)} · ${c.durationHours} hr<br>Status: ${esc(c.status)} · Publish: ${esc(c.publishStatus||"—")} · Host ID: ${esc(c.creatorId)}</div>${rewardStateHtml(c)}${c.publishError?`<div class="error" style="margin-top:8px">${esc(c.publishError)}</div><button class="btn retry" data-id="${c.id}">Retry Discord Publish</button>`:""}${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="btn" style="display:inline-block;margin-top:9px" target="_blank" href="${esc(c.discordUrl)}">Open Discord Contract</a>`:""} ${finalizeButton}</div><div class="counts">Accepted ${c.accepted}/${c.maxPlayers}<br>Waiting ${c.waiting}<br>Tentative ${c.tentative}</div></div>`;
-   }).join(""):'<div class="card">No contracts found.</div>';
+   }).join(""):'<div class="card">No Contracts are waiting for Party Rewards.</div>';
    document.querySelectorAll(".retry").forEach(b=>b.onclick=async()=>{try{await api("/api/contracts/retry-publish",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:Number(b.dataset.id)})});message("success","Publish retry queued.");setTimeout(load,1500)}catch(e){message("error",e.message)}});
    document.querySelectorAll(".finalize").forEach(b=>b.onclick=()=>openFinalize(Number(b.dataset.id)).catch(e=>message("error",e.message)));
  }catch(e){
@@ -137,11 +144,19 @@ function reviewFinalize(){
  document.getElementById("rewardReview").classList.remove("hidden");document.getElementById("rewardSubmitBtn").classList.remove("hidden");document.getElementById("rewardReviewBtn").classList.add("hidden");
 }
 async function submitFinalize(){
+ const p=collectFinalize();
+ if(!p.materialsText.trim()){
+   const sure=window.confirm(
+     "No quest materials have been added.\n\nAre you sure the party received NO materials during this Contract?\n\nClick OK to complete the rewards with no materials, or Cancel to go back and add them."
+   );
+   if(!sure)return;
+ }
  const btn=document.getElementById("rewardSubmitBtn");btn.disabled=true;
  try{
-   const p=collectFinalize();
    const r=await api("/api/contracts/finalize",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});
-   closeFinalize();message("success",`Contract #${r.contractId} rewards queued. The Economy Bot will process them and complete the contract.`);setTimeout(load,1800);
+   closeFinalize();
+   message("success",`Contract #${r.contractId} rewards queued. It has been removed from the reward list while the Economy Bot processes it.`);
+   load();
  }catch(e){message("error",e.message)}finally{btn.disabled=false}
 }
 document.getElementById("refresh").onclick=load;
