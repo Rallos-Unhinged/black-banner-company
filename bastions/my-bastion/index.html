@@ -1112,14 +1112,20 @@ async function useHarvestariumTurnFromRoom(button){
   }
 }
 
+function bindHarvestariumRoomButtons(){
+  document.querySelectorAll(".use-harvestarium-turn").forEach(btn=>{
+    if(btn.dataset.harvestBound==="1")return;
+    btn.dataset.harvestBound="1";
+    btn.addEventListener("click",async ev=>{
+      ev.preventDefault();
+      ev.stopPropagation();
+      message("Harvestarium button clicked…");
+      await useHarvestariumTurnFromRoom(btn);
+    });
+  });
+}
+
 document.addEventListener("click",async e=>{
-  const useHarvest=e.target.closest?.(".use-harvestarium-turn");
-  if(useHarvest){
-    e.preventDefault();
-    e.stopPropagation();
-    await useHarvestariumTurnFromRoom(useHarvest);
-    return;
-  }
   const saveHarvest=e.target.closest?.(".save-harvestarium-specializations");
   if(saveHarvest){
     const room=saveHarvest.closest(".harvestarium-room-specializations");
@@ -1362,6 +1368,7 @@ function render(data){
       ${facilityPersonnelHtml(f,data)}
     </div>`;
   }).join(""):empty("No completed Bastion facilities are registered.");
+  bindHarvestariumRoomButtons();
 
   $("construction").innerHTML=data.construction.length?data.construction.map(c=>`<div class="row"><span><strong>${esc(c.facility)}</strong><br><span class="muted">${esc(pretty(c.projectType))}</span></span><span>${Number(c.remainingTurns)} / ${Number(c.totalTurns)} turns left</span></div>`).join(""):empty("No active construction.");
 
