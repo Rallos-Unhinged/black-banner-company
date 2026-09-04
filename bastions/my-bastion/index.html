@@ -1043,6 +1043,10 @@ function facilityPersonnelHtml(f,data){
         ${isVast?`<label class="slot"><span>Specialization 2</span><select class="harvest-room-spec" data-slot="2">${optionHtml(savedSpecs[1]||"",true)}</select></label>`:`<div class="slot empty"><span>Specialization 2: 🔒 Upgrade to Vast to unlock</span></div>`}
       </div>
       <div class="room-actions"><button class="room-btn good save-harvestarium-specializations" type="button">Save Specialization${isVast?"s":""}</button></div>
+      ${data?.summary?.pendingBastionTurn && savedSpecs.length ? `<div class="slot-grid" style="margin-top:10px">
+        <label class="slot"><span>Harvest this turn</span><select class="harvest-room-use-spec">${savedSpecs.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("")}</select></label>
+      </div>
+      <div class="room-actions"><button class="room-btn good use-harvestarium-turn" type="button">🌿 Use Bastion Turn — Harvest</button></div>` : (data?.summary?.pendingBastionTurn ? `<div class="muted" style="margin-top:8px">Save a specialization before using the Harvestarium this turn.</div>` : `<div class="muted" style="margin-top:8px">A pending Bastion Turn is required to harvest.</div>`)}
       ${isVast?`<div class="muted">Vast Harvestariums may use two different specializations.</div>`:`<div class="muted">This Harvestarium can use one specialization.</div>`}
     </div>`);
   }
@@ -1077,6 +1081,31 @@ function facilityPersonnelHtml(f,data){
   return parts.join("");
 }
 document.addEventListener("click",async e=>{
+  const useHarvest=e.target.closest?.(".use-harvestarium-turn");
+  if(useHarvest){
+    e.preventDefault();
+    e.stopPropagation();
+    if(!currentViewingOwn)return;
+    if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
+    const room=useHarvest.closest(".harvestarium-room-specializations");
+    const specialization=room?.querySelector(".harvest-room-use-spec")?.value||"";
+    if(!specialization)return message("Choose a saved Harvestarium specialization first.","bad");
+    if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization}? This will NOT roll a Bastion event.`))return;
+    useHarvest.disabled=true;
+    const oldText=useHarvest.textContent;useHarvest.textContent="Harvesting…";
+    try{
+      const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
+      const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>");
+      const box=$("bastionTurnResult");
+      box.className="craft-result success";
+      box.innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
+      box.classList.remove("hidden");
+      message(`Harvestarium used for ${r.specialization}. No Bastion event was rolled.`,"good");
+      await reloadOwnBastion();
+    }catch(err){message(err.message,"bad");}
+    finally{useHarvest.disabled=false;useHarvest.textContent=oldText;}
+    return;
+  }
   const saveHarvest=e.target.closest?.(".save-harvestarium-specializations");
   if(saveHarvest){
     const room=saveHarvest.closest(".harvestarium-room-specializations");
@@ -1175,7 +1204,38 @@ document.addEventListener("click",async e=>{
   if(a==="aid")x.participants=Number(prompt(`How many Defenders/Hirelings will you send? Max ${Number(me?.pendingEvent?.data?.maxParticipants||0)}:`,"1"));
   if(a==="merchant"){x.itemName=prompt("DM-approved Player's Handbook item name:","");if(x.itemName===null)return;x.normalPrice=Number(prompt("Normal item price in GP:","0"));}
   if(a==="duel"){x.die=Number(prompt("Champion combat die sides (6, 8, 12, etc.):","6"));x.death=Number(prompt("Death threshold (normal Defender = 3):","3"));}
-  if(a==="vermin")x.beasts=Number(prompt("How many of the 10 are Beast / Monster Defenders?","0"));
+  if(a==="vermin"){
+    const personnel=Array.isArray(me?.personnel)?me.personnel:[];
+    const defenderAvail=personnel.filter(p=>String(p.personnelType||p.personnel_type||"").toLowerCase()==="defender").length;
+    const knightAvail=personnel.filter(p=>["knight","ronin"].includes(String(p.personnelType||p.personnel_type||"").toLowerCase())).length;
+    const monsterAvail=personnel.filter(p=>String(p.personnelType||p.personnel_type||"").toLowerCase()==="monster").length;
+    const totalAvail=defenderAvail+knightAvail+monsterAvail;
+    if(totalAvail<10)return message(`You need 10 eligible Defenders. You currently have ${totalAvail} total (${defenderAvail} Barracks Defenders, ${knightAvail} Knights/Ronin, ${monsterAvail} Monsters).`,"bad");
+
+    const modal=showPersonnelModal("Vermin Infestation — Choose 10 Defenders",`
+      <div class="muted" style="margin-bottom:10px">Choose exactly 10 defenders to exterminate the vermin.</div>
+      <div class="card"><strong>Barracks Defenders — 1d6 each</strong><div class="muted">Available: ${defenderAvail}</div><input id="verminDefenders" type="number" min="0" max="${defenderAvail}" value="${Math.min(10,defenderAvail)}"></div>
+      <div class="card"><strong>Knights / Ronin — 1d12 each</strong><div class="muted">Available: ${knightAvail}</div><input id="verminKnights" type="number" min="0" max="${knightAvail}" value="0"></div>
+      <div class="card"><strong>Monsters — 2d6 each</strong><div class="muted">Available: ${monsterAvail}</div><input id="verminMonsters" type="number" min="0" max="${monsterAvail}" value="0"></div>
+      <div id="verminSelectedTotal" class="purchase-preview">Selected: ${Math.min(10,defenderAvail)} / 10</div>
+      <button class="room-btn good" type="button" data-vermin-submit>Fight Vermin</button>`);
+    const inputs=["verminDefenders","verminKnights","verminMonsters"].map(id=>modal.querySelector("#"+id));
+    const updateTotal=()=>{const total=inputs.reduce((n,i)=>n+Math.max(0,Number(i?.value)||0),0);const out=modal.querySelector("#verminSelectedTotal");if(out)out.textContent=`Selected: ${total} / 10`;};
+    inputs.forEach(i=>i?.addEventListener("input",updateTotal));
+    modal.addEventListener("click",async ev=>{
+      const submit=ev.target.closest?.("[data-vermin-submit]");if(!submit)return;
+      const defenders=Math.max(0,Number(modal.querySelector("#verminDefenders")?.value)||0);
+      const knights=Math.max(0,Number(modal.querySelector("#verminKnights")?.value)||0);
+      const monsters=Math.max(0,Number(modal.querySelector("#verminMonsters")?.value)||0);
+      if(![defenders,knights,monsters].every(Number.isInteger))return message("Use whole numbers only.","bad");
+      if(defenders>defenderAvail||knights>knightAvail||monsters>monsterAvail)return message("You selected more personnel than you have available.","bad");
+      if(defenders+knights+monsters!==10)return message("Choose exactly 10 defenders before continuing.","bad");
+      submit.disabled=true;
+      try{closePersonnelModal();await resolveBastionEvent("vermin",{defenders,knights,monsters});}
+      catch(err){submit.disabled=false;message(err.message,"bad");}
+    });
+    return;
+  }
   if(["pay","arrest","decline","wait","friendly","humble","healing","elixir","accept","hire","art","reroll","ack","medicine","handling","animal_temp","barracks","hirelings","peasants"].includes(a)&&!confirm(`Resolve this Bastion event using: ${b.textContent.trim()}?`))return;
   await resolveBastionEvent(a,x);
 });
