@@ -18,7 +18,7 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 .reward-box label{display:block;color:#d8bd70;font-size:12px;margin-bottom:4px}.reward-box input,.reward-box select,.reward-box textarea{width:100%;background:#04090d;color:#eef;border:1px solid #28506a;padding:8px}
 .reward-box textarea{min-height:90px}.roster{display:grid;gap:6px;margin:10px 0}.roster-row{display:grid;grid-template-columns:minmax(180px,1fr) 150px;gap:8px;border:1px solid #1c3d52;background:#091923;padding:8px}.signup-status{color:#8ecceb;font-size:12px}.reward-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
 .reward-state{display:inline-block;margin-top:8px;padding:4px 7px;border:1px solid #4a5d68;font-size:12px;color:#b8cbd5}.reward-state.done{border-color:#39704b;color:#9fe1b5}.reward-state.failed{border-color:#773535;color:#f0aaaa}
-.material-picker{display:grid;grid-template-columns:minmax(220px,1fr) 100px auto;gap:8px;align-items:end}.material-list{margin-top:8px;display:grid;gap:6px}.material-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;border:1px solid #1c3d52;background:#091923;padding:8px}.material-name{min-width:0}.material-qty{color:#d8bd70;white-space:nowrap}.material-remove{padding:5px 9px}.material-empty{color:var(--muted);font-size:12px}
+.material-search-wrap{margin-bottom:8px}.material-search-wrap input{width:100%}.material-picker{display:grid;grid-template-columns:minmax(220px,1fr) 100px auto;gap:8px;align-items:end}.material-list{margin-top:8px;display:grid;gap:6px}.material-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;border:1px solid #1c3d52;background:#091923;padding:8px}.material-name{min-width:0}.material-qty{color:#d8bd70;white-space:nowrap}.material-remove{padding:5px 9px}.material-empty{color:var(--muted);font-size:12px}
 @media(max-width:700px){.reward-grid{grid-template-columns:1fr}.reward-grid .full{grid-column:1}.roster-row{grid-template-columns:1fr}.material-picker{grid-template-columns:1fr 92px}.material-picker .btn{grid-column:1/-1}.material-row{grid-template-columns:minmax(0,1fr) auto}.material-remove{grid-column:1/-1}}
 
 </style>
@@ -57,6 +57,10 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
       <div><label>Gold for Participants</label><input id="rewardGold" type="number" min="0" value="0"></div>
       <div class="full">
         <label>Quest Materials (optional)</label>
+        <div class="material-search-wrap">
+          <input id="rewardMaterialSearch" type="search" placeholder="Search materials… (ruby, dragon scale, blood, wood, etc.)" autocomplete="off">
+          <div id="rewardMaterialSearchCount" class="sub" style="margin-top:4px"></div>
+        </div>
         <div class="material-picker">
           <select id="rewardMaterialSelect"><option value="">Loading materials…</option></select>
           <input id="rewardMaterialQty" type="number" min="1" max="9999" value="1" inputmode="numeric" aria-label="Material quantity">
@@ -145,12 +149,25 @@ async function createContract(){
    const r=await api("/api/contracts/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});message("success",`Contract #${r.contract.id} created. Discord publishing is queued.`);document.getElementById("cName").value="";document.getElementById("cDescription").value="";document.getElementById("cRewards").value="";document.getElementById("cImage").value="";setTimeout(load,1800);
  }catch(e){message("error",e.message)}finally{btn.disabled=false}
 }
-async function loadMaterialCatalog(){
- if(materialCatalog.length)return materialCatalog;
- const d=await api("/api/buy-orders/catalog");
- materialCatalog=Array.isArray(d.materials)?d.materials:[];
+function renderMaterialOptions(query=""){
  const sel=document.getElementById("rewardMaterialSelect");
- sel.innerHTML='<option value="">Choose a material…</option>'+materialCatalog.map(m=>`<option value="${esc(m.itemKey)}">${esc(m.name)}</option>`).join("");
+ const count=document.getElementById("rewardMaterialSearchCount");
+ const q=String(query||"").trim().toLowerCase();
+ const current=sel.value;
+ const filtered=!q?materialCatalog:materialCatalog.filter(m=>{
+   const hay=`${m.name||""} ${m.itemKey||""}`.toLowerCase();
+   return hay.includes(q);
+ });
+ sel.innerHTML='<option value="">Choose a material…</option>'+filtered.map(m=>`<option value="${esc(m.itemKey)}">${esc(m.name)}</option>`).join("");
+ if(current&&filtered.some(m=>m.itemKey===current))sel.value=current;
+ if(count)count.textContent=q?`${filtered.length} material${filtered.length===1?"":"s"} found`:`${filtered.length} materials available`;
+}
+async function loadMaterialCatalog(){
+ if(!materialCatalog.length){
+   const d=await api("/api/buy-orders/catalog");
+   materialCatalog=Array.isArray(d.materials)?d.materials:[];
+ }
+ renderMaterialOptions(document.getElementById("rewardMaterialSearch")?.value||"");
  return materialCatalog;
 }
 function renderRewardMaterials(){
@@ -189,7 +206,7 @@ async function openFinalize(id){
  if(d.rewardJob)throw new Error(`Reward job is already ${d.rewardJob.status}.`);
  document.getElementById("rewardTitle").textContent=`Finalize #${d.contract.id} — ${d.contract.name}`;
  document.getElementById("rewardRoster").innerHTML=d.roster.length?d.roster.map((p,i)=>`<div class="roster-row"><div><b>${esc(p.playerName)}</b>${p.characterName?` — ${esc(p.characterName)}`:""}<div class="signup-status">${esc(p.status)}</div></div><select class="rewardClass" data-user="${esc(p.userId)}"><option value="">Not Participating</option><option value="main" ${p.status==="accepted"?"selected":""}>Main Character</option><option value="alt">Alt Character</option><option value="gold">Gold Only</option></select></div>`).join(""):'<div class="error">No Accepted, Tentative, or Waiting List players are available.</div>';
- document.getElementById("rewardMainPP").value="0";document.getElementById("rewardAltPP").value="0";document.getElementById("rewardGold").value="0";selectedRewardMaterials=[];renderRewardMaterials();await loadMaterialCatalog();document.getElementById("rewardMaterialSelect").value="";document.getElementById("rewardMaterialQty").value="1";
+ document.getElementById("rewardMainPP").value="0";document.getElementById("rewardAltPP").value="0";document.getElementById("rewardGold").value="0";selectedRewardMaterials=[];renderRewardMaterials();document.getElementById("rewardMaterialSearch").value="";await loadMaterialCatalog();document.getElementById("rewardMaterialSelect").value="";document.getElementById("rewardMaterialQty").value="1";
  document.getElementById("rewardReview").classList.add("hidden");document.getElementById("rewardSubmitBtn").classList.add("hidden");document.getElementById("rewardReviewBtn").classList.remove("hidden");
  document.getElementById("rewardModal").classList.remove("hidden");
 }
@@ -229,6 +246,15 @@ document.getElementById("rewardCancel").onclick=closeFinalize;
 document.getElementById("rewardReviewBtn").onclick=()=>{try{reviewFinalize()}catch(e){message("error",e.message)}};
 document.getElementById("rewardSubmitBtn").onclick=submitFinalize;
 document.getElementById("rewardAddMaterial").onclick=()=>{try{addRewardMaterial()}catch(e){message("error",e.message)}};
+document.getElementById("rewardMaterialSearch").addEventListener("input",e=>renderMaterialOptions(e.target.value));
+document.getElementById("rewardMaterialSearch").addEventListener("keydown",e=>{
+ if(e.key==="Enter"){
+   e.preventDefault();
+   const sel=document.getElementById("rewardMaterialSelect");
+   if(!sel.value && sel.options.length===2)sel.selectedIndex=1;
+   try{addRewardMaterial()}catch(err){message("error",err.message)}
+ }
+});
 document.getElementById("rewardModal").onclick=e=>{if(e.target===document.getElementById("rewardModal"))closeFinalize()};
 load();
 </script>
