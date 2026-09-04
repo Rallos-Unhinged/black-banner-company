@@ -41,7 +41,29 @@ function compSum(){if(!C)return;const c=$("currentRank").value,i=C.componentRank
 function result(el,a){const ok=a.status==="success";el.className="result "+(ok?"good":"bad");if(a.type==="augmentation"){el.innerHTML=`<h3>${ok?"✅ AUGMENTATION SUCCESSFUL":"❌ AUGMENTATION FAILED"}</h3><div>Arcana: 1d20 (${a.arcanaRoll}) + ${C.arcanaMod}${a.fogUsed?` + ${C.flashOfGenius.bonus} FoG`:""} = ${a.arcanaTotal} vs DC ${a.dc}</div><div>Gold Paid: ${money(a.totalPaid)}</div>${ok?`<div>${esc(a.mainItem)} advances to ${a.targetRank}-Rank and gains: <strong>${esc(a.property)}</strong></div><div>${esc(a.secondaryItem)} is consumed/destroyed. Result requires Attunement.</div>`:`<div>Main Item survives unchanged.</div><div>Secondary Fate: 1d100 = ${a.secondaryFateRoll} — ${a.secondaryDestroyed?"DESTROYED":"SURVIVES"}</div>`}`}else{el.innerHTML=`<h3>${ok?"✅ REFINEMENT SUCCESSFUL":"❌ REFINEMENT FAILED"}</h3><div>Risk Roll: 1d100 = ${a.failureRoll}</div><div>Gold Paid: ${money(a.totalPaid)}</div><div>${esc(a.componentName)}: ${a.currentRank} → ${a.targetRank}</div><div>${ok?"Refined successfully.":"Component consumed; Gold lost."}</div>`}}
 function card(a){const dt=new Date(a.resolvedAt||a.createdAt).toLocaleString(),player=all?`<span>Player: <strong>${esc(a.playerName)}</strong></span>`:"";if(a.type==="augmentation")return `<article class="entry ${a.status}"><div class="entry-head"><h3>#${a.id} · Augmentation</h3><strong>${a.status.toUpperCase()}</strong></div><div class="meta">${player}<span>${dt}</span><span>${money(a.totalPaid)}</span><span>FoG: ${a.fogUsed?"Yes":"No"}</span></div><div><b>Main:</b> ${esc(a.mainItem)}</div><div><b>Secondary:</b> ${esc(a.secondaryItem)}</div><div><b>Property:</b> ${esc(a.property)}</div><div><b>Target:</b> ${a.targetRank}-Rank</div>${a.arcanaRoll!=null?`<div><b>Arcana:</b> 1d20 (${a.arcanaRoll}) + ${C.arcanaMod}${a.fogUsed?` + ${C.flashOfGenius.bonus} FoG`:""} = ${a.arcanaTotal} vs DC ${a.dc}</div>`:""}${a.status==="failed"?`<div><b>Secondary Fate:</b> 1d100 = ${a.secondaryFateRoll} — ${a.secondaryDestroyed?"Destroyed":"Survived"}</div>`:""}<div><b>Transaction:</b> ${a.transactionId?"#"+a.transactionId:"—"}</div></article>`;return `<article class="entry ${a.status}"><div class="entry-head"><h3>#${a.id} · Component Upgrade</h3><strong>${a.status.toUpperCase()}</strong></div><div class="meta">${player}<span>${dt}</span><span>${money(a.totalPaid)}</span></div><div><b>Component:</b> ${esc(a.componentName)}</div><div><b>Upgrade:</b> ${a.currentRank} → ${a.targetRank}</div>${a.failureRoll!=null?`<div><b>Risk Roll:</b> 1d100 = ${a.failureRoll}</div>`:""}<div><b>Transaction:</b> ${a.transactionId?"#"+a.transactionId:"—"}</div></article>`}
 async function hist(){const d=await api("/api/vaelor/history"+(all?"?all=1":""));$("history").innerHTML=d.history.length?d.history.map(card).join(""):"<div class='entry'>No Forge history yet.</div>"}
-async function load(){try{C=await api("/api/vaelor/config");$("balance").textContent="Gold: "+money(C.gold);if(C.isAdmin)$("allHistoryBtn").classList.remove("hidden");augSum();compSum();await hist()}catch(e){$("history").innerHTML="<div class='entry failed'>"+esc(e.message)+"</div>";$("augmentBtn").disabled=$("componentBtn").disabled=true}}
+async function load(){
+  // Read the player's Gold from /api/me, the same established endpoint used elsewhere
+  // on the Black Banner site. This keeps the Gold display independent from the
+  // Vaelor configuration request.
+  try{
+    const me=await api("/api/me");
+    const gold=Number(me?.balance?.gold||0);
+    $("balance").textContent="Gold: "+money(gold);
+  }catch(e){
+    $("balance").textContent="Gold: Login required";
+  }
+
+  try{
+    C=await api("/api/vaelor/config");
+    if(C.isAdmin)$("allHistoryBtn").classList.remove("hidden");
+    augSum();
+    compSum();
+    await hist();
+  }catch(e){
+    $("history").innerHTML="<div class='entry failed'>Vaelor API: "+esc(e.message)+"</div>";
+    $("augmentBtn").disabled=$("componentBtn").disabled=true;
+  }
+}
 $("targetRank").onchange=augSum;$("useFog").onchange=augSum;$("currentRank").onchange=compSum;
 $("augmentBtn").onclick=async()=>{if(!confirm("Pay the displayed Gold and roll now?"))return;try{const d=await api("/api/vaelor/augment",{method:"POST",body:JSON.stringify({mainItem:$("mainItem").value,secondaryItem:$("secondaryItem").value,property:$("property").value,targetRank:$("targetRank").value,useFog:$("useFog").checked})});result($("augResult"),d.request);await load()}catch(e){$("augResult").className="result bad";$("augResult").innerHTML=esc(e.message)}};
 $("componentBtn").onclick=async()=>{if(!confirm("Pay the displayed Gold and roll now?"))return;try{const d=await api("/api/vaelor/component-upgrade",{method:"POST",body:JSON.stringify({componentName:$("componentName").value,currentRank:$("currentRank").value})});result($("compResult"),d.request);await load()}catch(e){$("compResult").className="result bad";$("compResult").innerHTML=esc(e.message)}};
