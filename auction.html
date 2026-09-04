@@ -98,7 +98,7 @@ function show(msg,type=""){const n=$("notice");n.textContent=msg;n.className="no
 async function api(path,opt={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{"Content-Type":"application/json",...(opt.headers||{})},...opt});let data={};try{data=await r.json()}catch(_){}if(r.status===401)throw new Error("LOGIN_REQUIRED");if(!r.ok)throw new Error(data.error||("Request failed: "+r.status));return data;}
 function remaining(ms){const d=ms-Date.now();if(d<=0)return"Ending...";const s=Math.floor(d/1000),days=Math.floor(s/86400),hrs=Math.floor((s%86400)/3600),mins=Math.floor((s%3600)/60);if(days)return`${days}d ${hrs}h`;if(hrs)return`${hrs}h ${mins}m`;return`${mins}m`;}
 function auctionCard(a,compact=false){
-  const seller=a.isSeller?"You":("Discord ID "+esc(a.sellerId));
+  const seller=a.isSeller?"You":esc(a.sellerName||("Discord ID "+a.sellerId));
   const bid=a.myBid>0?`<span class="mybid">Your sealed bid: ${money(a.myBid)}</span>`:"";
   const buy=a.buyNowPrice?`<span>Buy It Now: <strong>${money(a.buyNowPrice)}</strong></span>`:"";
   let actions="";
@@ -116,8 +116,8 @@ function closedDate(ms){
   catch(_){return new Date(ms).toLocaleString();}
 }
 function historyCard(a){
-  const seller=a.isSeller?"You":("Discord ID "+esc(a.sellerId));
-  const winner=a.winnerId?(String(a.winnerId)===String(me?.id)?"You":("Discord ID "+esc(a.winnerId))):null;
+  const seller=a.isSeller?"You":esc(a.sellerName||("Discord ID "+a.sellerId));
+  const winner=a.winnerId?(String(a.winnerId)===String(me?.id)?"You":esc(a.winnerName||("Discord ID "+a.winnerId))):null;
   let result="No bids";
   if(a.status==="cancelled") result="Cancelled — all held bids refunded";
   else if(winner&&a.finalBid>0) result=`Winner: ${winner} · ${money(a.finalBid)}`;
