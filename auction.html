@@ -17,6 +17,12 @@ button.primary,.btn.primary{background:linear-gradient(135deg,rgba(141,38,38,.72
 input,textarea{width:100%;padding:.72rem;color:var(--text);background:#100d0a;border:1px solid rgba(216,166,59,.34);font:inherit}textarea{min-height:110px;resize:vertical}.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}.field{margin:.65rem 0}.field label{display:block;color:var(--goldsoft);font-family:'Cinzel',serif;font-size:.72rem;margin-bottom:.25rem}
 .cards{display:grid;gap:.8rem}.auction{border:1px solid rgba(216,166,59,.3);background:rgba(0,0,0,.28);padding:1rem}.auction-head{display:flex;justify-content:space-between;gap:1rem;align-items:start}.auction h3{color:var(--goldsoft)}.tag{font:700 .67rem 'Fira Mono',monospace;border:1px solid var(--faint);padding:.3rem .45rem;color:var(--gold);white-space:nowrap}.meta{display:flex;gap:.8rem;flex-wrap:wrap;margin:.65rem 0;color:var(--muted);font-size:.94rem}.mybid{color:var(--good);font-weight:700}.actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}.bidbox{display:flex;gap:.5rem;flex:1;min-width:260px}.bidbox input{max-width:180px}.notice{margin-top:1rem;padding:.8rem 1rem;border:1px solid var(--faint);background:rgba(0,0,0,.28)}.notice.good{border-color:rgba(135,201,135,.5);color:var(--good)}.notice.bad{border-color:rgba(223,133,133,.5);color:var(--bad)}.hidden{display:none!important}
 .rules{font-size:.96rem;color:var(--muted)}.rules strong{color:var(--goldsoft)}footer{text-align:center;color:var(--muted);margin:2rem 0}
+
+.history-card{border-color:rgba(216,166,59,.22)}
+.history-card.won{border-color:rgba(135,201,135,.45)}
+.history-card.cancelled{opacity:.78}
+.history-result{color:var(--goldsoft);font-weight:700}
+.history-empty{padding:.75rem 0;color:var(--muted)}
 @media(max-width:850px){.grid{grid-template-columns:1fr}.formrow{grid-template-columns:1fr}.auction-head{flex-direction:column}.bidbox{min-width:100%}.bidbox input{max-width:none}}
 </style>
 </head>
@@ -55,6 +61,12 @@ input,textarea{width:100%;padding:.72rem;color:var(--text);background:#100d0a;bo
         <h2>My Auctions & Bids</h2><div class="rule"></div>
         <div id="mine" class="cards"><p class="muted">Login to view your activity.</p></div>
       </section>
+
+      <section class="panel">
+        <h2>Auction History</h2><div class="rule"></div>
+        <p class="rules">Closed auctions are kept here permanently. Winning bids are public after an auction closes, but losing sealed bids remain private.</p>
+        <div id="history" class="cards"><p class="muted">Login to load auction history.</p></div>
+      </section>
     </main>
 
     <aside>
@@ -78,7 +90,7 @@ input,textarea{width:100%;padding:.72rem;color:var(--text);background:#100d0a;bo
 
 <script>
 const API_BASE="https://api.blackbannercompany.com";
-let me=null, auctions=[], mine={selling:[],bidding:[]};
+let me=null, auctions=[], mine={selling:[],bidding:[]}, history=[];
 const $=id=>document.getElementById(id);
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function money(v){return Number(v||0).toLocaleString()+"g";}
@@ -97,6 +109,24 @@ function auctionCard(a,compact=false){
   if(a.status==="active"&&a.isSeller)actions=`<div class="actions"><button class="danger" onclick="endAuction(${a.id})">End Auction</button></div>`;
   return `<article class="auction"><div class="auction-head"><div><h3>#${a.id} · ${esc(a.itemName)}</h3><div class="muted">${esc(a.description||"No description.")}</div></div><span class="tag">${esc(a.status.toUpperCase())}</span></div><div class="meta"><span>Seller: ${seller}</span><span>Starting: <strong>${money(a.startingBid)}</strong></span><span>Min increase: ${money(a.minIncrement)}</span>${buy}<span>Ends: <strong>${remaining(a.endsAt)}</strong></span>${bid}</div>${actions}</article>`;
 }
+
+function closedDate(ms){
+  if(!ms)return"Unknown";
+  try{return new Date(ms).toLocaleString(undefined,{year:"numeric",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});}
+  catch(_){return new Date(ms).toLocaleString();}
+}
+function historyCard(a){
+  const seller=a.isSeller?"You":("Discord ID "+esc(a.sellerId));
+  const winner=a.winnerId?(String(a.winnerId)===String(me?.id)?"You":("Discord ID "+esc(a.winnerId))):null;
+  let result="No bids";
+  if(a.status==="cancelled") result="Cancelled — all held bids refunded";
+  else if(winner&&a.finalBid>0) result=`Winner: ${winner} · ${money(a.finalBid)}`;
+  const reason=a.closeReason==="buy_now"?"Buy It Now":a.closeReason==="expired"?"Auction Ended":a.closeReason==="cancelled"?"Cancelled":"Closed";
+  const cls=a.status==="cancelled"?"cancelled":(a.winnerId&&String(a.winnerId)===String(me?.id)?"won":"");
+  const buy=a.buyNowPrice?`<span>Buy It Now: <strong>${money(a.buyNowPrice)}</strong></span>`:"";
+  return `<article class="auction history-card ${cls}"><div class="auction-head"><div><h3>#${a.id} · ${esc(a.itemName)}</h3><div class="muted">${esc(a.description||"No description.")}</div></div><span class="tag">${esc(reason.toUpperCase())}</span></div><div class="meta"><span>Seller: ${seller}</span><span>Starting: <strong>${money(a.startingBid)}</strong></span>${buy}<span>Closed: <strong>${esc(closedDate(a.closedAt||a.endsAt))}</strong></span></div><div class="history-result">${result}</div></article>`;
+}
+
 function render(){
   $("accountName").textContent=me?.username||me?.global_name||"Black Banner Member";
   $("gold").textContent=Number(me?.gold||0).toLocaleString();
@@ -106,12 +136,13 @@ function render(){
   const blocks=[];
   if(mine.bidding?.length){blocks.push("<h3>My Active Bids</h3>"+mine.bidding.map(a=>auctionCard(a,true)).join(""));}
   if(mine.selling?.length){blocks.push("<h3>My Auctions</h3>"+mine.selling.map(a=>auctionCard(a,true)).join(""));}
-  $("mine").innerHTML=blocks.join("")||'<p class="muted">You have no auction activity yet.</p>';
+  $("mine").innerHTML=blocks.join("")||'<p class="muted">You have no active auction activity.</p>';
+  $("history").innerHTML=history.length?history.map(historyCard).join(""):'<p class="history-empty">No closed auctions yet.</p>';
 }
 async function load(){
   try{
-    const [m,a,x]=await Promise.all([api("/api/me"),api("/api/auctions"),api("/api/auctions/mine")]);
-    me=m;auctions=a.auctions||[];mine=x||{selling:[],bidding:[]};$("loginBtn").textContent="Logout";render();
+    const [m,a,x,h]=await Promise.all([api("/api/me"),api("/api/auctions"),api("/api/auctions/mine"),api("/api/auctions/history")]);
+    me=m;auctions=a.auctions||[];mine=x||{selling:[],bidding:[]};history=h.auctions||[];$("loginBtn").textContent="Logout";render();
   }catch(e){if(e.message==="LOGIN_REQUIRED"){me=null;$("loginBtn").textContent="Login with Discord";return;}show(e.message,"bad");}
 }
 async function createAuction(){
