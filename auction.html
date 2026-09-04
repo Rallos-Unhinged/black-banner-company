@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Black Banner Company — Silent Auctions</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Fira+Mono:wght@400;500&display=swap');
+:root{--bg:#050505;--panel:rgba(13,11,9,.95);--panel2:rgba(22,17,12,.96);--gold:#d8a63b;--goldsoft:#f1d994;--blood:#8d2626;--text:#efe4cc;--muted:#c6b99c;--faint:rgba(216,166,59,.28);--good:#87c987;--bad:#df8585}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top,rgba(212,91,31,.14),transparent 32rem),linear-gradient(180deg,#090604,#050505 48%,#080705);color:var(--text);font-family:'Crimson Pro',Georgia,serif;font-size:18px}
+.page{width:min(1240px,calc(100% - 2rem));margin:auto;padding-bottom:3rem}.topbar{display:flex;justify-content:space-between;align-items:center;gap:.7rem;flex-wrap:wrap;padding:1rem 0}.nav{display:flex;gap:.55rem;flex-wrap:wrap}
+.btn,button{border:1px solid rgba(216,166,59,.65);background:rgba(216,166,59,.08);color:var(--goldsoft);padding:.72rem .95rem;font-family:'Cinzel',serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;text-decoration:none}
+button.primary,.btn.primary{background:linear-gradient(135deg,rgba(141,38,38,.72),rgba(216,166,59,.18));border-color:rgba(241,217,148,.8)}button.danger{border-color:rgba(190,70,70,.75);color:#ffc7c7}
+.hero{border:1px solid rgba(216,166,59,.55);background:var(--panel);padding:clamp(1.4rem,4vw,2.6rem);text-align:center;box-shadow:0 2rem 5rem rgba(0,0,0,.6)}.eyebrow{font:700 .7rem 'Fira Mono',monospace;color:var(--gold);letter-spacing:.18em;text-transform:uppercase}h1,h2,h3{font-family:'Cinzel',serif;margin:0}h1{color:var(--gold);font-size:clamp(2.2rem,6vw,4.5rem)}.subtitle{color:var(--goldsoft);font-style:italic;max-width:780px;margin:.7rem auto 0}
+.accountbar,.panel{background:var(--panel);border:1px solid var(--faint);padding:1rem;margin-top:1rem}.accountbar{display:flex;justify-content:space-between;gap:1rem;align-items:center;flex-wrap:wrap}.stats{display:flex;gap:.6rem;flex-wrap:wrap}.stat{min-width:115px;text-align:center;border:1px solid var(--faint);padding:.55rem}.stat strong{display:block;color:var(--goldsoft);font-family:'Cinzel',serif}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-top:1rem}.panel h2{color:var(--gold);font-size:1.35rem}.muted{color:var(--muted)}.rule{height:1px;background:linear-gradient(90deg,transparent,rgba(216,166,59,.7),transparent);margin:.65rem 0 1rem}
+input,textarea{width:100%;padding:.72rem;color:var(--text);background:#100d0a;border:1px solid rgba(216,166,59,.34);font:inherit}textarea{min-height:110px;resize:vertical}.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}.field{margin:.65rem 0}.field label{display:block;color:var(--goldsoft);font-family:'Cinzel',serif;font-size:.72rem;margin-bottom:.25rem}
+.cards{display:grid;gap:.8rem}.auction{border:1px solid rgba(216,166,59,.3);background:rgba(0,0,0,.28);padding:1rem}.auction-head{display:flex;justify-content:space-between;gap:1rem;align-items:start}.auction h3{color:var(--goldsoft)}.tag{font:700 .67rem 'Fira Mono',monospace;border:1px solid var(--faint);padding:.3rem .45rem;color:var(--gold);white-space:nowrap}.meta{display:flex;gap:.8rem;flex-wrap:wrap;margin:.65rem 0;color:var(--muted);font-size:.94rem}.mybid{color:var(--good);font-weight:700}.actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}.bidbox{display:flex;gap:.5rem;flex:1;min-width:260px}.bidbox input{max-width:180px}.notice{margin-top:1rem;padding:.8rem 1rem;border:1px solid var(--faint);background:rgba(0,0,0,.28)}.notice.good{border-color:rgba(135,201,135,.5);color:var(--good)}.notice.bad{border-color:rgba(223,133,133,.5);color:var(--bad)}.hidden{display:none!important}
+.rules{font-size:.96rem;color:var(--muted)}.rules strong{color:var(--goldsoft)}footer{text-align:center;color:var(--muted);margin:2rem 0}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.formrow{grid-template-columns:1fr}.auction-head{flex-direction:column}.bidbox{min-width:100%}.bidbox input{max-width:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar">
+    <div class="nav">
+      <a class="btn" href="../">Home</a>
+      <a class="btn primary" href="../market/">← Market</a>
+    </div>
+    <button id="loginBtn" class="primary">Login with Discord</button>
+  </div>
+
+  <header class="hero">
+    <div class="eyebrow">Black Banner Company Exchange</div>
+    <h1>Silent Auctions</h1>
+    <p class="subtitle">Sealed bids. Private offers. One shared auction system across Discord and the website.</p>
+  </header>
+
+  <div id="notice" class="notice hidden"></div>
+
+  <section id="accountBar" class="accountbar hidden">
+    <div><strong id="accountName">—</strong><div class="muted">Your sealed bids are visible only to you.</div></div>
+    <div class="stats"><div class="stat"><strong id="gold">0</strong>Gold Available</div><div class="stat"><strong id="activeCount">0</strong>Active Auctions</div></div>
+  </section>
+
+  <div class="grid">
+    <main>
+      <section class="panel">
+        <h2>Active Auctions</h2><div class="rule"></div>
+        <p class="rules"><strong>Silent Bid:</strong> no bidder can see another player's bid. Your Gold is held when you bid. Losing bids are refunded when the auction ends. Exact ties stay with the bidder who reached that amount first. A successful bid in the final 5 minutes resets the auction to 12 hours remaining.</p>
+        <div id="auctions" class="cards"><p class="muted">Login to load auctions.</p></div>
+      </section>
+
+      <section class="panel">
+        <h2>My Auctions & Bids</h2><div class="rule"></div>
+        <div id="mine" class="cards"><p class="muted">Login to view your activity.</p></div>
+      </section>
+    </main>
+
+    <aside>
+      <section class="panel">
+        <h2>Create Auction</h2><div class="rule"></div>
+        <p class="muted">Creates the same 3-day sealed-bid auction used by the Discord Auction system.</p>
+        <div class="field"><label>Item Name</label><input id="itemName" maxlength="160" placeholder="Item name"></div>
+        <div class="field"><label>Description</label><textarea id="description" maxlength="1500" placeholder="Describe the item"></textarea></div>
+        <div class="formrow">
+          <div class="field"><label>Starting Bid</label><input id="startingBid" type="number" min="1" value="100"></div>
+          <div class="field"><label>Min Increase</label><input id="minIncrement" type="number" min="1" value="50"></div>
+          <div class="field"><label>Buy It Now</label><input id="buyNowPrice" type="number" min="1" placeholder="Optional"></div>
+        </div>
+        <button id="createBtn" class="primary">Create 3-Day Auction</button>
+      </section>
+    </aside>
+  </div>
+
+  <footer>Black Banner Company · Company Market · Silent Auction House</footer>
+</div>
+
+<script>
+const API_BASE="https://api.blackbannercompany.com";
+let me=null, auctions=[], mine={selling:[],bidding:[]};
+const $=id=>document.getElementById(id);
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function money(v){return Number(v||0).toLocaleString()+"g";}
+function show(msg,type=""){const n=$("notice");n.textContent=msg;n.className="notice "+type;n.classList.remove("hidden");}
+async function api(path,opt={}){const r=await fetch(API_BASE+path,{credentials:"include",headers:{"Content-Type":"application/json",...(opt.headers||{})},...opt});let data={};try{data=await r.json()}catch(_){}if(r.status===401)throw new Error("LOGIN_REQUIRED");if(!r.ok)throw new Error(data.error||("Request failed: "+r.status));return data;}
+function remaining(ms){const d=ms-Date.now();if(d<=0)return"Ending...";const s=Math.floor(d/1000),days=Math.floor(s/86400),hrs=Math.floor((s%86400)/3600),mins=Math.floor((s%3600)/60);if(days)return`${days}d ${hrs}h`;if(hrs)return`${hrs}h ${mins}m`;return`${mins}m`;}
+function auctionCard(a,compact=false){
+  const seller=a.isSeller?"You":("Discord ID "+esc(a.sellerId));
+  const bid=a.myBid>0?`<span class="mybid">Your sealed bid: ${money(a.myBid)}</span>`:"";
+  const buy=a.buyNowPrice?`<span>Buy It Now: <strong>${money(a.buyNowPrice)}</strong></span>`:"";
+  let actions="";
+  if(a.status==="active"&&!a.isSeller&&!compact){
+    const min=a.myBid>0?a.myBid+a.minIncrement:a.startingBid;
+    actions=`<div class="actions"><div class="bidbox"><input id="bid_${a.id}" type="number" min="${min}" placeholder="Your private bid"><button onclick="placeBid(${a.id},${min})" class="primary">Place Silent Bid</button></div>${a.buyNowPrice?`<button onclick="buyNow(${a.id},${a.buyNowPrice})">Buy It Now</button>`:""}</div>`;
+  }
+  if(a.status==="active"&&a.isSeller)actions=`<div class="actions"><button class="danger" onclick="endAuction(${a.id})">End Auction</button></div>`;
+  return `<article class="auction"><div class="auction-head"><div><h3>#${a.id} · ${esc(a.itemName)}</h3><div class="muted">${esc(a.description||"No description.")}</div></div><span class="tag">${esc(a.status.toUpperCase())}</span></div><div class="meta"><span>Seller: ${seller}</span><span>Starting: <strong>${money(a.startingBid)}</strong></span><span>Min increase: ${money(a.minIncrement)}</span>${buy}<span>Ends: <strong>${remaining(a.endsAt)}</strong></span>${bid}</div>${actions}</article>`;
+}
+function render(){
+  $("accountName").textContent=me?.username||me?.global_name||"Black Banner Member";
+  $("gold").textContent=Number(me?.gold||0).toLocaleString();
+  $("activeCount").textContent=auctions.length;
+  $("accountBar").classList.remove("hidden");
+  $("auctions").innerHTML=auctions.length?auctions.map(a=>auctionCard(a)).join(""):'<p class="muted">No active auctions right now.</p>';
+  const blocks=[];
+  if(mine.bidding?.length){blocks.push("<h3>My Active Bids</h3>"+mine.bidding.map(a=>auctionCard(a,true)).join(""));}
+  if(mine.selling?.length){blocks.push("<h3>My Auctions</h3>"+mine.selling.map(a=>auctionCard(a,true)).join(""));}
+  $("mine").innerHTML=blocks.join("")||'<p class="muted">You have no auction activity yet.</p>';
+}
+async function load(){
+  try{
+    const [m,a,x]=await Promise.all([api("/api/me"),api("/api/auctions"),api("/api/auctions/mine")]);
+    me=m;auctions=a.auctions||[];mine=x||{selling:[],bidding:[]};$("loginBtn").textContent="Logout";render();
+  }catch(e){if(e.message==="LOGIN_REQUIRED"){me=null;$("loginBtn").textContent="Login with Discord";return;}show(e.message,"bad");}
+}
+async function createAuction(){
+  const payload={itemName:$("itemName").value.trim(),description:$("description").value.trim(),startingBid:Number($("startingBid").value),minIncrement:Number($("minIncrement").value),buyNowPrice:$("buyNowPrice").value?Number($("buyNowPrice").value):null};
+  if(!confirm("Create this 3-day Silent Auction?"))return;
+  try{const r=await api("/api/auctions",{method:"POST",body:JSON.stringify(payload)});show(`Auction #${r.auction.id} created and queued for Discord.`,"good");$("itemName").value="";$("description").value="";$("buyNowPrice").value="";await load();}catch(e){show(e.message,"bad");}
+}
+async function placeBid(id,min){const amount=Number($("bid_"+id).value);if(!Number.isInteger(amount)||amount<min)return show(`Your bid must be at least ${money(min)}.`,"bad");if(!confirm(`Place a PRIVATE sealed bid of ${money(amount)}? This Gold will be held until the auction ends or you raise the bid.`))return;try{const r=await api(`/api/auctions/${id}/bid`,{method:"POST",body:JSON.stringify({bidAmount:amount})});show(r.antiSnipeExtended?`Silent bid accepted. Anti-snipe activated: auction reset to 12 hours remaining.`:`Silent bid of ${money(r.submittedBid)} accepted.`,"good");await load();}catch(e){show(e.message,"bad");}}
+async function buyNow(id,price){if(!confirm(`Buy this item now for ${money(price)}? All sealed bids will be refunded.`))return;try{await api(`/api/auctions/${id}/buy-now`,{method:"POST",body:"{}"});show("Buy It Now completed.","good");await load();}catch(e){show(e.message,"bad");}}
+async function endAuction(id){if(!confirm("End this auction? All sealed bids will be refunded and the auction will be cancelled."))return;try{await api(`/api/auctions/${id}`,{method:"DELETE"});show("Auction ended and all sealed bids refunded.","good");await load();}catch(e){show(e.message,"bad");}}
+$("createBtn").addEventListener("click",createAuction);
+$("loginBtn").addEventListener("click",async()=>{if(me){try{await api("/auth/logout",{method:"POST",body:"{}"})}catch(_){}location.reload();}else location.assign(API_BASE+"/auth/discord");});
+window.placeBid=placeBid;window.buyNow=buyNow;window.endAuction=endAuction;
+load();setInterval(()=>{if(me)load();},30000);
+</script>
+</body>
+</html>
