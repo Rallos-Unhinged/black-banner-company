@@ -1106,6 +1106,12 @@ async function useHarvestariumTurnFromRoom(button){
     await reloadOwnBastion();
     box.classList.remove("hidden");
   }catch(err){
+    const box=$("bastionTurnResult");
+    if(box){
+      box.className="craft-result failure";
+      box.innerHTML=`<strong>🌿 Harvestarium Failed</strong><div style="margin-top:.5rem">${esc(err.message||"Unknown error")}</div>`;
+      box.classList.remove("hidden");
+    }
     message(`Harvestarium failed: ${err.message}`,"bad");
   }finally{
     button.disabled=false;
@@ -1290,7 +1296,15 @@ async function harvestBastionTurn(){
     message("Bastion Turn used for Harvestarium Order: Harvest.","good");
     await reloadOwnBastion();
     box.classList.remove("hidden");
-  }catch(err){message(err.message,"bad");}
+  }catch(err){
+    const box=$("bastionTurnResult");
+    if(box){
+      box.className="craft-result failure";
+      box.innerHTML=`<strong>🌿 Harvestarium Failed</strong><div style="margin-top:.5rem">${esc(err.message||"Unknown error")}</div>`;
+      box.classList.remove("hidden");
+    }
+    message(`Harvestarium failed: ${err.message}`,"bad");
+  }
   finally{btn.disabled=false;btn.textContent="🌿 Harvest Harvestarium Instead";}
 }
 
