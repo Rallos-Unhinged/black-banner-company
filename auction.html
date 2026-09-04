@@ -136,7 +136,7 @@ function render(){
   const blocks=[];
   if(mine.bidding?.length){blocks.push("<h3>My Active Bids</h3>"+mine.bidding.map(a=>auctionCard(a,true)).join(""));}
   if(mine.selling?.length){blocks.push("<h3>My Auctions</h3>"+mine.selling.map(a=>auctionCard(a,true)).join(""));}
-  $("mine").innerHTML=blocks.join("")||'<p class="muted">You have no active auction activity.</p>';
+  $("mine").innerHTML=blocks.join("")||'<p class="muted">You have no auction activity yet.</p>';
   $("history").innerHTML=history.length?history.map(historyCard).join(""):'<p class="history-empty">No closed auctions yet.</p>';
 }
 async function load(){
