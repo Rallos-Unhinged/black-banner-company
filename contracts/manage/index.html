@@ -101,11 +101,24 @@ async function load(){
    );
    document.getElementById("list").innerHTML=rows.length?rows.map(c=>{
      const rewardBusy=["pending","processing","done","failed"].includes(c.rewardStatus);
-     const canRewardThis=isRewardAdmin||String(c.creatorId)===currentUserId;const finalizeButton=canRewardThis&&c.status==="active"&&!rewardBusy?`<button class="btn finalize" data-id="${c.id}" style="margin-top:9px">🏁 Award Party Rewards</button>`:"";
-     return `<div class="card"><div><h3>#${c.id} — ${esc(c.name)}</h3><div class="meta">${esc(c.rank)}-Rank · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)} · ${c.durationHours} hr<br>Status: ${esc(c.status)} · Publish: ${esc(c.publishStatus||"—")} · Host ID: ${esc(c.creatorId)}</div>${rewardStateHtml(c)}${c.publishError?`<div class="error" style="margin-top:8px">${esc(c.publishError)}</div><button class="btn retry" data-id="${c.id}">Retry Discord Publish</button>`:""}${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="btn" style="display:inline-block;margin-top:9px" target="_blank" href="${esc(c.discordUrl)}">Open Discord Contract</a>`:""} ${finalizeButton}</div><div class="counts">Accepted ${c.accepted}/${c.maxPlayers}<br>Waiting ${c.waiting}<br>Tentative ${c.tentative}</div></div>`;
+     const canRewardThis=isRewardAdmin||String(c.creatorId)===currentUserId;
+     const finalizeButton=canRewardThis&&c.status==="active"&&!rewardBusy?`<button class="btn finalize" data-id="${c.id}" style="margin-top:9px">🏁 Award Party Rewards</button>`:"";
+     const deleteButton=canRewardThis&&c.status==="active"?`<button class="btn dismissRewards" data-id="${c.id}" data-name="${esc(c.name)}" style="margin-top:9px">🗑 Delete</button>`:"";
+     return `<div class="card"><div><h3>#${c.id} — ${esc(c.name)}</h3><div class="meta">${esc(c.rank)}-Rank · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)} · ${c.durationHours} hr<br>Status: ${esc(c.status)} · Publish: ${esc(c.publishStatus||"—")} · Host ID: ${esc(c.creatorId)}</div>${rewardStateHtml(c)}${c.publishError?`<div class="error" style="margin-top:8px">${esc(c.publishError)}</div><button class="btn retry" data-id="${c.id}">Retry Discord Publish</button>`:""}${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="btn" style="display:inline-block;margin-top:9px" target="_blank" href="${esc(c.discordUrl)}">Open Discord Contract</a>`:""} ${finalizeButton} ${deleteButton}</div><div class="counts">Accepted ${c.accepted}/${c.maxPlayers}<br>Waiting ${c.waiting}<br>Tentative ${c.tentative}</div></div>`;
    }).join(""):'<div class="card">No Contracts are waiting for Party Rewards.</div>';
    document.querySelectorAll(".retry").forEach(b=>b.onclick=async()=>{try{await api("/api/contracts/retry-publish",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:Number(b.dataset.id)})});message("success","Publish retry queued.");setTimeout(load,1500)}catch(e){message("error",e.message)}});
    document.querySelectorAll(".finalize").forEach(b=>b.onclick=()=>openFinalize(Number(b.dataset.id)).catch(e=>message("error",e.message)));
+   document.querySelectorAll(".dismissRewards").forEach(b=>b.onclick=async()=>{
+     const id=Number(b.dataset.id),name=b.dataset.name||`Contract #${id}`;
+     const ok=window.confirm(`Delete ${name} from the Party Rewards list?\n\nThis will close it so it disappears from this list. It will NOT delete the Discord post and will NOT award any rewards.`);
+     if(!ok)return;
+     b.disabled=true;
+     try{
+       await api("/api/contracts/dismiss-rewards",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
+       message("success",`Contract #${id} removed from the Party Rewards list.`);
+       load();
+     }catch(e){message("error",e.message);b.disabled=false}
+   });
  }catch(e){
    if(e.status===403){document.getElementById("locked").classList.remove("hidden");document.getElementById("manager").classList.add("hidden");return}
    message("error",e.message);document.getElementById("manager").classList.remove("hidden")
