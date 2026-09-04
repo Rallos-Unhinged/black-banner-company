@@ -1137,74 +1137,25 @@ td {
   padding:.15rem 0 2rem;
 }
 
-
-
-/* === STANDARD BLACK BANNER SITE NAVIGATION === */
-#sidebar{width:250px!important}
-#main{margin-left:250px!important}
-#main::before{left:calc(250px + ((100vw - 250px) / 2))!important}
-#sidebar .bbc-site-nav-box{
-  flex:0 0 auto;background:#050504;border-bottom:1px solid #6d5215;
-  padding:18px 16px 14px;position:relative;z-index:3;
-}
-#sidebar .bbc-site-title{
-  color:#e0ad32;font:700 17px/1.28 'Cinzel',Georgia,serif;
-  text-transform:uppercase;letter-spacing:.02em;margin:0 0 8px;
-}
-#sidebar .bbc-site-links{display:flex;flex-direction:column;padding:0!important}
-#sidebar .bbc-site-links a{
-  display:block;color:#d8a63b!important;text-decoration:none;
-  font:700 12px/1.2 'Cinzel',Georgia,serif!important;
-  text-transform:uppercase;padding:8px 2px!important;
-  border:0!important;background:transparent!important;letter-spacing:0!important;
-}
-#sidebar .bbc-site-links a:hover{
-  color:#ffe28a!important;padding-left:5px!important;
-  background:transparent!important;box-shadow:none!important;
-}
-#sidebar .bbc-site-auth{
-  width:100%;margin-top:16px;padding:9px 10px;text-align:left;
-  border:1px solid #6d5215;background:#0a0906;color:#e0bd58;
-  font:700 12px 'Cinzel',Georgia,serif;text-transform:uppercase;cursor:pointer;
-}
-#sidebar .bbc-site-auth:hover{border-color:#c8960a;color:#ffe28a;background:#110e08}
-#sidebar .bbc-site-rule{height:1px;background:#5c4615;margin:20px 0 14px}
-#sidebar .bbc-site-label{
-  color:#8b6c20;font:10px 'Fira Mono',monospace;
-  letter-spacing:.18em;text-transform:uppercase;
-}
-.bbc-hidden{display:none!important}
-.top-guide-nav{display:none!important}
-#sidebar .sidebar-scroll{padding-top:.5rem!important}
-@media(max-width:860px){
-  #sidebar{display:flex!important;width:205px!important}
-  #main{margin-left:205px!important}
-  #main::before{left:calc(205px + ((100vw - 205px) / 2))!important}
-  #sidebar .bbc-site-title{font-size:14px}
-  #sidebar .bbc-site-links a,#sidebar .bbc-site-auth{font-size:10px!important}
-}
-
 </style>
 </head>
 <body>
 <!-- SIDEBAR -->
 <aside id="sidebar">
-<div class="sidebar-fixed bbc-site-nav-box">
-<div class="bbc-site-title">BASTIONS OF<br/>THE BLACK</div>
-<nav class="bbc-site-links" aria-label="Site navigation">
-<a href="/">Home</a>
-<a href="/character/">Character Sheet</a>
-<a href="/player-guide/">Player Guide</a>
-<a href="/crafting-guide/">Crafting Guide</a>
-<a href="/bastions/">Bastions Guide</a>
-<a href="/bastions/my-bastion/">My Bastion</a>
-<a href="/material-market/">Material Market</a>
-<a href="/contracts/">Calendar</a>
-<a id="bbcNavAdmin" class="bbc-hidden" href="/admin/player-management/">Admin</a>
+<div class="sidebar-fixed">
+<div class="logo">
+<h2>Black Banner Company<br/>Crafting Guide</h2>
+<p>v3.8 · Bot Automation &amp; 40-Hour Downtime</p>
+</div>
+<nav aria-label="Site navigation">
+<div class="section-head">Site</div>
+<a href="../">Home</a>
+<a href="../player-guide/">Player Guide</a>
+<a href="../crafting-guide/">Crafting Guide</a>
+<a href="../vaelors-forge/" style="padding-left:1.6rem;color:#f0d889">↳ Vaelor&#39;s Forge</a>
+<a href="../bastions/">Bastions Guide</a>
+<a href="../bastions/my-bastion/">My Bastion</a>
 </nav>
-<button id="bbcNavAuth" class="bbc-site-auth" type="button">Logout</button>
-<div class="bbc-site-rule"></div>
-<div class="bbc-site-label">Site</div>
 </div>
 <nav class="sidebar-scroll" aria-label="Crafting guide sections">
 <div class="section-head">Downtime Rules</div>
@@ -1253,6 +1204,12 @@ td {
 <main id="main">
 <!-- HERO -->
 <header id="hero">
+<div aria-label="Guide navigation" class="top-guide-nav">
+<a href="../">Home</a>
+<a href="../player-guide/">Player Guide</a>
+<a class="active" href="../crafting-guide/">Crafting Guide</a>
+<a href="../bastions/">Bastions Guide</a>
+</div>
 <div class="version">Official Guide · v3.8 · Created by Ooxy</div>
 <h1>Black Banner Company<br/><span>Crafting Guide</span></h1>
 <p class="subtitle">Downtime rules for crafting, gathering, training, and paid trade work.</p>
@@ -2072,7 +2029,7 @@ While you have one or more Fragments of Possibility from this potion, you can’
 <div class="card legendary">
 <div class="card-name">Potion of Giant Size</div>
 <div class="card-meta"><span class="badge legendary">Legendary</span><span class="badge">DC 23</span></div>
-<div class="card-ing"><strong>Ingredients:</strong> Arborian Ivy ×2, Storm Giant Bones ×2 (S+)</div>
+<div class="card-ing"><strong>Ingredients:</strong> Arborian Ivy ×2, Giant Bones ×2 (S+)</div>
 <div class="card-effect"><strong>Effect:</strong> When you drink this potion, you become Huge for 24 hours if you are Medium or smaller. Your Strength becomes 25 if it is lower, your maximum and current Hit Points double, and your reach increases by 5 feet. Everything you are wearing and carrying grows with you. Your melee weapons deal three times their normal number of damage dice. The potion has no effect if you are already Huge or larger.</div>
 <div class="card-stats"><div class="stat-block"><span>Crafting Time</span><span class="val">32 hrs</span></div></div>
 </div>
@@ -4253,44 +4210,5 @@ This section records major updates, rulings, balance changes, and additions made
 <p>Previous historical updates retained from the original guide including Dragon Scale Mail changes, Pottery overhaul, Black Lotus, Voidblossom replacement, Spell Trading revisions, Artificer revisions, Deadwood, Ironwood, Summitwood, Spider Silk, Interdisciplinary Crafts, Exotic Shields, and numerous balance updates.</p>
 </div>
 </div></main>
-
-
-<script>
-(function(){
-  const API="https://api.blackbannercompany.com";
-  const admin=document.getElementById("bbcNavAdmin");
-  const auth=document.getElementById("bbcNavAuth");
-  if(!auth)return;
-  let loggedIn=true;
-  fetch(API+"/api/session",{credentials:"include",cache:"no-store"})
-    .then(async r=>{
-      if(!r.ok)throw new Error("not_logged_in");
-      const s=await r.json().catch(()=>({}));
-      loggedIn=true;
-      auth.textContent="Logout";
-      if(admin)admin.classList.toggle("bbc-hidden",!s.isAdmin);
-    })
-    .catch(()=>{
-      loggedIn=false;
-      auth.textContent="Login";
-      if(admin)admin.classList.add("bbc-hidden");
-    });
-  auth.addEventListener("click",async()=>{
-    if(!loggedIn){
-      const ret=location.pathname+location.search+location.hash;
-      location.assign(API+"/auth/discord?return="+encodeURIComponent(ret));
-      return;
-    }
-    try{
-      await fetch(API+"/auth/logout",{
-        method:"POST",credentials:"include",
-        headers:{"Content-Type":"application/json"},body:"{}"
-      });
-    }catch(_){}
-    location.reload();
-  });
-})();
-</script>
-
 </body>
 </html>
