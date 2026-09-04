@@ -1080,30 +1080,44 @@ function facilityPersonnelHtml(f,data){
   }
   return parts.join("");
 }
+async function useHarvestariumTurnFromRoom(button){
+  if(!currentViewingOwn)return message("You cannot use this Bastion Turn from the current view.","bad");
+  const room=button.closest(".harvestarium-room-specializations");
+  const specialization=room?.querySelector(".harvest-room-use-spec")?.value||"";
+  if(!specialization)return message("Choose a saved Harvestarium specialization first.","bad");
+  if(!me?.summary?.pendingBastionTurn && !me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
+  if(me?.pendingEvent)return message(`Resolve your current Bastion event (${me.pendingEvent.eventName||"pending event"}) before using another Bastion Turn.`,"bad");
+  if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization}? This will consume the turn and will NOT roll a Bastion event.`))return;
+  button.disabled=true;
+  const oldText=button.textContent;
+  button.textContent="Harvesting…";
+  message(`Harvesting ${specialization}…`);
+  try{
+    const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
+    if(!r?.ok)throw new Error(r?.error||"Harvestarium did not complete.");
+    const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>") || "No rewards returned.";
+    const box=$("bastionTurnResult");
+    box.className="craft-result success";
+    box.innerHTML=`<strong>🌿 HARVEST RESULTS — ${esc(r.specialization)}</strong><br><span class="muted">d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s) · Bastion Turn consumed</span><div style="margin-top:.65rem">${rewards}</div>`;
+    box.classList.remove("hidden");
+    message(`Harvestarium complete. Your Bastion Turn was consumed for ${r.specialization}.`,"good");
+    alert(`Harvestarium complete!\n\n${r.specialization}\nRoll: ${Number(r.roll)}\nMaterials: ${Number(r.amount)}\n\nYour Bastion Turn was consumed.`);
+    await reloadOwnBastion();
+    box.classList.remove("hidden");
+  }catch(err){
+    message(`Harvestarium failed: ${err.message}`,"bad");
+  }finally{
+    button.disabled=false;
+    button.textContent=oldText;
+  }
+}
+
 document.addEventListener("click",async e=>{
   const useHarvest=e.target.closest?.(".use-harvestarium-turn");
   if(useHarvest){
     e.preventDefault();
     e.stopPropagation();
-    if(!currentViewingOwn)return;
-    if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
-    const room=useHarvest.closest(".harvestarium-room-specializations");
-    const specialization=room?.querySelector(".harvest-room-use-spec")?.value||"";
-    if(!specialization)return message("Choose a saved Harvestarium specialization first.","bad");
-    if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization}? This will NOT roll a Bastion event.`))return;
-    useHarvest.disabled=true;
-    const oldText=useHarvest.textContent;useHarvest.textContent="Harvesting…";
-    try{
-      const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
-      const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>");
-      const box=$("bastionTurnResult");
-      box.className="craft-result success";
-      box.innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
-      box.classList.remove("hidden");
-      message(`Harvestarium used for ${r.specialization}. No Bastion event was rolled.`,"good");
-      await reloadOwnBastion();
-    }catch(err){message(err.message,"bad");}
-    finally{useHarvest.disabled=false;useHarvest.textContent=oldText;}
+    await useHarvestariumTurnFromRoom(useHarvest);
     return;
   }
   const saveHarvest=e.target.closest?.(".save-harvestarium-specializations");
@@ -1244,7 +1258,7 @@ document.addEventListener("click",async e=>{
 
 async function harvestBastionTurn(){
   if(!currentViewingOwn)return;
-  if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
+  if(!me?.summary?.pendingBastionTurn && !me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
   const specialization=$("harvestTurnSpec")?.value||"";
   if(!specialization)return message("Choose a Harvestarium specialization first.","bad");
   if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization} instead of rolling a Bastion event?`))return;
@@ -1266,7 +1280,7 @@ async function harvestBastionTurn(){
 async function rollBastionTurn(){
   if(!currentViewingOwn)return;
   const btn=$("rollBastionTurnBtn");
-  if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
+  if(!me?.summary?.pendingBastionTurn && !me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
   if(!confirm("Roll and consume your pending Individual Bastion Turn?"))return;
   btn.disabled=true; btn.textContent="Rolling…";
   try{
