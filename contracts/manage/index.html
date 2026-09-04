@@ -110,14 +110,17 @@ async function load(){
    document.querySelectorAll(".finalize").forEach(b=>b.onclick=()=>openFinalize(Number(b.dataset.id)).catch(e=>message("error",e.message)));
    document.querySelectorAll(".dismissRewards").forEach(b=>b.onclick=async()=>{
      const id=Number(b.dataset.id),name=b.dataset.name||`Contract #${id}`;
-     const ok=window.confirm(`Delete ${name} from the Party Rewards list?\n\nThis will close it so it disappears from this list. It will NOT delete the Discord post and will NOT award any rewards.`);
+     const ok=window.confirm(`Permanently delete ${name}?\n\nThis WILL delete the Discord contract post and remove the Contract from the website. It will NOT award any Party Rewards.\n\nUse this only for contracts you want completely removed.`);
      if(!ok)return;
      b.disabled=true;
      try{
-       await api("/api/contracts/dismiss-rewards",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id})});
-       message("success",`Contract #${id} removed from the Party Rewards list.`);
-       load();
-     }catch(e){message("error",e.message);b.disabled=false}
+       await api(`/api/contracts/delete?id=${encodeURIComponent(id)}`,{method:"DELETE"});
+       message("success",`Contract #${id} deleted from the website and Discord.`);
+       await load();
+     }catch(e){
+       message("error",e.message);
+       b.disabled=false;
+     }
    });
  }catch(e){
    if(e.status===403){document.getElementById("locked").classList.remove("hidden");document.getElementById("manager").classList.add("hidden");return}
