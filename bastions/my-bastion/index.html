@@ -115,6 +115,14 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .room-order{padding:8px 10px;margin-top:6px;border:1px solid #4d4127;border-radius:8px;background:#0d0c09}
 .room-order strong{color:#ead48f}.room-order-desc{color:var(--muted);font-size:.82rem;line-height:1.45;margin-top:3px}
 
+
+#facilities.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+#facilities .facility-card{padding:1rem;min-width:0}
+.room-order-actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+.room-order-actions .room-btn{width:auto;min-width:110px;padding:6px 10px;font-size:.62rem}
+.room-order-used{color:var(--good);font:.62rem 'Fira Mono',monospace;text-transform:uppercase}
+@media(max-width:820px){#facilities.cards{grid-template-columns:1fr}}
+
 .personnel-modal-backdrop{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000}
 .personnel-modal{width:min(560px,96vw);max-height:85vh;overflow:auto;background:#09131b;border:1px solid #31536b;border-radius:14px;padding:18px;box-shadow:0 20px 60px #000}
 .personnel-modal h3{margin:0 0 12px}.personnel-modal select{width:100%;margin:8px 0 12px}
@@ -863,7 +871,7 @@ async function openDefenderManager(facility){
     try{await api("/api/bastion/defenders/recruit",{method:"POST",body:JSON.stringify({facility,quantity})});closePersonnelModal();message(`${quantity} Defender${quantity===1?"":"s"} recruited.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
   });
 }
-function facilityOrdersHtml(f){
+function facilityOrdersHtml(f,data){
   const rank=String(f.rank||"").toUpperCase();
   const ups=new Set((f.upgrades||[]).map(String));
   const orders={
@@ -890,7 +898,40 @@ function facilityOrdersHtml(f){
   };
   const rows=orders[f.facility];
   if(!rows)return "";
-  return `<div class="room-orders"><div class="room-orders-title">Bastion Orders</div>${rows.map(([name,desc])=>`<div class="room-order"><strong>Order: ${esc(name)}</strong><div class="room-order-desc">${esc(desc)}</div></div>`).join("")}</div>`;
+  const used=f.currentOrder||null;
+  const canUse=currentViewingOwn&&!!data?.summary?.pendingBastionTurn&&!used;
+  return `<div class="room-orders"><div class="room-orders-title">Bastion Orders</div>${rows.map(([name,desc])=>`<div class="room-order"><strong>Order: ${esc(name)}</strong><div class="room-order-desc">${esc(desc)}</div><div class="room-order-actions">${used?`<span class="room-order-used">${used.orderName===name?`✓ Used${used.choice?`: ${esc(used.choice)}`:""}`:"Order already chosen this turn"}</span>`:`<button class="room-btn good use-facility-order" type="button" data-facility="${esc(f.facility)}" data-order="${esc(name)}" ${canUse?"":"disabled"}>Use Order</button>${currentViewingOwn&&!data?.summary?.pendingBastionTurn?`<span class="muted">Requires a pending Bastion Turn</span>`:""}`}</div></div>`).join("")}</div>`;
+}
+
+function facilityOrderChoice(facility,orderName){
+  if(facility==="Sanctuary"&&orderName==="Craft Blessed Medallion"){
+    const v=prompt("Choose the Blessed Medallion:\n1 = Healing Word\n2 = Cure Wounds");
+    if(v===null)return null;
+    if(String(v).trim()==="1")return "Blessed Medallion of Healing Word";
+    if(String(v).trim()==="2")return "Blessed Medallion of Cure Wounds";
+    message("Choose 1 for Healing Word or 2 for Cure Wounds.","bad");return null;
+  }
+  if(facility==="Pub"&&orderName==="Change Keg"){
+    const specials=["Bigby’s Burden","Kiss of the Spider Queen","Moonlight Serenade","Scurvy’s Surprise","Positive Reinforcement","Negative Reinforcement","Sterner Stuff"];
+    const v=prompt("Choose the Pub Special:\n1 = Bigby’s Burden\n2 = Kiss of the Spider Queen\n3 = Moonlight Serenade\n4 = Scurvy’s Surprise\n5 = Positive Reinforcement\n6 = Negative Reinforcement\n7 = Sterner Stuff");
+    if(v===null)return null; const n=Number(String(v).trim());
+    if(n>=1&&n<=7)return specials[n-1]; message("Choose a number from 1 to 7.","bad");return null;
+  }
+  if(facility==="Museum"&&orderName==="Lucky Charm")return prompt("What kind of creature should the Museum search for?\nExample: Red Dragons, Goblins, Vampires")?.trim()||null;
+  if(facility==="Library"&&orderName==="Research — Topical Lore")return prompt("What topic should the Library research?")?.trim()||null;
+  if(facility==="Museum"&&orderName==="Research Lore")return prompt("What legend, creature, or famous object should the Museum research?")?.trim()||null;
+  return "";
+}
+
+async function useFacilityOrder(facility,orderName){
+  const choice=facilityOrderChoice(facility,orderName);
+  if(choice===null)return;
+  if(!confirm(`Issue ${orderName} to your ${facility} for this Bastion Turn?`))return;
+  try{
+    await api("/api/bastion/facility-order",{method:"POST",body:JSON.stringify({facility,orderName,choice})});
+    message(`${facility} Order issued: ${orderName}${choice?` — ${choice}`:""}.`,"good");
+    await reloadOwnBastion();
+  }catch(err){message(err.message,"bad");}
 }
 
 function facilityPersonnelHtml(f,data){
@@ -941,6 +982,13 @@ document.addEventListener("click",e=>{
 async function renamePersonnel(id,current){if(!currentViewingOwn)return;const name=prompt("Name this Defender or Hireling:",current||"");if(name===null)return;const clean=name.trim();if(!clean)return message("Enter a name.","bad");try{await api("/api/bastion/personnel/name",{method:"POST",body:JSON.stringify({id:Number(id),name:clean})});message(`Personnel renamed to ${clean}.`,"good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}}
 document.addEventListener("click",e=>{const b=e.target.closest?.(".rename-person");if(b)renamePersonnel(b.dataset.id,b.dataset.current);});
 let furnishingData={available:[],installed:[]};
+
+document.addEventListener("click",e=>{
+  const btn=e.target.closest?.(".use-facility-order");
+  if(!btn)return;
+  useFacilityOrder(btn.dataset.facility,btn.dataset.order);
+});
+
 async function loadFurnishings(){if(!currentViewingOwn)return;try{furnishingData=await api("/api/bastion/furnishings");const facilities=[...new Set((furnishingData.available||[]).map(x=>x.facility))].sort();$("furnishingFacility").innerHTML='<option value="">Choose facility…</option>'+facilities.map(x=>`<option>${esc(x)}</option>`).join("");updateFurnishingChoices();renderInstalledFurnishings();}catch(err){$("furnishingInstalled").textContent="Furnishings unavailable: "+err.message;}}
 function updateFurnishingChoices(){const f=$("furnishingFacility").value,rows=(furnishingData.available||[]).filter(x=>x.facility===f);$("furnishingItem").innerHTML='<option value="">Choose furnishing…</option>'+rows.map(x=>`<option value="${esc(x.name)}">${esc(x.name)} · ${esc(x.minimumRank)}+</option>`).join("");updateFurnishingPreview();}
 function updateFurnishingPreview(){const f=$("furnishingFacility").value,n=$("furnishingItem").value,r=$("furnishingRank").value,x=(furnishingData.available||[]).find(y=>y.facility===f&&y.name===n);$("furnishingPreview").textContent=x?`${r}-Rank ${x.name}\nRecommended Wood: ${x.recommendedWood||"Any allowed exotic wood"}\nBuff: ${x.bonus}`:"Choose a facility and furnishing.";}
@@ -1083,12 +1131,12 @@ function render(data){
     if(f.laboratorySpecialization) extras.push(`Lab: ${esc(f.laboratorySpecialization)}`);
     if(specs.length) extras.push(`Harvestarium: ${specs.map(esc).join(", ")}`);
     if(f.hasMasterCraftsmansBench) extras.push("Master Craftsman's Bench");
-    return `<div class="card">
+    return `<div class="card facility-card">
       <strong>${esc(f.facility)}</strong>
       <div class="badges"><span class="badge">${esc(f.facilityType||"Facility")}</span>${f.rank?`<span class="badge">Rank ${esc(f.rank)}</span>`:""}${f.size?`<span class="badge">${esc(f.size)}</span>`:""}</div>
       ${(f.upgrades||[]).length?`<div class="muted">Upgrades: ${f.upgrades.map(esc).join(", ")}</div>`:""}
       ${extras.length?`<div class="muted">${extras.join(" · ")}</div>`:""}
-      ${facilityOrdersHtml(f)}
+      ${facilityOrdersHtml(f,data)}
       ${facilityPersonnelHtml(f,data)}
     </div>`;
   }).join(""):empty("No completed Bastion facilities are registered.");
