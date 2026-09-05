@@ -128,18 +128,50 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
 .personnel-modal h3{margin:0 0 12px}.personnel-modal select{width:100%;margin:8px 0 12px}
 .modal-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 
+
+/* Black Banner left navigation */
+.sidebar{position:fixed;inset:0 auto 0 0;width:255px;background:#080706;border-right:1px solid rgba(216,166,59,.28);overflow:auto;padding:18px 12px;z-index:50}
+.sidebar-brand{font-family:'Cinzel',serif;color:var(--gold);font-weight:900;letter-spacing:.1em;padding:6px 10px 14px;border-bottom:1px solid rgba(216,166,59,.28);margin-bottom:10px}
+.sidebar-head{font-family:'Fira Mono',monospace;color:#8d806a;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;margin:15px 10px 5px}
+.sidebar a{display:block;text-decoration:none;color:#d9cdb4;padding:7px 10px;border-left:2px solid transparent;font-size:.9rem}
+.sidebar a:hover{color:#fff1c2;background:#171109;border-left-color:var(--gold)}
+.sidebar a.active{color:#fff1c2;background:#171109;border-left-color:var(--gold)}
+.sidebar .external{color:var(--gold2)}
+.sidebar-login{margin:14px 8px 4px;width:calc(100% - 16px)}
+.page{margin-left:255px!important;width:min(1180px,calc(100% - 255px - 2rem))!important}
+@media(max-width:900px){
+  .sidebar{position:static;width:auto;height:auto;border-right:0;border-bottom:1px solid rgba(216,166,59,.28);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-height:none}
+  .sidebar-brand,.sidebar-head{grid-column:1/-1}.sidebar a{font-size:.8rem}.sidebar-login{grid-column:1/-1;width:auto;margin:10px}
+  .page{margin-left:auto!important;width:min(1180px,calc(100% - 2rem))!important}
+}
+
+/* Fertile Soil rank picker */
+.harvest-rank-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
+.harvest-rank-grid button{width:100%}
+@media(max-width:520px){.harvest-rank-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
+<aside class="sidebar">
+  <div class="sidebar-brand">BLACK BANNER<br>MY BASTION</div>
+  <div class="sidebar-head">Player Systems</div>
+  <a class="external" href="../../character/">Character Sheet ↗</a>
+  <a class="external" href="../../contracts/">Contract Calendar ↗</a>
+  <a class="external" href="../../crafting-guide/">Crafting Guide ↗</a>
+  <a class="external" href="../../vaelors-forge/">Vaelor's Forge ↗</a>
+  <a class="external" href="../../material-market/">Material Market ↗</a>
+  <a class="external" href="../../auction.html">Auctions ↗</a>
+  <div class="sidebar-head">Bastions</div>
+  <a class="external" href="../">Bastion Guide ↗</a>
+  <a class="active" href="./">My Bastion</a>
+  <div class="sidebar-head">Help</div>
+  <a class="external" href="../../player-guide/">New Player Guide ↗</a>
+  <a id="adminPageBtn" class="external hidden" href="../../admin/player-management/">⚙ Admin ↗</a>
+  <a class="external" href="../../">Home ↗</a>
+  <button id="loginBtn" class="primary sidebar-login">Login with Discord</button>
+</aside>
 <div class="page">
-  <div class="topbar">
-    <div class="nav">
-      <a class="btn" href="../../">Home</a>
-      <a class="btn" href="../">Bastions Guide</a>
-      <a class="btn" href="../../material-market/">Market</a><a id="adminPageBtn" class="btn hidden" href="../../admin/player-management/">⚙ Admin</a>
-    </div>
-    <button id="loginBtn" class="primary">Login with Discord</button>
-  </div>
 
   <header class="hero">
     <div class="eyebrow">Black Banner Company · Personal Stronghold</div>
@@ -427,6 +459,7 @@ async function visitSelected(){
 
 let manageOptions=[];
 let currentViewingOwn=false;
+let currentBastionData=null;
 
 function renderBanner(url){
   const img=$("bastionBanner"), emptyEl=$("bannerEmpty");
@@ -1040,20 +1073,52 @@ document.addEventListener("click",async e=>{
 });
 
 
+function harvestariumFacilityRank(){
+  const f=(currentBastionData?.facilities||[]).find(x=>x.facility==="Harvestarium");
+  return String(f?.rank||"C").toUpperCase();
+}
+function chooseFertileSoilRank(){
+  return new Promise(resolve=>{
+    const order=["E","D","C","B","A","S"];
+    const facilityRank=harvestariumFacilityRank();
+    const max=order.indexOf(facilityRank);
+    const allowed=order.slice(0,max>=0?max+1:3);
+    const modal=showPersonnelModal("Fertile Soil — Choose Herb Rank",`
+      <div class="muted">Choose the rank of Herbs you want your Harvestarium to produce. You can choose any Herb rank up to your ${esc(facilityRank)}-Rank Harvestarium.</div>
+      <div class="harvest-rank-grid">${allowed.map(r=>`<button class="room-btn good" type="button" data-herb-rank="${r}">${r}-Rank Herbs</button>`).join("")}</div>
+    `);
+    let done=false;
+    const finish=v=>{if(done)return;done=true;closePersonnelModal();resolve(v)};
+    modal.addEventListener("click",e=>{
+      const btn=e.target.closest?.("[data-herb-rank]");
+      if(btn)finish(btn.dataset.herbRank||null);
+    });
+    const observer=new MutationObserver(()=>{
+      if(!document.body.contains(modal)) { observer.disconnect(); if(!done){done=true;resolve(null);} }
+    });
+    observer.observe(document.body,{childList:true,subtree:true});
+  });
+}
+
 async function harvestBastionTurn(){
   if(!currentViewingOwn)return;
   if(!me?.turn?.pending)return message("You do not currently have a pending Individual Bastion Turn.","bad");
   const specialization=$("harvestTurnSpec")?.value||"";
   if(!specialization)return message("Choose a Harvestarium specialization first.","bad");
-  if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization} instead of rolling a Bastion event?`))return;
+  let materialRank="";
+  if(specialization==="Fertile Soil"){
+    materialRank=await chooseFertileSoilRank();
+    if(!materialRank)return;
+  }
+  if(!confirm(`Use this Individual Bastion Turn to harvest ${specialization}${materialRank?` (${materialRank}-Rank Herbs)`:""} instead of rolling a Bastion event?`))return;
   const btn=$("harvestBastionTurnBtn");
   btn.disabled=true;btn.textContent="Harvesting…";
   try{
-    const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization})});
+    const r=await api("/api/bastion/turn/harvest",{method:"POST",body:JSON.stringify({specialization,materialRank})});
     const rewards=(r.rewards||[]).map(x=>`${esc(x.display)} ×${Number(x.quantity)}`).join("<br>");
     const box=$("bastionTurnResult");
     box.className="craft-result success";
-    box.innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
+    box.innerHTML=`<strong>🌿 Harvestarium — ${esc(r.specialization)}</strong><br><span class="muted">${r.materialRank?`${esc(r.materialRank)}-Rank · `:""}d4: ${Number(r.roll)} · ${esc(r.size)} · ${Number(r.amount)} material(s)</span><div style="margin-top:.65rem">${rewards}</div>`;
     message("Bastion Turn used for Harvestarium Order: Harvest.","good");
     await reloadOwnBastion();
     box.classList.remove("hidden");
@@ -1080,6 +1145,7 @@ async function rollBastionTurn(){
 }
 
 function render(data){
+  currentBastionData=data;
   me=data;
   currentEditOwnerId=String(data.owner?.id||"")||null;
   currentViewingOwn=!!data.canEdit;
