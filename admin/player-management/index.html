@@ -82,7 +82,10 @@ body.bbc-has-nav{padding-left:250px!important}
 <section class="panel"><h2>Personnel</h2><div id="personnel"></div><h3>Add Legacy Personnel</h3><select id="personType"></select><select id="personFacility"><option value="">Unassigned / None</option></select><input id="personName" placeholder="Optional name"><button id="addPerson" class="good">Add Personnel</button></section>
 <section class="panel"><h2>Construction</h2><div id="construction"></div></section>
 <section class="panel"><h2>Individual Bastion Turn</h2><div id="turn"></div><div class="toolbar"><button id="grantTurn" class="good">Set Turn Ready</button><button id="clearTurn">Clear Pending Turn</button></div></section>
-<section class="panel"><h2>Character Management</h2><p class="muted">Use the Character Sheet button above. On another player's sheet, Edit, Save and Sync are enabled only for these two admin accounts.</p><div id="characterInfo"></div><hr style="border-color:#49380e;margin:14px 0"><h3>Reset / Promote Character</h3><p class="muted">One button automatically detects an Acolyte from Alt PP. Preview shows every PP, Gold, material and Bastion change before anything is committed. If an Acolyte is promoted, the Bastion is inherited. If there is no Acolyte, the Bastion is fully reset. Work Hours are preserved.</p><button id="previewReset" class="danger">Preview Character Reset</button><div id="resetPreview" class="notice hidden" style="margin-top:10px"></div></section>
+<section class="panel"><h2>Character Management</h2><p class="muted">Use the Character Sheet button above. On another player's sheet, Edit, Save and Sync are enabled only for these two admin accounts.</p><div id="characterInfo"></div><hr style="border-color:#49380e;margin:14px 0"><h3>Reset / Promote Character</h3><p class="muted">One button automatically detects an Acolyte from Alt PP. Preview shows every PP, Gold, material and Bastion change before anything is committed. If an Acolyte is promoted, the Bastion is inherited. If there is no Acolyte, the Bastion is fully reset. Character Reset sets Work Hours to 0.</p><button id="previewReset" class="danger">Preview Character Reset</button>
+<div style="margin-top:10px"><button id="resetAcolytePP" class="danger">Reset Acolyte PP</button>
+<span class="muted" style="margin-left:8px">Only sets Alt/Acolyte PP to 0. Nothing else is changed.</span></div>
+<div id="resetPreview" class="notice hidden" style="margin-top:10px"></div></section>
 <section class="panel full"><h2>Admin Audit History</h2><div id="audit" class="audit"></div></section>
 </div></div></main></div></div>
 <script>
@@ -130,7 +133,7 @@ function renderResetPreview(){
     <div class="row"><span>Gold</span><strong>${Number(c.gold).toLocaleString()} → ${Number(r.gold).toLocaleString()} GP${p.hasAlt?` (${goldPct}% kept)`:" (all removed)"}</strong></div>
     <div style="margin-top:9px"><b>Materials removed</b><div class="muted" style="margin-top:4px">${materialText}</div></div>
     <div style="margin-top:9px"><b>Bastion</b><div class="muted" style="margin-top:4px">${p.hasAlt?"Inherited by the promoted Acolyte — all existing Bastion records are preserved.":`FULL RESET — ${Number(p.bastionReset?.facilities||0)} active facilities, ${Number(p.bastionReset?.personnel||0)} active personnel, ${Number(p.bastionReset?.construction||0)} active construction project(s)${p.bastionReset?.pendingTurn?", plus the pending Bastion Turn":""} will be cleared.`}</div></div>
-    <div class="muted" style="margin-top:9px">${esc(p.note)} Character sheet, equipment, D&D Beyond snapshot, character images, skills and crafting registration are cleared. Work Hours are preserved.</div>
+    <div class="muted" style="margin-top:9px">${esc(p.note)} Character sheet, equipment, D&D Beyond snapshot, character images, skills and crafting registration are cleared. Work Hours are set to 0.</div>
     <div class="toolbar"><button id="confirmReset" class="danger">Confirm Character Reset</button><button id="cancelReset">Cancel</button></div>`;
   $("confirmReset").onclick=()=>confirmCharacterReset().catch(e=>{
     const box=$("resetPreview");
@@ -165,6 +168,21 @@ async function confirmCharacterReset(){
   await loadPlayer(selected);
 }
 async function init(){try{const s=await api('/api/session');if(!s.isAdmin){$("forbidden").classList.remove('hidden');return}const d=await api('/api/admin/players');allPlayers=d.players||[];$("app").classList.remove('hidden');renderPlayers()}catch(e){$("forbidden").classList.remove('hidden');msg(e.message,'bad')}}
+$("resetAcolytePP").onclick=async()=>{
+  if(!selected)return msg("Choose a player first.","bad");
+  const label=state?.owner?.displayName||"this player";
+  if(!confirm(`Reset ${label}'s Acolyte/Alt PP to 0?\n\nThis will NOT change Main PP, Gold, Work Hours, materials, character data, or Bastion.`))return;
+  try{
+    const d=await api('/api/admin/acolyte/reset-pp',{
+      method:'POST',
+      body:JSON.stringify({ownerId:selected})
+    });
+    msg(`Acolyte PP reset: ${Number(d.before||0)} → 0 PP. Nothing else was changed.`,"good");
+    await loadPlayer(selected);
+  }catch(e){
+    msg(e.message||String(e),"bad");
+  }
+};
 $("previewReset").onclick=()=>previewCharacterReset().catch(e=>msg(e.message,"bad"));$("search").oninput=renderPlayers;$("facility").onchange=facilityChanged;$("saveFacility").onclick=()=>saveFacility().catch(e=>msg(e.message,'bad'));$("addPerson").onclick=()=>addPerson().catch(e=>msg(e.message,'bad'));$("grantTurn").onclick=()=>setTurn(true).catch(e=>msg(e.message,'bad'));$("clearTurn").onclick=()=>setTurn(false).catch(e=>msg(e.message,'bad'));init();
 </script>
 
