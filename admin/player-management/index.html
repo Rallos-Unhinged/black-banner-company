@@ -142,10 +142,10 @@ async function previewCharacterReset(){
 }
 async function confirmCharacterReset(){
   if(!resetPreview||!selected)return;
+  const p=resetPreview;
   const label=state?.owner?.displayName||"this player";
   const typed=prompt(`This permanently resets ${label}'s character progression and inventory under the rules shown.${p.hasAlt?' Their Bastion will be inherited and preserved.':' Their Bastion will ALSO be fully reset.'} Type RESET to confirm.`);
   if(typed!=="RESET")return msg("Character reset cancelled.");
-  const p=resetPreview;
   const d=await api('/api/admin/character/reset',{method:'POST',body:JSON.stringify({
     ownerId:selected,confirmation:'RESET CHARACTER',
     expected:{mainPP:p.current.mainPP,altPP:p.current.altPP,gold:p.current.gold}
