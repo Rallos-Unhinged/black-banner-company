@@ -82,7 +82,7 @@ body.bbc-has-nav{padding-left:250px!important}
 <section class="panel"><h2>Personnel</h2><div id="personnel"></div><h3>Add Legacy Personnel</h3><select id="personType"></select><select id="personFacility"><option value="">Unassigned / None</option></select><input id="personName" placeholder="Optional name"><button id="addPerson" class="good">Add Personnel</button></section>
 <section class="panel"><h2>Construction</h2><div id="construction"></div></section>
 <section class="panel"><h2>Individual Bastion Turn</h2><div id="turn"></div><div class="toolbar"><button id="grantTurn" class="good">Set Turn Ready</button><button id="clearTurn">Clear Pending Turn</button></div></section>
-<section class="panel"><h2>Character Management</h2><p class="muted">Use the Character Sheet button above. On another player's sheet, Edit, Save and Sync are enabled only for these two admin accounts.</p><div id="characterInfo"></div></section>
+<section class="panel"><h2>Character Management</h2><p class="muted">Use the Character Sheet button above. On another player's sheet, Edit, Save and Sync are enabled only for these two admin accounts.</p><div id="characterInfo"></div><hr style="border-color:#49380e;margin:14px 0"><h3>Reset / Promote Character</h3><p class="muted">One button automatically detects an Acolyte from Alt PP. Preview shows every PP, Gold, material and Bastion change before anything is committed. If an Acolyte is promoted, the Bastion is inherited. If there is no Acolyte, the Bastion is fully reset. Work Hours are preserved.</p><button id="previewReset" class="danger">Preview Character Reset</button><div id="resetPreview" class="notice hidden" style="margin-top:10px"></div></section>
 <section class="panel full"><h2>Admin Audit History</h2><div id="audit" class="audit"></div></section>
 </div></div></main></div></div>
 <script>
@@ -93,7 +93,7 @@ async function api(path,opt={}){const r=await fetch(API+path,{credentials:"inclu
 function playerHtml(p){return `<div class="player${selected===p.userId?" active":""}" data-id="${esc(p.userId)}"><strong>${esc(p.playerName)}</strong><div class="muted">${esc(p.characterName||"No website character")}${p.rank?` · ${esc(p.rank)}-Rank`:""}${p.hasBastion?" · Bastion":""}</div></div>`}
 function renderPlayers(){const q=$("search").value.trim().toLowerCase();const rows=allPlayers.filter(p=>!q||`${p.playerName} ${p.characterName||""} ${p.userId}`.toLowerCase().includes(q));$("players").innerHTML=rows.map(playerHtml).join("")||'<div class="muted">No matches.</div>';document.querySelectorAll(".player").forEach(e=>e.onclick=()=>loadPlayer(e.dataset.id))}
 function checked(name){return [...document.querySelectorAll(`[name="${name}"]:checked`)].map(x=>x.value)}
-function renderState(){const d=state,o=d.owner;$("empty").classList.add("hidden");$("detail").classList.remove("hidden");$("playerName").textContent=o.displayName;$("playerMeta").textContent=`Discord ID ${o.id}`;$("gold").textContent=`Gold ${d.balance.gold.toLocaleString()} GP`;$("hours").textContent=`Work Hours ${d.balance.workHours}`;$("charSummary").textContent=d.character?`${d.character.name||"Character"} · Level ${d.character.level||"?"} · ${d.character.rank||"?"}-Rank`:'No website character';$("openCharacter").href=`../../character/?owner=${encodeURIComponent(o.id)}`;$("openBastion").href=`../../bastions/my-bastion/?owner=${encodeURIComponent(o.id)}`;
+function renderState(){const d=state,o=d.owner;resetPreview=null;$("empty").classList.add("hidden");$("detail").classList.remove("hidden");$("playerName").textContent=o.displayName;$("playerMeta").textContent=`Discord ID ${o.id}`;$("gold").textContent=`Gold ${d.balance.gold.toLocaleString()} GP`;$("hours").textContent=`Work Hours ${d.balance.workHours}`;$("charSummary").textContent=d.character?`${d.character.name||"Character"} · Level ${d.character.level||"?"} · ${d.character.rank||"?"}-Rank`:'No website character';$("openCharacter").href=`../../character/?owner=${encodeURIComponent(o.id)}`;$("openBastion").href=`../../bastions/my-bastion/?owner=${encodeURIComponent(o.id)}`;
 $("facilities").innerHTML=d.facilities.length?d.facilities.map(f=>`<div class="card"><strong>${esc(f.facility)}</strong><div>${esc(f.rank||"—")}-Rank · ${esc(f.size||"—")}</div><div class="muted">${(f.upgrades||[]).map(esc).join(", ")||"No special upgrades"}${f.harvestariumSpecializations?.length?`<br>Harvest: ${f.harvestariumSpecializations.map(esc).join(", ")}`:""}</div><div class="toolbar"><button data-edit-fac="${esc(f.facility)}">Edit</button><button class="danger" data-remove-fac="${esc(f.facility)}">Remove</button></div></div>`).join(""):'<div class="muted">No completed facilities recorded.</div>';
 $("personnel").innerHTML=d.personnel.length?d.personnel.map(p=>`<div class="row"><span>${esc(p.name||`Unnamed ${p.personnelType}`)}<div class="muted">${esc(p.personnelType)} · ${esc(p.facility||"Unassigned")}</div></span><span class="actions"><button data-rename-person="${p.id}">Rename</button><button class="danger" data-remove-person="${p.id}">Remove</button></span></div>`).join(""):'<div class="muted">No active personnel.</div>';
 $("construction").innerHTML=d.construction.length?d.construction.map(c=>`<div class="row"><span>${esc(c.facility)}<div class="muted">${esc(c.projectType)} · ${c.remainingTurns}/${c.totalTurns} turns · ${esc(c.status)}</div></span>${c.status==='active'?`<span class="actions"><button class="good" data-construct="complete:${c.id}">Complete</button><button class="danger" data-construct="cancel:${c.id}">Cancel</button></span>`:""}</div>`).join(""):'<div class="muted">No construction records.</div>';
@@ -110,8 +110,52 @@ async function addPerson(){await api('/api/admin/bastion/personnel',{method:'POS
 async function personAction(action,id,name=null){if(action==='remove'&&!confirm('Remove this personnel record?'))return;await api('/api/admin/bastion/personnel',{method:'POST',body:JSON.stringify({ownerId:selected,action,id,name,note:'Legacy Bastion correction'})});msg('Personnel updated.','good');await loadPlayer(selected)}
 async function constructionAction(action,id){if(!confirm(`${action==='complete'?'Complete':'Cancel'} this construction project?`))return;await api('/api/admin/bastion/construction',{method:'POST',body:JSON.stringify({ownerId:selected,id,action,note:'Legacy Bastion correction'})});msg('Construction corrected.','good');await loadPlayer(selected)}
 async function setTurn(pending){await api('/api/admin/bastion/turn',{method:'POST',body:JSON.stringify({ownerId:selected,pending,note:'Admin Bastion Turn correction'})});msg(pending?'Bastion Turn set ready.':'Pending Bastion Turn cleared.','good');await loadPlayer(selected)}
+let resetPreview=null;
+function renderResetPreview(){
+  const box=$("resetPreview");
+  if(!resetPreview){box.classList.add("hidden");box.innerHTML="";return;}
+  const p=resetPreview,r=p.result,c=p.current;
+  const removed=p.removedMaterials||[];
+  const materialText=removed.length
+    ? removed.map(x=>`${esc(x.display)}${x.rank?` (${esc(x.rank)}-Rank)`:""} ×${Number(x.qty).toLocaleString()}`).join("<br>")
+    : "None";
+  const mode=p.hasAlt?"ALT PROMOTION":"FULL RESET — NO ALT";
+  const goldPct=Math.round(Number(r.goldKeepRate||0)*100);
+  box.className="notice bad";
+  box.innerHTML=`<h3 style="margin-top:0">${mode}</h3>
+    <div class="row"><span>Current Main</span><strong>Level ${c.mainLevel} · ${c.mainPP} PP · ${esc(c.mainRank)}-Rank</strong></div>
+    <div class="row"><span>Alt</span><strong>${p.hasAlt?`Level ${p.alt.level} · ${p.alt.pp} PP · ${esc(p.alt.rank)}-Rank`:"No Alt PP detected"}</strong></div>
+    <div class="row"><span>New Main</span><strong>Level ${r.mainLevel} · ${r.mainPP} PP · ${esc(r.mainRank)}-Rank</strong></div>
+    <div class="row"><span>Alt PP After</span><strong>0 PP</strong></div>
+    <div class="row"><span>Gold</span><strong>${Number(c.gold).toLocaleString()} → ${Number(r.gold).toLocaleString()} GP${p.hasAlt?` (${goldPct}% kept)`:" (all removed)"}</strong></div>
+    <div style="margin-top:9px"><b>Materials removed</b><div class="muted" style="margin-top:4px">${materialText}</div></div>
+    <div style="margin-top:9px"><b>Bastion</b><div class="muted" style="margin-top:4px">${p.hasAlt?"Inherited by the promoted Acolyte — all existing Bastion records are preserved.":`FULL RESET — ${Number(p.bastionReset?.facilities||0)} active facilities, ${Number(p.bastionReset?.personnel||0)} active personnel, ${Number(p.bastionReset?.construction||0)} active construction project(s)${p.bastionReset?.pendingTurn?", plus the pending Bastion Turn":""} will be cleared.`}</div></div>
+    <div class="muted" style="margin-top:9px">${esc(p.note)} Character sheet, equipment, D&D Beyond snapshot, character images, skills and crafting registration are cleared. Work Hours are preserved.</div>
+    <div class="toolbar"><button id="confirmReset" class="danger">Confirm Character Reset</button><button id="cancelReset">Cancel</button></div>`;
+  $("confirmReset").onclick=()=>confirmCharacterReset().catch(e=>msg(e.message,"bad"));
+  $("cancelReset").onclick=()=>{resetPreview=null;renderResetPreview()};
+}
+async function previewCharacterReset(){
+  if(!selected)throw new Error("Choose a player first.");
+  const d=await api('/api/admin/character/reset-preview?owner='+encodeURIComponent(selected));
+  resetPreview=d.preview;renderResetPreview();
+}
+async function confirmCharacterReset(){
+  if(!resetPreview||!selected)return;
+  const label=state?.owner?.displayName||"this player";
+  const typed=prompt(`This permanently resets ${label}'s character progression and inventory under the rules shown.${p.hasAlt?' Their Bastion will be inherited and preserved.':' Their Bastion will ALSO be fully reset.'} Type RESET to confirm.`);
+  if(typed!=="RESET")return msg("Character reset cancelled.");
+  const p=resetPreview;
+  const d=await api('/api/admin/character/reset',{method:'POST',body:JSON.stringify({
+    ownerId:selected,confirmation:'RESET CHARACTER',
+    expected:{mainPP:p.current.mainPP,altPP:p.current.altPP,gold:p.current.gold}
+  })});
+  resetPreview=null;
+  msg(`Character reset complete.${d.result?.roleSync?.warning?` ${d.result.roleSync.warning}`:""}`,'good');
+  await loadPlayer(selected);
+}
 async function init(){try{const s=await api('/api/session');if(!s.isAdmin){$("forbidden").classList.remove('hidden');return}const d=await api('/api/admin/players');allPlayers=d.players||[];$("app").classList.remove('hidden');renderPlayers()}catch(e){$("forbidden").classList.remove('hidden');msg(e.message,'bad')}}
-$("search").oninput=renderPlayers;$("facility").onchange=facilityChanged;$("saveFacility").onclick=()=>saveFacility().catch(e=>msg(e.message,'bad'));$("addPerson").onclick=()=>addPerson().catch(e=>msg(e.message,'bad'));$("grantTurn").onclick=()=>setTurn(true).catch(e=>msg(e.message,'bad'));$("clearTurn").onclick=()=>setTurn(false).catch(e=>msg(e.message,'bad'));init();
+$("previewReset").onclick=()=>previewCharacterReset().catch(e=>msg(e.message,"bad"));$("search").oninput=renderPlayers;$("facility").onchange=facilityChanged;$("saveFacility").onclick=()=>saveFacility().catch(e=>msg(e.message,'bad'));$("addPerson").onclick=()=>addPerson().catch(e=>msg(e.message,'bad'));$("grantTurn").onclick=()=>setTurn(true).catch(e=>msg(e.message,'bad'));$("clearTurn").onclick=()=>setTurn(false).catch(e=>msg(e.message,'bad'));init();
 </script>
 
 <script>
