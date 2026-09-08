@@ -309,7 +309,7 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
   <a class="side-link" href="../bastions/my-bastion/"><span class="side-icon">♜</span>Bastions</a>
   <a class="side-link" href="../contracts/"><span class="side-icon">▣</span>Contracts</a>
   <div class="side-link" data-jump="skills"><span class="side-icon">✥</span>Skills</div>
-  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><div id="inventoryExtra"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button><button id="showComponents" class="materials-link">Components & Neutrals</button><button id="giveMaterialsBtn" class="materials-link">Give Materials</button><div id="recentTransfersPanel" class="transfer-panel hidden"><div class="transfer-title">Recent Transfers</div><div id="recentTransfers" class="transfer-list"><div class="transfer-empty">Loading transfers…</div></div></div></div>
+  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button><button id="giveMaterialsBtn" class="materials-link">Give Materials</button><div id="recentTransfersPanel" class="transfer-panel hidden"><div class="transfer-title">Recent Transfers</div><div id="recentTransfers" class="transfer-list"><div class="transfer-empty">Loading transfers…</div></div></div></div>
   <div class="load-card"><h4>Equipment Load</h4><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
 </aside>
 
@@ -810,10 +810,25 @@ function renderBags(){
  const containers=ddbInventory.filter(x=>x.isContainer);
  const byParent=new Map();
  for(const item of ddbInventory){const key=item.containerEntityId||"uncontained";if(!byParent.has(key))byParent.set(key,[]);byParent.get(key).push(item)}
+ const componentRows=componentInventory||[];
+ const componentTotal=componentRows.reduce((n,x)=>n+Number(x.quantity||0),0);
+ const componentHtml=componentRows.length
+   ? componentRows.map(x=>`<div class="component-entry"><div class="component-main"><span>${esc(x.rank)}-Rank ${esc(x.name)}</span><span>×${Number(x.quantity||0)}</span></div><div class="component-meta"><b>Comp Type:</b> ${esc(x.type||x.attribute||"—")} · <span class="component-id">Inventory #${Number(x.id)}</span>${x.description?`<br><span style="color:#c4d0d7">${esc(x.description)}</span>`:""}${x.source?`<br><span class="component-source">Source: ${esc(x.source)}</span>`:""}</div></div>`).join("")
+   : '<div class="small">No Components or Neutrals have been awarded.</div>';
+ const compsBag=`<details class="bag"><summary>🧩 Comps Bag (${componentTotal})</summary><div class="bag-items">${componentHtml}</div></details>`;
+
  const parts=[];
+ let compsInserted=false;
  for(const bag of containers){
    const items=(byParent.get(String(bag.inventoryId))||[]).filter(x=>String(x.inventoryId)!==String(bag.inventoryId));
    parts.push(`<details class="bag"><summary>🎒 ${esc(bag.name)} (${items.length})</summary><div class="bag-items">${items.length?items.map(x=>`<div class="bag-item"><span>${esc(x.name)}</span><span>×${Number(x.quantity||1)}</span></div>`).join(""):'<div class="small">Empty</div>'}</div></details>`);
+   if(!compsInserted && String(bag.name||"").toLowerCase().includes("pouch")){
+     parts.push(compsBag);
+     compsInserted=true;
+   }
+ }
+ if(!compsInserted){
+   parts.push(compsBag);
  }
  const containedIds=new Set(containers.map(x=>String(x.inventoryId)));
  const loose=ddbInventory.filter(x=>!x.isContainer && (!x.containerEntityId || !containedIds.has(String(x.containerEntityId))));
@@ -823,13 +838,7 @@ function renderBags(){
 function renderMaterialBag(){
  const rows=materialInventory||[];
  const html=rows.length?rows.map(x=>`<div class="bag-item"><span>${esc(friendlyKey(x.itemKey))}</span><span>×${Number(x.qty||0)}</span></div>`).join(""):'<div class="small">No crafting materials.</div>';
- $("inventoryExtra").innerHTML=`<details class="bag" open><summary>⚒ Crafting Materials (${rows.length})</summary><div class="bag-items">${html}</div></details>`;
-}
-function renderComponentBag(){
- const rows=componentInventory||[];
- const total=rows.reduce((n,x)=>n+Number(x.quantity||0),0);
- const html=rows.length?rows.map(x=>`<div class="component-entry"><div class="component-main"><span>${esc(x.rank)}-Rank ${esc(x.name)}</span><span>×${Number(x.quantity||0)}</span></div><div class="component-meta"><b>Comp Type:</b> ${esc(x.type||x.attribute||"—")} · <span class="component-id">Inventory #${Number(x.id)}</span>${x.description?`<br><span style="color:#c4d0d7">${esc(x.description)}</span>`:""}${x.source?`<br><span class="component-source">Source: ${esc(x.source)}</span>`:""}</div></div>`).join(""):'<div class="small">No Components or Neutrals have been awarded.</div>';
- $("inventoryExtra").innerHTML=`<details class="bag" open><summary>🧩 Components & Neutrals (${total})</summary><div class="bag-items">${html}</div></details>`;
+ $("bags").innerHTML=`<details class="bag" open><summary>⚒ Crafting Materials (${rows.length})</summary><div class="bag-items">${html}</div></details>`;
 }
 async function loadComponents(){
  const d=await api("/api/components?x=1"+managedOwnerQuery());componentInventory=d.inventory||[];return componentInventory;
@@ -837,7 +846,17 @@ async function loadComponents(){
 async function loadDdbInventory(){
  const d=await api("/api/character/dndbeyond-inventory?x=1"+managedOwnerQuery());
  ddbInventory=d.inventory||[];
- if(currentViewingOwn){const m=await api("/api/inventory");materialInventory=m.inventory||[];}else{materialInventory=[];}
+ if(currentViewingOwn){
+   const [m,c]=await Promise.all([
+     api("/api/inventory"),
+     api("/api/components?x=1"+managedOwnerQuery()).catch(()=>({inventory:[]}))
+   ]);
+   materialInventory=m.inventory||[];
+   componentInventory=c.inventory||[];
+ }else{
+   materialInventory=[];
+   componentInventory=[];
+ }
  renderDdbPickers();renderBags();
 }
 
@@ -1141,7 +1160,7 @@ $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
 $("crestImg").onclick=()=>{if(currentCanEdit)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
-$("refreshInventory").onclick=()=>Promise.all([loadDdbInventory(),loadTransferHistory()]).catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));$("showComponents").onclick=()=>loadComponents().then(()=>renderComponentBag()).catch(e=>show(e.message||"Could not load Components & Neutrals.","bad"));
+$("refreshInventory").onclick=()=>Promise.all([loadDdbInventory(),loadTransferHistory()]).catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
 $("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
 document.querySelectorAll("[data-tablink='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
