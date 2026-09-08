@@ -68,7 +68,7 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <option value="Bludgeoning">Bludgeoning</option>
 </select></div>
     <div><label>Rank</label><select id="componentRank"><option>F</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
-    <div class="wide"><label>Component Name</label><input id="componentName" maxlength="120" placeholder="Example: Heart of the Ember Wyrm"></div>\n<div class="full"><label>Description / RP Information</label><textarea id="componentDescription" maxlength="2000" placeholder="Describe what the component looks like, where it came from, strange properties, markings, sensations, or other RP details…"></textarea></div>
+    <div class="wide"><label>Component Name</label><input id="componentName" maxlength="120" placeholder="Example: Heart of the Ember Wyrm"></div><div class="full"><label>Description / RP Information</label><textarea id="componentDescription" maxlength="2000" placeholder="Describe what the component looks like, where it came from, strange properties, markings, sensations, or other RP details…"></textarea></div>
     
     <div><label>Quantity</label><input id="componentQuantity" type="number" min="1" max="9999" value="1"></div>
     <div class="wide"><label>Reason / Source</label><input id="componentSource" maxlength="180" placeholder="Example: Contract #131, Event Reward, DM Reward"></div>
@@ -221,7 +221,7 @@ async function load(){
    document.querySelectorAll(".finalize").forEach(b=>b.onclick=()=>openFinalize(Number(b.dataset.id)).catch(e=>message("error",e.message)));
    document.querySelectorAll(".dismissRewards").forEach(b=>b.onclick=async()=>{
      const id=Number(b.dataset.id),name=b.dataset.name||`Contract #${id}`;
-     const ok=window.confirm(`Permanently delete ${name}?\n\nThis WILL delete the Discord contract post and remove the Contract from the website. It will NOT award any Party Rewards.\n\nUse this only for contracts you want completely removed.`);
+     const ok=window.confirm(`Permanently delete ${name}?This WILL delete the Discord contract post and remove the Contract from the website. It will NOT award any Party Rewards.Use this only for contracts you want completely removed.`);
      if(!ok)return;
      b.disabled=true;
      try{
@@ -325,7 +325,7 @@ async function submitFinalize(){
  const p=collectFinalize();
  if(!p.materialRewards.length){
    const sure=window.confirm(
-     "No quest materials have been added.\n\nAre you sure the party received NO materials during this Contract?\n\nClick OK to complete the rewards with no materials, or Cancel to go back and add them."
+     "No quest materials have been added.Are you sure the party received NO materials during this Contract?Click OK to complete the rewards with no materials, or Cancel to go back and add them."
    );
    if(!sure)return;
  }
