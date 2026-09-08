@@ -21,6 +21,10 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 .material-search-wrap{margin-bottom:8px}.material-search-wrap input{width:100%}.material-picker{display:grid;grid-template-columns:minmax(220px,1fr) 100px auto;gap:8px;align-items:end}.material-list{margin-top:8px;display:grid;gap:6px}.material-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;border:1px solid #1c3d52;background:#091923;padding:8px}.material-name{min-width:0}.material-qty{color:#d8bd70;white-space:nowrap}.material-remove{padding:5px 9px}.material-empty{color:var(--muted);font-size:12px}
 @media(max-width:700px){.reward-grid{grid-template-columns:1fr}.reward-grid .full{grid-column:1}.roster-row{grid-template-columns:1fr}.material-picker{grid-template-columns:1fr 92px}.material-picker .btn{grid-column:1/-1}.material-row{grid-template-columns:minmax(0,1fr) auto}.material-remove{grid-column:1/-1}}
 
+.component-award-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.component-award-head h2{margin:0;color:var(--gold)}
+.component-review{margin-top:10px}.component-history{margin-top:12px;border-top:1px solid #1c3d52;padding-top:10px}.component-history-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,2fr) auto;gap:10px;padding:8px;border:1px solid #1c3d52;background:#071019;margin-top:6px;font-size:12px}.component-history-player{color:#8ecceb}.component-history-item{color:#e7ce7e}.component-history-time{color:var(--muted);white-space:nowrap}.component-search-note{color:var(--muted);font-size:11px;margin-top:3px}
+@media(max-width:700px){.component-history-row{grid-template-columns:1fr}.component-history-time{white-space:normal}}
+
 </style>
 </head>
 <body>
@@ -41,6 +45,25 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <div class="full"><label>Expected Rewards (display only, optional)</label><input id="cRewards" maxlength="300" placeholder="Example: 2 PP + 500 Gold"></div>
 <div class="full"><button id="createContract" class="btn" type="button">Create & Post Contract</button> <span style="color:var(--muted);font-size:12px">Discord post normally appears within a few seconds.</span></div>
 </div></div>
+
+<div class="formbox" id="componentAwardBox">
+  <div class="component-award-head"><h2>🧩 Award Component / Neutral</h2><button id="refreshComponentAwards" class="btn" type="button">Refresh Awards</button></div>
+  <div class="sub" style="margin-bottom:10px">Enter the Component information and assign it directly to a Black Banner player. The API records the DM, source, timestamp, and inventory ID.</div>
+  <div class="formgrid">
+    <div class="wide"><label>Find Player</label><input id="componentPlayerSearch" type="search" placeholder="Search player or character…" autocomplete="off"><div id="componentPlayerCount" class="component-search-note"></div></div>
+    <div class="wide"><label>Assign To Player</label><select id="componentPlayer"><option value="">Loading players…</option></select></div>
+    <div><label>Type</label><select id="componentType"><option value="component">Component</option><option value="neutral">Neutral</option></select></div>
+    <div><label>Rank</label><select id="componentRank"><option>F</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
+    <div class="wide"><label>Component Name / Information</label><input id="componentName" maxlength="120" placeholder="Example: Dragon Heart, Astral Shard, Infernal Core"></div>
+    <div class="wide"><label>Attribute</label><input id="componentAttribute" maxlength="100" placeholder="Example: Fire, Lightning, Protection, Neutral"></div>
+    <div><label>Quantity</label><input id="componentQuantity" type="number" min="1" max="9999" value="1"></div>
+    <div class="wide"><label>Reason / Source</label><input id="componentSource" maxlength="180" placeholder="Example: Contract #131, Event Reward, DM Reward"></div>
+    <div class="full"><button id="componentReviewBtn" class="btn" type="button">Review Award</button> <button id="componentConfirmBtn" class="btn hidden" type="button">Confirm & Award To Player</button></div>
+  </div>
+  <div id="componentReview" class="success component-review hidden"></div>
+  <div class="component-history"><b style="color:var(--gold)">Recent Component / Neutral Awards</b><div id="componentHistory"><div class="sub" style="margin-top:6px">Loading recent awards…</div></div></div>
+</div>
+
 <div class="toolbar"><button id="refresh" class="btn">Refresh Contracts</button></div>
 <div id="list" class="list"></div>
 </div>
@@ -91,8 +114,66 @@ function zonedWallTimeToMillis(dateStr,timeStr,timeZone=USER_TIME_ZONE){
 }
 function message(id,text){const el=document.getElementById(id);el.textContent=text;el.classList.toggle("hidden",!text)}
 let currentUserId="",isRewardAdmin=false,currentFinalize=null,materialCatalog=[],selectedRewardMaterials=[];
+let componentPlayers=[],componentAwardReview=null;
 const tzLabel=document.getElementById("timeZoneLabel");
 if(tzLabel)tzLabel.textContent=`Time (Your Local Time — ${USER_TIME_ZONE})`;
+
+function renderComponentPlayers(query=""){
+ const sel=document.getElementById("componentPlayer"),count=document.getElementById("componentPlayerCount");if(!sel)return;
+ const q=String(query||"").trim().toLowerCase(),current=sel.value;
+ const filtered=!q?componentPlayers:componentPlayers.filter(p=>`${p.playerName||""} ${p.characterName||""} ${p.rank||""}`.toLowerCase().includes(q));
+ sel.innerHTML='<option value="">Choose player…</option>'+filtered.map(p=>`<option value="${esc(p.userId)}">${esc(p.playerName||"Banner Member")}${p.characterName?` — ${esc(p.characterName)}`:""}${p.rank?` (${esc(p.rank)}-Rank)`:""}</option>`).join("");
+ if(current&&filtered.some(p=>String(p.userId)===String(current)))sel.value=current;
+ if(count)count.textContent=q?`${filtered.length} player${filtered.length===1?"":"s"} found`:`${filtered.length} Black Banner players available`;
+}
+async function loadComponentPlayers(){
+ const d=await api("/api/characters");componentPlayers=Array.isArray(d.characters)?d.characters:[];renderComponentPlayers(document.getElementById("componentPlayerSearch")?.value||"");
+}
+function componentTypeChanged(){
+ const type=document.getElementById("componentType")?.value,attr=document.getElementById("componentAttribute");
+ if(type==="neutral"&&attr&&!attr.value.trim())attr.value="Neutral";
+}
+function collectComponentAward(){
+ const targetId=String(document.getElementById("componentPlayer").value||"");
+ const player=componentPlayers.find(p=>String(p.userId)===targetId);
+ const type=String(document.getElementById("componentType").value||"");
+ const rank=String(document.getElementById("componentRank").value||"").toUpperCase();
+ const name=String(document.getElementById("componentName").value||"").trim();
+ const attribute=String(document.getElementById("componentAttribute").value||"").trim();
+ const quantity=Number(document.getElementById("componentQuantity").value||1);
+ const source=String(document.getElementById("componentSource").value||"").trim();
+ if(!player)throw new Error("Choose the player receiving this award.");
+ if(!name)throw new Error("Enter the Component name or information.");
+ if(!["F","E","D","C","B","A","S"].includes(rank))throw new Error("Choose a valid Component rank.");
+ if(!["component","neutral"].includes(type))throw new Error("Choose Component or Neutral.");
+ if(!Number.isSafeInteger(quantity)||quantity<1||quantity>9999)throw new Error("Quantity must be a whole number from 1 through 9,999.");
+ return {targetId,type,rank,name,attribute:attribute||(type==="neutral"?"Neutral":""),quantity,source:source||"DM Award",player};
+}
+function reviewComponentAward(){
+ const p=collectComponentAward();componentAwardReview=p;
+ const box=document.getElementById("componentReview");
+ box.innerHTML=`<b>Review Component Award</b><br>Player: <b>${esc(p.player.playerName||"Banner Member")}${p.player.characterName?` — ${esc(p.player.characterName)}`:""}</b><br>Type: <b>${p.type==="neutral"?"Neutral":"Component"}</b><br>Rank: <b>${esc(p.rank)}-Rank</b><br>Component: <b>${esc(p.name)}</b><br>Attribute: <b>${esc(p.attribute||"—")}</b><br>Quantity: <b>${p.quantity}</b><br>Source: <b>${esc(p.source)}</b><br><br>This will be written directly to that player's persistent Component inventory and audit log.`;
+ box.classList.remove("hidden");document.getElementById("componentConfirmBtn").classList.remove("hidden");
+}
+function resetComponentReview(){componentAwardReview=null;document.getElementById("componentReview")?.classList.add("hidden");document.getElementById("componentConfirmBtn")?.classList.add("hidden")}
+async function submitComponentAward(){
+ const p=collectComponentAward();
+ const btn=document.getElementById("componentConfirmBtn");btn.disabled=true;
+ try{
+  const r=await api("/api/components/award",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({targetId:p.targetId,type:p.type,rank:p.rank,name:p.name,attribute:p.attribute,quantity:p.quantity,source:p.source})});
+  message("success",`${p.rank}-Rank ${p.type==="neutral"?"Neutral":"Component"} awarded to ${p.player.playerName||"player"}. Inventory ID #${r.award?.inventoryId||"—"}.`);
+  document.getElementById("componentName").value="";document.getElementById("componentAttribute").value=p.type==="neutral"?"Neutral":"";document.getElementById("componentQuantity").value="1";document.getElementById("componentSource").value="";resetComponentReview();
+  await loadRecentComponentAwards();
+ }finally{btn.disabled=false}
+}
+function fmtComponentAwardTime(ms){try{return new Date(Number(ms||0)).toLocaleString()}catch(_){return ""}}
+async function loadRecentComponentAwards(){
+ const box=document.getElementById("componentHistory");if(!box)return;
+ try{
+  const d=await api("/api/components/awards/recent?limit=20"),rows=d.awards||[];
+  box.innerHTML=rows.length?rows.map(a=>`<div class="component-history-row"><div class="component-history-player"><b>${esc(a.playerName||"Banner Member")}</b>${a.characterName?`<br>${esc(a.characterName)}`:""}</div><div class="component-history-item"><b>${esc(a.rank)}-Rank ${a.type==="neutral"?"Neutral":"Component"}</b> — ${esc(a.name)} ×${Number(a.quantity||0)}${a.attribute?`<br>Attribute: ${esc(a.attribute)}`:""}${a.source?`<br>Source: ${esc(a.source)}`:""}</div><div class="component-history-time">${esc(fmtComponentAwardTime(a.createdAt))}</div></div>`).join(""):'<div class="sub" style="margin-top:6px">No Component awards have been recorded yet.</div>';
+ }catch(e){box.innerHTML=`<div class="error" style="margin-top:6px">${esc(e.message||"Could not load recent awards.")}</div>`}
+}
 
 function rewardStateHtml(c){
  if(!c.rewardStatus)return "";
@@ -105,6 +186,7 @@ async function load(){
    if(!access.canManage){document.getElementById("locked").classList.remove("hidden");return}
    currentUserId=String(access.userId||"");isRewardAdmin=!!access.isAdmin;
    document.getElementById("manager").classList.remove("hidden");
+   await Promise.all([loadComponentPlayers(),loadRecentComponentAwards()]);
    const from=Date.now()-90*86400000,to=Date.now()+365*86400000,d=await api(`/api/contracts/manage?from=${from}&to=${to}`);
    // DM Contract Manager is now an action list, not permanent history.
    // Keep only Contracts that still require DM reward action. Once rewards are
@@ -255,6 +337,14 @@ document.getElementById("rewardMaterialSearch").addEventListener("keydown",e=>{
    try{addRewardMaterial()}catch(err){message("error",err.message)}
  }
 });
+document.getElementById("componentPlayerSearch").addEventListener("input",e=>{renderComponentPlayers(e.target.value);resetComponentReview()});
+document.getElementById("componentPlayer").addEventListener("change",resetComponentReview);
+document.getElementById("componentType").addEventListener("change",()=>{componentTypeChanged();resetComponentReview()});
+["componentRank","componentName","componentAttribute","componentQuantity","componentSource"].forEach(id=>document.getElementById(id)?.addEventListener("input",resetComponentReview));
+document.getElementById("componentReviewBtn").onclick=()=>{try{reviewComponentAward()}catch(e){message("error",e.message)}};
+document.getElementById("componentConfirmBtn").onclick=()=>submitComponentAward().catch(e=>message("error",e.message));
+document.getElementById("refreshComponentAwards").onclick=()=>Promise.all([loadComponentPlayers(),loadRecentComponentAwards()]).catch(e=>message("error",e.message));
+
 document.getElementById("rewardModal").onclick=e=>{if(e.target===document.getElementById("rewardModal"))closeFinalize()};
 load();
 </script>
