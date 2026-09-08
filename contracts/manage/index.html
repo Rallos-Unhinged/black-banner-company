@@ -22,9 +22,10 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 @media(max-width:700px){.reward-grid{grid-template-columns:1fr}.reward-grid .full{grid-column:1}.roster-row{grid-template-columns:1fr}.material-picker{grid-template-columns:1fr 92px}.material-picker .btn{grid-column:1/-1}.material-row{grid-template-columns:minmax(0,1fr) auto}.material-remove{grid-column:1/-1}}
 
 .component-award-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.component-award-head h2{margin:0;color:var(--gold)}
-.component-review{margin-top:10px}.component-history{margin-top:12px;border-top:1px solid #1c3d52;padding-top:10px}.component-history #componentHistory{max-height:660px;overflow-y:auto;overflow-x:hidden;padding-right:6px;scrollbar-gutter:stable}.component-history-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,2fr) auto;gap:10px;padding:8px;border:1px solid #1c3d52;background:#071019;margin-top:6px;font-size:12px}.component-history-player{color:#8ecceb}.component-history-item{color:#e7ce7e}.component-history-time{color:var(--muted);white-space:nowrap}.component-history-awarder{color:#9fc7d9;margin-top:3px}.component-search-note{color:var(--muted);font-size:11px;margin-top:3px}
+.component-review{margin-top:10px}.component-history{margin-top:12px;border-top:1px solid #1c3d52;padding-top:10px}.component-history-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,2fr) auto;gap:10px;padding:8px;border:1px solid #1c3d52;background:#071019;margin-top:6px;font-size:12px}.component-history-player{color:#8ecceb}.component-history-item{color:#e7ce7e}.component-history-time{color:var(--muted);white-space:nowrap}.component-search-note{color:var(--muted);font-size:11px;margin-top:3px}
 @media(max-width:700px){.component-history-row{grid-template-columns:1fr}.component-history-time{white-space:normal}}
 
+#componentHistory{max-height:660px;overflow-y:auto;overflow-x:hidden;padding-right:6px;scrollbar-gutter:stable}
 </style>
 </head>
 <body>
@@ -52,10 +53,23 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
   <div class="formgrid">
     <div class="wide"><label>Find Player</label><input id="componentPlayerSearch" type="search" placeholder="Search player or character…" autocomplete="off"><div id="componentPlayerCount" class="component-search-note"></div></div>
     <div class="wide"><label>Assign To Player</label><select id="componentPlayer"><option value="">Loading players…</option></select></div>
-    <div><label>Type</label><select id="componentType"><option value="component">Component</option><option value="neutral">Neutral</option></select></div>
+    <div><label>Comp Type</label><select id="componentType">
+<option value="">Choose type…</option>
+<option value="Conjuration">Conjuration</option>
+<option value="Divination">Divination</option>
+<option value="Enchantment">Enchantment</option>
+<option value="Evocation">Evocation</option>
+<option value="Illusion">Illusion</option>
+<option value="Necromancy">Necromancy</option>
+<option value="Transmutation">Transmutation</option>
+<option value="Neutral">Neutral</option>
+<option value="Slashing">Slashing</option>
+<option value="Piercing">Piercing</option>
+<option value="Bludgeoning">Bludgeoning</option>
+</select></div>
     <div><label>Rank</label><select id="componentRank"><option>F</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
-    <div class="wide"><label>Component Name / Information</label><input id="componentName" maxlength="120" placeholder="Example: Dragon Heart, Astral Shard, Infernal Core"></div>
-    <div class="wide"><label>Attribute</label><input id="componentAttribute" maxlength="100" placeholder="Example: Fire, Lightning, Protection, Neutral"></div>
+    <div class="wide"><label>Component Name</label><input id="componentName" maxlength="120" placeholder="Example: Heart of the Ember Wyrm"></div>\n<div class="full"><label>Description / RP Information</label><textarea id="componentDescription" maxlength="2000" placeholder="Describe what the component looks like, where it came from, strange properties, markings, sensations, or other RP details…"></textarea></div>
+    
     <div><label>Quantity</label><input id="componentQuantity" type="number" min="1" max="9999" value="1"></div>
     <div class="wide"><label>Reason / Source</label><input id="componentSource" maxlength="180" placeholder="Example: Contract #131, Event Reward, DM Reward"></div>
     <div class="full"><button id="componentReviewBtn" class="btn" type="button">Review Award</button> <button id="componentConfirmBtn" class="btn hidden" type="button">Confirm & Award To Player</button></div>
@@ -130,8 +144,7 @@ async function loadComponentPlayers(){
  const d=await api("/api/characters");componentPlayers=Array.isArray(d.characters)?d.characters:[];renderComponentPlayers(document.getElementById("componentPlayerSearch")?.value||"");
 }
 function componentTypeChanged(){
- const type=document.getElementById("componentType")?.value,attr=document.getElementById("componentAttribute");
- if(type==="neutral"&&attr&&!attr.value.trim())attr.value="Neutral";
+ resetComponentReview();
 }
 function collectComponentAward(){
  const targetId=String(document.getElementById("componentPlayer").value||"");
@@ -139,20 +152,22 @@ function collectComponentAward(){
  const type=String(document.getElementById("componentType").value||"");
  const rank=String(document.getElementById("componentRank").value||"").toUpperCase();
  const name=String(document.getElementById("componentName").value||"").trim();
- const attribute=String(document.getElementById("componentAttribute").value||"").trim();
+ const description=String(document.getElementById("componentDescription").value||"").trim();
+ const attribute=type;
  const quantity=Number(document.getElementById("componentQuantity").value||1);
  const source=String(document.getElementById("componentSource").value||"").trim();
  if(!player)throw new Error("Choose the player receiving this award.");
- if(!name)throw new Error("Enter the Component name or information.");
+ if(!name)throw new Error("Enter the Component name.");
  if(!["F","E","D","C","B","A","S"].includes(rank))throw new Error("Choose a valid Component rank.");
- if(!["component","neutral"].includes(type))throw new Error("Choose Component or Neutral.");
+ const validTypes=["Conjuration","Divination","Enchantment","Evocation","Illusion","Necromancy","Transmutation","Neutral","Slashing","Piercing","Bludgeoning"];
+ if(!validTypes.includes(type))throw new Error("Choose a valid Comp Type.");
  if(!Number.isSafeInteger(quantity)||quantity<1||quantity>9999)throw new Error("Quantity must be a whole number from 1 through 9,999.");
- return {targetId,type,rank,name,attribute:attribute||(type==="neutral"?"Neutral":""),quantity,source:source||"DM Award",player};
+ return {targetId,type,rank,name,description,attribute,quantity,source:source||"DM Award",player};
 }
 function reviewComponentAward(){
  const p=collectComponentAward();componentAwardReview=p;
  const box=document.getElementById("componentReview");
- box.innerHTML=`<b>Review Component Award</b><br>Player: <b>${esc(p.player.playerName||"Banner Member")}${p.player.characterName?` — ${esc(p.player.characterName)}`:""}</b><br>Type: <b>${p.type==="neutral"?"Neutral":"Component"}</b><br>Rank: <b>${esc(p.rank)}-Rank</b><br>Component: <b>${esc(p.name)}</b><br>Attribute: <b>${esc(p.attribute||"—")}</b><br>Quantity: <b>${p.quantity}</b><br>Source: <b>${esc(p.source)}</b><br><br>This will be written directly to that player's persistent Component inventory and audit log.`;
+ box.innerHTML=`<b>Review Component Award</b><br>Player: <b>${esc(p.player.playerName||"Banner Member")}${p.player.characterName?` — ${esc(p.player.characterName)}`:""}</b><br>Comp Type: <b>${esc(p.type)}</b><br>Rank: <b>${esc(p.rank)}-Rank</b><br>Component: <b>${esc(p.name)}</b><br>Comp Type: <b>${esc(p.type)}</b>${p.description?`<br>Description: ${esc(p.description)}`:""}<br>Quantity: <b>${p.quantity}</b><br>Source: <b>${esc(p.source)}</b><br><br>This will be written directly to that player's persistent Component inventory and audit log.`;
  box.classList.remove("hidden");document.getElementById("componentConfirmBtn").classList.remove("hidden");
 }
 function resetComponentReview(){componentAwardReview=null;document.getElementById("componentReview")?.classList.add("hidden");document.getElementById("componentConfirmBtn")?.classList.add("hidden")}
@@ -160,9 +175,9 @@ async function submitComponentAward(){
  const p=collectComponentAward();
  const btn=document.getElementById("componentConfirmBtn");btn.disabled=true;
  try{
-  const r=await api("/api/components/award",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({targetId:p.targetId,type:p.type,rank:p.rank,name:p.name,attribute:p.attribute,quantity:p.quantity,source:p.source})});
-  message("success",`${p.rank}-Rank ${p.type==="neutral"?"Neutral":"Component"} awarded to ${p.player.playerName||"player"}. Inventory ID #${r.award?.inventoryId||"—"}.`);
-  document.getElementById("componentName").value="";document.getElementById("componentAttribute").value=p.type==="neutral"?"Neutral":"";document.getElementById("componentQuantity").value="1";document.getElementById("componentSource").value="";resetComponentReview();
+  const r=await api("/api/components/award",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({targetId:p.targetId,type:p.type,rank:p.rank,name:p.name,description:p.description,attribute:p.attribute,quantity:p.quantity,source:p.source})});
+  message("success",`${p.rank}-Rank ${p.type} comp awarded to ${p.player.playerName||"player"}. Inventory ID #${r.award?.inventoryId||"—"}.`);
+  document.getElementById("componentName").value="";document.getElementById("componentDescription").value="";document.getElementById("componentType").value="";document.getElementById("componentQuantity").value="1";document.getElementById("componentSource").value="";resetComponentReview();
   await loadRecentComponentAwards();
  }finally{btn.disabled=false}
 }
@@ -340,7 +355,7 @@ document.getElementById("rewardMaterialSearch").addEventListener("keydown",e=>{
 document.getElementById("componentPlayerSearch").addEventListener("input",e=>{renderComponentPlayers(e.target.value);resetComponentReview()});
 document.getElementById("componentPlayer").addEventListener("change",resetComponentReview);
 document.getElementById("componentType").addEventListener("change",()=>{componentTypeChanged();resetComponentReview()});
-["componentRank","componentName","componentAttribute","componentQuantity","componentSource"].forEach(id=>document.getElementById(id)?.addEventListener("input",resetComponentReview));
+["componentRank","componentName","componentDescription","componentQuantity","componentSource"].forEach(id=>document.getElementById(id)?.addEventListener("input",resetComponentReview));
 document.getElementById("componentReviewBtn").onclick=()=>{try{reviewComponentAward()}catch(e){message("error",e.message)}};
 document.getElementById("componentConfirmBtn").onclick=()=>submitComponentAward().catch(e=>message("error",e.message));
 document.getElementById("refreshComponentAwards").onclick=()=>Promise.all([loadComponentPlayers(),loadRecentComponentAwards()]).catch(e=>message("error",e.message));
