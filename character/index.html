@@ -39,6 +39,7 @@ body.readonly .owner-only{display:none!important}
 .transfer-item{color:#e7c461;margin-top:5px;font-weight:700;line-height:1.25}
 .transfer-time{color:var(--muted);font-size:10px;margin-top:3px}
 .transfer-empty{padding:12px 8px;text-align:center;color:var(--muted);font-size:11px}
+.component-entry{padding:8px;border-top:1px solid #1f2a31;background:linear-gradient(180deg,#071018,#03090e)}.component-entry:first-child{border-top:0}.component-main{display:flex;justify-content:space-between;gap:8px;color:#e7c461;font-weight:700;font-size:12px}.component-meta{margin-top:3px;color:#9eb2bf;font-size:10px;line-height:1.35}.component-source{color:#7f9099}.component-id{color:#647783}
 .load-card{position:absolute;bottom:12px;left:10px;right:10px;border:1px solid #5b4518;padding:12px;text-align:center;background:#0a0a08}.load-card h4{font:700 12px Cinzel;color:#ddb848;margin:0 0 6px}.load-card .green{color:#64d078;font-size:18px}.attune-gems{font-size:25px;color:#4ccd67;letter-spacing:4px}
 .main{min-width:0}.equipment-layout{display:grid;grid-template-columns:260px minmax(410px,1fr) 260px 340px;gap:10px;padding:10px;align-items:start}
 .slot-column{display:flex;flex-direction:column;gap:10px}.equip{position:relative;min-height:205px;border:1px solid var(--theme);background:linear-gradient(135deg,#081722,#03090e);box-shadow:inset 0 0 0 1px var(--theme-soft),0 0 12px #07131c;padding:10px;text-align:center;clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 7px,100% calc(100% - 7px),calc(100% - 7px) 100%,7px 100%,0 calc(100% - 7px),0 7px)}
@@ -308,7 +309,7 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
   <a class="side-link" href="../bastions/my-bastion/"><span class="side-icon">♜</span>Bastions</a>
   <a class="side-link" href="../contracts/"><span class="side-icon">▣</span>Contracts</a>
   <div class="side-link" data-jump="skills"><span class="side-icon">✥</span>Skills</div>
-  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button><button id="giveMaterialsBtn" class="materials-link">Give Materials</button><div id="recentTransfersPanel" class="transfer-panel hidden"><div class="transfer-title">Recent Transfers</div><div id="recentTransfers" class="transfer-list"><div class="transfer-empty">Loading transfers…</div></div></div></div>
+  <div id="bagZone" class="bag-zone owner-only"><h3>Carried Containers</h3><div id="bags"></div><button id="refreshInventory" class="materials-link">Refresh Inventory</button><button id="showMaterials" class="materials-link">Crafting Materials</button><button id="showComponents" class="materials-link">Components & Neutrals</button><button id="giveMaterialsBtn" class="materials-link">Give Materials</button><div id="recentTransfersPanel" class="transfer-panel hidden"><div class="transfer-title">Recent Transfers</div><div id="recentTransfers" class="transfer-list"><div class="transfer-empty">Loading transfers…</div></div></div></div>
   <div class="load-card"><h4>Equipment Load</h4><h4>Attunement</h4><div id="attuneText">0 / 3</div><div class="attune-gems">◆◆◆</div></div>
 </aside>
 
@@ -483,7 +484,7 @@ const slotLabels={head:"Head",mask:"Mask",neck:"Neck",cloak:"Cloak",chest:"Chest
 const leftSlots=["head","mask","neck","chest","hands"];
 const rightSlots=["cloak","arms","waist","legs","feet"];
 const bottomSlots=["main_hand","off_hand","ranged","ring_1","ring_2","trinket","other"];
-let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],characterDirectory=[];
+let data=null,toolChoices=[],ddbInventory=[],materialInventory=[],componentInventory=[],characterDirectory=[];
 let currentViewingOwn=true,currentCanEdit=true,currentOwnerId=null,sessionUserId=null,sessionIsAdmin=false;
 const PUBLIC_FEATURED_OWNER_ID="297176750990032906";
 let publicVisitorMode=false;
@@ -824,6 +825,15 @@ function renderMaterialBag(){
  const html=rows.length?rows.map(x=>`<div class="bag-item"><span>${esc(friendlyKey(x.itemKey))}</span><span>×${Number(x.qty||0)}</span></div>`).join(""):'<div class="small">No crafting materials.</div>';
  $("bags").innerHTML=`<details class="bag" open><summary>⚒ Crafting Materials (${rows.length})</summary><div class="bag-items">${html}</div></details>`;
 }
+function renderComponentBag(){
+ const rows=componentInventory||[];
+ const total=rows.reduce((n,x)=>n+Number(x.quantity||0),0);
+ const html=rows.length?rows.map(x=>`<div class="component-entry"><div class="component-main"><span>${esc(x.rank)}-Rank ${x.type==="neutral"?"Neutral":"Component"}: ${esc(x.name)}</span><span>×${Number(x.quantity||0)}</span></div><div class="component-meta">${x.attribute?`Attribute: ${esc(x.attribute)} · `:""}<span class="component-id">Inventory #${Number(x.id)}</span>${x.source?`<br><span class="component-source">Source: ${esc(x.source)}</span>`:""}</div></div>`).join(""):'<div class="small">No Components or Neutrals have been awarded.</div>';
+ $("bags").innerHTML=`<details class="bag" open><summary>🧩 Components & Neutrals (${total})</summary><div class="bag-items">${html}</div></details>`;
+}
+async function loadComponents(){
+ const d=await api("/api/components?x=1"+managedOwnerQuery());componentInventory=d.inventory||[];return componentInventory;
+}
 async function loadDdbInventory(){
  const d=await api("/api/character/dndbeyond-inventory?x=1"+managedOwnerQuery());
  ddbInventory=d.inventory||[];
@@ -1131,7 +1141,7 @@ $("saveCrafting").onclick=()=>saveAll().catch(e=>show(e.message,"bad"));
 $("uploadBtn").onclick=()=>$("portraitFile").click();$("portraitFile").onchange=e=>uploadPortrait(e.target.files[0]).catch(e=>show(e.message,"bad"));
 $("portraitDrop").ondragover=e=>e.preventDefault();$("portraitDrop").ondrop=e=>{e.preventDefault();uploadPortrait(e.dataTransfer.files[0]).catch(e=>show(e.message,"bad"))};
 $("crestImg").onclick=()=>{if(currentCanEdit)$("crestFile").click()};$("crestFile").onchange=e=>uploadCrest(e.target.files[0]).catch(e=>show(e.message,"bad"));
-$("refreshInventory").onclick=()=>Promise.all([loadDdbInventory(),loadTransferHistory()]).catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));
+$("refreshInventory").onclick=()=>Promise.all([loadDdbInventory(),loadTransferHistory()]).catch(e=>show(e.message,"bad"));$("showMaterials").onclick=()=>api("/api/inventory").then(d=>{materialInventory=d.inventory||[];renderMaterialBag()}).catch(e=>show(e.message,"bad"));$("showComponents").onclick=()=>loadComponents().then(()=>renderComponentBag()).catch(e=>show(e.message||"Could not load Components & Neutrals.","bad"));
 $("characterSearch").oninput=e=>renderDirectory(e.target.value);$("characterSelect").onchange=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));$("visitCharacter").onclick=()=>visitCharacter($("characterSelect").value).catch(e=>show(e.message,"bad"));
 $("level").oninput=()=>{$("rank").value=rankFromLevel($("level").value)};$("int").oninput=()=>{$("intMod").value=mod($("int").value)};
 document.querySelectorAll("[data-tablink='crafting']").forEach(x=>x.onclick=()=>{$("sheetTab").classList.add("hidden");$("craftingTab").classList.remove("hidden")});
