@@ -828,7 +828,7 @@ function renderMaterialBag(){
 function renderComponentBag(){
  const rows=componentInventory||[];
  const total=rows.reduce((n,x)=>n+Number(x.quantity||0),0);
- const html=rows.length?rows.map(x=>`<div class="component-entry"><div class="component-main"><span>${esc(x.rank)}-Rank ${x.type==="neutral"?"Neutral":"Component"}: ${esc(x.name)}</span><span>×${Number(x.quantity||0)}</span></div><div class="component-meta">${x.attribute?`Attribute: ${esc(x.attribute)} · `:""}<span class="component-id">Inventory #${Number(x.id)}</span>${x.source?`<br><span class="component-source">Source: ${esc(x.source)}</span>`:""}</div></div>`).join(""):'<div class="small">No Components or Neutrals have been awarded.</div>';
+ const html=rows.length?rows.map(x=>`<div class="component-entry"><div class="component-main"><span>${esc(x.rank)}-Rank ${esc(x.name)}</span><span>×${Number(x.quantity||0)}</span></div><div class="component-meta"><b>Comp Type:</b> ${esc(x.type||x.attribute||"—")} · <span class="component-id">Inventory #${Number(x.id)}</span>${x.description?`<br><span style="color:#c4d0d7">${esc(x.description)}</span>`:""}${x.source?`<br><span class="component-source">Source: ${esc(x.source)}</span>`:""}</div></div>`).join(""):'<div class="small">No Components or Neutrals have been awarded.</div>';
  $("bags").innerHTML=`<details class="bag" open><summary>🧩 Components & Neutrals (${total})</summary><div class="bag-items">${html}</div></details>`;
 }
 async function loadComponents(){
