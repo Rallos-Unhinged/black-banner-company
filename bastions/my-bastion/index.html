@@ -338,7 +338,7 @@ footer{text-align:center;color:#78612b;font: .68rem 'Cinzel',serif;text-transfor
     </section>
 
     <section class="panel">
-      <h2>Defenders & Personnel</h2><div class="rule"></div>
+      <h2>Knights, Ronin & Personnel</h2><div class="rule"></div>
       <div id="personnel" class="list scroll"></div>
     </section>
 
@@ -894,8 +894,18 @@ async function openDefenderManager(facility){
   const open=Math.max(0,Number(room.defenderCapacity||0)-(room.defenders||[]).length);
   const max=Math.min(4,open);
   const qtyOptions=Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1} Defender${i?"s":""}</option>`).join("");
-  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${(room.defenders||[]).length}/${room.defenderCapacity} · Open slots: ${open}</div>${open?`<label>Recruit Order</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">The current Barracks rule gives no separate GP price for Defenders, so recruitment does not charge Gold.</div>`:`<strong>🔒 Barracks is full.</strong>`}`);
+  const waiting=(data.unassignedDefenders||[]);
+  const waitingHtml=waiting.length?`<div style="margin-top:12px"><strong>Existing Defenders to place</strong><div class="slot-grid">${waiting.map(d=>`<div class="slot"><span>🛡️ ${esc(d.name||`Defender #${d.id}`)}</span>${open?`<button class="mini-btn" type="button" data-place-defender="${Number(d.id)}">Move to Barracks</button>`:`<span class="muted">Barracks full</span>`}</div>`).join("")}</div></div>`:"";
+  const recruitHtml=open?`<label>Recruit Order</label><select id="defenderQty">${qtyOptions}</select><button class="room-btn good" type="button" data-recruit-defenders="${esc(facility)}">Recruit Selected</button><button class="room-btn" type="button" data-add-defender="${esc(facility)}">Buy / Add 1 Defender</button><div class="muted" style="margin-top:8px">New regular Defenders are created directly in the Barracks.</div>`:`<strong>🔒 Barracks is full.</strong>`;
+  const modal=showPersonnelModal(`Barracks Defenders`,`<div class="muted">Capacity: ${(room.defenders||[]).length}/${room.defenderCapacity} · Open slots: ${open}</div>${waitingHtml}${recruitHtml}`);
   modal.addEventListener("click",async e=>{
+    const place=e.target.closest?.("[data-place-defender]");
+    if(place){
+      const id=Number(place.dataset.placeDefender);
+      if(!confirm("Move this Defender to the Barracks?"))return;
+      try{await api("/api/bastion/defenders/assign",{method:"POST",body:JSON.stringify({id})});closePersonnelModal();message("Defender moved to the Barracks.","good");await reloadOwnBastion();}catch(err){message(err.message,"bad");}
+      return;
+    }
     const recruit=e.target.closest?.("[data-recruit-defenders]");
     const add=e.target.closest?.("[data-add-defender]");
     const quantity=add?1:Number(modal.querySelector("#defenderQty")?.value||1);
@@ -1214,8 +1224,8 @@ function render(data){
   const hirelings=data.personnel.filter(p=>p.personnelType==="hireling");
   $("hirelings").innerHTML=hirelings.length?hirelings.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`Hireling ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Unassigned")}</span></span><span class="person-actions">Hireling${currentViewingOwn?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No hirelings registered.");
 
-  const others=data.personnel.filter(p=>p.personnelType!=="hireling");
-  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(pretty(p.personnelType))}${currentViewingOwn&&["defender","knight","ronin","monster"].includes(String(p.personnelType||"").toLowerCase())?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No defenders, ronin, knights, or monsters registered.");
+  const others=data.personnel.filter(p=>!["hireling","defender"].includes(String(p.personnelType||"").toLowerCase()));
+  $("personnel").innerHTML=others.length?others.map((p,i)=>`<div class="row"><span><strong>${esc(p.name||`${pretty(p.personnelType)} ${i+1}`)}</strong><br><span class="muted">${esc(p.facility||"Bastion")}</span></span><span class="person-actions">${esc(pretty(p.personnelType))}${currentViewingOwn&&["defender","knight","ronin","monster"].includes(String(p.personnelType||"").toLowerCase())?` <button class="mini-btn rename-person" data-id="${Number(p.id)}" data-current="${esc(p.name||"")}" type="button">Rename</button>`:""}</span></div>`).join(""):empty("No Ronin, Knights, or special personnel registered.");
 
   if(data.combined?.members?.length){
     $("combined").innerHTML=data.combined.members.map(m=>`<div class="row"><span>${String(m.userId)===String(data.owner.id)?"You":esc(m.displayName||`Member ${String(m.userId).slice(-6)}`)}</span><span>${String(m.userId)===String(data.combined.createdBy)?"Founder":"Resident"}</span></div>`).join("");
