@@ -552,6 +552,14 @@ body.bbc-has-nav{padding-left:250px!important}
       <section class="panel" style="margin-top:1rem">
         <h2>My Inventory</h2>
         <div class="rule"></div>
+        <div style="margin-bottom:.65rem">
+          <select id="inventorySort">
+            <option value="default">Sort by Rank</option>
+            <option value="rankHigh">Rank: High to Low</option>
+            <option value="rankLow">Rank: Low to High</option>
+            <option value="name">Name: A to Z</option>
+          </select>
+        </div>
         <div id="inventory" class="card-list">
           <div class="empty">Login to view your crafting materials.</div>
         </div>
@@ -656,13 +664,35 @@ function renderAccount() {
 function renderInventory() {
   const holder = $("inventory");
   const select = $("sellMaterial");
+  const sortMode = $("inventorySort")?.value || "default";
   holder.innerHTML = "";
   select.innerHTML = '<option value="">Choose a material...</option>';
 
-  if (!inventory.length) {
+  const rankOrder = { E:1, D:2, C:3, B:4, A:5, S:6 };
+  const rows = [...inventory];
+
+  if (sortMode === "rankHigh") {
+    rows.sort((a,b) => {
+      const ar = friendlyItemKey(a.itemKey);
+      const br = friendlyItemKey(b.itemKey);
+      return (rankOrder[br.rank] || 0) - (rankOrder[ar.rank] || 0)
+        || ar.name.localeCompare(br.name);
+    });
+  } else if (sortMode === "rankLow") {
+    rows.sort((a,b) => {
+      const ar = friendlyItemKey(a.itemKey);
+      const br = friendlyItemKey(b.itemKey);
+      return (rankOrder[ar.rank] || 999) - (rankOrder[br.rank] || 999)
+        || ar.name.localeCompare(br.name);
+    });
+  } else if (sortMode === "name") {
+    rows.sort((a,b) => friendlyItemKey(a.itemKey).name.localeCompare(friendlyItemKey(b.itemKey).name));
+  }
+
+  if (!rows.length) {
     holder.innerHTML = '<div class="empty">No crafting materials found.</div>';
   } else {
-    for (const row of inventory) {
+    for (const row of rows) {
       const f = friendlyItemKey(row.itemKey);
       const line = document.createElement("div");
       line.className = "inventory-row";
@@ -1076,6 +1106,7 @@ $("sellBtn").addEventListener("click", createListing);
 $("search").addEventListener("input", renderMarket);
 $("rankFilter").addEventListener("change", renderMarket);
 $("sortBy").addEventListener("change", renderMarket);
+$("inventorySort").addEventListener("change", renderInventory);
 
 window.buyListing = buyListing;
 window.cancelListing = cancelListing;
