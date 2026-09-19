@@ -553,11 +553,20 @@ body.bbc-has-nav{padding-left:250px!important}
         <h2>My Inventory</h2>
         <div class="rule"></div>
         <div style="margin-bottom:.65rem">
-          <select id="inventorySort">
-            <option value="default">Sort by Rank</option>
+          <select id="inventoryRankFilter">
+            <option value="">All Ranks</option>
+            <option value="E">E Rank Only</option>
+            <option value="D">D Rank Only</option>
+            <option value="C">C Rank Only</option>
+            <option value="B">B Rank Only</option>
+            <option value="A">A Rank Only</option>
+            <option value="S">S Rank Only</option>
+          </select>
+          <select id="inventorySort" style="margin-top:.45rem">
             <option value="rankHigh">Rank: High to Low</option>
             <option value="rankLow">Rank: Low to High</option>
             <option value="name">Name: A to Z</option>
+            <option value="default">Original Order</option>
           </select>
         </div>
         <div id="inventory" class="card-list">
@@ -664,12 +673,16 @@ function renderAccount() {
 function renderInventory() {
   const holder = $("inventory");
   const select = $("sellMaterial");
-  const sortMode = $("inventorySort")?.value || "default";
+  const sortMode = $("inventorySort")?.value || "rankHigh";
+  const rankFilter = $("inventoryRankFilter")?.value || "";
   holder.innerHTML = "";
   select.innerHTML = '<option value="">Choose a material...</option>';
 
   const rankOrder = { E:1, D:2, C:3, B:4, A:5, S:6 };
-  const rows = [...inventory];
+  const rows = inventory.filter((row) => {
+    if (!rankFilter) return true;
+    return friendlyItemKey(row.itemKey).rank === rankFilter;
+  });
 
   if (sortMode === "rankHigh") {
     rows.sort((a,b) => {
@@ -1106,6 +1119,7 @@ $("sellBtn").addEventListener("click", createListing);
 $("search").addEventListener("input", renderMarket);
 $("rankFilter").addEventListener("change", renderMarket);
 $("sortBy").addEventListener("change", renderMarket);
+$("inventoryRankFilter").addEventListener("change", renderInventory);
 $("inventorySort").addEventListener("change", renderInventory);
 
 window.buyListing = buyListing;
