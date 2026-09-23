@@ -50,3 +50,36 @@
 
   refresh();
 })();
+
+// Black Banner Company oath — homepage only.
+(() => {
+  const path = location.pathname.replace(/\/+$/, "");
+  if (path && path !== "/black-banner-company") return;
+
+  const main = document.querySelector("main");
+  if (!main || document.getElementById("company-oath")) return;
+
+  const oath = document.createElement("section");
+  oath.id = "company-oath";
+  oath.style.textAlign = "center";
+  oath.innerHTML = `
+    <h2>The Black Banner Oath</h2>
+    <div class="rule"></div>
+    <p style="font-family:'Cinzel',serif;color:var(--gold-soft);font-size:clamp(1.15rem,3vw,1.55rem);letter-spacing:.04em;margin-bottom:1.5rem;">
+      “A contract taken is a contract kept.”
+    </p>
+    <div style="max-width:760px;margin:0 auto;color:var(--text);font-size:1.08rem;line-height:1.9;">
+      <p>Before the Banner, I give my word.</p>
+      <p>A contract taken is a contract kept.</p>
+      <p>I stand with those who stand beside me.</p>
+      <p>I will not abandon my company for fear, fortune, or favor.</p>
+      <p>Let my deeds carry the Banner farther than my name.</p>
+      <p>Until the contract is fulfilled, my oath remains.</p>
+    </div>
+    <div class="callout" style="max-width:820px;margin:1.6rem auto 0;text-align:center;border-left:0;border-top:1px solid rgba(216,166,59,.45);">
+      <strong style="font-family:'Cinzel',serif;">Officer’s Response</strong><br>
+      “Your word is witnessed. Your oath is bound. Rise, mercenary of the Black Banner Company.”
+    </div>`;
+
+  main.insertBefore(oath, main.firstElementChild);
+})();
