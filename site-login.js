@@ -77,7 +77,7 @@
       <p>Until the contract is fulfilled, my oath remains.</p>
     </div>
     <div class="callout" style="max-width:820px;margin:1.6rem auto 0;text-align:center;border-left:0;border-top:1px solid rgba(216,166,59,.45);">
-      <strong style="font-family:'Cinzel',serif;">Officer’s Response</strong><br>
+      <strong style="font-family:'Cinzel',serif;">Aranis’ Response</strong><br>
       “Your word is witnessed. Your oath is bound. Rise, mercenary of the Black Banner Company.”
     </div>`;
 
