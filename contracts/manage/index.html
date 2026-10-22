@@ -39,10 +39,11 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <div class="wide"><label>Contract Name</label><input id="cName" maxlength="100"></div>
 <div><label>Rank</label><select id="cRank"><option>F</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
 <div><label>Maximum Players</label><input id="cMax" type="number" min="1" max="50" value="6"></div>
-<div><label>Date</label><input id="cDate" type="date"></div><div><label id="timeZoneLabel">Time (Your Local Time)</label><input id="cTime" type="time"></div>
+<div><label for="cDate">Date</label><input id="cDate" type="date" aria-describedby="dateHelp"><button id="openDatePicker" class="btn hidden" type="button" style="margin-top:6px;min-height:44px">Choose Date</button><div id="dateHelp" style="color:var(--muted);font-size:12px;margin-top:4px">Tap to choose a date from the calendar.</div></div><div><label id="timeZoneLabel" for="cTime">Time (Your Local Time)</label><input id="cTime" type="time"><button id="openTimePicker" class="btn hidden" type="button" style="margin-top:6px;min-height:44px">Choose Time</button></div>
 <div><label>Duration</label><select id="cDuration"><option value="2">2 hours</option><option value="3">3 hours</option><option value="4" selected>4 hours</option><option value="5">5 hours</option><option value="6">6 hours</option><option value="7">7 hours</option><option value="8">8 hours</option></select></div>
 <div><label>Optional Contract Image</label><input id="cImage" type="file" accept="image/png,image/jpeg,image/webp"></div>
 <div class="full"><label>Description</label><textarea id="cDescription" maxlength="1000"></textarea></div>
+<div class="full"><details><summary style="cursor:pointer;padding:10px 0;color:var(--gold)">Date or time won't open? Enter them here</summary><div class="formgrid" style="margin-top:8px"><div><label for="manualDate">Date (YYYY-MM-DD)</label><input id="manualDate" type="text" placeholder="2026-10-25" autocomplete="off" aria-describedby="manualDateHelp"><div id="manualDateHelp" style="font-size:12px;color:var(--muted)">Year-month-day, for example 2026-10-25.</div></div><div><label for="manualTime">Time (24-hour HH:MM)</label><input id="manualTime" type="text" placeholder="18:30" autocomplete="off" aria-describedby="manualTimeHelp"><div id="manualTimeHelp" style="font-size:12px;color:var(--muted)">For example 18:30 for 6:30 PM. Uses your local time.</div></div></div></details></div>
 <div class="full"><label>Expected Rewards (display only, optional)</label><input id="cRewards" maxlength="300" placeholder="Example: 2 PP + 500 Gold"></div>
 <div class="full"><button id="createContract" class="btn" type="button">Create & Post Contract</button> <span style="color:var(--muted);font-size:12px">Discord post normally appears within a few seconds.</span></div>
 </div></div>
@@ -129,6 +130,32 @@ function zonedWallTimeToMillis(dateStr,timeStr,timeZone=USER_TIME_ZONE){
 function message(id,text){const el=document.getElementById(id);el.textContent=text;el.classList.toggle("hidden",!text)}
 let currentUserId="",isRewardAdmin=false,currentFinalize=null,materialCatalog=[],selectedRewardMaterials=[];
 let componentPlayers=[],componentAwardReview=null;
+// Request native pickers from either field or its explicit button.
+for(const [inputId,buttonId] of [["cDate","openDatePicker"],["cTime","openTimePicker"]]){
+ const input=document.getElementById(inputId),button=document.getElementById(buttonId);
+ if(typeof input.showPicker==="function"){
+  const open=()=>{try{input.showPicker()}catch(_){input.focus()}};
+  input.addEventListener("click",open);button.addEventListener("click",open);
+  button.classList.remove("hidden");
+ }
+}
+function readContractDateTime(){
+ const dateInput=document.getElementById("cDate"),timeInput=document.getElementById("cTime");
+ const manualDate=document.getElementById("manualDate").value.trim();
+ const manualTime=document.getElementById("manualTime").value.trim();
+ if(manualDate){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(manualDate))throw new Error("Enter the date as YYYY-MM-DD.");
+  const parsed=new Date(manualDate+"T00:00:00Z");
+  if(!Number.isFinite(parsed.getTime())||parsed.toISOString().slice(0,10)!==manualDate)throw new Error("Enter a valid calendar date.");
+  dateInput.value=manualDate;
+ }
+ if(manualTime){
+  if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(manualTime))throw new Error("Enter the time as HH:MM using a 24-hour clock, such as 18:30.");
+  timeInput.value=manualTime;
+ }
+ if(!dateInput.value||!timeInput.value)throw new Error("Choose a date and time, or use the manual entry fields.");
+ return {date:dateInput.value,time:timeInput.value};
+}
 const tzLabel=document.getElementById("timeZoneLabel");
 if(tzLabel)tzLabel.textContent=`Time (Your Local Time — ${USER_TIME_ZONE})`;
 
@@ -241,8 +268,9 @@ async function load(){
 async function createContract(){
  const btn=document.getElementById("createContract");btn.disabled=true;message("error","");message("success","");
  try{
+   const selectedDateTime=readContractDateTime();
    let imageUrl=null,file=document.getElementById("cImage").files?.[0];if(file){const u=await api("/api/contracts/image",{method:"POST",headers:{"Content-Type":file.type},body:file});imageUrl=u.url}
-   const payload={name:document.getElementById("cName").value,rank:document.getElementById("cRank").value,maxPlayers:Number(document.getElementById("cMax").value),description:document.getElementById("cDescription").value,rewards:document.getElementById("cRewards").value,startAt:zonedWallTimeToMillis(document.getElementById("cDate").value,document.getElementById("cTime").value,USER_TIME_ZONE),timezone:USER_TIME_ZONE,durationHours:Number(document.getElementById("cDuration").value),imageUrl};
+   const payload={name:document.getElementById("cName").value,rank:document.getElementById("cRank").value,maxPlayers:Number(document.getElementById("cMax").value),description:document.getElementById("cDescription").value,rewards:document.getElementById("cRewards").value,startAt:zonedWallTimeToMillis(selectedDateTime.date,selectedDateTime.time,USER_TIME_ZONE),timezone:USER_TIME_ZONE,durationHours:Number(document.getElementById("cDuration").value),imageUrl};
    const r=await api("/api/contracts/create",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});message("success",`Contract #${r.contract.id} created. Discord publishing is queued.`);document.getElementById("cName").value="";document.getElementById("cDescription").value="";document.getElementById("cRewards").value="";document.getElementById("cImage").value="";setTimeout(load,1800);
  }catch(e){message("error",e.message)}finally{btn.disabled=false}
 }
