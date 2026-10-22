@@ -39,7 +39,7 @@ h1{color:var(--gold);margin:0 0 5px}.sub{color:var(--muted);margin-bottom:18px}.
 <div class="wide"><label>Contract Name</label><input id="cName" maxlength="100"></div>
 <div><label>Rank</label><select id="cRank"><option>F</option><option>E</option><option>D</option><option>C</option><option>B</option><option>A</option><option>S</option></select></div>
 <div><label>Maximum Players</label><input id="cMax" type="number" min="1" max="50" value="6"></div>
-<div><label>Date</label><input id="cDate" type="date"></div><div><label id="timeZoneLabel">Time (Your Local Time)</label><input id="cTime" type="time"></div>
+<div><label for="cDate">Date</label><input id="cDate" type="date" aria-describedby="dateHelp"><button id="openDatePicker" class="btn hidden" type="button" style="margin-top:6px;min-height:44px">Choose Date</button><div id="dateHelp" style="color:var(--muted);font-size:12px;margin-top:4px">Tap to choose a date from the calendar.</div></div><div><label id="timeZoneLabel">Time (Your Local Time)</label><input id="cTime" type="time"></div>
 <div><label>Duration</label><select id="cDuration"><option value="2">2 hours</option><option value="3">3 hours</option><option value="4" selected>4 hours</option><option value="5">5 hours</option><option value="6">6 hours</option><option value="7">7 hours</option><option value="8">8 hours</option></select></div>
 <div><label>Optional Contract Image</label><input id="cImage" type="file" accept="image/png,image/jpeg,image/webp"></div>
 <div class="full"><label>Description</label><textarea id="cDescription" maxlength="1000"></textarea></div>
@@ -129,6 +129,17 @@ function zonedWallTimeToMillis(dateStr,timeStr,timeZone=USER_TIME_ZONE){
 function message(id,text){const el=document.getElementById(id);el.textContent=text;el.classList.toggle("hidden",!text)}
 let currentUserId="",isRewardAdmin=false,currentFinalize=null,materialCatalog=[],selectedRewardMaterials=[];
 let componentPlayers=[],componentAwardReview=null;
+// Open the native calendar from the whole field, including taps away from its icon.
+const contractDateInput=document.getElementById("cDate");
+const openDatePicker=document.getElementById("openDatePicker");
+if(typeof contractDateInput.showPicker==="function"){
+ const showContractDatePicker=()=>{
+  try{contractDateInput.showPicker()}catch(_){contractDateInput.focus()}
+ };
+ contractDateInput.addEventListener("click",showContractDatePicker);
+ openDatePicker.addEventListener("click",showContractDatePicker);
+ openDatePicker.classList.remove("hidden");
+}
 const tzLabel=document.getElementById("timeZoneLabel");
 if(tzLabel)tzLabel.textContent=`Time (Your Local Time — ${USER_TIME_ZONE})`;
 
