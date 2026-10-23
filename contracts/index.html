@@ -126,7 +126,7 @@ function render(){
    const d=new Date(start);d.setDate(start.getDate()+i);
    const cell=document.createElement("div");cell.className="day"+(d.getMonth()!==cursor.getMonth()?" out":"")+(key(d)===key(now)?" today":"");
    const events=contracts.filter(c=>{const x=new Date(c.startAt);return key(x)===key(d)});
-   cell.innerHTML=`<div class="num">${d.getDate()}</div>`+events.map(c=>`<div class="event-wrap">${canManage?`<button class="delete-contract" data-delete-id="${c.id}" title="Delete Contract">✕</button>`:""}<a class="event" ${c.discordUrl?`href="${esc(c.discordUrl)}" target="_blank"`:""}><span class="rank">${esc(c.rank)}-Rank</span> · ${esc(c.name)}<br><span class="time">${fmtTime(c.startAt)}</span></a></div>`).join("");
+   cell.innerHTML=`<div class="num">${d.getDate()}</div>`+events.map(c=>`<div class="event-wrap">${canManage?`<button class="delete-contract" data-delete-id="${c.id}" title="Delete Contract">✕</button>`:""}<a class="event" ${c.discordUrl?`href="${esc(c.discordUrl)}" target="_blank"`:""}><span class="rank">${String(c.rank).toUpperCase()==="OPEN"?"Open · All Ranks":`${esc(c.rank)}-Rank`}</span> · ${esc(c.name)}<br><span class="time">${fmtTime(c.startAt)}</span></a></div>`).join("");
    grid.appendChild(cell);
  }
  const future=contracts.filter(c=>c.startAt>=Date.now()).sort((a,b)=>a.startAt-b.startAt).slice(0,12);
@@ -142,7 +142,7 @@ function render(){
      render();
    }catch(err){show(err)}
  });
- document.getElementById("upcoming").innerHTML=future.length?future.map(c=>`<div class="card"><h3>${esc(c.name)}</h3><div class="meta"><b>${esc(c.rank)}-Rank</b> · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)}<br>Accepted: ${c.accepted}/${c.maxPlayers}${c.waiting?` · Waiting: ${c.waiting}`:""}</div>${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="open" href="${esc(c.discordUrl)}" target="_blank">Open Contract in Discord →</a>`:""}</div>`).join(""):'<div class="card">No upcoming contracts currently scheduled.</div>';
+ document.getElementById("upcoming").innerHTML=future.length?future.map(c=>`<div class="card"><h3>${esc(c.name)}</h3><div class="meta"><b>${String(c.rank).toUpperCase()==="OPEN"?"Open · All Ranks":`${esc(c.rank)}-Rank`}</b> · ${fmtDate(c.startAt)} at ${fmtTime(c.startAt)}<br>Accepted: ${c.accepted}/${c.maxPlayers}${c.waiting?` · Waiting: ${c.waiting}`:""}</div>${c.description?`<div class="desc">${esc(c.description)}</div>`:""}${c.discordUrl?`<a class="open" href="${esc(c.discordUrl)}" target="_blank">Open Contract in Discord →</a>`:""}</div>`).join(""):'<div class="card">No upcoming contracts currently scheduled.</div>';
 }
 document.getElementById("prev").onclick=()=>{cursor=new Date(cursor.getFullYear(),cursor.getMonth()-1,1);load().catch(show)};
 document.getElementById("next").onclick=()=>{cursor=new Date(cursor.getFullYear(),cursor.getMonth()+1,1);load().catch(show)};
