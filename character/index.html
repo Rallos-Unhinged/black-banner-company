@@ -404,7 +404,7 @@ body.theme-silver{--theme:#8fa3ad;--theme-soft:#46535a}
     </div>
     <div class="stats-section abilities"><h3>⚄ Ability Scores</h3><div id="abilityList"></div></div>
     <div class="stats-section"><h3>⚙ Saving Throws</h3><div id="saveList"></div></div>
-    <div class="stats-section"><div class="statline"><span style="color:#d8b14c">Passive Perception</span><span id="passivePerception">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Save DC</span><span id="spellDC">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Attack</span><span id="spellAttack">—</span></div></div>
+    <div class="stats-section"><div class="statline"><span style="color:#d8b14c">Passive Perception</span><span id="passivePerception">—</span></div><div class="statline"><span style="color:#d8b14c">Passive Investigation</span><span id="passiveInvestigation">—</span></div><div class="statline"><span style="color:#d8b14c">Passive Insight</span><span id="passiveInsight">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Save DC</span><span id="spellDC">—</span></div><div class="statline"><span style="color:#d8b14c">Spell Attack</span><span id="spellAttack">—</span></div></div>
     <div id="skills" class="stats-section"><h3>Skills</h3><div id="skillGrid" class="skill-grid"></div></div>
     <div id="harvesting" class="stats-section harvest-panel owner-only"><h3>🌿 Harvesting & Work</h3><p><a href="../spell-exchange/">Copy Spells &amp; Approvals →</a></p><div class="harvest-hours"><span>Work Hours</span><strong id="harvestWorkHours">—</strong></div><div class="harvest-grid"><select id="harvestActivity"><option value="foraging">Foraging</option><option value="mining">Mining</option><option value="logging">Logging</option><option value="hunting">Hunting</option><option value="oddjobs">Odd Jobs</option></select><select id="harvestHours"><option value="8">8h</option><option value="16">16h</option><option value="24">24h</option><option value="32">32h</option><option value="40">40h</option></select></div><div id="harvestExtra" class="harvest-extra"></div><button id="harvestRun">RUN ACTIVITY</button><div id="harvestResult" class="harvest-result">Choose an activity and spend your shared Work Hours.</div></div>
 
@@ -884,6 +884,7 @@ function renderStats(c,details={},skills=[]){
  $("abilityList").innerHTML=abilities.map(([abbr,score])=>`<div class="statline"><span>${abbr}</span><span>${score??"—"}</span><span>${score!=null?signed(mod(score)):"—"}</span></div>`).join("");
  $("saveList").innerHTML=(details.savingThrows||[]).map(s=>`<div class="save-row"><span>${esc(s.name)}</span><span>${signed(s.bonus)}</span></div>`).join("")||'<div class="small">Sync D&D Beyond to load saves.</div>';
  $("passivePerception").textContent=(ov.passivePerception??details.passivePerception)??"—";$("spellDC").textContent=(ov.spellSaveDC??details.spell?.saveDC)??"—";const sa=(ov.spellAttack??details.spell?.attack);$("spellAttack").textContent=sa!=null?signed(sa):"—";
+ for(const [name,id] of [["Investigation","passiveInvestigation"],["Insight","passiveInsight"]]){const skill=skills.find(s=>s.name===name);$(id).textContent=details[id]??(skill?.bonus!=null?10+Number(skill.bonus):"—");}
  renderSkills(skills);
 }
 function renderSkills(skills=[]){
